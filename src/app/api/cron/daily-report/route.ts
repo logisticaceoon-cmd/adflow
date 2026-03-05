@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
     .select('user_id')
     .eq('status', 'active')
 
-  const uniqueUserIds: string[] = [...new Set(usersWithCampaigns?.map((c: { user_id: string }) => c.user_id) || [])]
+  const uniqueUserIds: string[] = [...new Set<string>(usersWithCampaigns?.map((c: { user_id: string }) => c.user_id) ?? [])]
 
   const results = []
 
