@@ -4,6 +4,7 @@ import Link from 'next/link'
 import type { Campaign, DailyReport } from '@/types'
 import FacebookConnectButton from '@/components/dashboard/FacebookConnectButton'
 
+
 function MetricCard({ label, value, change, color, positive }: {
   label: string, value: string, change: string, color: string, positive?: boolean
 }) {
@@ -33,6 +34,13 @@ function StatusBadge({ status }: { status: string }) {
 export default async function DashboardPage() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
+
+  // Obtener estado de conexión Facebook
+  const { data: fbConnection } = await supabase
+    .from('facebook_connections')
+    .select('ad_account_id, ad_account_name')
+    .eq('user_id', user!.id)
+    .maybeSingle()
 
   // Obtener campañas del usuario
   const { data: campaigns } = await supabase
@@ -81,7 +89,10 @@ export default async function DashboardPage() {
 
       {/* Facebook connection */}
       <div className="mb-6">
-        <FacebookConnectButton />
+        <FacebookConnectButton
+          initialConnected={!!fbConnection}
+          accountName={fbConnection?.ad_account_name ?? fbConnection?.ad_account_id ?? null}
+        />
       </div>
 
       {/* Metrics */}
