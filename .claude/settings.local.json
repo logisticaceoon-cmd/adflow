@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node:*)",
+      "Bash(find:*)",
+      "Bash(gh auth:*)",
+      "Bash(git:*)",
+      "Bash(npx:*)",
+      "Bash(winget install:*)",
+      "Bash(export:*)"
+    ]
+  }
+}
