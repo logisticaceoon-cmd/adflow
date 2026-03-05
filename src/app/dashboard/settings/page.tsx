@@ -41,14 +41,7 @@ export default function SettingsPage() {
   }
 
   function connectFacebook() {
-    const params = new URLSearchParams({
-      client_id: process.env.NEXT_PUBLIC_FB_APP_ID || '',
-      redirect_uri: `${window.location.origin}/api/facebook/callback`,
-      scope: 'ads_management,ads_read,business_management,pages_read_engagement',
-      response_type: 'code',
-      state: 'adflow_connect',
-    })
-    window.location.href = `https://www.facebook.com/v20.0/dialog/oauth?${params}`
+    window.location.href = '/api/auth/facebook'
   }
 
   return (
