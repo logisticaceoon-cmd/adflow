@@ -2,6 +2,7 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import type { Campaign, DailyReport } from '@/types'
+import FacebookConnectButton from '@/components/dashboard/FacebookConnectButton'
 
 function MetricCard({ label, value, change, color, positive }: {
   label: string, value: string, change: string, color: string, positive?: boolean
@@ -76,6 +77,11 @@ export default async function DashboardPage() {
         <Link href="/dashboard/create" className="btn-primary">
           ✨ Nueva campaña con IA
         </Link>
+      </div>
+
+      {/* Facebook connection */}
+      <div className="mb-6">
+        <FacebookConnectButton />
       </div>
 
       {/* Metrics */}
