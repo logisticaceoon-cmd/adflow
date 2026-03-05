@@ -1,31 +1,23 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
 
-interface FacebookConnection {
-  ad_account_id: string | null
-  ad_account_name: string | null
+interface FacebookStatus {
+  connected: boolean
+  account_name: string | null
 }
 
 export default function FacebookConnectButton() {
-  const [connection, setConnection] = useState<FacebookConnection | null>(null)
+  const [status, setStatus] = useState<FacebookStatus | null>(null)
   const [loading, setLoading] = useState(true)
   const [disconnecting, setDisconnecting] = useState(false)
 
   useEffect(() => {
     async function fetchConnection() {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { setLoading(false); return }
-
-      const { data } = await supabase
-        .from('facebook_connections')
-        .select('ad_account_id, ad_account_name')
-        .eq('user_id', user.id)
-        .maybeSingle()
-
-      setConnection(data)
+      const res = await fetch('/api/facebook/status')
+      const json: FacebookStatus = await res.json()
+      console.log('[FacebookConnectButton] status:', json)
+      setStatus(json)
       setLoading(false)
     }
 
@@ -44,7 +36,7 @@ export default function FacebookConnectButton() {
     setDisconnecting(true)
     try {
       const res = await fetch('/api/facebook/disconnect', { method: 'POST' })
-      if (res.ok) setConnection(null)
+      if (res.ok) setStatus({ connected: false, account_name: null })
     } finally {
       setDisconnecting(false)
     }
@@ -59,7 +51,7 @@ export default function FacebookConnectButton() {
     )
   }
 
-  if (connection) {
+  if (status?.connected) {
     return (
       <div className="card p-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -72,7 +64,7 @@ export default function FacebookConnectButton() {
               Facebook Ads conectado
             </p>
             <p className="text-sm font-medium" style={{ color: 'var(--accent3)' }}>
-              ● {connection.ad_account_name || connection.ad_account_id || 'Cuenta conectada'}
+              ● {status.account_name || 'Cuenta conectada'}
             </p>
           </div>
         </div>
