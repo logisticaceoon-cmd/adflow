@@ -93,8 +93,8 @@ export default function CreateCampaignPage() {
       clearTimeout(timer1)
       clearTimeout(timer2)
 
-      if (!res.ok) throw new Error('Error al generar copies')
       const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Error al generar copies')
       setGenStep(3)
       setTimeout(() => {
         setAiCopies(data.copies)
@@ -102,8 +102,8 @@ export default function CreateCampaignPage() {
         setLoading(false)
       }, 600)
 
-    } catch (err) {
-      setError('Error al conectar con la IA. Verificá tu API Key de Anthropic en .env.local')
+    } catch (err: any) {
+      setError(err.message || 'Error desconocido al conectar con la IA')
       setLoading(false)
       setStep(1)
       setGenStep(-1)

@@ -90,9 +90,9 @@ Respondé ÚNICAMENTE con un JSON válido, sin texto adicional antes o después,
 
   } catch (error: any) {
     console.error('Error en generate-copies:', error)
-    if (error.status === 401) {
-      return NextResponse.json({ error: 'API Key de Anthropic inválida. Revisá tu .env.local' }, { status: 500 })
-    }
-    return NextResponse.json({ error: 'Error interno al generar copies' }, { status: 500 })
+    return NextResponse.json({
+      error: error.message || String(error),
+      stack: error.stack,
+    }, { status: 500 })
   }
 }
