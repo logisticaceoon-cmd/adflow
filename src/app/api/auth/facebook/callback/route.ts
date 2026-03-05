@@ -1,7 +1,8 @@
 // src/app/api/auth/facebook/callback/route.ts
 // Recibe el código de autorización de Meta y guarda el token
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams
@@ -54,8 +55,25 @@ export async function GET(req: NextRequest) {
       return NextResponse.redirect(new URL('/dashboard/settings?fb=no_accounts', req.url))
     }
 
-    // 5. Guardar en Supabase
-    const supabase = createClient()
+    // 5. Cliente Supabase con cookies del request para leer la sesión activa
+    const cookieStore = cookies()
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() { return cookieStore.getAll() },
+          setAll(cookiesToSet) {
+            try {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                cookieStore.set(name, value, options)
+              )
+            } catch {}
+          },
+        },
+      }
+    )
+
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.redirect(new URL('/login', req.url))
 
@@ -63,17 +81,28 @@ export async function GET(req: NextRequest) {
       ? new Date(Date.now() + longTokenData.expires_in * 1000).toISOString()
       : null
 
-    await supabase.from('fb_accounts').upsert({
+    // 6. Guardar en facebook_connections (upsert por user_id)
+    const { data: existing } = await supabase
+      .from('facebook_connections')
+      .select('id')
+      .eq('user_id', user.id)
+      .maybeSingle()
+
+    const payload = {
       user_id: user.id,
-      fb_user_id: meData.id,
-      fb_ad_account_id: firstAccount.id,
-      account_name: firstAccount.name,
-      currency: firstAccount.currency || 'USD',
-      timezone: firstAccount.timezone_name || 'America/Argentina/Buenos_Aires',
       access_token: accessToken,
       token_expires_at: expiresAt,
-      is_active: true,
-    }, { onConflict: 'user_id,fb_user_id' })
+      ad_account_id: firstAccount.id,
+      ad_account_name: firstAccount.name,
+      facebook_user_id: meData.id,
+      updated_at: new Date().toISOString(),
+    }
+
+    if (existing) {
+      await supabase.from('facebook_connections').update(payload).eq('user_id', user.id)
+    } else {
+      await supabase.from('facebook_connections').insert(payload)
+    }
 
     return NextResponse.redirect(new URL('/dashboard/settings?fb=connected', req.url))
 
