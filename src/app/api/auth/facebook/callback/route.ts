@@ -74,7 +74,8 @@ export async function GET(req: NextRequest) {
       }
     )
 
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
+    console.log('[/api/auth/facebook/callback] user_id:', user?.id ?? 'null', '| error:', userError?.message ?? 'none')
     if (!user) return NextResponse.redirect(new URL('/login', req.url))
 
     const expiresAt = longTokenData.expires_in
@@ -99,11 +100,14 @@ export async function GET(req: NextRequest) {
     }
 
     if (existing) {
-      await supabase.from('facebook_connections').update(payload).eq('user_id', user.id)
+      const { error: updateError } = await supabase.from('facebook_connections').update(payload).eq('user_id', user.id)
+      console.log('[/api/auth/facebook/callback] update error:', updateError?.message ?? 'none')
     } else {
-      await supabase.from('facebook_connections').insert(payload)
+      const { error: insertError } = await supabase.from('facebook_connections').insert(payload)
+      console.log('[/api/auth/facebook/callback] insert error:', insertError?.message ?? 'none')
     }
 
+    console.log('[/api/auth/facebook/callback] guardado OK, redirigiendo a settings')
     return NextResponse.redirect(new URL('/dashboard/settings?fb=connected', req.url))
 
   } catch (err) {
