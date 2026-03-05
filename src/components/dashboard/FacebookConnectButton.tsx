@@ -28,7 +28,16 @@ export default function FacebookConnectButton() {
       setConnection(data)
       setLoading(false)
     }
+
     fetchConnection()
+
+    // Re-consultar cuando el usuario vuelve a esta pestaña tras el redirect OAuth
+    function handleVisibilityChange() {
+      if (document.visibilityState === 'visible') fetchConnection()
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
   }, [])
 
   async function handleDisconnect() {
