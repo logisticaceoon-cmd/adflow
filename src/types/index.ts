@@ -99,6 +99,34 @@ export interface Recommendation {
   }
 }
 
+export interface BusinessProfile {
+  id: string
+  user_id: string
+  selected_ad_account_id: string | null
+  selected_ad_account_name: string | null
+  pixel_id: string | null
+  pixel_name: string | null
+  fb_page_id: string | null
+  fb_page_name: string | null
+  instagram_account_id: string | null
+  instagram_account_name: string | null
+  business_name: string | null
+  website_url: string | null
+  whatsapp_number: string | null
+  industry: string | null
+  country: string | null
+  currency: string
+  logo_url: string | null
+  brand_color_primary: string
+  brand_color_secondary: string
+  communication_tone: string
+  default_daily_budget: number
+  default_objective: string
+  default_whatsapp_cta: string | null
+  created_at: string
+  updated_at: string
+}
+
 // Para el formulario de creación de campaña
 export interface CreateCampaignForm {
   name: string
