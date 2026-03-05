@@ -4,8 +4,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@/lib/supabase/server'
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-
 const OBJ_MAP: Record<string, string> = {
   CONVERSIONS: 'generar ventas directas',
   TRAFFIC: 'llevar tráfico al sitio web',
@@ -15,6 +13,8 @@ const OBJ_MAP: Record<string, string> = {
 
 export async function POST(req: NextRequest) {
   try {
+    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+
     // Verificar que el usuario esté autenticado
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
