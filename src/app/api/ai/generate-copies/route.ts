@@ -69,7 +69,7 @@ Respondé ÚNICAMENTE con un JSON válido, sin texto adicional antes o después,
     // Llamada a Claude
     const message = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 1024,
+      max_tokens: 3000,
       messages: [{ role: 'user', content: prompt }]
     })
 

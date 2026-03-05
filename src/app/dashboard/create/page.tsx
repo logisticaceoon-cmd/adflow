@@ -140,9 +140,17 @@ export default function CreateCampaignPage() {
 
     // Subir archivos creativos si los hay
     if (uploadedFiles.length > 0) {
+      const uploadErrors: string[] = []
       for (const file of uploadedFiles) {
         const path = `${user!.id}/${campaign.id}/${file.name}`
-        await supabase.storage.from('creatives').upload(path, file)
+        const { error: uploadError } = await supabase.storage.from('creatives').upload(path, file)
+        if (uploadError) {
+          console.error(`Error subiendo ${file.name}:`, uploadError.message)
+          uploadErrors.push(file.name)
+        }
+      }
+      if (uploadErrors.length > 0) {
+        setError(`La campaña se guardó, pero falló la subida de: ${uploadErrors.join(', ')}. Podés subirlos desde la página de la campaña.`)
       }
     }
 
@@ -374,7 +382,9 @@ export default function CreateCampaignPage() {
               {/* Texto principal */}
               <div className="card p-5">
                 <h3 className="section-title mb-3">Texto principal del anuncio</h3>
-                <textarea className="input-field" rows={4} defaultValue={aiCopies.primary_text} />
+                <textarea className="input-field" rows={4}
+                  value={aiCopies.primary_text}
+                  onChange={e => setAiCopies(prev => prev ? { ...prev, primary_text: e.target.value } : prev)} />
               </div>
 
               {/* Otros elementos */}
@@ -417,8 +427,8 @@ export default function CreateCampaignPage() {
             Para publicarla en Facebook, conectá tu cuenta publicitaria en Configuración y luego activá la campaña.
           </p>
           <div className="flex gap-3 justify-center">
-            <button onClick={() => router.push('/dashboard/campaigns')} className="btn-primary">
-              Ver mis campañas →
+            <button onClick={() => router.push('/dashboard?campaign=created')} className="btn-primary">
+              Ver dashboard →
             </button>
             <button onClick={() => router.push('/dashboard/settings')} className="btn-ghost">
               Conectar Facebook →
