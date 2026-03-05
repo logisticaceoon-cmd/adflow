@@ -12,15 +12,32 @@ interface Props {
   initialData: BusinessProfile | null
 }
 
+function Spinner() {
+  return <div className="w-3.5 h-3.5 rounded-full border-2 border-white/20 border-t-white animate-spin flex-shrink-0" />
+}
+
 export default function FacebookAssetsSection({ hasFbToken, initialData }: Props) {
-  const [adAccounts, setAdAccounts]     = useState<MetaAsset[]>([])
-  const [pages, setPages]               = useState<MetaAsset[]>([])
-  const [pixels, setPixels]             = useState<MetaAsset[]>([])
-  const [igAccounts, setIgAccounts]     = useState<MetaIG[]>([])
-  const [loadingAssets, setLoadingAssets] = useState(false)
-  const [saving, setSaving]             = useState(false)
-  const [saved, setSaved]               = useState(false)
-  const [assetsError, setAssetsError]   = useState('')
+  // Listas de opciones
+  const [adAccounts, setAdAccounts] = useState<MetaAsset[]>([])
+  const [pages,      setPages]      = useState<MetaAsset[]>([])
+  const [pixels,     setPixels]     = useState<MetaAsset[]>([])
+  const [igAccounts, setIgAccounts] = useState<MetaIG[]>([])
+
+  // Loading por sección independiente
+  const [loadingBase,      setLoadingBase]      = useState(false)
+  const [loadingPixels,    setLoadingPixels]    = useState(false)
+  const [loadingInstagram, setLoadingInstagram] = useState(false)
+
+  // Errores por sección independiente
+  const [baseError,  setBaseError]  = useState('')
+  const [pixelError, setPixelError] = useState('')
+  const [igError,    setIgError]    = useState('')
+
+  // Guardar
+  const [saving,       setSaving]       = useState(false)
+  const [saved,        setSaved]        = useState(false)
+  const [saveError,    setSaveError]    = useState('')
+  const [validationError, setValidationError] = useState('')
 
   const [form, setForm] = useState({
     selected_ad_account_id:   initialData?.selected_ad_account_id   || '',
@@ -33,59 +50,101 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
     instagram_account_name:   initialData?.instagram_account_name   || '',
   })
 
-  // Cargar ad accounts y páginas al montar si hay token
+  // Carga inicial: un solo request con todos los params conocidos
   useEffect(() => {
     if (!hasFbToken) return
-    fetchBaseAssets()
-  }, [hasFbToken])
+    const params = new URLSearchParams()
+    if (initialData?.selected_ad_account_id) params.set('ad_account_id', initialData.selected_ad_account_id)
+    if (initialData?.fb_page_id)             params.set('page_id',       initialData.fb_page_id)
+    loadInitialAssets(params.toString())
+  }, [hasFbToken]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  async function fetchBaseAssets() {
-    setLoadingAssets(true)
-    setAssetsError('')
+  async function loadInitialAssets(queryString: string) {
+    setLoadingBase(true)
+    setBaseError('')
     try {
-      const res  = await fetch('/api/facebook/meta-assets')
+      const res  = await fetch(`/api/facebook/meta-assets${queryString ? '?' + queryString : ''}`)
       const data = await res.json()
-      if (data.error) { setAssetsError(data.error); return }
-      setAdAccounts(data.adAccounts || [])
-      setPages(data.pages || [])
+      if (data.error) { setBaseError(data.error); return }
+
+      setAdAccounts(data.adAccounts     || [])
+      setPages(data.pages               || [])
+      // Si la carga inicial ya trajo pixels/instagram, pre-populamos
+      if ((data.pixels || []).length > 0)              setPixels(data.pixels)
+      if ((data.instagramAccounts || []).length > 0)   setIgAccounts(data.instagramAccounts)
     } catch {
-      setAssetsError('Error al cargar los activos de Meta')
+      setBaseError('Error al conectar con Meta API. Intentá recargar la página.')
     } finally {
-      setLoadingAssets(false)
+      setLoadingBase(false)
     }
   }
 
-  async function fetchPixels(adAccountId: string) {
-    if (!adAccountId) return
-    const res  = await fetch(`/api/facebook/meta-assets?ad_account_id=${adAccountId}`)
-    const data = await res.json()
-    setPixels(data.pixels || [])
+  async function loadPixels(adAccountId: string) {
+    setLoadingPixels(true)
+    setPixelError('')
+    try {
+      const res  = await fetch(`/api/facebook/meta-assets?ad_account_id=${adAccountId}`)
+      const data = await res.json()
+      if (data.error) { setPixelError(`Error al cargar pixels: ${data.error}`); return }
+      setPixels(data.pixels || [])
+    } catch {
+      setPixelError('Error al cargar los pixels. Intentá de nuevo.')
+    } finally {
+      setLoadingPixels(false)
+    }
   }
 
-  async function fetchInstagram(pageId: string) {
-    if (!pageId) return
-    const res  = await fetch(`/api/facebook/meta-assets?page_id=${pageId}`)
-    const data = await res.json()
-    setIgAccounts(data.instagramAccounts || [])
+  async function loadInstagram(pageId: string) {
+    setLoadingInstagram(true)
+    setIgError('')
+    try {
+      const res  = await fetch(`/api/facebook/meta-assets?page_id=${pageId}`)
+      const data = await res.json()
+      if (data.error) { setIgError(`Error al cargar Instagram: ${data.error}`); return }
+      setIgAccounts(data.instagramAccounts || [])
+    } catch {
+      setIgError('Error al cargar cuentas de Instagram. Intentá de nuevo.')
+    } finally {
+      setLoadingInstagram(false)
+    }
   }
 
   function handleAdAccount(id: string) {
     const account = adAccounts.find(a => a.id === id)
-    setForm(p => ({ ...p, selected_ad_account_id: id, selected_ad_account_name: account?.name || '', pixel_id: '', pixel_name: '' }))
+    // Solo limpia pixel — page e instagram se mantienen intactos
+    setForm(p => ({
+      ...p,
+      selected_ad_account_id:   id,
+      selected_ad_account_name: account?.name || '',
+      pixel_id:   '',
+      pixel_name: '',
+    }))
     setPixels([])
-    if (id) fetchPixels(id)
-  }
-
-  function handlePage(id: string) {
-    const page = pages.find(p => p.id === id)
-    setForm(p => ({ ...p, fb_page_id: id, fb_page_name: page?.name || '', instagram_account_id: '', instagram_account_name: '' }))
-    setIgAccounts([])
-    if (id) fetchInstagram(id)
+    setPixelError('')
+    setValidationError('')
+    if (id) loadPixels(id)
   }
 
   function handlePixel(id: string) {
     const pixel = pixels.find(p => p.id === id)
     setForm(p => ({ ...p, pixel_id: id, pixel_name: pixel?.name || '' }))
+    setValidationError('')
+  }
+
+  function handlePage(id: string) {
+    const page = pages.find(p => p.id === id)
+    // Solo limpia instagram — ad account y pixel se mantienen intactos
+    setForm(p => ({
+      ...p,
+      fb_page_id:   id,
+      fb_page_name: page?.name || '',
+      instagram_account_id:   '',
+      instagram_account_name: '',
+    }))
+    setIgAccounts([])
+    setIgError('')
+    setValidationError('')
+    if (id) loadInstagram(id)
   }
 
   function handleInstagram(id: string) {
@@ -95,16 +154,35 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
 
   async function save(e: React.FormEvent) {
     e.preventDefault()
+    setSaveError('')
+    setValidationError('')
+
+    // Validación
+    if (!form.selected_ad_account_id) {
+      setValidationError('Seleccioná una Ad Account antes de guardar.')
+      return
+    }
+    if (!form.fb_page_id) {
+      setValidationError('Seleccioná una Página de Facebook antes de guardar.')
+      return
+    }
+
     setSaving(true)
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    await supabase.from('business_profiles').upsert(
-      { user_id: user!.id, ...form, updated_at: new Date().toISOString() },
-      { onConflict: 'user_id' }
-    )
-    setSaving(false)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2500)
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      const { error } = await supabase.from('business_profiles').upsert(
+        { user_id: user!.id, ...form, updated_at: new Date().toISOString() },
+        { onConflict: 'user_id' }
+      )
+      if (error) { setSaveError(`Error al guardar: ${error.message}`); return }
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2500)
+    } catch {
+      setSaveError('Error inesperado al guardar. Intentá de nuevo.')
+    } finally {
+      setSaving(false)
+    }
   }
 
   if (!hasFbToken) {
@@ -125,66 +203,110 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
         Seleccioná los activos que se usarán por defecto en tus campañas
       </p>
 
-      {assetsError && (
-        <div className="mb-4 p-3 rounded-lg text-xs" style={{ background: 'rgba(239,68,68,0.1)', color: 'var(--danger)' }}>
-          {assetsError}
+      {/* Error de carga base */}
+      {baseError && (
+        <div className="mb-4 p-3 rounded-lg text-xs flex items-center gap-2"
+             style={{ background: 'rgba(239,68,68,0.1)', color: 'var(--danger)' }}>
+          <span>⚠</span> {baseError}
+          <button type="button" className="ml-auto underline" onClick={() => loadInitialAssets('')}>
+            Reintentar
+          </button>
         </div>
       )}
 
-      {loadingAssets ? (
-        <div className="flex items-center gap-2 py-4">
-          <div className="w-4 h-4 rounded-full border-2 border-white/20 border-t-white animate-spin" />
+      {loadingBase ? (
+        <div className="flex items-center gap-2 py-6">
+          <Spinner />
           <span className="text-sm" style={{ color: 'var(--muted)' }}>Cargando activos de Meta...</span>
         </div>
       ) : (
         <form onSubmit={save} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
+
             {/* Ad Account */}
             <div>
-              <label className="label">Ad Account</label>
-              <select className="input-field" value={form.selected_ad_account_id} onChange={e => handleAdAccount(e.target.value)}>
+              <label className="label">Ad Account *</label>
+              <select className="input-field" value={form.selected_ad_account_id}
+                onChange={e => handleAdAccount(e.target.value)}>
                 <option value="">— Seleccioná una cuenta —</option>
-                {adAccounts.map(a => <option key={a.id} value={a.id}>{a.name} ({a.id})</option>)}
+                {adAccounts.map(a => (
+                  <option key={a.id} value={a.id}>{a.name} ({a.id})</option>
+                ))}
               </select>
             </div>
 
             {/* Pixel */}
             <div>
-              <label className="label">Pixel de Facebook</label>
+              <label className="label">
+                <span className="flex items-center gap-1.5">
+                  Pixel de Facebook
+                  {loadingPixels && <Spinner />}
+                </span>
+              </label>
               <select className="input-field" value={form.pixel_id}
                 onChange={e => handlePixel(e.target.value)}
-                disabled={!form.selected_ad_account_id}>
-                <option value="">— Seleccioná un pixel —</option>
-                {pixels.map(p => <option key={p.id} value={p.id}>{p.name} ({p.id})</option>)}
+                disabled={!form.selected_ad_account_id || loadingPixels}>
+                <option value="">
+                  {loadingPixels ? 'Cargando pixels...' : '— Seleccioná un pixel —'}
+                </option>
+                {pixels.map(p => (
+                  <option key={p.id} value={p.id}>{p.name} ({p.id})</option>
+                ))}
               </select>
-              {!form.selected_ad_account_id && (
-                <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>Primero seleccioná una Ad Account</p>
+              {pixelError && (
+                <p className="text-xs mt-1" style={{ color: 'var(--danger)' }}>⚠ {pixelError}</p>
+              )}
+              {!form.selected_ad_account_id && !pixelError && (
+                <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>Seleccioná una Ad Account primero</p>
               )}
             </div>
 
             {/* Página de Facebook */}
             <div>
-              <label className="label">Página de Facebook</label>
-              <select className="input-field" value={form.fb_page_id} onChange={e => handlePage(e.target.value)}>
+              <label className="label">Página de Facebook *</label>
+              <select className="input-field" value={form.fb_page_id}
+                onChange={e => handlePage(e.target.value)}>
                 <option value="">— Seleccioná una página —</option>
-                {pages.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                {pages.map(p => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
               </select>
             </div>
 
             {/* Instagram */}
             <div>
-              <label className="label">Cuenta de Instagram</label>
+              <label className="label">
+                <span className="flex items-center gap-1.5">
+                  Cuenta de Instagram
+                  {loadingInstagram && <Spinner />}
+                </span>
+              </label>
               <select className="input-field" value={form.instagram_account_id}
                 onChange={e => handleInstagram(e.target.value)}
-                disabled={!form.fb_page_id}>
-                <option value="">— Seleccioná una cuenta —</option>
-                {igAccounts.map(a => <option key={a.id} value={a.id}>@{a.username}</option>)}
+                disabled={!form.fb_page_id || loadingInstagram}>
+                <option value="">
+                  {loadingInstagram ? 'Cargando cuentas...' : '— Seleccioná una cuenta —'}
+                </option>
+                {igAccounts.map(a => (
+                  <option key={a.id} value={a.id}>@{a.username}</option>
+                ))}
               </select>
-              {!form.fb_page_id && (
-                <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>Primero seleccioná una Página de Facebook</p>
+              {igError && (
+                <p className="text-xs mt-1" style={{ color: 'var(--danger)' }}>⚠ {igError}</p>
+              )}
+              {!form.fb_page_id && !igError && (
+                <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>Seleccioná una Página primero</p>
               )}
             </div>
           </div>
+
+          {/* Errores de validación y guardado */}
+          {validationError && (
+            <p className="text-xs" style={{ color: 'var(--danger)' }}>⚠ {validationError}</p>
+          )}
+          {saveError && (
+            <p className="text-xs" style={{ color: 'var(--danger)' }}>⚠ {saveError}</p>
+          )}
 
           <div className="flex justify-end">
             <button type="submit" disabled={saving} className="btn-primary">
