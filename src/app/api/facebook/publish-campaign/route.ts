@@ -120,8 +120,8 @@ const OBJECTIVE_VALID_OPTIMIZATIONS: Record<string, string[]> = {
   OUTCOME_TRAFFIC:    ['LINK_CLICKS', 'LANDING_PAGE_VIEWS'],
   OUTCOME_ENGAGEMENT: ['POST_ENGAGEMENT', 'PAGE_LIKES', 'MESSAGES', 'CONVERSATIONS', 'LINK_CLICKS'],
   OUTCOME_LEADS:      ['LEAD_GENERATION', 'QUALITY_LEAD', 'LINK_CLICKS', 'CONVERSATIONS'],
-  OUTCOME_SALES:      ['OFFSITE_CONVERSIONS', 'VALUE', 'LINK_CLICKS', 'LANDING_PAGE_VIEWS'],
-  CONVERSIONS:        ['OFFSITE_CONVERSIONS', 'VALUE', 'LINK_CLICKS'],
+  OUTCOME_SALES:      ['OFFSITE_CONVERSIONS', 'LINK_CLICKS', 'LANDING_PAGE_VIEWS'],
+  CONVERSIONS:        ['OFFSITE_CONVERSIONS', 'LINK_CLICKS'],
   TRAFFIC:            ['LINK_CLICKS', 'LANDING_PAGE_VIEWS'],
   REACH:              ['REACH', 'IMPRESSIONS'],
   LEAD_GENERATION:    ['LEAD_GENERATION', 'LINK_CLICKS'],
@@ -139,7 +139,6 @@ const OPTIMIZATION_TO_BILLING_EVENT: Record<string, string> = {
   LEAD_GENERATION:                   'IMPRESSIONS',
   QUALITY_LEAD:                      'IMPRESSIONS',
   OFFSITE_CONVERSIONS:               'IMPRESSIONS',
-  VALUE:                             'IMPRESSIONS',
   THRUPLAY:                          'THRUPLAY',
   TWO_SECOND_CONTINUOUS_VIDEO_VIEWS: 'IMPRESSIONS',
 }
@@ -388,6 +387,11 @@ export async function POST(req: NextRequest) {
       is_adset_budget_sharing_enabled: false,
     }
 
+    // Meta API v20+ requires bid_strategy for conversion-based objectives
+    if (['OUTCOME_SALES', 'OUTCOME_LEADS'].includes(campaignObjective)) {
+      campaignPayload.bid_strategy = 'LOWEST_COST_WITHOUT_CAP'
+    }
+
     console.log('[publish-campaign] Creating campaign:', campaignPayload.name)
 
     const metaCampaign = await graphPost(`/${adAccountId}/campaigns`, token, campaignPayload)
@@ -493,6 +497,11 @@ export async function POST(req: NextRequest) {
       }
 
       if (promotedObject) adSetPayload.promoted_object = promotedObject
+
+      // Meta API v20+ requires bid_strategy for conversion-based objectives
+      if (['OUTCOME_SALES', 'OUTCOME_LEADS'].includes(campaignObjective) && optimizationGoal !== 'LINK_CLICKS') {
+        adSetPayload.bid_strategy = 'LOWEST_COST_WITHOUT_CAP'
+      }
 
       if (campaignObjective === 'OUTCOME_ENGAGEMENT' || campaignObjective === 'OUTCOME_TRAFFIC') {
         if (optimizationGoal === 'MESSAGES' || optimizationGoal === 'CONVERSATIONS') {
