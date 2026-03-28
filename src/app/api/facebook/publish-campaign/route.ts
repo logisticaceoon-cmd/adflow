@@ -402,6 +402,25 @@ export async function POST(req: NextRequest) {
     // Global counter for round-robin image distribution across all ads
     let globalAdIndex = 0
 
+    console.log('[publish-campaign] ===== FULL DEBUG =====')
+    console.log('[publish-campaign] adAccountId:', adAccountId)
+    console.log('[publish-campaign] pageId:', pageId)
+    console.log('[publish-campaign] token exists:', !!token)
+    console.log('[publish-campaign] token length:', token?.length)
+    console.log('[publish-campaign] pixelId:', pixelId)
+    console.log('[publish-campaign] linkUrl:', linkUrl)
+    console.log('[publish-campaign] campaignObjective:', campaignObjective)
+    console.log('[publish-campaign] metaCampaignId:', metaCampaignId)
+    console.log('[publish-campaign] numAdSets:', numAdSets)
+    console.log('[publish-campaign] perAdSetBudgetCents:', perAdSetBudgetCents)
+    console.log('[publish-campaign] structure.ad_sets:', JSON.stringify(structure.ad_sets?.map((s: any) => ({
+      name: s.name,
+      ads_count: s.ads?.length,
+      daily_budget: s.daily_budget,
+      optimization_goal: s.optimization_goal,
+      targeting_countries: s.targeting?.geo_locations?.countries,
+    })), null, 2))
+
     for (let adSetIdx = 0; adSetIdx < structure.ad_sets.length; adSetIdx++) {
       const adSet = structure.ad_sets[adSetIdx] as AdSetItem
 
@@ -492,6 +511,9 @@ export async function POST(req: NextRequest) {
         promoted_object:   promotedObject ?? 'none',
       }))
 
+      console.log(`[publish-campaign] ===== AD SET PAYLOAD [${adSetIdx}] =====`)
+      console.log(JSON.stringify(adSetPayload, null, 2))
+
       let adSetId: string
       try {
         const metaAdSet = await graphPost(`/${adAccountId}/adsets`, token, adSetPayload)
@@ -500,6 +522,7 @@ export async function POST(req: NextRequest) {
         console.log(`[publish-campaign] ✓ Ad set created: ${adSetId}`)
       } catch (err: any) {
         console.error(`[publish-campaign] ✗ Ad set "${adSet.name}" FAILED: ${err.message}`)
+        console.error(`[publish-campaign] ✗ Ad set FULL ERROR:`, JSON.stringify(err, Object.getOwnPropertyNames(err)))
         errors.push(`Ad set "${adSet.name}": ${err.message}`)
         // Skip all ads in this ad set but continue with next ad set
         globalAdIndex += (adSet.ads as AdCopyItem[]).length
@@ -584,6 +607,7 @@ export async function POST(req: NextRequest) {
 
         } catch (err: any) {
           console.error(`[publish-campaign]   ✗ Ad "${ad.name}" in "${adSet.name}" FAILED: ${err.message}`)
+          console.error(`[publish-campaign]   ✗ Ad/Creative FULL ERROR:`, JSON.stringify(err, Object.getOwnPropertyNames(err)))
           errors.push(`"${adSet.name}" → "${ad.name}": ${err.message}`)
         }
 
