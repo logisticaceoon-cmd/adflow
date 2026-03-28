@@ -1,7 +1,13 @@
 // src/app/api/facebook/meta-assets/route.ts
-// Trae ad accounts, pixels, páginas e Instagram desde la Meta Graph API
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+
+async function graphFetch(url: string, label: string) {
+  const res  = await fetch(url)
+  const data = await res.json()
+  if (data.error) console.error(`[meta-assets] ${label}:`, JSON.stringify(data.error))
+  return data
+}
 
 export async function GET(req: NextRequest) {
   const supabase = createClient()
@@ -21,42 +27,117 @@ export async function GET(req: NextRequest) {
   const token = conn.access_token
   const { searchParams } = new URL(req.url)
   const adAccountId = searchParams.get('ad_account_id')
-  const pageId = searchParams.get('page_id')
+  const pageId      = searchParams.get('page_id')
+  const businessId  = searchParams.get('business_id')
 
-  // Siempre traemos ad accounts y páginas en paralelo
-  const [adAccountsRes, pagesRes] = await Promise.all([
-    fetch(`https://graph.facebook.com/v20.0/me/adaccounts?fields=id,name,currency&limit=50&access_token=${token}`),
-    fetch(`https://graph.facebook.com/v20.0/me/accounts?fields=id,name&limit=50&access_token=${token}`),
-  ])
-  const [adAccountsData, pagesData] = await Promise.all([
-    adAccountsRes.json(),
-    pagesRes.json(),
+  // ── Businesses + Pages (siempre) ────────────────────────────────────────
+  const [businessesData, pagesData] = await Promise.all([
+    graphFetch(
+      `https://graph.facebook.com/v20.0/me/businesses?fields=id,name&limit=50&access_token=${token}`,
+      '/me/businesses'
+    ),
+    graphFetch(
+      `https://graph.facebook.com/v20.0/me/accounts?fields=id,name,access_token&limit=50&access_token=${token}`,
+      '/me/accounts'
+    ),
   ])
 
-  // Pixels — solo si se pasa ad_account_id
+  // ── Ad Accounts ──────────────────────────────────────────────────────────
+  let adAccounts: { id: string; name: string }[] = []
+  let adAccountsError: string | null = null
+
+  if (businessId) {
+    // Intento 1: ad accounts del business portfolio
+    const bizData = await graphFetch(
+      `https://graph.facebook.com/v20.0/${businessId}/adaccounts?fields=id,name,account_status&limit=50&access_token=${token}`,
+      `/${businessId}/adaccounts`
+    )
+    if (!bizData.error && Array.isArray(bizData.data)) {
+      adAccounts = bizData.data
+    } else {
+      adAccountsError = bizData.error ? JSON.stringify(bizData.error) : null
+      // Fallback: todas las cuentas del usuario
+      console.log('[meta-assets] Fallback a /me/adaccounts')
+      const meData = await graphFetch(
+        `https://graph.facebook.com/v20.0/me/adaccounts?fields=id,name&limit=50&access_token=${token}`,
+        '/me/adaccounts (fallback)'
+      )
+      adAccounts = meData.data || []
+      adAccountsError = meData.error ? JSON.stringify(meData.error) : adAccountsError
+    }
+  } else {
+    // Sin business_id: cuentas personales del usuario
+    const meData = await graphFetch(
+      `https://graph.facebook.com/v20.0/me/adaccounts?fields=id,name&limit=50&access_token=${token}`,
+      '/me/adaccounts'
+    )
+    adAccounts = meData.data || []
+    if (meData.error) adAccountsError = JSON.stringify(meData.error)
+  }
+
+  // ── Pixels ───────────────────────────────────────────────────────────────
   let pixels: { id: string; name: string }[] = []
   if (adAccountId) {
-    const pixelsRes = await fetch(
-      `https://graph.facebook.com/v20.0/${adAccountId}/adspixels?fields=id,name&access_token=${token}`
+    const pixelsData = await graphFetch(
+      `https://graph.facebook.com/v20.0/${adAccountId}/adspixels?fields=id,name&access_token=${token}`,
+      `/${adAccountId}/adspixels`
     )
-    const pixelsData = await pixelsRes.json()
     pixels = pixelsData.data || []
   }
 
-  // Instagram — solo si se pasa page_id
+  // ── Instagram ────────────────────────────────────────────────────────────
   let instagramAccounts: { id: string; username: string }[] = []
+  let igDebugError: string | null = null
+
   if (pageId) {
-    const igRes = await fetch(
-      `https://graph.facebook.com/v20.0/${pageId}/instagram_accounts?fields=id,username&access_token=${token}`
+    // Buscamos el page access token en la lista de páginas ya obtenida
+    const pageList: Array<{ id: string; name: string; access_token?: string }> = pagesData.data || []
+    const pageEntry  = pageList.find((p) => p.id === pageId)
+    const pageToken  = pageEntry?.access_token || token
+
+    console.log(`[meta-assets] Instagram: page_id=${pageId} pageToken=${pageEntry?.access_token ? 'page' : 'user-fallback'}`)
+
+    // Intento 1: connected_instagram_account (Business / Creator accounts)
+    const connectedData = await graphFetch(
+      `https://graph.facebook.com/v20.0/${pageId}?fields=connected_instagram_account{id,username,name}&access_token=${pageToken}`,
+      `/${pageId}?fields=connected_instagram_account`
     )
-    const igData = await igRes.json()
-    instagramAccounts = igData.data || []
+
+    if (connectedData.connected_instagram_account) {
+      const ig = connectedData.connected_instagram_account
+      instagramAccounts = [{ id: ig.id, username: ig.username || ig.name || ig.id }]
+    } else {
+      if (connectedData.error) igDebugError = JSON.stringify(connectedData.error)
+
+      // Intento 2: edge instagram_accounts (cuentas clásicas vinculadas)
+      const igEdgeData = await graphFetch(
+        `https://graph.facebook.com/v20.0/${pageId}/instagram_accounts?fields=id,username,name&access_token=${pageToken}`,
+        `/${pageId}/instagram_accounts`
+      )
+
+      if (igEdgeData.error) igDebugError = JSON.stringify(igEdgeData.error)
+
+      instagramAccounts = (igEdgeData.data || []).map(
+        (a: { id: string; username?: string; name?: string }) => ({
+          id: a.id,
+          username: a.username || a.name || a.id,
+        })
+      )
+    }
   }
 
+  // Quitamos access_token de las páginas antes de retornar al cliente
+  const pages = (pagesData.data || []).map(
+    (p: { id: string; name: string; access_token?: string }) => ({ id: p.id, name: p.name })
+  )
+
   return NextResponse.json({
-    adAccounts: adAccountsData.data || [],
-    pages: pagesData.data || [],
+    businesses:       businessesData.data || [],
+    adAccounts,
+    adAccountsError,
+    pages,
     pixels,
     instagramAccounts,
+    igDebugError,
   })
 }

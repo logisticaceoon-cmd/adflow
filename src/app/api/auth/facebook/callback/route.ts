@@ -6,20 +6,32 @@ import { cookies } from 'next/headers'
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams
-  const code = searchParams.get('code')
-  const error = searchParams.get('error')
+  const code          = searchParams.get('code')
+  const error         = searchParams.get('error')
+  const returnedState = searchParams.get('state')
 
   if (error || !code) {
     return NextResponse.redirect(new URL('/dashboard/settings?fb=error', req.url))
   }
 
+  // Leer la cookie CSRF directamente desde el objeto request (más confiable en Route Handlers)
+  const savedState = req.cookies.get('fb_oauth_state')?.value
+
+  console.log('[/api/auth/facebook/callback] savedState:', savedState ?? 'UNDEFINED')
+  console.log('[/api/auth/facebook/callback] returnedState:', returnedState ?? 'UNDEFINED')
+
+  if (!savedState || savedState !== returnedState) {
+    console.error('[/api/auth/facebook/callback] CSRF state mismatch — abortando')
+    return NextResponse.redirect(new URL('/dashboard/settings?fb=error&reason=state_mismatch', req.url))
+  }
+
   try {
-    const appId = process.env.META_APP_ID!
-    const appSecret = process.env.META_APP_SECRET!
+    const appId       = process.env.META_APP_ID!
+    const appSecret   = process.env.META_APP_SECRET!
     const redirectUri = process.env.META_REDIRECT_URI!
 
-    // 1. Intercambiar el código por un token de corta duración
-    const tokenRes = await fetch(
+    // 1. Intercambiar código por token corto
+    const tokenRes  = await fetch(
       `https://graph.facebook.com/v20.0/oauth/access_token?` +
       `client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&` +
       `client_secret=${appSecret}&code=${code}`
@@ -32,20 +44,20 @@ export async function GET(req: NextRequest) {
     }
 
     // 2. Convertir a token de LARGA duración (60 días)
-    const longTokenRes = await fetch(
+    const longTokenRes  = await fetch(
       `https://graph.facebook.com/v20.0/oauth/access_token?` +
       `grant_type=fb_exchange_token&client_id=${appId}&` +
       `client_secret=${appSecret}&fb_exchange_token=${tokenData.access_token}`
     )
     const longTokenData = await longTokenRes.json()
-    const accessToken = longTokenData.access_token || tokenData.access_token
+    const accessToken   = longTokenData.access_token || tokenData.access_token
 
-    // 3. Obtener info del usuario de Facebook
-    const meRes = await fetch(`https://graph.facebook.com/v20.0/me?access_token=${accessToken}`)
+    // 3. Info del usuario de Facebook
+    const meRes  = await fetch(`https://graph.facebook.com/v20.0/me?access_token=${accessToken}`)
     const meData = await meRes.json()
 
-    // 4. Obtener cuentas publicitarias del usuario
-    const accountsRes = await fetch(
+    // 4. Cuentas publicitarias
+    const accountsRes  = await fetch(
       `https://graph.facebook.com/v20.0/me/adaccounts?fields=id,name,currency,timezone_name&access_token=${accessToken}`
     )
     const accountsData = await accountsRes.json()
@@ -55,7 +67,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.redirect(new URL('/dashboard/settings?fb=no_accounts', req.url))
     }
 
-    // 5. Cliente Supabase con cookies del request para leer la sesión activa
+    // 5. Cliente Supabase — usa cookies() de next/headers para leer la sesión de Supabase
     const cookieStore = cookies()
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -90,13 +102,13 @@ export async function GET(req: NextRequest) {
       .maybeSingle()
 
     const payload = {
-      user_id: user.id,
-      access_token: accessToken,
+      user_id:          user.id,
+      access_token:     accessToken,
       token_expires_at: expiresAt,
-      ad_account_id: firstAccount.id,
-      ad_account_name: firstAccount.name,
+      ad_account_id:    firstAccount.id,
+      ad_account_name:  firstAccount.name,
       facebook_user_id: meData.id,
-      updated_at: new Date().toISOString(),
+      updated_at:       new Date().toISOString(),
     }
 
     if (existing) {
@@ -107,8 +119,11 @@ export async function GET(req: NextRequest) {
       console.log('[/api/auth/facebook/callback] insert error:', insertError?.message ?? 'none')
     }
 
+    // 7. Redirigir a settings y borrar la cookie de state
+    const successRes = NextResponse.redirect(new URL('/dashboard/settings?fb=connected', req.url))
+    successRes.cookies.set('fb_oauth_state', '', { maxAge: 0, path: '/' })
     console.log('[/api/auth/facebook/callback] guardado OK, redirigiendo a settings')
-    return NextResponse.redirect(new URL('/dashboard/settings?fb=connected', req.url))
+    return successRes
 
   } catch (err) {
     console.error('Error en Facebook callback:', err)

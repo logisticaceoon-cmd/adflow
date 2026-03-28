@@ -1,5 +1,4 @@
 // src/lib/supabase/server.ts
-// Cliente de Supabase para usar en el SERVIDOR (API routes, Server Components)
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
@@ -16,14 +15,17 @@ export function createClient() {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
             )
-          } catch {}
+          } catch {
+            // setAll called from a Server Component — cookies() is read-only there,
+            // the try/catch prevents the expected "cookies is read-only" error.
+          }
         },
       },
     }
   )
 }
 
-// Cliente con permisos de administrador (para cron jobs y operaciones del servidor)
+// Admin client: bypasses RLS — only for server-side admin operations
 export function createAdminClient() {
   const { createClient: createSupabaseClient } = require('@supabase/supabase-js')
   return createSupabaseClient(

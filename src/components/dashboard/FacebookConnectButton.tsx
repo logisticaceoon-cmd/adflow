@@ -59,7 +59,7 @@ export default function FacebookConnectButton({ initialConnected, accountName }:
     <div className="card p-4 flex items-center justify-between gap-4">
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0"
-             style={{ background: 'rgba(79,110,247,0.12)', border: '1px solid rgba(79,110,247,0.25)' }}>
+             style={{ background: 'rgba(233,30,140,0.1)', border: '1px solid rgba(233,30,140,0.2)' }}>
           📣
         </div>
         <div>

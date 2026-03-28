@@ -57,23 +57,33 @@ async function processUserReport(supabase: any, userId: string) {
 
   if (!profile?.report_active || !profile?.report_email) return
 
-  // 2. Obtener campañas activas del usuario con su cuenta de FB
+  // 2. Obtener campañas activas del usuario
   const { data: campaigns } = await supabase
     .from('campaigns')
-    .select('*, fb_accounts(access_token, fb_ad_account_id)')
+    .select('*')
     .eq('user_id', userId)
     .eq('status', 'active')
 
   if (!campaigns?.length) return
 
-  // 3. Obtener métricas de Facebook para cada campaña
+  // 3. Obtener token de Facebook del usuario
+  const { data: fbConn } = await supabase
+    .from('facebook_connections')
+    .select('access_token')
+    .eq('user_id', userId)
+    .maybeSingle()
+
+  const fbToken = fbConn?.access_token
+  if (!fbToken) return
+
+  // 4. Obtener métricas de Facebook para cada campaña
   const metricsSnapshot: Record<string, CampaignMetrics> = {}
 
   for (const campaign of campaigns) {
-    if (campaign.fb_campaign_id && campaign.fb_accounts?.access_token) {
+    if (campaign.meta_campaign_id && fbToken) {
       const metrics = await fetchFBMetrics(
-        campaign.fb_campaign_id,
-        campaign.fb_accounts.access_token
+        campaign.meta_campaign_id,
+        fbToken
       )
       metricsSnapshot[campaign.id] = metrics
 
@@ -317,7 +327,7 @@ async function sendReportEmail(
 </html>`
 
   await resend.emails.send({
-    from: 'AdFlow <reportes@tudominio.com>',
+    from: 'AdFlow <reportes@adflow.ai>',
     to: profile.report_email,
     subject: `📊 Reporte AdFlow — ${campaigns.length} campaña${campaigns.length !== 1 ? 's' : ''} · ${new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'short' })}`,
     html,

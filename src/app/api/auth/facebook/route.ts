@@ -1,29 +1,41 @@
 // src/app/api/auth/facebook/route.ts
-// Inicia el flujo OAuth de Meta/Facebook Ads
+// Inicia el flujo OAuth de Meta/Facebook Ads con protección CSRF
 import { NextRequest, NextResponse } from 'next/server'
+
+// Force dynamic so Next.js never caches this response (each user needs a unique state)
+export const dynamic = 'force-dynamic'
 
 export async function GET(req: NextRequest) {
   const appId = process.env.META_APP_ID
   const redirectUri = process.env.META_REDIRECT_URI
 
-  console.log('[/api/auth/facebook] META_APP_ID:', appId ?? 'UNDEFINED')
-  console.log('[/api/auth/facebook] META_REDIRECT_URI:', redirectUri ?? 'UNDEFINED')
-
   if (!appId || !redirectUri) {
-    console.error('[/api/auth/facebook] Faltan variables de entorno META_APP_ID o META_REDIRECT_URI')
+    console.error('[/api/auth/facebook] Faltan variables META_APP_ID o META_REDIRECT_URI')
     return NextResponse.redirect(new URL('/dashboard/settings?fb=error', req.url))
   }
+
+  // Generar state CSRF único por request
+  const state = crypto.randomUUID()
 
   const params = new URLSearchParams({
     client_id: appId,
     redirect_uri: redirectUri,
-    scope: 'ads_management,ads_read,business_management,pages_read_engagement',
+    scope: 'ads_management,ads_read,business_management,pages_show_list,pages_read_engagement,instagram_basic,instagram_manage_insights,public_profile,read_insights',
     response_type: 'code',
-    state: 'adflow_connect',
+    state,
   })
 
   const oauthUrl = `https://www.facebook.com/v20.0/dialog/oauth?${params}`
-  console.log('[/api/auth/facebook] Redirigiendo a:', oauthUrl)
+  const res = NextResponse.redirect(oauthUrl)
 
-  return NextResponse.redirect(oauthUrl)
+  // Guardar state en cookie httpOnly — se envía de vuelta en el callback (sameSite lax permite redirects cross-site GET)
+  res.cookies.set('fb_oauth_state', state, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'lax',
+    maxAge: 600, // 10 minutos
+    path: '/',
+  })
+
+  return res
 }

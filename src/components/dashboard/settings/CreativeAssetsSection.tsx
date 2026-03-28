@@ -24,8 +24,8 @@ export default function CreativeAssetsSection({ initialData }: Props) {
 
   const [form, setForm] = useState({
     logo_url:              initialData?.logo_url              || '',
-    brand_color_primary:   initialData?.brand_color_primary   || '#4f6ef7',
-    brand_color_secondary: initialData?.brand_color_secondary || '#7c3aed',
+    brand_color_primary:   initialData?.brand_color_primary   || '#e91e8c',
+    brand_color_secondary: initialData?.brand_color_secondary || '#62c4b0',
     communication_tone:    initialData?.communication_tone    || 'profesional',
   })
 
@@ -129,8 +129,8 @@ export default function CreativeAssetsSection({ initialData }: Props) {
               <button key={t.value} type="button" onClick={() => setForm(p => ({ ...p, communication_tone: t.value }))}
                 className="p-3 rounded-xl text-left transition-all"
                 style={{
-                  background: form.communication_tone === t.value ? 'rgba(79,110,247,0.12)' : 'var(--surface2)',
-                  border: `1px solid ${form.communication_tone === t.value ? 'rgba(79,110,247,0.5)' : 'var(--border)'}`,
+                  background: form.communication_tone === t.value ? 'rgba(233,30,140,0.12)' : 'var(--surface2)',
+                  border: `1px solid ${form.communication_tone === t.value ? 'rgba(233,30,140,0.5)' : 'var(--border)'}`,
                 }}>
                 <p className="text-sm font-semibold mb-0.5">{t.label}</p>
                 <p className="text-xs" style={{ color: 'var(--muted)' }}>{t.desc}</p>

@@ -4,5 +4,11 @@
       "path": "/api/cron/daily-report",
       "schedule": "0 11 * * *"
     }
-  ]
+  ],
+  "functions": {
+    "src/app/api/ai/generate-copies/route.ts": {
+      "maxDuration": 60,
+      "memory": 1024
+    }
+  }
 }

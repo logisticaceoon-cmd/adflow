@@ -1,39 +1,51 @@
 // src/app/dashboard/reports/page.tsx
 import { createClient } from '@/lib/supabase/server'
 import type { DailyReport, Recommendation } from '@/types'
+import { BarChart2, Clock, Mail, Zap } from 'lucide-react'
 
 const TYPE_CONFIG: Record<string, { label: string; color: string; bg: string; border: string; icon: string }> = {
-  scale_up:         { label: 'Escalar', color: 'var(--accent3)', bg: 'rgba(6,214,160,0.08)', border: 'rgba(6,214,160,0.2)', icon: '📈' },
-  scale_down:       { label: 'Reducir gasto', color: 'var(--warn)', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.2)', icon: '⚠️' },
-  pause:            { label: 'Pausar', color: 'var(--danger)', bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.2)', icon: '🛑' },
-  refresh_creative: { label: 'Renovar creativo', color: 'var(--accent)', bg: 'rgba(79,110,247,0.08)', border: 'rgba(79,110,247,0.2)', icon: '🔄' },
-  maintain:         { label: 'Mantener', color: 'var(--muted)', bg: 'rgba(107,114,128,0.08)', border: 'rgba(107,114,128,0.2)', icon: '→' },
-  duplicate:        { label: 'Duplicar campaña', color: 'var(--accent)', bg: 'rgba(79,110,247,0.08)', border: 'rgba(79,110,247,0.2)', icon: '✨' },
+  scale_up:         { label: 'Escalar',          color: 'var(--accent3)',  bg: 'rgba(6,214,160,0.07)',    border: 'rgba(6,214,160,0.22)',    icon: '📈' },
+  scale_down:       { label: 'Reducir gasto',    color: 'var(--warn)',     bg: 'rgba(245,158,11,0.07)',   border: 'rgba(245,158,11,0.22)',   icon: '⚠️' },
+  pause:            { label: 'Pausar',            color: 'var(--danger)',   bg: 'rgba(239,68,68,0.07)',    border: 'rgba(239,68,68,0.22)',    icon: '🛑' },
+  refresh_creative: { label: 'Renovar creativo', color: 'var(--accent)',   bg: 'rgba(233,30,140,0.07)',   border: 'rgba(233,30,140,0.22)',   icon: '🔄' },
+  maintain:         { label: 'Mantener',          color: 'var(--muted)',    bg: 'rgba(255,255,255,0.04)',  border: 'rgba(255,255,255,0.10)',  icon: '→' },
+  duplicate:        { label: 'Duplicar campaña', color: 'var(--accent)',   bg: 'rgba(233,30,140,0.07)',   border: 'rgba(233,30,140,0.22)',   icon: '✨' },
 }
 
 function RecommendationCard({ rec }: { rec: Recommendation }) {
   const cfg = TYPE_CONFIG[rec.type] || TYPE_CONFIG.maintain
   return (
-    <div className="p-5 rounded-xl flex gap-4" style={{ background: cfg.bg, border: `1px solid ${cfg.border}` }}>
-      <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
-           style={{ background: cfg.bg, border: `1px solid ${cfg.border}` }}>
+    <div className="p-5 rounded-2xl flex gap-4 transition-all duration-200 hover:-translate-y-0.5"
+      style={{
+        background: cfg.bg,
+        border: `1px solid ${cfg.border}`,
+        backdropFilter: 'blur(12px)',
+        boxShadow: `0 4px 16px rgba(0,0,0,0.25)`,
+      }}>
+      <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+        style={{ background: 'rgba(255,255,255,0.06)', border: `1px solid ${cfg.border}` }}>
         {cfg.icon}
       </div>
       <div className="flex-1">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-xs font-bold px-2 py-0.5 rounded-full"
-                style={{ background: cfg.bg, color: cfg.color, border: `1px solid ${cfg.border}` }}>
+        <div className="flex items-center gap-2 mb-2">
+          <span style={{
+            fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 20,
+            background: 'rgba(255,255,255,0.06)', color: cfg.color, border: `1px solid ${cfg.border}`,
+            letterSpacing: '0.06em', textTransform: 'uppercase',
+          }}>
             {cfg.label}
           </span>
           {rec.priority === 'high' && (
-            <span className="text-xs font-bold" style={{ color: 'var(--danger)' }}>● Alta prioridad</span>
+            <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--danger)', display: 'flex', alignItems: 'center', gap: 3 }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--danger)', display: 'inline-block', boxShadow: '0 0 6px rgba(239,68,68,0.7)' }} className="glow-dot" />
+              Alta prioridad
+            </span>
           )}
         </div>
-        <p className="text-sm font-semibold mb-1">{rec.title}</p>
-        <p className="text-xs leading-relaxed" style={{ color: 'var(--muted)' }}>{rec.description}</p>
+        <p style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.92)', marginBottom: 6 }}>{rec.title}</p>
+        <p style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.6 }}>{rec.description}</p>
         {rec.action && (
-          <button className="mt-3 text-xs font-semibold transition-opacity hover:opacity-80"
-                  style={{ color: cfg.color }}>
+          <button style={{ marginTop: 12, fontSize: 12, fontWeight: 600, color: cfg.color, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
             → {rec.action.label}
           </button>
         )}
@@ -53,70 +65,122 @@ export default async function ReportsPage() {
     .order('report_date', { ascending: false })
     .limit(10) as { data: DailyReport[] | null }
 
-  const latestReport = reports?.[0]
+  const latestReport    = reports?.[0]
   const recommendations = (latestReport?.recommendations || []) as Recommendation[]
-  const highPriority = recommendations.filter(r => r.priority === 'high')
+  const highPriority    = recommendations.filter(r => r.priority === 'high')
 
   return (
     <div>
-      <div className="flex justify-between items-start mb-8">
+      {/* ── Header ── */}
+      <div className="flex justify-between items-start mb-8 dash-anim-1">
         <div>
-          <h1 className="page-title mb-1">Reportes diarios IA 📩</h1>
-          <p className="text-sm" style={{ color: 'var(--muted)' }}>
-            Análisis automático enviado cada mañana a las 8:00 AM a tu email
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#e91e8c', marginBottom: 6 }}>
+            Inteligencia artificial
+          </p>
+          <h1 className="page-title mb-1.5">Reportes diarios IA</h1>
+          <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+            Análisis automático generado cada mañana a las 8:00 AM
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs p-2.5 rounded-lg" style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--muted)' }}>
-            Próximo reporte: <strong style={{ color: 'var(--accent3)' }}>mañana 8:00 AM</strong>
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', borderRadius: 12,
+          background: 'rgba(6,214,160,0.06)', border: '1px solid rgba(6,214,160,0.18)',
+        }}>
+          <Clock size={13} style={{ color: 'var(--accent3)' }} />
+          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.78)' }}>
+            Próximo: <strong style={{ color: 'var(--accent3)' }}>mañana 8:00 AM</strong>
           </span>
         </div>
       </div>
 
+      {/* ── Empty state ── */}
       {!reports?.length ? (
-        <div className="card p-16 text-center">
-          <div className="text-5xl mb-4">📊</div>
-          <h2 className="font-display text-xl font-bold mb-2">Sin reportes todavía</h2>
-          <p className="text-sm mb-2 max-w-md mx-auto" style={{ color: 'var(--muted)' }}>
-            Los reportes se generan automáticamente cada mañana una vez que tenés campañas activas en Facebook.
+        <div className="card p-16 text-center dash-anim-2" style={{ maxWidth: 540, margin: '0 auto' }}>
+          <div style={{
+            width: 72, height: 72, borderRadius: '50%', margin: '0 auto 20px',
+            background: 'rgba(233,30,140,0.08)', border: '1px solid rgba(233,30,140,0.20)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32,
+          }}>
+            📊
+          </div>
+          <h2 style={{ fontSize: 20, fontWeight: 700, color: 'rgba(255,255,255,0.92)', marginBottom: 10 }}>Sin reportes todavía</h2>
+          <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.7, marginBottom: 8 }}>
+            Los reportes se generan automáticamente cada mañana una vez que tenés campañas activas.
           </p>
-          <p className="text-xs" style={{ color: 'var(--muted)' }}>
-            Para activarlos: creá una campaña → conectá tu cuenta de Facebook → activá la campaña.
+          <p style={{ fontSize: 12, color: 'var(--muted)' }}>
+            Creá una campaña → conectá Facebook → activá la campaña.
           </p>
         </div>
       ) : (
         <>
-          {/* Último reporte */}
-          <div className="p-5 rounded-xl flex items-center gap-4 mb-6"
-               style={{ background: 'linear-gradient(135deg, rgba(79,110,247,0.08), rgba(124,58,237,0.08))', border: '1px solid rgba(79,110,247,0.2)' }}>
-            <span className="text-3xl">📊</span>
-            <div className="flex-1">
-              <h2 className="font-display text-base font-bold mb-0.5">
-                Reporte del{' '}
+          {/* ── Latest report summary ── */}
+          <div className="dash-anim-2" style={{
+            padding: '20px 24px', borderRadius: 20, marginBottom: 24,
+            background: 'linear-gradient(135deg, rgba(234,27,126,0.09) 0%, rgba(98,196,176,0.06) 100%)',
+            border: '1px solid rgba(233,30,140,0.22)',
+            backdropFilter: 'blur(16px)',
+            display: 'flex', alignItems: 'center', gap: 20,
+          }}>
+            <div style={{
+              width: 56, height: 56, borderRadius: 16, flexShrink: 0,
+              background: 'rgba(233,30,140,0.12)', border: '1px solid rgba(233,30,140,0.25)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26,
+            }}>
+              📊
+            </div>
+            <div style={{ flex: 1 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: '#f9a8d4', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>
+                Último reporte
+              </p>
+              <h2 style={{ fontSize: 16, fontWeight: 700, color: '#ffffff', marginBottom: 6, letterSpacing: '-0.02em' }}>
                 {new Date(latestReport!.report_date).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
               </h2>
-              <p className="text-xs" style={{ color: 'var(--muted)' }}>
-                {recommendations.length} recomendaciones ·{' '}
-                {highPriority.length > 0 ? <span style={{ color: 'var(--danger)' }}>{highPriority.length} de alta prioridad</span> : 'Todo en orden'} ·{' '}
-                {latestReport?.email_status === 'sent' ? '✅ Email enviado' : '⏳ Pendiente de envío'}
-              </p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                <span style={{ fontSize: 12, color: 'var(--muted)' }}>
+                  {recommendations.length} recomendaciones
+                </span>
+                {highPriority.length > 0 && (
+                  <>
+                    <span style={{ color: 'rgba(255,255,255,0.15)' }}>·</span>
+                    <span style={{ fontSize: 12, color: 'var(--danger)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--danger)', display: 'inline-block' }} />
+                      {highPriority.length} alta prioridad
+                    </span>
+                  </>
+                )}
+                <span style={{ color: 'rgba(255,255,255,0.15)' }}>·</span>
+                <span style={{ fontSize: 12, color: latestReport?.email_status === 'sent' ? 'var(--accent3)' : 'var(--muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <Mail size={11} />
+                  {latestReport?.email_status === 'sent' ? 'Email enviado' : 'Pendiente'}
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Análisis de la IA */}
+          {/* ── AI analysis ── */}
           {latestReport?.ai_analysis && (
-            <div className="card p-5 mb-6">
-              <h2 className="section-title mb-3">🤖 Análisis de la IA</h2>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
+            <div className="card p-6 mb-6 dash-anim-3">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                <div style={{
+                  width: 28, height: 28, borderRadius: 8,
+                  background: 'rgba(98,196,176,0.10)', border: '1px solid rgba(98,196,176,0.22)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14,
+                }}>🤖</div>
+                <h2 className="section-title">Análisis de la IA</h2>
+              </div>
+              <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.8 }}>
                 {latestReport.ai_analysis}
               </p>
             </div>
           )}
 
-          {/* Recomendaciones */}
+          {/* ── Recommendations ── */}
           {recommendations.length > 0 && (
-            <div className="mb-6">
-              <h2 className="section-title mb-4">Acciones recomendadas</h2>
+            <div className="mb-6 dash-anim-4">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                <Zap size={14} style={{ color: '#e91e8c' }} />
+                <h2 className="section-title">Acciones recomendadas</h2>
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 {recommendations.map((rec, i) => (
                   <RecommendationCard key={i} rec={rec} />
@@ -125,31 +189,28 @@ export default async function ReportsPage() {
             </div>
           )}
 
-          {/* Historial de reportes */}
-          <div className="card">
-            <div className="px-5 py-4 border-b" style={{ borderColor: 'var(--border)' }}>
+          {/* ── History table ── */}
+          <div className="card dash-anim-5">
+            <div className="flex items-center gap-2 px-5 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+              <BarChart2 size={14} style={{ color: '#62c4b0' }} />
               <h2 className="section-title">Historial de reportes</h2>
             </div>
             <table className="w-full">
               <thead>
-                <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(255,255,255,0.02)' }}>
-                  {['FECHA', 'RECOMENDACIONES', 'EMAIL', 'ESTADO'].map(h => (
-                    <th key={h} className="text-left px-5 py-3 text-[10px] font-bold tracking-wider uppercase"
-                        style={{ color: 'var(--muted)' }}>{h}</th>
-                  ))}
+                <tr className="table-head">
+                  {['FECHA', 'RECOMENDACIONES', 'ENVIADO A LAS', 'ESTADO'].map(h => <th key={h}>{h}</th>)}
                 </tr>
               </thead>
               <tbody>
                 {reports.map(r => (
-                  <tr key={r.id} className="border-b hover:bg-white/[0.02] transition-colors"
-                      style={{ borderColor: 'var(--border)' }}>
-                    <td className="px-5 py-3.5 text-sm font-medium">
+                  <tr key={r.id} className="table-row">
+                    <td className="px-5 py-3.5" style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.88)' }}>
                       {new Date(r.report_date).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </td>
-                    <td className="px-5 py-3.5 text-sm">
+                    <td className="px-5 py-3.5" style={{ fontSize: 13, color: 'var(--muted)' }}>
                       {(r.recommendations as Recommendation[]).length} acciones
                     </td>
-                    <td className="px-5 py-3.5 text-xs" style={{ color: 'var(--muted)' }}>
+                    <td className="px-5 py-3.5" style={{ fontSize: 12, color: 'var(--muted)' }}>
                       {r.email_sent_at
                         ? new Date(r.email_sent_at).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
                         : '—'}

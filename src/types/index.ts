@@ -1,15 +1,30 @@
 // src/types/index.ts
-// Tipos TypeScript para toda la aplicación
+
+export type UserRole = 'user' | 'admin' | 'super_admin'
+export type PlanType = 'free' | 'starter' | 'pro' | 'agency'
+export type StrategyType = 'TOFU' | 'MOFU' | 'BOFU'
 
 export interface Profile {
   id: string
   full_name: string | null
   company: string | null
-  plan: 'free' | 'pro' | 'agency'
+  plan: PlanType
+  role: UserRole
   report_email: string | null
   report_time: string
   report_active: boolean
   created_at: string
+  credits_total: number
+  credits_used: number
+  credits_reset_date: string | null
+}
+
+export interface CreditsInfo {
+  plan: PlanType
+  total: number
+  used: number
+  remaining: number
+  resetDate: string | null
 }
 
 export interface FbAccount {
@@ -24,6 +39,117 @@ export interface FbAccount {
   created_at: string
 }
 
+export type CampaignStatus = 'draft' | 'active' | 'paused' | 'completed' | 'error'
+export type CampaignObjective =
+  | 'OUTCOME_AWARENESS'
+  | 'OUTCOME_TRAFFIC'
+  | 'OUTCOME_ENGAGEMENT'
+  | 'OUTCOME_LEADS'
+  | 'OUTCOME_APP_PROMOTION'
+  | 'OUTCOME_SALES'
+  // legacy
+  | 'CONVERSIONS' | 'TRAFFIC' | 'REACH' | 'LEAD_GENERATION'
+
+// ── AI Targeting (shared) ──────────────────────────────────────────────────
+export interface AITargeting {
+  age_min: number
+  age_max: number
+  gender: 'all' | 'male' | 'female'
+  interests: Array<{ category: string; interest: string }>
+  geo: string
+}
+
+// ── Legacy AICopies (kept for backward compat with old campaigns) ──────────
+export interface AICopies {
+  headlines: string[]
+  primary_texts: string[]
+  primary_text?: string        // legacy
+  description: string
+  call_to_action: string
+  cta_type: string
+  targeting: AITargeting
+  recommended_placements: string[]
+  recommended_schedule: string
+  budget_tip: string
+  tone: string
+  audience_suggestion?: string // legacy
+  positioning?: string         // legacy
+}
+
+// ── New campaign structure types ───────────────────────────────────────────
+export interface EstimatedResults {
+  daily_reach: string
+  daily_clicks: string
+  daily_conversions: string
+  estimated_cpm: string
+  estimated_cpa: string
+  estimated_roas: string
+}
+
+export interface AdCopyItem {
+  name: string
+  headline: string
+  primary_text: string
+  description: string
+  call_to_action: string
+  cta_type?: string
+  copy_angle: 'emocional' | 'informativo' | 'urgencia' | 'social_proof'
+}
+
+export interface AdSetItem {
+  name: string
+  audience_type?: string
+  requires_pixel?: boolean
+  pixel_note?: string
+  targeting: {
+    age_min: number
+    age_max: number
+    genders: number[]
+    geo_locations: { countries: string[] }
+    interests: Array<{ id?: string; name: string }>
+    advantage_plus?: boolean
+    publisher_platforms: string[]
+    facebook_positions: string[]
+    instagram_positions: string[]
+  }
+  optimization_goal: string
+  billing_event: string
+  daily_budget: number  // in cents
+  ads: AdCopyItem[]
+}
+
+export interface CampaignStructure {
+  name: string
+  objective: string
+  ad_sets: AdSetItem[]
+}
+
+// ── AIStrategy: new format returned by generate-copies API ────────────────
+export interface AIStrategy {
+  // New strategy fields
+  strategy_type: StrategyType
+  recommended_budget: number
+  budget_justification: string
+  estimated_results: EstimatedResults
+  campaign: CampaignStructure
+  // Backward-compat fields (extracted from first ad set for old consumers)
+  headlines: string[]
+  primary_texts: string[]
+  description: string
+  call_to_action: string
+  cta_type: string
+  targeting: AITargeting
+  recommended_placements: string[]
+  recommended_schedule: string
+  budget_tip: string
+  tone: string
+  // Legacy optional fields (present in old AICopies stored in DB)
+  primary_text?: string
+  audience_suggestion?: string
+  positioning?: string
+}
+
+// ── Campaign ──────────────────────────────────────────────────────────────
 export interface Campaign {
   id: string
   user_id: string
@@ -38,25 +164,20 @@ export interface Campaign {
   product_description: string | null
   product_url: string | null
   target_audience: string | null
-  ai_copies: AICopies | null
+  ai_copies: AIStrategy | AICopies | null
   creative_urls: string[]
   metrics: CampaignMetrics
+  // New strategy fields
+  strategy_type: StrategyType | null
+  campaign_structure: CampaignStructure | null
+  estimated_results: EstimatedResults | null
+  meta_campaign_id: string | null
+  meta_status: string | null
+  destination_url: string | null
+  whatsapp_number: string | null
+  target_country: string | null
   created_at: string
   updated_at: string
-}
-
-export type CampaignStatus = 'draft' | 'active' | 'paused' | 'completed' | 'error'
-export type CampaignObjective = 'CONVERSIONS' | 'TRAFFIC' | 'REACH' | 'LEAD_GENERATION'
-
-export interface AICopies {
-  headlines: string[]         // 3 variantes de título
-  primary_text: string        // Texto principal del anuncio
-  description: string         // Descripción larga
-  call_to_action: string      // Texto del botón
-  cta_type: string            // SHOP_NOW, LEARN_MORE, SIGN_UP, etc.
-  audience_suggestion: string // Sugerencia de audiencia en texto
-  positioning: string         // Análisis del posicionamiento
-  tone: string                // Tono del mensaje
 }
 
 export interface CampaignMetrics {
@@ -102,6 +223,8 @@ export interface Recommendation {
 export interface BusinessProfile {
   id: string
   user_id: string
+  business_portfolio_id: string | null
+  business_portfolio_name: string | null
   selected_ad_account_id: string | null
   selected_ad_account_name: string | null
   pixel_id: string | null
@@ -127,14 +250,14 @@ export interface BusinessProfile {
   updated_at: string
 }
 
-// Para el formulario de creación de campaña
+// ── Form types ─────────────────────────────────────────────────────────────
 export interface CreateCampaignForm {
-  name: string
-  objective: CampaignObjective
-  daily_budget: number
   product_description: string
-  product_url: string
+  strategy_type: StrategyType
+  daily_budget: number
+  target_country: string
+  existing_copy: string
   target_audience: string
-  end_date?: string
-  fb_account_id?: string
+  destination_url: string
+  whatsapp_number: string
 }

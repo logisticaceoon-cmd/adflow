@@ -18,15 +18,17 @@ function Spinner() {
 
 export default function FacebookAssetsSection({ hasFbToken, initialData }: Props) {
   // Listas de opciones
-  const [adAccounts, setAdAccounts] = useState<MetaAsset[]>([])
-  const [pages,      setPages]      = useState<MetaAsset[]>([])
-  const [pixels,     setPixels]     = useState<MetaAsset[]>([])
-  const [igAccounts, setIgAccounts] = useState<MetaIG[]>([])
+  const [businesses,  setBusinesses]  = useState<MetaAsset[]>([])
+  const [adAccounts,  setAdAccounts]  = useState<MetaAsset[]>([])
+  const [pages,       setPages]       = useState<MetaAsset[]>([])
+  const [pixels,      setPixels]      = useState<MetaAsset[]>([])
+  const [igAccounts,  setIgAccounts]  = useState<MetaIG[]>([])
 
   // Loading por sección independiente
-  const [loadingBase,      setLoadingBase]      = useState(false)
-  const [loadingPixels,    setLoadingPixels]    = useState(false)
-  const [loadingInstagram, setLoadingInstagram] = useState(false)
+  const [loadingBase,        setLoadingBase]        = useState(false)
+  const [loadingAdAccounts,  setLoadingAdAccounts]  = useState(false)
+  const [loadingPixels,      setLoadingPixels]      = useState(false)
+  const [loadingInstagram,   setLoadingInstagram]   = useState(false)
 
   // Errores por sección independiente
   const [baseError,  setBaseError]  = useState('')
@@ -34,12 +36,14 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
   const [igError,    setIgError]    = useState('')
 
   // Guardar
-  const [saving,       setSaving]       = useState(false)
-  const [saved,        setSaved]        = useState(false)
-  const [saveError,    setSaveError]    = useState('')
+  const [saving,          setSaving]          = useState(false)
+  const [saved,           setSaved]           = useState(false)
+  const [saveError,       setSaveError]       = useState('')
   const [validationError, setValidationError] = useState('')
 
   const [form, setForm] = useState({
+    business_portfolio_id:    initialData?.business_portfolio_id    || '',
+    business_portfolio_name:  initialData?.business_portfolio_name  || '',
     selected_ad_account_id:   initialData?.selected_ad_account_id   || '',
     selected_ad_account_name: initialData?.selected_ad_account_name || '',
     pixel_id:                 initialData?.pixel_id                 || '',
@@ -54,8 +58,9 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
   useEffect(() => {
     if (!hasFbToken) return
     const params = new URLSearchParams()
-    if (initialData?.selected_ad_account_id) params.set('ad_account_id', initialData.selected_ad_account_id)
-    if (initialData?.fb_page_id)             params.set('page_id',       initialData.fb_page_id)
+    if (initialData?.business_portfolio_id)  params.set('business_id',    initialData.business_portfolio_id)
+    if (initialData?.selected_ad_account_id) params.set('ad_account_id',  initialData.selected_ad_account_id)
+    if (initialData?.fb_page_id)             params.set('page_id',        initialData.fb_page_id)
     loadInitialAssets(params.toString())
   }, [hasFbToken]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -67,15 +72,37 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
       const data = await res.json()
       if (data.error) { setBaseError(data.error); return }
 
-      setAdAccounts(data.adAccounts     || [])
-      setPages(data.pages               || [])
-      // Si la carga inicial ya trajo pixels/instagram, pre-populamos
-      if ((data.pixels || []).length > 0)              setPixels(data.pixels)
-      if ((data.instagramAccounts || []).length > 0)   setIgAccounts(data.instagramAccounts)
+      setBusinesses(data.businesses   || [])
+      setAdAccounts(data.adAccounts   || [])
+      setPages(data.pages             || [])
+      if ((data.pixels            || []).length > 0) setPixels(data.pixels)
+      if ((data.instagramAccounts || []).length > 0) setIgAccounts(data.instagramAccounts)
     } catch {
       setBaseError('Error al conectar con Meta API. Intentá recargar la página.')
     } finally {
       setLoadingBase(false)
+    }
+  }
+
+  async function loadAdAccounts(businessId: string) {
+    setLoadingAdAccounts(true)
+    setBaseError('')
+    try {
+      const res  = await fetch(`/api/facebook/meta-assets?business_id=${businessId}`)
+      const data = await res.json()
+      if (data.error) { setBaseError(`Error al cargar cuentas: ${data.error}`); return }
+      if (data.adAccountsError) {
+        setBaseError(`Meta API: ${data.adAccountsError}`)
+        return
+      }
+      setAdAccounts(data.adAccounts || [])
+      if ((data.adAccounts || []).length === 0) {
+        setBaseError('Este Business Portfolio no tiene cuentas publicitarias accesibles con tu token.')
+      }
+    } catch {
+      setBaseError('Error al cargar las cuentas publicitarias. Intentá de nuevo.')
+    } finally {
+      setLoadingAdAccounts(false)
     }
   }
 
@@ -101,7 +128,12 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
       const res  = await fetch(`/api/facebook/meta-assets?page_id=${pageId}`)
       const data = await res.json()
       if (data.error) { setIgError(`Error al cargar Instagram: ${data.error}`); return }
-      setIgAccounts(data.instagramAccounts || [])
+      const accounts = data.instagramAccounts || []
+      setIgAccounts(accounts)
+      if (accounts.length === 0) {
+        const detail = data.igDebugError ? ` (${data.igDebugError})` : ''
+        setIgError(`No se encontró una cuenta de Instagram vinculada a esta Página.${detail}`)
+      }
     } catch {
       setIgError('Error al cargar cuentas de Instagram. Intentá de nuevo.')
     } finally {
@@ -109,9 +141,26 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
     }
   }
 
+  function handlePortfolio(id: string) {
+    const biz = businesses.find(b => b.id === id)
+    setForm(p => ({
+      ...p,
+      business_portfolio_id:    id,
+      business_portfolio_name:  biz?.name || '',
+      selected_ad_account_id:   '',
+      selected_ad_account_name: '',
+      pixel_id:   '',
+      pixel_name: '',
+    }))
+    setAdAccounts([])
+    setPixels([])
+    setBaseError('')
+    setValidationError('')
+    if (id) loadAdAccounts(id)
+  }
+
   function handleAdAccount(id: string) {
     const account = adAccounts.find(a => a.id === id)
-    // Solo limpia pixel — page e instagram se mantienen intactos
     setForm(p => ({
       ...p,
       selected_ad_account_id:   id,
@@ -133,7 +182,6 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
 
   function handlePage(id: string) {
     const page = pages.find(p => p.id === id)
-    // Solo limpia instagram — ad account y pixel se mantienen intactos
     setForm(p => ({
       ...p,
       fb_page_id:   id,
@@ -157,7 +205,6 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
     setSaveError('')
     setValidationError('')
 
-    // Validación
     if (!form.selected_ad_account_id) {
       setValidationError('Seleccioná una Ad Account antes de guardar.')
       return
@@ -223,12 +270,35 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
         <form onSubmit={save} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
 
+            {/* Business Portfolio */}
+            <div className="col-span-2">
+              <label className="label">
+                <span className="flex items-center gap-1.5">
+                  Business Portfolio
+                  {loadingAdAccounts && <Spinner />}
+                </span>
+              </label>
+              <select className="input-field" value={form.business_portfolio_id}
+                onChange={e => handlePortfolio(e.target.value)}>
+                <option value="">— Sin portfolio (cuentas personales) —</option>
+                {businesses.map(b => (
+                  <option key={b.id} value={b.id}>{b.name}</option>
+                ))}
+              </select>
+              <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>
+                Opcional. Si tus cuentas están bajo un Business Manager, seleccionalo para filtrar.
+              </p>
+            </div>
+
             {/* Ad Account */}
             <div>
               <label className="label">Ad Account *</label>
               <select className="input-field" value={form.selected_ad_account_id}
+                disabled={loadingAdAccounts}
                 onChange={e => handleAdAccount(e.target.value)}>
-                <option value="">— Seleccioná una cuenta —</option>
+                <option value="">
+                  {loadingAdAccounts ? 'Cargando cuentas...' : '— Seleccioná una cuenta —'}
+                </option>
                 {adAccounts.map(a => (
                   <option key={a.id} value={a.id}>{a.name} ({a.id})</option>
                 ))}
