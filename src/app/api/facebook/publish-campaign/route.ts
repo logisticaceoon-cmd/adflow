@@ -275,15 +275,29 @@ export async function POST(req: NextRequest) {
   const token = conn.access_token
 
   // ── Resolve campaign structure ────────────────────────────────────────────
-  const structure: CampaignStructure | null =
+  const rawStructure: CampaignStructure | null =
     campaign.campaign_structure || (campaign.ai_copies as any)?.campaign || null
 
-  if (!structure?.ad_sets?.length) {
+  // Guard against empty objects: `{}` is truthy but has no ad_sets
+  const structure = rawStructure?.ad_sets?.length ? rawStructure : null
+
+  if (!structure) {
     return NextResponse.json({
       error: 'La campaña no tiene estructura de anuncios. Generá los copies con IA antes de publicar.',
       code:  'NO_STRUCTURE',
     }, { status: 400 })
   }
+
+  // ── Diagnostic log ────────────────────────────────────────────────────────
+  console.log('[publish-campaign] Full structure:', JSON.stringify({
+    campaign_structure: !!campaign.campaign_structure,
+    ai_copies_campaign: !!(campaign.ai_copies as any)?.campaign,
+    ad_sets_count: structure.ad_sets.length,
+    first_adset_ads_count: structure.ad_sets[0]?.ads?.length ?? 0,
+    daily_budget: campaign.daily_budget,
+    objective: campaign.objective,
+    strategy_type: campaign.strategy_type,
+  }, null, 2))
 
   // ── Link URL ──────────────────────────────────────────────────────────────
   let linkUrl = campaign.destination_url?.trim() || ''
@@ -339,13 +353,17 @@ export async function POST(req: NextRequest) {
     }
 
     // ── Budget per ad set (cents, ABO always) ─────────────────────────────
+    // campaign.daily_budget is in the user's currency (e.g. 40000 COP, 15 USD).
+    // Meta expects daily_budget in CENTS of that currency.
+    // We always derive from campaign.daily_budget ÷ numAdSets × 100.
+    // The AI-generated adSet.daily_budget is unreliable (sometimes in cents,
+    // sometimes in currency units, sometimes fantasy numbers) — we ignore it.
     const numAdSets = structure.ad_sets.length
-    const perAdSetBudgetCents = structure.ad_sets.map((adSet: AdSetItem) => {
-      const cents = adSet.daily_budget > 100
-        ? adSet.daily_budget
-        : Math.round((campaign.daily_budget / numAdSets) * 100)
-      return Math.max(cents, 100)
-    })
+    const perAdSetCents = Math.max(
+      Math.round((campaign.daily_budget / numAdSets) * 100),
+      100, // Meta minimum: 100 cents = 1 unit of currency
+    )
+    const perAdSetBudgetCents = structure.ad_sets.map(() => perAdSetCents)
 
     // start_time: now (Meta requires RFC-3339 with timezone)
     const startTimeISO = new Date().toISOString()
@@ -463,7 +481,16 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      console.log(`[publish-campaign] Creating ad set [${adSetIdx + 1}/${numAdSets}]: "${adSet.name}" (${optimizationGoal}, ${perAdSetBudgetCents[adSetIdx]} cents/day, ${countries.join(',')})`)
+      console.log(`[publish-campaign] Creating ad set [${adSetIdx + 1}/${numAdSets}]: "${adSet.name}"`, JSON.stringify({
+        optimization_goal: optimizationGoal,
+        billing_event:     billingEvent,
+        daily_budget:      perAdSetBudgetCents[adSetIdx],
+        countries,
+        age:               `${targetingSpec.age_min}-${targetingSpec.age_max}`,
+        genders:           targetingSpec.genders ?? 'all',
+        interests_count:   validInterests.length,
+        promoted_object:   promotedObject ?? 'none',
+      }))
 
       let adSetId: string
       try {
@@ -520,10 +547,6 @@ export async function POST(req: NextRequest) {
             // the creative will be created as a link ad with the page's default image.
           }
 
-          if (biz?.instagram_account_id) {
-            linkData.instagram_actor_id = biz.instagram_account_id
-          }
-
           // ── Creative name must be UNIQUE within the ad account ──────────
           // Bug: AI generates the same names ("Ad — Ángulo 1") for every ad set.
           // Adding the ad set name prefix makes each creative globally unique.
@@ -531,9 +554,18 @@ export async function POST(req: NextRequest) {
 
           console.log(`[publish-campaign]   Creating creative [${adIdx + 1}/${adsInSet.length}]: "${uniqueCreativeName}"`)
 
+          // instagram_actor_id belongs in object_story_spec, NOT inside link_data
+          const objectStorySpec: Record<string, unknown> = {
+            page_id: pageId,
+            link_data: linkData,
+          }
+          if (biz?.instagram_account_id) {
+            objectStorySpec.instagram_actor_id = biz.instagram_account_id
+          }
+
           const creative = await graphPost(`/${adAccountId}/adcreatives`, token, {
             name:              uniqueCreativeName,
-            object_story_spec: { page_id: pageId, link_data: linkData },
+            object_story_spec: objectStorySpec,
           })
 
           creativeIds.push(creative.id)
