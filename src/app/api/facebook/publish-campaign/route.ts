@@ -80,25 +80,35 @@ function toCountryCode(s: string): string {
 
 // ── CTA label → Meta CTA type ──────────────────────────────────────────────
 const CTA_MAP: Record<string, string> = {
-  'comprar ahora': 'SHOP_NOW', comprar: 'SHOP_NOW', 'shop now': 'SHOP_NOW',
+  'comprar ahora': 'SHOP_NOW', comprar: 'SHOP_NOW', compra: 'SHOP_NOW', 'shop now': 'SHOP_NOW',
+  'finalizar compra': 'SHOP_NOW', 'completar compra': 'SHOP_NOW', 'completa tu compra': 'SHOP_NOW',
+  'agregar al carrito': 'SHOP_NOW', 'añadir al carrito': 'SHOP_NOW',
+  'ver en la tienda': 'SHOP_NOW', 'ir a la tienda': 'SHOP_NOW', 'visitar tienda': 'SHOP_NOW',
+  'ver producto': 'SHOP_NOW', 'ver productos': 'SHOP_NOW',
+  'proteger ahora': 'SHOP_NOW', 'pedir ahora': 'SHOP_NOW', 'ordenar ahora': 'SHOP_NOW',
   'más información': 'LEARN_MORE', 'mas informacion': 'LEARN_MORE', 'más info': 'LEARN_MORE', 'learn more': 'LEARN_MORE',
+  'saber más': 'LEARN_MORE', 'conocer más': 'LEARN_MORE', 'conocé más': 'LEARN_MORE',
   contactar: 'CONTACT_US', contactarnos: 'CONTACT_US', 'contact us': 'CONTACT_US',
   'enviar mensaje': 'MESSAGE_PAGE', mensaje: 'MESSAGE_PAGE',
-  whatsapp: 'WHATSAPP_MESSAGE',
+  whatsapp: 'WHATSAPP_MESSAGE', 'escribinos': 'WHATSAPP_MESSAGE',
   registrarse: 'SIGN_UP', registrarme: 'SIGN_UP', registrarte: 'SIGN_UP', 'sign up': 'SIGN_UP',
-  'obtener oferta': 'GET_OFFER', 'get offer': 'GET_OFFER',
+  'obtener oferta': 'GET_OFFER', 'get offer': 'GET_OFFER', 'ver oferta': 'GET_OFFER',
   'ver más': 'SEE_MORE', 'see more': 'SEE_MORE',
   descargar: 'DOWNLOAD', download: 'DOWNLOAD',
   reservar: 'BOOK_TRAVEL', 'reservar ahora': 'BOOK_TRAVEL',
   solicitar: 'APPLY_NOW', 'solicitar ahora': 'APPLY_NOW', aplicar: 'APPLY_NOW',
+  suscribirse: 'SUBSCRIBE', 'suscribirme': 'SUBSCRIBE', subscribe: 'SUBSCRIBE',
 }
 
-function toCTAType(label: string, ctaType?: string): string {
+function toCTAType(label: string, ctaType?: string, objective?: string): string {
   if (ctaType && /^[A-Z_]+$/.test(ctaType)) return ctaType
-  const lower = label.toLowerCase()
+  const lower = (label || '').toLowerCase()
   for (const [key, val] of Object.entries(CTA_MAP)) {
     if (lower.includes(key)) return val
   }
+  // Intelligent fallback based on campaign objective
+  if (objective === 'OUTCOME_SALES' || objective === 'CONVERSIONS') return 'SHOP_NOW'
+  if (objective === 'OUTCOME_LEADS' || objective === 'LEAD_GENERATION') return 'SIGN_UP'
   return 'LEARN_MORE'
 }
 
@@ -422,13 +432,21 @@ export async function POST(req: NextRequest) {
 
       const targetingSpec: Record<string, unknown> = {
         geo_locations: { countries },
-        age_min: t.age_min || 18,
-        age_max: t.age_max || 65,
+        age_min: t.age_min || campaign.target_age_min || 18,
+        age_max: t.age_max || campaign.target_age_max || 65,
       }
 
+      // Gender: Meta uses 1=male, 2=female. 0 or omitted = all.
+      // The AI sometimes generates wrong values, so we cross-check with
+      // campaign.target_gender (from the user's form: "male"/"female"/"all").
+      const formGender = campaign.target_gender as string | null
       if (t.genders?.length && !t.genders.includes(0)) {
         targetingSpec.genders = t.genders
       }
+      // Override from form if AI didn't set it or set it wrong
+      if (formGender === 'female') targetingSpec.genders = [2]
+      else if (formGender === 'male') targetingSpec.genders = [1]
+      else if (formGender === 'all' && targetingSpec.genders) delete targetingSpec.genders
 
       // Only include interests that have a valid numeric Meta ID
       const validInterests = (t.interests || []).filter(
@@ -505,7 +523,7 @@ export async function POST(req: NextRequest) {
         const ad = adsInSet[adIdx]
 
         try {
-          const ctaType = toCTAType(ad.call_to_action || '', ad.cta_type)
+          const ctaType = toCTAType(ad.call_to_action || '', ad.cta_type, campaignObjective)
 
           const linkData: Record<string, unknown> = {
             message:     ad.primary_text || 'Conocé más',
