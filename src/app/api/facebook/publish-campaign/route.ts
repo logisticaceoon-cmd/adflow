@@ -102,59 +102,49 @@ function toCTAType(label: string, ctaType?: string): string {
   return 'LEARN_MORE'
 }
 
-// ── Objective → optimization_goal mapping ─────────────────────────────────
-const OBJECTIVE_TO_OPTIMIZATION_GOAL: Record<string, string> = {
-  OUTCOME_AWARENESS:  'REACH',
-  OUTCOME_TRAFFIC:    'LINK_CLICKS',
-  OUTCOME_ENGAGEMENT: 'POST_ENGAGEMENT',
-  OUTCOME_LEADS:      'LEAD_GENERATION',
-  OUTCOME_SALES:      'OFFSITE_CONVERSIONS',
-  CONVERSIONS:        'OFFSITE_CONVERSIONS',
-  TRAFFIC:            'LINK_CLICKS',
-  REACH:              'REACH',
-  LEAD_GENERATION:    'LEAD_GENERATION',
-}
+// ── Resolve optimization_goal + promoted_object from campaign objective ────
+// We ignore the AI-generated optimization_goal — it's unreliable.
+// This mapping is the safe, Meta API v20-compliant set.
+function resolveOptGoalForObjective(
+  campaignObjective: string,
+  hasPixel: boolean,
+  pixelId: string | null,
+): { optimization_goal: string; promoted_object: Record<string, unknown> | null } {
+  switch (campaignObjective) {
+    case 'OUTCOME_AWARENESS':
+    case 'REACH':
+      return { optimization_goal: 'REACH', promoted_object: null }
 
-const OBJECTIVE_VALID_OPTIMIZATIONS: Record<string, string[]> = {
-  OUTCOME_AWARENESS:  ['REACH', 'IMPRESSIONS', 'THRUPLAY', 'TWO_SECOND_CONTINUOUS_VIDEO_VIEWS'],
-  OUTCOME_TRAFFIC:    ['LINK_CLICKS', 'LANDING_PAGE_VIEWS'],
-  OUTCOME_ENGAGEMENT: ['POST_ENGAGEMENT', 'PAGE_LIKES', 'MESSAGES', 'CONVERSATIONS', 'LINK_CLICKS'],
-  OUTCOME_LEADS:      ['LEAD_GENERATION', 'QUALITY_LEAD', 'LINK_CLICKS', 'CONVERSATIONS'],
-  OUTCOME_SALES:      ['OFFSITE_CONVERSIONS', 'LINK_CLICKS', 'LANDING_PAGE_VIEWS'],
-  CONVERSIONS:        ['OFFSITE_CONVERSIONS', 'LINK_CLICKS'],
-  TRAFFIC:            ['LINK_CLICKS', 'LANDING_PAGE_VIEWS'],
-  REACH:              ['REACH', 'IMPRESSIONS'],
-  LEAD_GENERATION:    ['LEAD_GENERATION', 'LINK_CLICKS'],
-}
+    case 'OUTCOME_TRAFFIC':
+    case 'TRAFFIC':
+      return { optimization_goal: 'LINK_CLICKS', promoted_object: null }
 
-const OPTIMIZATION_TO_BILLING_EVENT: Record<string, string> = {
-  REACH:                             'IMPRESSIONS',
-  IMPRESSIONS:                       'IMPRESSIONS',
-  LINK_CLICKS:                       'IMPRESSIONS',
-  LANDING_PAGE_VIEWS:                'IMPRESSIONS',
-  POST_ENGAGEMENT:                   'POST_ENGAGEMENT',
-  PAGE_LIKES:                        'IMPRESSIONS',
-  MESSAGES:                          'IMPRESSIONS',
-  CONVERSATIONS:                     'IMPRESSIONS',
-  LEAD_GENERATION:                   'IMPRESSIONS',
-  QUALITY_LEAD:                      'IMPRESSIONS',
-  OFFSITE_CONVERSIONS:               'IMPRESSIONS',
-  THRUPLAY:                          'THRUPLAY',
-  TWO_SECOND_CONTINUOUS_VIDEO_VIEWS: 'IMPRESSIONS',
-}
+    case 'OUTCOME_ENGAGEMENT':
+      return { optimization_goal: 'LINK_CLICKS', promoted_object: null }
 
-function resolveOptimizationGoal(adSetGoal: string | undefined, campaignObjective: string): string {
-  const aiGoal = adSetGoal || ''
-  const valid  = OBJECTIVE_VALID_OPTIMIZATIONS[campaignObjective] || []
-  if (aiGoal && valid.includes(aiGoal)) return aiGoal
-  return OBJECTIVE_TO_OPTIMIZATION_GOAL[campaignObjective] || 'LINK_CLICKS'
-}
+    case 'OUTCOME_LEADS':
+    case 'LEAD_GENERATION':
+      if (hasPixel && pixelId) {
+        return {
+          optimization_goal: 'LEAD_GENERATION',
+          promoted_object: { pixel_id: pixelId, custom_event_type: 'LEAD' },
+        }
+      }
+      return { optimization_goal: 'LINK_CLICKS', promoted_object: null }
 
-function resolveBillingEvent(optimizationGoal: string, adSetBillingEvent?: string): string {
-  if (adSetBillingEvent && OPTIMIZATION_TO_BILLING_EVENT[optimizationGoal] === adSetBillingEvent) {
-    return adSetBillingEvent
+    case 'OUTCOME_SALES':
+    case 'CONVERSIONS':
+      if (hasPixel && pixelId) {
+        return {
+          optimization_goal: 'OFFSITE_CONVERSIONS',
+          promoted_object: { pixel_id: pixelId, custom_event_type: 'PURCHASE' },
+        }
+      }
+      return { optimization_goal: 'LINK_CLICKS', promoted_object: null }
+
+    default:
+      return { optimization_goal: 'LINK_CLICKS', promoted_object: null }
   }
-  return OPTIMIZATION_TO_BILLING_EVENT[optimizationGoal] || 'IMPRESSIONS'
 }
 
 // ── Graph API POST helper ──────────────────────────────────────────────────
@@ -380,16 +370,11 @@ export async function POST(req: NextRequest) {
 
     // ── 1. Create Campaign ─────────────────────────────────────────────────
     const campaignPayload: Record<string, unknown> = {
-      name:                            structure.name || campaign.name,
-      objective:                       campaignObjective,
-      status:                          'PAUSED',
-      special_ad_categories:           [],
-      is_adset_budget_sharing_enabled: false,
-    }
-
-    // Meta API v20+ requires bid_strategy for conversion-based objectives
-    if (['OUTCOME_SALES', 'OUTCOME_LEADS'].includes(campaignObjective)) {
-      campaignPayload.bid_strategy = 'LOWEST_COST_WITHOUT_CAP'
+      name:                  structure.name || campaign.name,
+      objective:             campaignObjective,
+      status:                'PAUSED',
+      special_ad_categories: [],
+      bid_strategy:          'LOWEST_COST_WITHOUT_CAP',
     }
 
     console.log('[publish-campaign] Creating campaign:', campaignPayload.name)
@@ -463,55 +448,29 @@ export async function POST(req: NextRequest) {
         console.warn(`[publish-campaign] AdSet "${adSet.name}": invalid placements → automatic`)
       }
 
-      // ── 3. Resolve optimization_goal ───────────────────────────────────
-      let optimizationGoal = resolveOptimizationGoal(adSet.optimization_goal, campaignObjective)
-      let promotedObject: Record<string, unknown> | null = null
-
-      if (optimizationGoal === 'OFFSITE_CONVERSIONS') {
-        if (pixelId) {
-          promotedObject = { pixel_id: pixelId, custom_event_type: 'PURCHASE' }
-        } else {
-          optimizationGoal = 'LINK_CLICKS'
-          console.warn(`[publish-campaign] AdSet "${adSet.name}": OFFSITE_CONVERSIONS→LINK_CLICKS (no pixel)`)
-        }
-      } else if (optimizationGoal === 'LEAD_GENERATION' && pixelId) {
-        promotedObject = { pixel_id: pixelId, custom_event_type: 'LEAD' }
-      } else if (optimizationGoal === 'VALUE') {
-        optimizationGoal = pixelId ? 'OFFSITE_CONVERSIONS' : 'LINK_CLICKS'
-        if (pixelId) promotedObject = { pixel_id: pixelId, custom_event_type: 'PURCHASE' }
-        console.warn(`[publish-campaign] AdSet "${adSet.name}": VALUE→${optimizationGoal}`)
-      }
-
-      const billingEvent = resolveBillingEvent(optimizationGoal, adSet.billing_event)
+      // ── 3. Resolve optimization_goal (deterministic, ignores AI) ───────
+      const { optimization_goal: optimizationGoal, promoted_object: promotedObject } =
+        resolveOptGoalForObjective(campaignObjective, !!pixelId, pixelId)
 
       // ── 4. Build ad set payload ─────────────────────────────────────────
       const adSetPayload: Record<string, unknown> = {
         name:              adSet.name,
         campaign_id:       metaCampaignId,
         daily_budget:      perAdSetBudgetCents[adSetIdx],
-        billing_event:     billingEvent,
+        billing_event:     'IMPRESSIONS',
         optimization_goal: optimizationGoal,
         targeting:         targetingSpec,
         status:            'PAUSED',
         start_time:        startTimeISO,
+        bid_strategy:      'LOWEST_COST_WITHOUT_CAP',
       }
 
       if (promotedObject) adSetPayload.promoted_object = promotedObject
 
-      // Meta API v20+ requires bid_strategy for conversion-based objectives
-      if (['OUTCOME_SALES', 'OUTCOME_LEADS'].includes(campaignObjective) && optimizationGoal !== 'LINK_CLICKS') {
-        adSetPayload.bid_strategy = 'LOWEST_COST_WITHOUT_CAP'
-      }
-
-      if (campaignObjective === 'OUTCOME_ENGAGEMENT' || campaignObjective === 'OUTCOME_TRAFFIC') {
-        if (optimizationGoal === 'MESSAGES' || optimizationGoal === 'CONVERSATIONS') {
-          adSetPayload.destination_type = isWhatsAppCampaign ? 'WHATSAPP' : 'MESSENGER'
-        }
-      }
-
       console.log(`[publish-campaign] Creating ad set [${adSetIdx + 1}/${numAdSets}]: "${adSet.name}"`, JSON.stringify({
         optimization_goal: optimizationGoal,
-        billing_event:     billingEvent,
+        billing_event:     'IMPRESSIONS',
+        bid_strategy:      'LOWEST_COST_WITHOUT_CAP',
         daily_budget:      perAdSetBudgetCents[adSetIdx],
         countries,
         age:               `${targetingSpec.age_min}-${targetingSpec.age_max}`,
@@ -549,8 +508,8 @@ export async function POST(req: NextRequest) {
           const ctaType = toCTAType(ad.call_to_action || '', ad.cta_type)
 
           const linkData: Record<string, unknown> = {
-            message:     ad.primary_text || '',
-            name:        ad.headline     || '',
+            message:     ad.primary_text || 'Conocé más',
+            name:        ad.headline     || 'Ver ahora',
             description: ad.description  || '',
             link:        linkUrl,
             call_to_action: {
