@@ -379,13 +379,13 @@ export async function POST(req: NextRequest) {
     })
 
     // ── 1. Create Campaign ─────────────────────────────────────────────────
+    // ABO mode: budget is at ad set level, NOT campaign level.
+    // bid_strategy goes on each ad set, not the campaign.
     const campaignPayload: Record<string, unknown> = {
-      name:                            structure.name || campaign.name,
-      objective:                       campaignObjective,
-      status:                          'PAUSED',
-      special_ad_categories:           [],
-      bid_strategy:                    'LOWEST_COST_WITHOUT_CAP',
-      is_adset_budget_sharing_enabled: false,
+      name:                  structure.name || campaign.name,
+      objective:             campaignObjective,
+      status:                'PAUSED',
+      special_ad_categories: [],
     }
 
     console.log('[publish-campaign] Creating campaign:', campaignPayload.name)
