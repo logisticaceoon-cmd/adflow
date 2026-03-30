@@ -201,6 +201,25 @@ export async function POST(req: NextRequest) {
   if (!conn?.access_token) return NextResponse.json({ error: 'Facebook no está conectado. Conectá tu cuenta en Configuración.', code: 'NO_FB_TOKEN' }, { status: 400 })
   const token = conn.access_token
 
+  // ── Verify token has permissions on the selected ad account ─────────────
+  try {
+    const verifyRes = await fetch(`${GRAPH}/${adAccountId}?fields=name,account_status,currency&access_token=${token}`)
+    const verifyData = await verifyRes.json()
+    if (verifyData.error) {
+      console.error('[publish-campaign] Token verification failed:', JSON.stringify(verifyData.error))
+      const errCode = verifyData.error.code
+      const errMsg = errCode === 190
+        ? 'El token de Facebook expiró o no es válido. Reconectá tu cuenta de Facebook en Configuración.'
+        : errCode === 10 || errCode === 200 || errCode === 275
+          ? `Tu token de Facebook no tiene permisos sobre la cuenta publicitaria ${adAccountId}. Reconectá Facebook en Configuración y asegurate de dar acceso a esa cuenta.`
+          : `Error al verificar permisos de Facebook: ${verifyData.error.message}`
+      return NextResponse.json({ error: errMsg, code: 'TOKEN_INVALID' }, { status: 400 })
+    }
+    console.log('[publish-campaign] ✓ Token verified for ad account:', verifyData.name, '| currency:', verifyData.currency, '| status:', verifyData.account_status)
+  } catch (err: any) {
+    console.error('[publish-campaign] Token verification exception:', err.message)
+  }
+
   // ── Resolve campaign structure ────────────────────────────────────────────
   const rawStructure: CampaignStructure | null =
     campaign.campaign_structure || (campaign.ai_copies as any)?.campaign || null
