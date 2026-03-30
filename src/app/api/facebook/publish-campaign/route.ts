@@ -329,10 +329,8 @@ export async function POST(req: NextRequest) {
 
       // ════════════════════════════════════════════════════════════════════
       // 3. CREATE AD SET
-      //    - daily_budget in cents of user currency
-      //    - billing_event: always IMPRESSIONS
-      //    - NO bid_strategy (not a valid ad set field; Meta defaults to
-      //      lowest cost automatically for ABO)
+      //    Meta API v20 requires bid_strategy on ad sets for ABO mode.
+      //    LOWEST_COST_WITHOUT_CAP = Meta optimizes for lowest cost per result.
       // ════════════════════════════════════════════════════════════════════
       const adSetPayload: Record<string, unknown> = {
         name:              adSet.name,
@@ -340,6 +338,7 @@ export async function POST(req: NextRequest) {
         daily_budget:      perAdSetCents,
         billing_event:     'IMPRESSIONS',
         optimization_goal: optimization_goal,
+        bid_strategy:      'LOWEST_COST_WITHOUT_CAP',
         targeting:         targetingSpec,
         status:            'PAUSED',
         start_time:        startTimeISO,
