@@ -418,6 +418,7 @@ export async function POST(req: NextRequest) {
     const isShellOnly = adSetIds.length === 0
     const isPartial = errors.length > 0 && adSetIds.length > 0
 
+    // Save results + errors in metrics JSON for debugging (survives Vercel log truncation)
     await supabase.from('campaigns').update({
       meta_campaign_id:  metaCampaignId,
       meta_adset_ids:    adSetIds,
@@ -425,6 +426,7 @@ export async function POST(req: NextRequest) {
       meta_creative_ids: creativeIds,
       meta_status:       isShellOnly ? 'ERROR' : isPartial ? 'PARTIAL' : 'PAUSED',
       status:            isShellOnly ? 'error' : 'active',
+      metrics:           { publish_errors: errors, publish_date: new Date().toISOString(), adsets_attempted: numAdSets, adsets_created: adSetIds.length, ads_created: adIds.length },
     }).eq('id', campaign_id)
 
     console.log('[publish-campaign] ✓ DONE:', { adSets: adSetIds.length, ads: adIds.length, errors: errors.length })
