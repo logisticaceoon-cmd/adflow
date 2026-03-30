@@ -316,7 +316,7 @@ export default function CreateCampaignPage() {
       const ext  = file.name.split('.').pop() || 'jpg'
       const path = `${user.id}/${campaign.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
       const { error: uploadErr } = await supabase.storage
-        .from('campaign-creatives').upload(path, file, { upsert: false })
+        .from('campaign-creatives').upload(path, file, { upsert: false, contentType: file.type })
       if (!uploadErr) {
         const { data: { publicUrl } } = supabase.storage.from('campaign-creatives').getPublicUrl(path)
         const { data: existing } = await supabase.from('campaigns').select('creative_urls').eq('id', campaign.id).single()
