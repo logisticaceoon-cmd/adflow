@@ -16,7 +16,7 @@ import StepStrategy   from '@/components/campaign/StepStrategy'
 import StepContent    from '@/components/campaign/StepContent'
 import StepReview     from '@/components/campaign/StepReview'
 
-const STEPS = ['Esencial', 'Diagnóstico', 'Estrategia', 'Contenido', 'Revisión IA', '¡Listo!']
+const STEPS = ['Intención', 'Diagnóstico', 'Estrategia', 'Contenido', 'Revisión IA', '¡Listo!']
 
 export default function CreateCampaignPage() {
   const router = useRouter()
@@ -431,12 +431,14 @@ export default function CreateCampaignPage() {
 
       {/* Header */}
       <div className="mb-8">
-        <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#e91e8c', marginBottom: 6 }}>
-          Inteligencia artificial · AdFlow
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#f9a8d4', marginBottom: 8 }}>
+          Estratega digital · AdFlow
         </p>
-        <h1 className="page-title mb-1.5">Crear campaña con IA ✨</h1>
-        <p style={{ fontSize: 13, color: 'var(--muted)' }}>
-          Describí tu negocio y la IA diseña una estrategia completa lista para publicar en Meta
+        <h1 style={{ fontFamily: 'Syne, sans-serif', fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.03em', lineHeight: 1.1 }}>
+          Diseñá tu próxima campaña ✨
+        </h1>
+        <p style={{ fontSize: 14, color: 'var(--muted)', maxWidth: 540, lineHeight: 1.55 }}>
+          Te guiamos paso a paso para que termines con una estrategia completa lista para publicar en Meta. Sin formularios eternos, sin jerga técnica.
         </p>
         {pixelAnalysis && !noPixelConfigured && (
           <div style={{

@@ -33,8 +33,21 @@ export default function StepStrategy({
       <style>{`
         @keyframes stratCardIn { from { opacity: 0; transform: translateY(14px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
         .strat-card { animation: stratCardIn 0.4s cubic-bezier(0.16,1,0.3,1) both; }
-        .strat-card:hover { transform: translateY(-4px); transition: transform 0.2s ease; }
+        .strat-card:hover:not(:disabled) { transform: translateY(-4px); transition: transform 0.2s ease; }
       `}</style>
+
+      {/* Step header */}
+      <div>
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#f9a8d4', marginBottom: 8 }}>
+          Paso 3 de 5 · Estrategia
+        </p>
+        <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 6, letterSpacing: '-0.02em' }}>
+          Tu estrategia recomendada
+        </h2>
+        <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+          Basada en tu diagnóstico y el nivel actual de tu pixel
+        </p>
+      </div>
 
       {/* Diagnosis result banner */}
       <div style={{ borderRadius: 16, padding: '16px 20px', background: 'linear-gradient(135deg, rgba(233,30,140,0.10), rgba(98,196,176,0.07))', border: '1px solid rgba(233,30,140,0.25)' }}>

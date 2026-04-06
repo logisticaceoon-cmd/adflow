@@ -37,13 +37,31 @@ export default function StepContent({
 
   return (
     <div className="space-y-5">
+      {/* Step header */}
+      <div>
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#f9a8d4', marginBottom: 8 }}>
+          Paso 4 de 5 · Contenido
+        </p>
+        <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 6, letterSpacing: '-0.02em' }}>
+          Subí tus creativos
+        </h2>
+        <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+          Las imágenes y videos que va a usar la IA para diseñar tus anuncios. Cuanto mejor el material, mejor el resultado.
+        </p>
+      </div>
+
       {/* Media upload card */}
       <div style={{
         borderRadius: 18, padding: 22,
         background: 'linear-gradient(160deg, rgba(18,4,10,0.92) 0%, rgba(12,3,7,0.96) 100%)',
         border: '1px solid rgba(255,255,255,0.09)',
       }}>
-        <h2 className="section-title mb-5">🎨 Materiales creativos</h2>
+        <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
+          🎨 Materiales creativos
+        </h3>
+        <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 16 }}>
+          Arrastrá los archivos o hacé click para seleccionarlos
+        </p>
 
         {/* Drop zone */}
         <div
@@ -136,14 +154,17 @@ export default function StepContent({
 
       {/* Optional extras */}
       <div style={{
-        borderRadius: 18, padding: 20,
+        borderRadius: 18, padding: 22,
         background: 'linear-gradient(160deg, rgba(18,4,10,0.92) 0%, rgba(12,3,7,0.96) 100%)',
         border: '1px solid rgba(255,255,255,0.09)',
       }}>
-        <h2 className="section-title mb-4">
+        <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
           ✏️ Información adicional
-          <span style={{ fontWeight: 400, color: 'var(--muted)', fontSize: 12, marginLeft: 6 }}>(opcional)</span>
-        </h2>
+          <span style={{ fontWeight: 400, color: 'var(--muted)', fontSize: 11, marginLeft: 4 }}>(opcional)</span>
+        </h3>
+        <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 16 }}>
+          Si tenés contexto extra que pueda ayudar a la IA, sumalo acá
+        </p>
         <div className="space-y-4">
           <div>
             <label className="label">Copy o mensaje previo</label>
