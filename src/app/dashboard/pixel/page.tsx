@@ -1,11 +1,15 @@
 'use client'
-// src/app/dashboard/pixel/page.tsx — Pixel dashboard
+// src/app/dashboard/pixel/page.tsx — Mi Pixel: progress, gamification, growth profile
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { RefreshCw } from 'lucide-react'
 import LevelBadge from '@/components/dashboard/LevelBadge'
-import LevelProgress from '@/components/dashboard/LevelProgress'
+import LevelMap from '@/components/dashboard/LevelMap'
+import ScoreCard from '@/components/dashboard/ScoreCard'
+import FunnelExplained from '@/components/dashboard/FunnelExplained'
+import CapabilitiesCard from '@/components/dashboard/CapabilitiesCard'
+import AchievementsWall from '@/components/dashboard/AchievementsWall'
 import GrowthTimeline from '@/components/dashboard/GrowthTimeline'
 
 interface PixelEvents {
@@ -30,20 +34,39 @@ interface PixelAnalysisRow {
   analyzed_at: string
 }
 
-const LEVEL_INFO: Record<number, { color: string; emoji: string; nextReq: string }> = {
-  0: { color: '#ef4444', emoji: '🌱', nextReq: '100 PageView en 30 días' },
-  1: { color: '#ef4444', emoji: '🌱', nextReq: '500 PageView en 30 días' },
-  2: { color: '#f59e0b', emoji: '📊', nextReq: '1.000 ViewContent en 30 días' },
-  3: { color: '#f59e0b', emoji: '📊', nextReq: '100 AddToCart en 30 días' },
-  4: { color: '#f59e0b', emoji: '📊', nextReq: '50 Purchases en 30 días' },
-  5: { color: '#06d6a0', emoji: '🚀', nextReq: '100 Purchases en 30 días' },
-  6: { color: '#06d6a0', emoji: '🚀', nextReq: '500 Purchases en 180 días' },
-  7: { color: '#06d6a0', emoji: '🚀', nextReq: '1.000 Purchases en 180 días' },
-  8: { color: '#06d6a0', emoji: '👑', nextReq: 'Nivel máximo' },
+// Hero gradient backgrounds per level
+const LEVEL_GRADIENT: Record<number, { from: string; to: string; main: string; emoji: string }> = {
+  0: { from: 'rgba(80,80,100,0.18)',     to: 'rgba(40,40,52,0.05)',    main: '#8892b0', emoji: '🌑' },
+  1: { from: 'rgba(239,68,68,0.20)',     to: 'rgba(245,158,11,0.05)',  main: '#ef4444', emoji: '🌱' },
+  2: { from: 'rgba(239,68,68,0.20)',     to: 'rgba(245,158,11,0.05)',  main: '#ef4444', emoji: '📚' },
+  3: { from: 'rgba(245,158,11,0.20)',    to: 'rgba(251,191,36,0.05)',  main: '#f59e0b', emoji: '🧠' },
+  4: { from: 'rgba(245,158,11,0.20)',    to: 'rgba(251,191,36,0.05)',  main: '#f59e0b', emoji: '🛒' },
+  5: { from: 'rgba(6,214,160,0.18)',     to: 'rgba(16,185,129,0.05)',  main: '#06d6a0', emoji: '💼' },
+  6: { from: 'rgba(6,214,160,0.18)',     to: 'rgba(16,185,129,0.05)',  main: '#06d6a0', emoji: '🚀' },
+  7: { from: 'rgba(59,130,246,0.20)',    to: 'rgba(37,99,235,0.05)',   main: '#3b82f6', emoji: '👑' },
+  8: { from: 'rgba(139,92,246,0.22)',    to: 'rgba(245,158,11,0.10)',  main: '#8b5cf6', emoji: '🏰' },
 }
+
+function nextLevelMetric(level: number, events: PixelEvents | undefined) {
+  const map: Record<number, { current: number; required: number; label: string }> = {
+    0: { current: events?.PageView.count_30d    ?? 0, required: 100,  label: 'PageView (30d)' },
+    1: { current: events?.PageView.count_30d    ?? 0, required: 500,  label: 'PageView (30d)' },
+    2: { current: events?.ViewContent.count_30d ?? 0, required: 1000, label: 'ViewContent (30d)' },
+    3: { current: events?.AddToCart.count_30d   ?? 0, required: 100,  label: 'AddToCart (30d)' },
+    4: { current: events?.Purchase.count_30d    ?? 0, required: 50,   label: 'Purchase (30d)' },
+    5: { current: events?.Purchase.count_30d    ?? 0, required: 100,  label: 'Purchase (30d)' },
+    6: { current: events?.Purchase.count_180d   ?? 0, required: 500,  label: 'Purchase (180d)' },
+    7: { current: events?.Purchase.count_180d   ?? 0, required: 1000, label: 'Purchase (180d)' },
+  }
+  return map[level] || { current: 0, required: 0, label: '' }
+}
+
+const LEVEL_NAMES = ['Sin Data', 'Explorador', 'Aprendiz', 'Estratega', 'Vendedor', 'Profesional', 'Escalador', 'Maestro', 'Imperio']
 
 export default function PixelDashboardPage() {
   const [pa, setPa] = useState<PixelAnalysisRow | null>(null)
+  const [campaignsCount, setCampaignsCount] = useState(0)
+  const [hasAnyProfitable, setHasAnyProfitable] = useState(false)
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [hasPixel, setHasPixel] = useState(true)
@@ -53,12 +76,17 @@ export default function PixelDashboardPage() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { setLoading(false); return }
 
-    const [{ data: biz }, { data: row }] = await Promise.all([
+    const [{ data: biz }, { data: row }, { data: camps }] = await Promise.all([
       supabase.from('business_profiles').select('pixel_id').eq('user_id', user.id).maybeSingle(),
       supabase.from('pixel_analysis').select('*').eq('user_id', user.id).maybeSingle(),
+      supabase.from('campaigns').select('metrics').eq('user_id', user.id),
     ])
     if (!biz?.pixel_id) setHasPixel(false)
     if (row) setPa(row as PixelAnalysisRow)
+    if (camps) {
+      setCampaignsCount(camps.length)
+      setHasAnyProfitable(camps.some((c: any) => (c.metrics?.roas ?? 0) >= 2))
+    }
     setLoading(false)
   }
 
@@ -75,7 +103,7 @@ export default function PixelDashboardPage() {
   }
 
   if (loading) {
-    return <div className="p-8 text-center" style={{ color: 'var(--muted)' }}>Cargando análisis del pixel...</div>
+    return <div className="p-12 text-center" style={{ color: 'var(--muted)' }}>Cargando análisis del pixel...</div>
   }
 
   if (!hasPixel) {
@@ -83,7 +111,9 @@ export default function PixelDashboardPage() {
       <div className="max-w-2xl mx-auto">
         <div className="card p-10 text-center">
           <div style={{ fontSize: 48, marginBottom: 16 }}>🔌</div>
-          <h1 className="page-title mb-2">No tenés pixel configurado</h1>
+          <h1 style={{ fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 10 }}>
+            No tenés pixel configurado
+          </h1>
           <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 24, maxWidth: 380, margin: '0 auto 24px' }}>
             Sin pixel no podemos medir conversiones, crear audiencias inteligentes ni recomendarte estrategias.
           </p>
@@ -95,173 +125,196 @@ export default function PixelDashboardPage() {
 
   const events = pa?.events_data
   const level = pa?.level ?? 0
-  const info = LEVEL_INFO[level]
+  const grad = LEVEL_GRADIENT[level]
   const nextLevel = Math.min(level + 1, 8)
+  const nextMetric = nextLevelMetric(level, events)
+  const progressPct = nextMetric.required > 0
+    ? Math.min(100, Math.round((nextMetric.current / nextMetric.required) * 100))
+    : 100
 
-  // Funnel conversion %
-  const fn = events ? {
-    pv: events.PageView.count_30d,
-    vc: events.ViewContent.count_30d,
-    atc: events.AddToCart.count_30d,
-    co: events.InitiateCheckout.count_30d,
-    pu: events.Purchase.count_30d,
-  } : { pv: 0, vc: 0, atc: 0, co: 0, pu: 0 }
-  const pct = (a: number, b: number) => b > 0 ? Math.round((a / b) * 100) : 0
+  // Motivational message
+  let motivation = ''
+  if (level >= 8) motivation = '👑 Alcanzaste el nivel máximo. Tu negocio es un imperio.'
+  else if (progressPct < 25) motivation = 'Acabás de empezar este nivel. ¡Seguí invirtiendo para crecer!'
+  else if (progressPct < 50) motivation = 'Vas por buen camino. Cada campaña te acerca más.'
+  else if (progressPct < 75) motivation = '¡Más de la mitad! El siguiente nivel está cerca.'
+  else                       motivation = `🔥 ¡Casi! Falta muy poco para desbloquear ${LEVEL_NAMES[nextLevel]}!`
+
+  // Growth Score breakdown
+  const scoreLevel    = level * 100
+  const scoreTraffic  = Math.min(200, (events?.PageView.count_30d  ?? 0) / 5)
+  const scoreSales    = Math.min(150, (events?.Purchase.count_180d ?? 0) * 2)
+  const scoreCamps    = campaignsCount * 10
+  const totalScore    = Math.round(scoreLevel + scoreTraffic + scoreSales + scoreCamps)
+
+  // Monthly stars
+  const monthStars = [
+    { label: 'Crear una campaña este mes',          earned: campaignsCount > 0 },
+    { label: 'ROAS positivo en alguna campaña',     earned: hasAnyProfitable },
+    { label: 'Subir de nivel del pixel',            earned: false /* would need monthly delta */ },
+    { label: '100+ visitantes web',                 earned: (events?.PageView.count_30d ?? 0) >= 100 },
+    { label: 'Tener al menos una compra registrada', earned: (events?.Purchase.count_30d ?? 0) >= 1 },
+  ]
+
+  // Achievements (full wall)
+  const totalSales = events?.Purchase.count_180d ?? 0
+  const achievements = [
+    { id: 'first_camp',  icon: '🎬', title: 'Primera campaña',          description: 'Lanzaste tu primera campaña',                 unlocked: campaignsCount >= 1 },
+    { id: 'first_pixel', icon: '🔌', title: 'Pixel instalado',           description: 'Tu pixel está midiendo eventos',              unlocked: !!pa },
+    { id: 'first_data',  icon: '📡', title: 'Primer dato del pixel',     description: '100+ PageView en 30 días',                    unlocked: (events?.PageView.count_30d ?? 0) >= 100 },
+    { id: 'first10',     icon: '🏆', title: 'Primeras 10 ventas',        description: '10 compras registradas',                      unlocked: totalSales >= 10 },
+    { id: 'first50',     icon: '🌟', title: 'Primeras 50 ventas',        description: '50 compras — el algoritmo ya tiene data',     unlocked: totalSales >= 50 },
+    { id: 'first100',    icon: '💎', title: 'Primeras 100 ventas',       description: '100 compras — sos interesante para Meta',     unlocked: totalSales >= 100 },
+    { id: 'first500',    icon: '🏅', title: '500 ventas',                description: '500 compras en 180 días',                     unlocked: totalSales >= 500 },
+    { id: 'first1000',   icon: '👑', title: '1.000 ventas',               description: '1.000 compras — nivel Imperio',               unlocked: totalSales >= 1000 },
+    { id: 'profitable',  icon: '🚀', title: 'Primer ROAS rentable',      description: 'Una campaña con ROAS ≥ 2x',                   unlocked: hasAnyProfitable },
+    { id: 'mofu',        icon: '🎯', title: 'Remarketing desbloqueado',  description: 'Tu pixel soporta retargeting',                unlocked: !!pa?.can_retarget_view_content },
+    { id: 'cart',        icon: '🛒', title: 'Carrito desbloqueado',      description: 'Retargeting de carrito disponible',           unlocked: !!pa?.can_retarget_add_to_cart },
+    { id: 'lookalike',   icon: '🔮', title: 'Lookalike desbloqueado',    description: '100+ compras → Lookalikes activos',           unlocked: !!pa?.can_create_lookalike },
+    { id: 'bofu',        icon: '💼', title: 'BOFU alcanzado',            description: 'Estrategia BOFU disponible',                  unlocked: level >= 5 },
+    { id: 'master',      icon: '🎓', title: 'Nivel Maestro',             description: 'Llegaste al nivel 7',                          unlocked: level >= 7 },
+    { id: 'imperio',     icon: '🏰', title: 'Nivel Imperio',             description: 'Llegaste al nivel máximo',                     unlocked: level >= 8 },
+    { id: 'iterator',    icon: '⚡', title: 'Iterador',                  description: '5+ campañas creadas',                          unlocked: campaignsCount >= 5 },
+  ]
 
   return (
-    <div className="max-w-5xl mx-auto">
-      <div className="flex justify-between items-start mb-8">
-        <div>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#e91e8c', marginBottom: 6 }}>
-            Mi Pixel · AdFlow
-          </p>
-          <h1 className="page-title mb-1.5">Análisis del pixel</h1>
-          <p style={{ fontSize: 13, color: 'var(--muted)' }}>
-            Última actualización: {pa?.analyzed_at ? new Date(pa.analyzed_at).toLocaleString() : 'nunca'}
-          </p>
-        </div>
-        <button onClick={handleRefresh} disabled={refreshing} className="btn-primary">
-          <RefreshCw size={14} className={refreshing ? 'animate-spin' : ''} /> {refreshing ? 'Actualizando...' : 'Actualizar'}
-        </button>
-      </div>
-
-      {/* ── Level hero ── */}
-      <div className="card p-8 mb-6" style={{
-        background: `linear-gradient(135deg, ${info.color}15, ${info.color}05)`,
-        borderTop: `2px solid ${info.color}`,
+    <div className="max-w-6xl mx-auto">
+      {/* ── SECTION A: HERO ───────────────────────────────────────────── */}
+      <div className="dash-anim-1 mb-6" style={{
+        position: 'relative',
+        borderRadius: 24, padding: '36px 32px',
+        background: `linear-gradient(135deg, ${grad.from} 0%, ${grad.to} 100%)`,
+        border: `1px solid ${grad.main}30`,
+        backdropFilter: 'blur(20px)',
+        boxShadow: `0 20px 80px rgba(0,0,0,0.55), 0 0 80px ${grad.main}15`,
+        overflow: 'hidden',
       }}>
-        <div className="flex items-center gap-8">
-          <LevelBadge level={level} levelName={pa?.level_name} size="lg" />
-          <div style={{ flex: 1 }}>
-            <p style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 4 }}>
-              Nivel {level} de 8
-            </p>
-            <h2 style={{ fontSize: 28, fontWeight: 800, color: info.color, marginBottom: 4 }}>
-              {pa?.level_name}
-            </h2>
-            <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 14 }}>
-              Pixel ID: <code style={{ color: '#a0a8c0' }}>{pa?.pixel_id}</code>
-            </p>
-            {level < 8 && events && (() => {
-              // Choose the metric that gates the next level
-              const map: Record<number, { current: number; required: number; label: string }> = {
-                0: { current: events.PageView.count_30d,    required: 100,  label: 'PageView (30d)' },
-                1: { current: events.PageView.count_30d,    required: 500,  label: 'PageView (30d)' },
-                2: { current: events.ViewContent.count_30d, required: 1000, label: 'ViewContent (30d)' },
-                3: { current: events.AddToCart.count_30d,   required: 100,  label: 'AddToCart (30d)' },
-                4: { current: events.Purchase.count_30d,    required: 50,   label: 'Purchase (30d)' },
-                5: { current: events.Purchase.count_30d,    required: 100,  label: 'Purchase (30d)' },
-                6: { current: events.Purchase.count_180d,   required: 500,  label: 'Purchase (180d)' },
-                7: { current: events.Purchase.count_180d,   required: 1000, label: 'Purchase (180d)' },
-              }
-              const m = map[level]
-              if (!m) return null
-              return (
-                <LevelProgress
-                  current={m.current}
-                  required={m.required}
-                  metric={m.label}
-                  nextLevel={nextLevel}
-                  currentColor={info.color}
-                  nextColor={LEVEL_INFO[nextLevel].color}
-                />
-              )
-            })()}
+        {/* Top edge accent */}
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+          background: `linear-gradient(90deg, transparent, ${grad.main}80, transparent)`,
+        }} />
+        {/* Imperio: extra glow particles */}
+        {level === 8 && (
+          <>
+            <div style={{ position: 'absolute', top: '15%', right: '10%', width: 4, height: 4, borderRadius: '50%', background: '#fbbf24', boxShadow: '0 0 20px #fbbf24' }} />
+            <div style={{ position: 'absolute', top: '60%', right: '25%', width: 3, height: 3, borderRadius: '50%', background: '#fbbf24', boxShadow: '0 0 16px #fbbf24' }} />
+            <div style={{ position: 'absolute', top: '30%', left: '15%', width: 5, height: 5, borderRadius: '50%', background: '#c4b5fd', boxShadow: '0 0 22px #c4b5fd' }} />
+          </>
+        )}
+
+        <button
+          onClick={handleRefresh}
+          disabled={refreshing}
+          style={{
+            position: 'absolute', top: 20, right: 20,
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            padding: '8px 14px', borderRadius: 10,
+            background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)',
+            color: '#fff', fontSize: 12, fontWeight: 600,
+            cursor: refreshing ? 'wait' : 'pointer',
+          }}>
+          <RefreshCw size={13} className={refreshing ? 'animate-spin' : ''} />
+          {refreshing ? 'Actualizando...' : 'Actualizar análisis'}
+        </button>
+
+        {/* Centered hero content */}
+        <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto' }}>
+          {/* Big level badge */}
+          <div style={{ display: 'inline-block', marginBottom: 18 }}>
+            <LevelBadge level={level} levelName="" size="lg" showName={false} />
           </div>
-        </div>
-      </div>
 
-      {/* ── Event metrics grid ── */}
-      <div className="card p-6 mb-6">
-        <h2 className="section-title mb-4">Eventos del pixel</h2>
-        <div className="grid grid-cols-5 gap-3">
-          {(['PageView','ViewContent','AddToCart','InitiateCheckout','Purchase'] as const).map(ev => {
-            const e = events?.[ev]
-            return (
-              <div key={ev} className="p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: '#8892b0', marginBottom: 8 }}>{ev}</p>
-                <p style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>
-                  {(e?.count_30d ?? 0).toLocaleString()}
-                </p>
-                <p style={{ fontSize: 10, color: 'var(--muted)' }}>30 días</p>
-                <div style={{ marginTop: 6, fontSize: 10, color: 'var(--muted)' }}>
-                  7d: {(e?.count_7d ?? 0).toLocaleString()} · 180d: {(e?.count_180d ?? 0).toLocaleString()}
-                </div>
+          <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 6 }}>
+            Nivel {level} de 8
+          </p>
+          <h1 style={{
+            fontFamily: 'Syne, sans-serif', fontSize: 36, fontWeight: 900,
+            color: grad.main, letterSpacing: '-0.03em', marginBottom: 14,
+            textShadow: `0 0 32px ${grad.main}50`,
+          }}>
+            {pa?.level_name}
+          </h1>
+
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '8px 18px', borderRadius: 99, marginBottom: 24,
+            background: 'rgba(245,158,11,0.10)',
+            border: '1px solid rgba(245,158,11,0.30)',
+          }}>
+            <span style={{ fontSize: 16 }}>⭐</span>
+            <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 800, color: '#fbbf24' }}>
+              {totalScore.toLocaleString()} puntos de crecimiento
+            </span>
+          </div>
+
+          {level < 8 && nextMetric.required > 0 && (
+            <>
+              <div style={{
+                height: 16, borderRadius: 99,
+                background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.06)',
+                overflow: 'hidden', marginBottom: 12,
+              }}>
+                <div style={{
+                  height: '100%', width: `${progressPct}%`,
+                  background: `linear-gradient(90deg, ${grad.main}, ${LEVEL_GRADIENT[nextLevel].main})`,
+                  boxShadow: `0 0 24px ${LEVEL_GRADIENT[nextLevel].main}90`,
+                  borderRadius: 99,
+                  transition: 'width 1s cubic-bezier(0.16,1,0.3,1)',
+                }} />
               </div>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* ── Funnel ── */}
-      <div className="card p-6 mb-6">
-        <h2 className="section-title mb-4">Funnel de conversión (30 días)</h2>
-        <div className="space-y-2">
-          {[
-            { label: 'PageView',         val: fn.pv, color: '#62c4b0', conv: 100 },
-            { label: 'ViewContent',      val: fn.vc, color: '#3aa9d8', conv: pct(fn.vc, fn.pv) },
-            { label: 'AddToCart',        val: fn.atc, color: '#f59e0b', conv: pct(fn.atc, fn.vc) },
-            { label: 'InitiateCheckout', val: fn.co, color: '#e91e8c', conv: pct(fn.co, fn.atc) },
-            { label: 'Purchase',         val: fn.pu, color: '#06d6a0', conv: pct(fn.pu, fn.co) },
-          ].map((s, i) => {
-            const widthPct = fn.pv > 0 ? Math.max(8, (s.val / fn.pv) * 100) : 8
-            return (
-              <div key={s.label}>
-                <div className="flex items-center justify-between mb-1">
-                  <span style={{ fontSize: 11, color: '#a0a8c0' }}>{s.label}</span>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: s.color }}>
-                    {s.val.toLocaleString()} {i > 0 && <span style={{ color: 'var(--muted)' }}>({s.conv}%)</span>}
-                  </span>
-                </div>
-                <div style={{ height: 10, borderRadius: 6, background: 'rgba(255,255,255,0.04)', overflow: 'hidden' }}>
-                  <div style={{
-                    height: '100%', width: `${widthPct}%`,
-                    background: `linear-gradient(90deg, ${s.color}, ${s.color}80)`,
-                    boxShadow: `0 0 10px ${s.color}50`,
-                    transition: 'width 0.6s ease',
-                  }} />
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-6 mb-6">
-        {/* ── Available now ── */}
-        <div className="card p-6">
-          <h2 className="section-title mb-3">¿Qué podés hacer en tu nivel?</h2>
-          <ul style={{ fontSize: 12, color: '#a0a8c0', listStyle: 'none', padding: 0, lineHeight: 1.9 }}>
-            <li>✅ Estrategias: <b>{(pa?.available_strategies || ['TOFU']).join(' · ')}</b></li>
-            <li>✅ Audiencias: <b>{(pa?.available_audience_types || ['broad']).join(', ')}</b></li>
-            {pa?.can_retarget_view_content && <li>✅ Retargeting de visitantes</li>}
-            {pa?.can_retarget_add_to_cart && <li>✅ Retargeting de carrito abandonado</li>}
-            {pa?.can_retarget_purchase && <li>✅ Retargeting de compradores</li>}
-            {pa?.can_create_lookalike && <li>✅ Lookalike Audiences</li>}
-          </ul>
-        </div>
-
-        {/* ── Next level ── */}
-        <div className="card p-6">
-          <h2 className="section-title mb-3">¿Qué desbloqueás en el próximo nivel?</h2>
-          {level < 8 ? (
-            <ul style={{ fontSize: 12, color: '#a0a8c0', listStyle: 'none', padding: 0, lineHeight: 1.9 }}>
-              <li>🔓 Subir a nivel <b>{nextLevel}</b></li>
-              <li>📊 {LEVEL_INFO[nextLevel].nextReq}</li>
-              {nextLevel >= 3 && !pa?.can_retarget_view_content && <li>🔓 Retargeting de visitantes</li>}
-              {nextLevel >= 4 && !pa?.can_retarget_add_to_cart && <li>🔓 Retargeting de carrito</li>}
-              {nextLevel >= 5 && !pa?.can_retarget_purchase && <li>🔓 BOFU + retargeting de compradores</li>}
-              {nextLevel >= 6 && !pa?.can_create_lookalike && <li>🔓 Lookalike Audiences</li>}
-            </ul>
-          ) : (
-            <p style={{ fontSize: 12, color: 'var(--muted)' }}>👑 Estás en el nivel máximo. Seguí escalando.</p>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.85)', marginBottom: 8 }}>
+                <b style={{ color: '#fff' }}>{nextMetric.current.toLocaleString()}</b> de{' '}
+                <b style={{ color: '#fff' }}>{nextMetric.required.toLocaleString()}</b> {nextMetric.label} para nivel{' '}
+                <b style={{ color: LEVEL_GRADIENT[nextLevel].main }}>{nextLevel}: {LEVEL_NAMES[nextLevel]}</b>
+              </p>
+            </>
           )}
+
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.78)', fontStyle: 'italic', marginTop: 6 }}>
+            {motivation}
+          </p>
+
+          <p style={{ fontSize: 10, color: 'var(--muted)', marginTop: 22 }}>
+            Pixel ID: <code style={{ color: '#a0a8c0' }}>{pa?.pixel_id}</code>
+            {' · '}
+            Última actualización: {pa?.analyzed_at ? new Date(pa.analyzed_at).toLocaleString('es') : 'nunca'}
+          </p>
         </div>
       </div>
 
-      {/* ── Growth timeline ── */}
-      <div className="card p-6">
-        <h2 className="section-title mb-4">Tu viaje de crecimiento</h2>
+      {/* ── SECTION B: LEVEL MAP ──────────────────────────────────────── */}
+      <LevelMap currentLevel={level} />
+
+      {/* ── SECTION C: SCORE CARD ─────────────────────────────────────── */}
+      <ScoreCard
+        totalScore={totalScore}
+        breakdown={[
+          { label: `Nivel ${level}`,    points: scoreLevel,   color: grad.main },
+          { label: 'Tráfico web',       points: scoreTraffic, color: '#62c4b0' },
+          { label: 'Compras (180d)',    points: scoreSales,   color: '#06d6a0' },
+          { label: `Campañas (${campaignsCount})`, points: scoreCamps, color: '#e91e8c' },
+        ]}
+        monthStars={monthStars}
+      />
+
+      {/* ── SECTION D: FUNNEL EXPLAINED ───────────────────────────────── */}
+      <FunnelExplained events={events ?? null} />
+
+      {/* ── SECTION E: CAPABILITIES ───────────────────────────────────── */}
+      <CapabilitiesCard level={level} />
+
+      {/* ── SECTION F: ACHIEVEMENTS WALL ──────────────────────────────── */}
+      <AchievementsWall achievements={achievements} />
+
+      {/* ── SECTION G: GROWTH TIMELINE ────────────────────────────────── */}
+      <div className="card p-6 mb-6">
+        <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+          Tu viaje de crecimiento
+        </h2>
+        <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 18 }}>
+          Cada vez que subiste de nivel queda registrado acá
+        </p>
         <GrowthTimeline />
       </div>
     </div>
