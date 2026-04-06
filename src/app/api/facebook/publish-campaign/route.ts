@@ -300,6 +300,9 @@ export async function POST(req: NextRequest) {
         geo_locations: { countries },
         age_min: t.age_min || campaign.target_age_min || 18,
         age_max: t.age_max || campaign.target_age_max || 65,
+        // Meta v20 requires explicit declaration of Advantage Audience.
+        // 0 = off (respect manual targeting), 1 = let Meta expand the audience.
+        targeting_automation: { advantage_audience: 0 },
       }
 
       // Gender: use form value as source of truth
