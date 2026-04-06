@@ -6,19 +6,14 @@ import { createClient } from '@/lib/supabase/client'
 import {
   LayoutDashboard, Megaphone, Sparkles, Images,
   BarChart2, Settings, HelpCircle, LogOut, Zap, Shield, CreditCard,
+  Activity, DollarSign,
 } from 'lucide-react'
 import type { User } from '@supabase/supabase-js'
 import type { Profile } from '@/types'
 import { PLAN_CREDITS } from '@/lib/plans'
 import { useSidebar } from './SidebarContext'
 
-const navItems = [
-  { href: '/dashboard',           icon: LayoutDashboard, label: 'Resumen' },
-  { href: '/dashboard/campaigns', icon: Megaphone,       label: 'Mis campañas' },
-  { href: '/dashboard/create',    icon: Sparkles,        label: 'Crear con IA',  badge: 'IA' },
-  { href: '/dashboard/creatives', icon: Images,          label: 'Creativos' },
-  { href: '/dashboard/reports',   icon: BarChart2,       label: 'Reportes' },
-]
+type NavItem = { href: string; icon: any; label: string; badge?: string }
 
 const bottomItems = [
   { href: '/dashboard/billing',  icon: CreditCard, label: 'Plan y créditos' },
@@ -40,6 +35,7 @@ export default function Sidebar({ user, profile }: Props) {
   const [liveCredits, setLiveCredits] = useState<{
     total: number; used: number; plan: string
   } | null>(null)
+  const [pixelLevel, setPixelLevel] = useState<number>(0)
 
   useEffect(() => {
     let active = true
@@ -60,8 +56,27 @@ export default function Sidebar({ user, profile }: Props) {
         }
       })
 
+    supabase
+      .from('pixel_analysis')
+      .select('level')
+      .eq('user_id', user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data && active && typeof data.level === 'number') setPixelLevel(data.level)
+      })
+
     return () => { active = false }
   }, [user.id, pathname]) // re-fetch every time user navigates to a new page
+
+  const navItems: NavItem[] = [
+    { href: '/dashboard',           icon: LayoutDashboard, label: 'Resumen' },
+    { href: '/dashboard/campaigns', icon: Megaphone,       label: 'Mis campañas' },
+    { href: '/dashboard/create',    icon: Sparkles,        label: 'Crear con IA',  badge: 'IA' },
+    { href: '/dashboard/creatives', icon: Images,          label: 'Creativos' },
+    { href: '/dashboard/pixel',     icon: Activity,        label: 'Mi Pixel',      badge: pixelLevel > 0 ? `Nv${pixelLevel}` : undefined },
+    { href: '/dashboard/budget',    icon: DollarSign,      label: 'Presupuesto' },
+    { href: '/dashboard/phases',    icon: BarChart2,       label: 'Fases' },
+  ]
 
   async function handleLogout() {
     const supabase = createClient()

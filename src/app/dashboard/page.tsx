@@ -1,10 +1,11 @@
 // src/app/dashboard/page.tsx
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import type { Campaign, DailyReport, BusinessProfile, PlanType } from '@/types'
+import type { Campaign, BusinessProfile, PlanType } from '@/types'
 import SpendChart from '@/components/dashboard/SpendChart'
 import OnboardingWizard from '@/components/dashboard/OnboardingWizard'
 import { TrendingUp, DollarSign, Target, Megaphone, ArrowRight, Sparkles, Settings, Images, Zap, CreditCard } from 'lucide-react'
+import RecommendationsList from '@/components/dashboard/RecommendationsList'
 import { PLAN_CREDITS } from '@/lib/plans'
 import { ADS_PER_CAMPAIGN_MIN, ADS_PER_CAMPAIGN_MAX } from '@/lib/credit-costs'
 
@@ -82,10 +83,8 @@ export default async function DashboardPage() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  const [{ data: fbConnection }, { data: campaigns }, { data: lastReport }, { data: bp }, { data: profileData }] = await Promise.all([
-    supabase.from('facebook_connections').select('ad_account_id,ad_account_name').eq('user_id', user!.id).maybeSingle(),
+  const [{ data: campaigns }, { data: bp }, { data: profileData }] = await Promise.all([
     supabase.from('campaigns').select('*').eq('user_id', user!.id).order('created_at', { ascending: false }).limit(5),
-    supabase.from('daily_reports').select('*').eq('user_id', user!.id).order('report_date', { ascending: false }).limit(1).maybeSingle(),
     supabase.from('business_profiles').select('selected_ad_account_id,business_name').eq('user_id', user!.id).maybeSingle(),
     supabase.from('profiles').select('plan, credits_total, credits_used').eq('id', user!.id).single(),
   ])
@@ -101,7 +100,6 @@ export default async function DashboardPage() {
   const projAdsMax       = creditsRemaining * ADS_PER_CAMPAIGN_MAX
 
   const typed           = (campaigns || []) as Campaign[]
-  const typedReport     = lastReport as DailyReport | null
   const businessProfile = bp as BusinessProfile | null
 
   const activeCampaigns = typed.filter(c => c.status === 'active')
@@ -351,44 +349,16 @@ export default async function DashboardPage() {
               <SpendChart totalSpend={totalSpend} />
             </div>
 
-            {/* AI alerts */}
+            {/* Recomendaciones inteligentes */}
             <div className="card overflow-hidden">
               <div className="px-5 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                 <div className="flex items-center gap-2">
                   <span style={{ fontSize: 14 }}>🤖</span>
-                  <h2 className="section-title">Alertas IA</h2>
+                  <h2 className="section-title">Recomendaciones IA</h2>
                 </div>
               </div>
-              <div className="p-4 flex flex-col gap-2.5">
-                {typedReport?.recommendations?.length ? (
-                  typedReport.recommendations.slice(0, 3).map((rec, i) => {
-                    const isUp    = rec.type === 'scale_up'
-                    const isPause = rec.type === 'pause' || rec.type === 'scale_down'
-                    const bg      = isUp ? 'rgba(6,214,160,0.06)' : isPause ? 'rgba(239,68,68,0.06)' : 'rgba(233,30,140,0.06)'
-                    const border  = isUp ? 'rgba(6,214,160,0.18)' : isPause ? 'rgba(239,68,68,0.18)' : 'rgba(233,30,140,0.18)'
-                    const color   = isUp ? 'var(--accent3)' : isPause ? 'var(--danger)' : '#f9a8d4'
-                    const icon    = isUp ? '↑' : isPause ? '⚠' : '→'
-                    return (
-                      <div key={i} className="p-3 rounded-xl"
-                        style={{ background: bg, border: `1px solid ${border}` }}>
-                        <p style={{ fontSize: 11, fontWeight: 700, color, marginBottom: 4 }}>
-                          {icon} {rec.title}
-                        </p>
-                        <p style={{ fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>{rec.description}</p>
-                      </div>
-                    )
-                  })
-                ) : (
-                  <div className="p-4 text-center">
-                    <p style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.6 }}>
-                      Los reportes aparecen cuando tenés campañas activas.
-                    </p>
-                    <Link href="/dashboard/reports"
-                      style={{ fontSize: 11, color: 'var(--accent)', display: 'block', marginTop: 10 }}>
-                      Ver reportes →
-                    </Link>
-                  </div>
-                )}
+              <div className="p-4">
+                <RecommendationsList limit={4} emptyMessage="Todo en orden por ahora. Volvé después de publicar nuevas campañas." />
               </div>
             </div>
           </div>
