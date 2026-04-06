@@ -68,14 +68,20 @@ export default function Sidebar({ user, profile }: Props) {
     return () => { active = false }
   }, [user.id, pathname]) // re-fetch every time user navigates to a new page
 
-  const navItems: NavItem[] = [
+  // Plataforma: navegación core (Mi Pixel sube a la posición 2 con badge de nivel)
+  const platformItems: NavItem[] = [
     { href: '/dashboard',           icon: LayoutDashboard, label: 'Resumen' },
+    { href: '/dashboard/pixel',     icon: Activity,        label: 'Mi Pixel',     badge: pixelLevel > 0 ? `Nv${pixelLevel}` : undefined },
     { href: '/dashboard/campaigns', icon: Megaphone,       label: 'Mis campañas' },
-    { href: '/dashboard/create',    icon: Sparkles,        label: 'Crear con IA',  badge: 'IA' },
+    { href: '/dashboard/create',    icon: Sparkles,        label: 'Crear con IA', badge: 'IA' },
     { href: '/dashboard/creatives', icon: Images,          label: 'Creativos' },
-    { href: '/dashboard/pixel',     icon: Activity,        label: 'Mi Pixel',      badge: pixelLevel > 0 ? `Nv${pixelLevel}` : undefined },
-    { href: '/dashboard/budget',    icon: DollarSign,      label: 'Presupuesto' },
-    { href: '/dashboard/phases',    icon: BarChart2,       label: 'Fases' },
+  ]
+
+  // Gestión: módulos de growth/budget/reportes
+  const managementItems: NavItem[] = [
+    { href: '/dashboard/budget',  icon: DollarSign, label: 'Presupuesto' },
+    { href: '/dashboard/phases',  icon: BarChart2,  label: 'Fases' },
+    { href: '/dashboard/reports', icon: BarChart2,  label: 'Reportes' },
   ]
 
   async function handleLogout() {
@@ -172,8 +178,10 @@ export default function Sidebar({ user, profile }: Props) {
       <nav className="flex-1 px-3 py-4 flex flex-col gap-0.5 overflow-y-auto" style={{ position: 'relative', zIndex: 1 }}>
         <p className="section-label px-2 pb-2.5">Plataforma</p>
 
-        {navItems.map(({ href, icon: Icon, label, badge }) => {
+        {platformItems.map(({ href, icon: Icon, label, badge }) => {
           const active = isActive(href)
+          // Pixel-level badge has its own color when present
+          const isLevelBadge = label === 'Mi Pixel' && badge && pixelLevel > 0
           return (
             <Link key={href} href={href} onClick={close}
               className={`nav-item ${active ? 'nav-item-active' : 'nav-item-inactive'}`}
@@ -197,7 +205,12 @@ export default function Sidebar({ user, profile }: Props) {
               {badge && (
                 <span
                   className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full font-bold"
-                  style={{
+                  style={isLevelBadge ? {
+                    background: pixelLevel >= 5 ? 'rgba(6,214,160,0.20)' : pixelLevel >= 3 ? 'rgba(245,158,11,0.20)' : 'rgba(239,68,68,0.20)',
+                    color:      pixelLevel >= 5 ? '#06d6a0'              : pixelLevel >= 3 ? '#fbbf24'              : '#fca5a5',
+                    border:     `1px solid ${pixelLevel >= 5 ? 'rgba(6,214,160,0.40)' : pixelLevel >= 3 ? 'rgba(245,158,11,0.40)' : 'rgba(239,68,68,0.40)'}`,
+                    boxShadow:  `0 0 8px ${pixelLevel >= 5 ? 'rgba(6,214,160,0.30)' : pixelLevel >= 3 ? 'rgba(245,158,11,0.30)' : 'rgba(239,68,68,0.30)'}`,
+                  } : {
                     background: 'rgba(234,27,126,0.18)',
                     color: '#f9a8d4',
                     border: '1px solid rgba(234,27,126,0.30)',
@@ -207,6 +220,31 @@ export default function Sidebar({ user, profile }: Props) {
                   {badge}
                 </span>
               )}
+            </Link>
+          )
+        })}
+
+        {/* ── Gestión section ── */}
+        <p className="section-label px-2 pt-4 pb-2.5">Gestión</p>
+        {managementItems.map(({ href, icon: Icon, label }) => {
+          const active = isActive(href)
+          return (
+            <Link key={href} href={href} onClick={close}
+              className={`nav-item ${active ? 'nav-item-active' : 'nav-item-inactive'}`}
+            >
+              <Icon size={16} strokeWidth={active ? 2.2 : 1.75}
+                style={{
+                  color: active ? '#e91e8c' : '#8892b0',
+                  filter: active ? 'drop-shadow(0 0 6px rgba(233,30,140,0.60))' : 'none',
+                  flexShrink: 0,
+                }} />
+              <span style={{
+                fontSize: 13,
+                color: active ? '#ffffff' : '#a0a8c0',
+                textShadow: active ? '0 0 12px rgba(255,255,255,0.15)' : 'none',
+              }}>
+                {label}
+              </span>
             </Link>
           )
         })}

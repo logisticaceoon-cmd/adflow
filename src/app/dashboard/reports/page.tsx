@@ -1,7 +1,8 @@
 // src/app/dashboard/reports/page.tsx
 import { createClient } from '@/lib/supabase/server'
+import Link from 'next/link'
 import type { DailyReport, Recommendation } from '@/types'
-import { BarChart2, Clock, Mail, Zap } from 'lucide-react'
+import { BarChart2, Clock, Mail, Zap, ArrowRight } from 'lucide-react'
 
 const TYPE_CONFIG: Record<string, { label: string; color: string; bg: string; border: string; icon: string }> = {
   scale_up:         { label: 'Escalar',          color: 'var(--accent3)',  bg: 'rgba(6,214,160,0.07)',    border: 'rgba(6,214,160,0.22)',    icon: '📈' },
@@ -72,14 +73,14 @@ export default async function ReportsPage() {
   return (
     <div>
       {/* ── Header ── */}
-      <div className="flex justify-between items-start mb-8 dash-anim-1">
+      <div className="flex justify-between items-start mb-6 dash-anim-1">
         <div>
           <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#e91e8c', marginBottom: 6 }}>
             Inteligencia artificial
           </p>
-          <h1 className="page-title mb-1.5">Reportes diarios IA</h1>
+          <h1 className="page-title mb-1.5">Reportes IA</h1>
           <p style={{ fontSize: 13, color: 'var(--muted)' }}>
-            Análisis automático generado cada mañana a las 8:00 AM
+            Análisis diario automático + reporte mensual consolidado
           </p>
         </div>
         <div style={{
@@ -92,6 +93,37 @@ export default async function ReportsPage() {
           </span>
         </div>
       </div>
+
+      {/* ── Monthly report hero card ── */}
+      <Link href="/dashboard/reports/monthly" className="block mb-6 dash-anim-2" style={{ textDecoration: 'none' }}>
+        <div className="p-5 transition-all hover:-translate-y-0.5" style={{
+          borderRadius: 18,
+          background: 'linear-gradient(135deg, rgba(234,27,126,0.10) 0%, rgba(98,196,176,0.07) 100%)',
+          border: '1px solid rgba(234,27,126,0.25)',
+          backdropFilter: 'blur(16px)',
+          display: 'flex', alignItems: 'center', gap: 18,
+          cursor: 'pointer',
+        }}>
+          <div style={{
+            width: 56, height: 56, borderRadius: 14, flexShrink: 0,
+            background: 'rgba(234,27,126,0.15)', border: '1px solid rgba(234,27,126,0.30)',
+            boxShadow: '0 0 20px rgba(234,27,126,0.30)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26,
+          }}>📊</div>
+          <div style={{ flex: 1 }}>
+            <p style={{ fontSize: 11, fontWeight: 700, color: '#f9a8d4', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 4 }}>
+              Reporte mensual consolidado
+            </p>
+            <h2 style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+              Cómo te fue este mes
+            </h2>
+            <p style={{ fontSize: 12, color: 'var(--muted)' }}>
+              Gasto, ROAS, fases, evolución del nivel + análisis IA + próximas acciones
+            </p>
+          </div>
+          <ArrowRight size={18} style={{ color: '#f9a8d4', flexShrink: 0 }} />
+        </div>
+      </Link>
 
       {/* ── Empty state ── */}
       {!reports?.length ? (

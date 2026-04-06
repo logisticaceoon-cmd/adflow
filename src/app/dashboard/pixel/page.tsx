@@ -3,7 +3,10 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { Activity, RefreshCw } from 'lucide-react'
+import { RefreshCw } from 'lucide-react'
+import LevelBadge from '@/components/dashboard/LevelBadge'
+import LevelProgress from '@/components/dashboard/LevelProgress'
+import GrowthTimeline from '@/components/dashboard/GrowthTimeline'
 
 interface PixelEvents {
   PageView:         { count_7d: number; count_30d: number; count_180d: number }
@@ -27,14 +30,6 @@ interface PixelAnalysisRow {
   analyzed_at: string
 }
 
-interface LevelHistoryRow {
-  old_level: number | null
-  new_level: number
-  level_name: string
-  reason: string | null
-  created_at: string
-}
-
 const LEVEL_INFO: Record<number, { color: string; emoji: string; nextReq: string }> = {
   0: { color: '#ef4444', emoji: '🌱', nextReq: '100 PageView en 30 días' },
   1: { color: '#ef4444', emoji: '🌱', nextReq: '500 PageView en 30 días' },
@@ -49,7 +44,6 @@ const LEVEL_INFO: Record<number, { color: string; emoji: string; nextReq: string
 
 export default function PixelDashboardPage() {
   const [pa, setPa] = useState<PixelAnalysisRow | null>(null)
-  const [history, setHistory] = useState<LevelHistoryRow[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [hasPixel, setHasPixel] = useState(true)
@@ -59,14 +53,12 @@ export default function PixelDashboardPage() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { setLoading(false); return }
 
-    const [{ data: biz }, { data: row }, { data: hist }] = await Promise.all([
+    const [{ data: biz }, { data: row }] = await Promise.all([
       supabase.from('business_profiles').select('pixel_id').eq('user_id', user.id).maybeSingle(),
       supabase.from('pixel_analysis').select('*').eq('user_id', user.id).maybeSingle(),
-      supabase.from('level_history').select('old_level, new_level, level_name, reason, created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(8),
     ])
     if (!biz?.pixel_id) setHasPixel(false)
     if (row) setPa(row as PixelAnalysisRow)
-    if (hist) setHistory(hist as LevelHistoryRow[])
     setLoading(false)
   }
 
@@ -133,19 +125,13 @@ export default function PixelDashboardPage() {
         </button>
       </div>
 
-      {/* ── Level badge ── */}
+      {/* ── Level hero ── */}
       <div className="card p-8 mb-6" style={{
         background: `linear-gradient(135deg, ${info.color}15, ${info.color}05)`,
         borderTop: `2px solid ${info.color}`,
       }}>
-        <div className="flex items-center gap-6">
-          <div style={{
-            width: 80, height: 80, borderRadius: 20,
-            background: `radial-gradient(circle at 38% 38%, ${info.color}30, ${info.color}10)`,
-            border: `2px solid ${info.color}50`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 38, boxShadow: `0 0 30px ${info.color}40`,
-          }}>{info.emoji}</div>
+        <div className="flex items-center gap-8">
+          <LevelBadge level={level} levelName={pa?.level_name} size="lg" />
           <div style={{ flex: 1 }}>
             <p style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 4 }}>
               Nivel {level} de 8
@@ -153,18 +139,36 @@ export default function PixelDashboardPage() {
             <h2 style={{ fontSize: 28, fontWeight: 800, color: info.color, marginBottom: 4 }}>
               {pa?.level_name}
             </h2>
-            <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+            <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 14 }}>
               Pixel ID: <code style={{ color: '#a0a8c0' }}>{pa?.pixel_id}</code>
             </p>
+            {level < 8 && events && (() => {
+              // Choose the metric that gates the next level
+              const map: Record<number, { current: number; required: number; label: string }> = {
+                0: { current: events.PageView.count_30d,    required: 100,  label: 'PageView (30d)' },
+                1: { current: events.PageView.count_30d,    required: 500,  label: 'PageView (30d)' },
+                2: { current: events.ViewContent.count_30d, required: 1000, label: 'ViewContent (30d)' },
+                3: { current: events.AddToCart.count_30d,   required: 100,  label: 'AddToCart (30d)' },
+                4: { current: events.Purchase.count_30d,    required: 50,   label: 'Purchase (30d)' },
+                5: { current: events.Purchase.count_30d,    required: 100,  label: 'Purchase (30d)' },
+                6: { current: events.Purchase.count_180d,   required: 500,  label: 'Purchase (180d)' },
+                7: { current: events.Purchase.count_180d,   required: 1000, label: 'Purchase (180d)' },
+              }
+              const m = map[level]
+              if (!m) return null
+              return (
+                <LevelProgress
+                  current={m.current}
+                  required={m.required}
+                  metric={m.label}
+                  nextLevel={nextLevel}
+                  currentColor={info.color}
+                  nextColor={LEVEL_INFO[nextLevel].color}
+                />
+              )
+            })()}
           </div>
         </div>
-        {level < 8 && (
-          <div className="mt-6">
-            <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 6 }}>
-              Para subir a <b style={{ color: '#fff' }}>nivel {nextLevel}</b> necesitás: {LEVEL_INFO[nextLevel].nextReq}
-            </p>
-          </div>
-        )}
       </div>
 
       {/* ── Event metrics grid ── */}
@@ -255,26 +259,11 @@ export default function PixelDashboardPage() {
         </div>
       </div>
 
-      {/* ── Level history ── */}
-      {history.length > 0 && (
-        <div className="card p-6">
-          <h2 className="section-title mb-4">Historial de niveles</h2>
-          <div className="space-y-2">
-            {history.map((h, i) => (
-              <div key={i} className="flex items-center gap-3 p-2.5 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                <Activity size={14} style={{ color: '#62c4b0' }} />
-                <p style={{ fontSize: 12, color: '#a0a8c0', flex: 1 }}>
-                  {h.old_level !== null && <>Nivel {h.old_level} → </>}<b style={{ color: '#fff' }}>Nivel {h.new_level}: {h.level_name}</b>
-                  {h.reason && <span style={{ color: 'var(--muted)' }}> · {h.reason}</span>}
-                </p>
-                <span style={{ fontSize: 11, color: 'var(--muted)' }}>
-                  {new Date(h.created_at).toLocaleDateString()}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* ── Growth timeline ── */}
+      <div className="card p-6">
+        <h2 className="section-title mb-4">Tu viaje de crecimiento</h2>
+        <GrowthTimeline />
+      </div>
     </div>
   )
 }

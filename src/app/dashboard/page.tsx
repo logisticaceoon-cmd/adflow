@@ -6,6 +6,7 @@ import SpendChart from '@/components/dashboard/SpendChart'
 import OnboardingWizard from '@/components/dashboard/OnboardingWizard'
 import { TrendingUp, DollarSign, Target, Megaphone, ArrowRight, Sparkles, Settings, Images, Zap, CreditCard } from 'lucide-react'
 import RecommendationsList from '@/components/dashboard/RecommendationsList'
+import PixelLevelCard from '@/components/dashboard/PixelLevelCard'
 import { PLAN_CREDITS } from '@/lib/plans'
 import { ADS_PER_CAMPAIGN_MIN, ADS_PER_CAMPAIGN_MAX } from '@/lib/credit-costs'
 
@@ -139,6 +140,9 @@ export default async function DashboardPage() {
             <Sparkles size={15} /> Nueva campaña con IA
           </Link>
         </div>
+
+        {/* ── Pixel level card ── */}
+        <PixelLevelCard />
 
         {/* ── Metrics grid ── */}
         <div className="grid grid-cols-4 gap-4 mb-6">

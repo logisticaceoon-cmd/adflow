@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { Resend } from 'resend'
 import { createAdminClient } from '@/lib/supabase/server'
+import { analyzePixel, savePixelAnalysis } from '@/lib/pixel-analyzer'
+import { generateMonthlyReport } from '@/lib/monthly-report-engine'
 import type { Campaign, CampaignMetrics, Recommendation } from '@/types'
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
@@ -75,6 +77,33 @@ async function processUserReport(supabase: any, userId: string) {
 
   const fbToken = fbConn?.access_token
   if (!fbToken) return
+
+  // 3.5 Refrescar pixel analysis (siempre, así las recomendaciones están al día)
+  try {
+    const { data: biz } = await supabase
+      .from('business_profiles')
+      .select('pixel_id')
+      .eq('user_id', userId)
+      .maybeSingle()
+    if (biz?.pixel_id) {
+      const analysis = await analyzePixel(biz.pixel_id, fbToken)
+      await savePixelAnalysis(userId, analysis)
+    }
+  } catch (err) {
+    console.warn(`[cron] pixel refresh failed for ${userId}:`, err)
+  }
+
+  // 3.6 Si es el primer día del mes, generar el reporte mensual del mes anterior
+  if (new Date().getDate() === 1) {
+    try {
+      const prev = new Date()
+      prev.setMonth(prev.getMonth() - 1)
+      const prevMonth = `${prev.getFullYear()}-${String(prev.getMonth() + 1).padStart(2, '0')}`
+      await generateMonthlyReport(userId, prevMonth)
+    } catch (err) {
+      console.warn(`[cron] monthly report failed for ${userId}:`, err)
+    }
+  }
 
   // 4. Obtener métricas de Facebook para cada campaña
   const metricsSnapshot: Record<string, CampaignMetrics> = {}
