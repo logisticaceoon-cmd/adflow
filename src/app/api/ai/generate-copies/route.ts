@@ -279,6 +279,7 @@ export async function POST(req: NextRequest) {
       currency,
       destination_url,
       whatsapp_number,
+      pixel_data,
     } = body
 
     if (!product_description?.trim()) {
@@ -288,20 +289,42 @@ export async function POST(req: NextRequest) {
     const strategyType: StrategyType = strategy_type
       || (objective ? objectiveToStrategy(objective) : 'TOFU')
 
-    // ── Load pixel capabilities (server-side, not from client) ─────────────
-    const { data: pa } = await supabase
-      .from('pixel_analysis')
-      .select('level, level_name, can_retarget_view_content, can_retarget_add_to_cart, can_retarget_purchase, can_create_lookalike')
-      .eq('user_id', user.id)
-      .maybeSingle()
-    const pixelCtx = pa ? {
-      level: pa.level ?? 0,
-      levelName: pa.level_name ?? 'Sin Data',
-      canRetargetViewContent: !!pa.can_retarget_view_content,
-      canRetargetAddToCart: !!pa.can_retarget_add_to_cart,
-      canRetargetPurchase: !!pa.can_retarget_purchase,
-      canCreateLookalike: !!pa.can_create_lookalike,
-    } : undefined
+    // ── Pixel capabilities: prefer client-supplied pixel_data, fall back to DB ─
+    let pixelCtx: {
+      level: number
+      levelName: string
+      canRetargetViewContent: boolean
+      canRetargetAddToCart: boolean
+      canRetargetPurchase: boolean
+      canCreateLookalike: boolean
+    } | undefined
+
+    if (pixel_data && typeof pixel_data.level === 'number') {
+      pixelCtx = {
+        level: pixel_data.level,
+        levelName: pixel_data.levelName ?? 'Sin Data',
+        canRetargetViewContent: !!pixel_data.canRetargetViewContent,
+        canRetargetAddToCart: !!pixel_data.canRetargetAddToCart,
+        canRetargetPurchase: !!pixel_data.canRetargetPurchase,
+        canCreateLookalike: !!pixel_data.canCreateLookalike,
+      }
+    } else {
+      const { data: pa } = await supabase
+        .from('pixel_analysis')
+        .select('level, level_name, can_retarget_view_content, can_retarget_add_to_cart, can_retarget_purchase, can_create_lookalike')
+        .eq('user_id', user.id)
+        .maybeSingle()
+      if (pa) {
+        pixelCtx = {
+          level: pa.level ?? 0,
+          levelName: pa.level_name ?? 'Sin Data',
+          canRetargetViewContent: !!pa.can_retarget_view_content,
+          canRetargetAddToCart: !!pa.can_retarget_add_to_cart,
+          canRetargetPurchase: !!pa.can_retarget_purchase,
+          canCreateLookalike: !!pa.can_create_lookalike,
+        }
+      }
+    }
 
     // ── Credits check ──────────────────────────────────────────────────────
     await resetCreditsIfNeeded(user.id)

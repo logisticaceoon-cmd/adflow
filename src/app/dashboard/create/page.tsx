@@ -53,6 +53,7 @@ export default function CreateCampaignPage() {
   const [pixelLevelName,      setPixelLevelName]      = useState('Sin Data')
   const [availableStrategies, setAvailableStrategies] = useState<string[]>(['TOFU'])
   const [pixelAnalysis,       setPixelAnalysis]       = useState<any>(null)
+  const [noPixelConfigured,   setNoPixelConfigured]   = useState(false)
 
   // ── Media ─────────────────────────────────────────────────────────────────
   const [mediaFiles,       setMediaFiles]       = useState<File[]>([])
@@ -107,14 +108,25 @@ export default function CreateCampaignPage() {
           try {
             const pixelRes  = await fetch('/api/pixel/analyze')
             const pixelJson = await pixelRes.json()
-            const a = pixelJson?.analysis
-            if (a && typeof a.level === 'number') {
-              setPixelLevel(a.level)
-              setPixelLevelName(a.levelName || 'Sin Data')
-              setAvailableStrategies(a.availableStrategies?.length ? a.availableStrategies : ['TOFU'])
-              setPixelAnalysis(a)
+            if (pixelJson?.code === 'NO_PIXEL' || !pixelRes.ok) {
+              setNoPixelConfigured(true)
+              setAvailableStrategies(['TOFU'])
+            } else {
+              const a = pixelJson?.analysis
+              if (a && typeof a.level === 'number') {
+                setPixelLevel(a.level)
+                setPixelLevelName(a.levelName || 'Sin Data')
+                setAvailableStrategies(a.availableStrategies?.length ? a.availableStrategies : ['TOFU'])
+                setPixelAnalysis(a)
+              }
             }
-          } catch { /* default: nivel 0 = solo TOFU */ }
+          } catch {
+            setNoPixelConfigured(true)
+            setAvailableStrategies(['TOFU'])
+          }
+        } else {
+          setNoPixelConfigured(true)
+          setAvailableStrategies(['TOFU'])
         }
       } catch { /* ignore */ }
     }
@@ -252,6 +264,16 @@ export default function CreateCampaignPage() {
           currency,
           destination_url:     form.destination_url  || undefined,
           whatsapp_number:     form.whatsapp_number  || undefined,
+          pixel_level:         pixelLevel,
+          pixel_data:          pixelAnalysis ? {
+            level:                  pixelAnalysis.level,
+            levelName:              pixelAnalysis.levelName,
+            canRetargetViewContent: pixelAnalysis.canRetargetViewContent,
+            canRetargetAddToCart:   pixelAnalysis.canRetargetAddToCart,
+            canRetargetPurchase:    pixelAnalysis.canRetargetPurchase,
+            canCreateLookalike:     pixelAnalysis.canCreateLookalike,
+            events:                 pixelAnalysis.events,
+          } : null,
         }),
       })
       clearTimeout(t1); clearTimeout(t2)
@@ -416,7 +438,7 @@ export default function CreateCampaignPage() {
         <p style={{ fontSize: 13, color: 'var(--muted)' }}>
           Describí tu negocio y la IA diseña una estrategia completa lista para publicar en Meta
         </p>
-        {pixelAnalysis && (
+        {pixelAnalysis && !noPixelConfigured && (
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             padding: '6px 14px', borderRadius: 99, marginTop: 10,
@@ -435,6 +457,30 @@ export default function CreateCampaignPage() {
           </div>
         )}
       </div>
+
+      {/* No-pixel banner */}
+      {noPixelConfigured && (
+        <div className="mb-6 p-4 rounded-xl text-sm" style={{
+          background: 'rgba(245,158,11,0.08)',
+          border: '1px solid rgba(245,158,11,0.30)',
+          color: '#f59e0b',
+          display: 'flex', gap: 12, alignItems: 'flex-start',
+        }}>
+          <span style={{ fontSize: 18, flexShrink: 0 }}>⚠️</span>
+          <div style={{ lineHeight: 1.55 }}>
+            <p style={{ fontWeight: 700, marginBottom: 4, color: '#f59e0b' }}>
+              No tenés pixel de Meta configurado
+            </p>
+            <p style={{ fontSize: 12.5, color: 'rgba(245,158,11,0.85)' }}>
+              Solo podés crear campañas <b>TOFU</b> con audiencias amplias. Configurá tu pixel en{' '}
+              <a href="/dashboard/settings" style={{ textDecoration: 'underline', color: '#fbbf24' }}>
+                Configuración → Activos de Meta
+              </a>
+              {' '}para desbloquear MOFU (retargeting) y BOFU (lookalikes).
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Steps indicator */}
       <div className="flex items-center mb-10">
