@@ -389,12 +389,31 @@ export async function POST(req: NextRequest) {
 
           const uniqueName = `${adSet.name} | ${ad.name || `Ad ${ai + 1}`}`
           const objectStorySpec: Record<string, unknown> = { page_id: pageId, link_data: linkData }
-          if (biz?.instagram_account_id) objectStorySpec.instagram_actor_id = biz.instagram_account_id
 
-          const creative = await graphPost(`/${adAccountId}/adcreatives`, token, {
-            name: uniqueName,
-            object_story_spec: objectStorySpec,
-          })
+          // Only include instagram_actor_id if configured AND a numeric ID
+          const igActorId = biz?.instagram_account_id
+          const useInstagram = igActorId && /^\d+$/.test(String(igActorId))
+          if (useInstagram) objectStorySpec.instagram_actor_id = igActorId
+
+          let creative: any
+          try {
+            creative = await graphPost(`/${adAccountId}/adcreatives`, token, {
+              name: uniqueName,
+              object_story_spec: objectStorySpec,
+            })
+          } catch (creativeErr: any) {
+            // If Meta rejects instagram_actor_id, retry without it (FB-only)
+            if (creativeErr.message?.includes('instagram_actor_id') && objectStorySpec.instagram_actor_id) {
+              console.warn(`[publish-campaign] Retrying creative without instagram_actor_id`)
+              delete objectStorySpec.instagram_actor_id
+              creative = await graphPost(`/${adAccountId}/adcreatives`, token, {
+                name: uniqueName,
+                object_story_spec: objectStorySpec,
+              })
+            } else {
+              throw creativeErr
+            }
+          }
           creativeIds.push(creative.id)
 
           const metaAd = await graphPost(`/${adAccountId}/ads`, token, {
