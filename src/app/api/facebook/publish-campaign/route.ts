@@ -2,6 +2,8 @@
 // Publishes a full Meta Ads campaign structure: Campaign → Ad Sets → Ad Creatives → Ads
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { analyzePixel, savePixelAnalysis, type PixelAnalysis } from '@/lib/pixel-analyzer'
+import { searchMetaInterests, findOrCreateRetargetingAudience, findOrCreateLookalike } from '@/lib/audience-engine'
 import type { AdSetItem, AdCopyItem, CampaignStructure } from '@/types'
 
 const GRAPH = 'https://graph.facebook.com/v20.0'
@@ -151,7 +153,6 @@ async function graphPost(path: string, token: string, body: Record<string, unkno
   return data
 }
 
-// ── Audience resolution helpers ─────────────────────────────────────────────
 // Tracks every audience attempt for post-mortem debugging (saved in metrics)
 type AudienceLogEntry = {
   ad_set: string
@@ -160,197 +161,6 @@ type AudienceLogEntry = {
   result: 'ok' | 'fail' | 'skip'
   detail?: string
   ids?: string[]
-}
-
-// Search Meta's interest taxonomy by name. Returns up to `take` results per query.
-async function searchMetaInterestsByName(
-  token: string,
-  name: string,
-  take = 3,
-): Promise<Array<{ id: string; name: string }>> {
-  try {
-    const url = `${GRAPH}/search?type=adinterest&q=${encodeURIComponent(name)}&limit=10&access_token=${token}`
-    const res = await fetch(url)
-    const data = await res.json()
-    if (data.error) {
-      console.warn(`[publish-campaign] Interest search error for "${name}":`, data.error.message)
-      return []
-    }
-    if (!data.data?.length) return []
-    return data.data.slice(0, take)
-      .filter((i: any) => i?.id)
-      .map((i: any) => ({ id: String(i.id), name: i.name || name }))
-  } catch (err: any) {
-    console.warn(`[publish-campaign] Interest search exception for "${name}":`, err.message)
-    return []
-  }
-}
-
-// Resolve AI-generated interest names → array of 7-15 real Meta interest IDs.
-// Accepts strings or { id?, name?, interest? } objects. Dedupes by id.
-async function searchMetaInterests(
-  token: string,
-  raw: Array<any>,
-): Promise<Array<{ id: string; name: string }>> {
-  const out: Array<{ id: string; name: string }> = []
-  const seen = new Set<string>()
-
-  // Extract usable names from heterogeneous input shapes
-  const names: string[] = []
-  for (const item of raw) {
-    if (!item) continue
-    if (typeof item === 'string') { names.push(item); continue }
-    // Already has a numeric Meta ID — preserve as-is
-    if (item.id && /^\d+$/.test(String(item.id))) {
-      const idStr = String(item.id)
-      if (!seen.has(idStr)) {
-        seen.add(idStr)
-        out.push({ id: idStr, name: item.name || item.interest || '' })
-      }
-      continue
-    }
-    const n = item.name || item.interest || item.category
-    if (n && typeof n === 'string') names.push(n)
-  }
-
-  // Search Meta API for each name
-  for (const name of names) {
-    if (out.length >= 15) break
-    const found = await searchMetaInterestsByName(token, name, 3)
-    for (const f of found) {
-      if (out.length >= 15) break
-      if (!seen.has(f.id)) {
-        seen.add(f.id)
-        out.push(f)
-      }
-    }
-  }
-  return out
-}
-
-// Look up an existing Custom Audience by exact name match within the ad account
-async function findCustomAudienceByName(
-  adAccountId: string,
-  token: string,
-  name: string,
-): Promise<string | null> {
-  try {
-    const filtering = encodeURIComponent(JSON.stringify([
-      { field: 'name', operator: 'CONTAIN', value: name },
-    ]))
-    const url = `${GRAPH}/${adAccountId}/customaudiences?fields=id,name&limit=25&filtering=${filtering}&access_token=${token}`
-    const res = await fetch(url)
-    const data = await res.json()
-    if (data.error) {
-      console.warn(`[publish-campaign] Audience lookup error for "${name}":`, data.error.message)
-      return null
-    }
-    if (!data.data?.length) return null
-    // Prefer exact name match, otherwise the first containing match
-    const exact = data.data.find((a: any) => a.name === name)
-    return (exact || data.data[0]).id || null
-  } catch (err: any) {
-    console.warn(`[publish-campaign] Audience lookup exception for "${name}":`, err.message)
-    return null
-  }
-}
-
-// Find or create a Website Custom Audience from pixel data.
-// `eventType` (e.g. Purchase, AddToCart, ViewContent) restricts the rule.
-async function findOrCreateCustomAudience(
-  adAccountId: string,
-  token: string,
-  pixelId: string,
-  name: string,
-  retentionDays: number,
-  eventType?: string,
-): Promise<string | null> {
-  // 1) Reuse existing audience if present
-  const existing = await findCustomAudienceByName(adAccountId, token, name)
-  if (existing) {
-    console.log(`[publish-campaign] ↻ Reusing custom audience "${name}" → ${existing}`)
-    return existing
-  }
-
-  // 2) Build rule (no empty url filter — Meta is picky)
-  const ruleEntry: Record<string, unknown> = {
-    event_sources: [{ id: pixelId, type: 'pixel' }],
-    retention_seconds: retentionDays * 86400,
-  }
-  if (eventType) {
-    ruleEntry.filter = {
-      operator: 'and',
-      filters: [{ field: 'event', operator: 'eq', value: eventType }],
-    }
-  }
-
-  try {
-    const res = await graphPost(`/${adAccountId}/customaudiences`, token, {
-      name,
-      subtype: 'WEBSITE',
-      description: `Auto-created by AdFlow${eventType ? ` (${eventType})` : ''}`,
-      pixel_id: pixelId,
-      rule: JSON.stringify({
-        inclusions: { operator: 'or', rules: [ruleEntry] },
-      }),
-    })
-    if (res?.id) {
-      console.log(`[publish-campaign] ✚ Created custom audience "${name}" → ${res.id}`)
-      return res.id
-    }
-    return null
-  } catch (err: any) {
-    console.warn(`[publish-campaign] Custom audience creation failed for "${name}":`, err.message)
-    return null
-  }
-}
-
-// Find or create a Lookalike audience built on top of a Purchase-source audience
-async function findOrCreateLookalike(
-  adAccountId: string,
-  token: string,
-  pixelId: string,
-  countryCode: string,
-  retentionDays = 180,
-  ratio = 0.01,
-): Promise<{ lookalikeId: string | null; sourceId: string | null }> {
-  const sourceName = `[AdFlow] Compradores ${retentionDays}d`
-  const lookalikeName = `[AdFlow] LAL 1% ${countryCode} — Compradores ${retentionDays}d`
-
-  // 1) Try to reuse the lookalike directly
-  const existingLal = await findCustomAudienceByName(adAccountId, token, lookalikeName)
-  if (existingLal) {
-    console.log(`[publish-campaign] ↻ Reusing lookalike "${lookalikeName}" → ${existingLal}`)
-    return { lookalikeId: existingLal, sourceId: null }
-  }
-
-  // 2) Find or create the source (Purchase event audience)
-  const sourceId = await findOrCreateCustomAudience(
-    adAccountId, token, pixelId, sourceName, retentionDays, 'Purchase',
-  )
-  if (!sourceId) return { lookalikeId: null, sourceId: null }
-
-  // 3) Create the lookalike from that source
-  try {
-    const res = await graphPost(`/${adAccountId}/customaudiences`, token, {
-      name: lookalikeName,
-      subtype: 'LOOKALIKE',
-      origin_audience_id: sourceId,
-      lookalike_spec: JSON.stringify({
-        type: 'similarity',
-        ratio,
-        country: countryCode,
-      }),
-    })
-    if (res?.id) {
-      console.log(`[publish-campaign] ✚ Created lookalike "${lookalikeName}" → ${res.id}`)
-      return { lookalikeId: res.id, sourceId }
-    }
-    return { lookalikeId: null, sourceId }
-  } catch (err: any) {
-    console.warn(`[publish-campaign] Lookalike creation failed for "${lookalikeName}":`, err.message)
-    return { lookalikeId: null, sourceId }
-  }
 }
 
 async function uploadImageToMeta(adAccountId: string, token: string, imageUrl: string): Promise<string | null> {
@@ -488,6 +298,19 @@ export async function POST(req: NextRequest) {
     // Resolve optimization goal once (same for all ad sets)
     const { optimization_goal, promoted_object } = resolveOptGoalForObjective(campaignObjective, pixelId)
 
+    // Analyze pixel BEFORE the loop so we can gate retargeting/lookalike attempts
+    let pixelData: PixelAnalysis | null = null
+    if (pixelId) {
+      try {
+        pixelData = await analyzePixel(pixelId, token)
+        await savePixelAnalysis(user.id, pixelData)
+        console.log(`[publish-campaign] Pixel level: ${pixelData.level} (${pixelData.levelName}) | VC30=${pixelData.events.ViewContent.count_30d} ATC30=${pixelData.events.AddToCart.count_30d} P30=${pixelData.events.Purchase.count_30d} P180=${pixelData.events.Purchase.count_180d}`)
+        console.log(`[publish-campaign] Capabilities: VC=${pixelData.canRetargetViewContent} ATC=${pixelData.canRetargetAddToCart} P=${pixelData.canRetargetPurchase} LAL=${pixelData.canCreateLookalike}`)
+      } catch (err: any) {
+        console.warn('[publish-campaign] Pixel analysis failed, continuing with broad targeting:', err.message)
+      }
+    }
+
     // Cache custom audience IDs across ad sets in this run (key → audience id)
     const audienceCache: Record<string, string> = {}
     // Per-publish audit trail of what we tried for each ad set's audience
@@ -538,111 +361,163 @@ export async function POST(req: NextRequest) {
       }
 
       // ════════════════════════════════════════════════════════════════════
-      // 2.b RESOLVE AUDIENCE — interest IDs / custom audiences / lookalikes
-      //     Falls back to broad targeting if anything fails (never blocks).
+      // 2.b RESOLVE AUDIENCE — gated by pixel level + capabilities
+      //     If pixel can't support the requested type, gracefully degrade
+      //     (e.g. lookalike → interests; retargeting → interests).
       //     Every attempt is recorded in audienceLog → saved to metrics.
       // ════════════════════════════════════════════════════════════════════
       const rawAudienceType = ((adSet as any).audience_type as string | undefined)?.toLowerCase()
       const isTofu = (campaign.strategy_type || '').toUpperCase() === 'TOFU'
-      // Default to "interest" for TOFU when AI didn't tag it explicitly
-      const audienceType = rawAudienceType
-        || (isTofu ? 'interest' : 'broad')
+      const audienceType = rawAudienceType || (isTofu ? 'interest' : 'broad')
       const primaryCountry = countries[0] || 'US'
 
+      // Helper: extract interest names from every shape the AI may emit
+      const collectInterestNames = (): string[] => {
+        const raw: any[] = [
+          ...(Array.isArray(t.interests) ? t.interests : []),
+          ...((adSet as any).interests || []),
+          ...((campaign.ai_copies as any)?.targeting?.interests || []),
+        ]
+        return raw
+          .map((i: any) => typeof i === 'string' ? i : (i?.name || i?.interest || i?.category || ''))
+          .filter((s: string) => !!s)
+      }
+
+      // Helper: try interest fallback when retargeting/lookalike isn't viable
+      const tryInterestFallback = async (reason: string) => {
+        const names = collectInterestNames()
+        if (!names.length) {
+          audienceLog.push({ ad_set: adSet.name, audience_type: audienceType, action: 'fallback', result: 'skip', detail: `${reason}; no AI interests to fall back on` })
+          return
+        }
+        const resolved = await searchMetaInterests(token, names, 7, 15)
+        if (resolved.length) {
+          targetingSpec.flexible_spec = [{ interests: resolved }]
+          delete (targetingSpec as Record<string, unknown>).interests
+          audienceLog.push({
+            ad_set: adSet.name, audience_type: audienceType, action: 'fallback', result: 'ok',
+            detail: `${reason} → ${resolved.length} interests`,
+            ids: resolved.map(r => `${r.name}(${r.id})`),
+          })
+        } else {
+          audienceLog.push({ ad_set: adSet.name, audience_type: audienceType, action: 'fallback', result: 'fail', detail: `${reason}; Meta returned no interests` })
+        }
+      }
+
       try {
-        if (audienceType === 'interest') {
-          // Pull names from every shape the AI may emit
-          const rawInterests: any[] = [
-            ...(Array.isArray(t.interests) ? t.interests : []),
-            ...((adSet as any).interests || []),
-            ...((campaign.ai_copies as any)?.targeting?.interests || []),
-          ]
-          if (!rawInterests.length) {
-            audienceLog.push({ ad_set: adSet.name, audience_type: 'interest', action: 'search', result: 'skip', detail: 'AI did not generate any interest names' })
-            console.warn(`[publish-campaign] "${adSet.name}": no interest names from AI → broad`)
-          } else {
-            const resolved = await searchMetaInterests(token, rawInterests)
+        // ── INTEREST or BROAD ─────────────────────────────────────────────
+        if (audienceType === 'interest' || audienceType === 'broad') {
+          const names = collectInterestNames()
+          if (names.length) {
+            const resolved = await searchMetaInterests(token, names, 7, 15)
             if (resolved.length) {
               targetingSpec.flexible_spec = [{ interests: resolved }]
               delete (targetingSpec as Record<string, unknown>).interests
               audienceLog.push({
-                ad_set: adSet.name, audience_type: 'interest', action: 'search', result: 'ok',
+                ad_set: adSet.name, audience_type: audienceType, action: 'search', result: 'ok',
                 detail: `${resolved.length} interests`,
                 ids: resolved.map(r => `${r.name}(${r.id})`),
               })
-              console.log(`[publish-campaign] ✓ "${adSet.name}": ${resolved.length} interests resolved`, resolved.map(r => `${r.name}(${r.id})`).join(', '))
+              console.log(`[publish-campaign] ✓ "${adSet.name}": ${resolved.length} interests resolved`)
             } else {
-              audienceLog.push({ ad_set: adSet.name, audience_type: 'interest', action: 'search', result: 'fail', detail: 'no Meta search results for any name' })
-              console.warn(`[publish-campaign] "${adSet.name}": Meta returned no results for AI interest names → broad`)
+              audienceLog.push({ ad_set: adSet.name, audience_type: audienceType, action: 'search', result: 'fail', detail: 'Meta returned no results for AI names' })
             }
+          } else if ((t as any).advantage_plus === true) {
+            (targetingSpec as Record<string, unknown>).targeting_automation = { advantage_audience: 1 }
+            audienceLog.push({ ad_set: adSet.name, audience_type: audienceType, action: 'attach', result: 'ok', detail: 'Advantage+ broad' })
+          } else {
+            audienceLog.push({ ad_set: adSet.name, audience_type: audienceType, action: 'attach', result: 'ok', detail: 'broad (geo+age+gender)' })
           }
-        } else if (audienceType === 'retargeting') {
+        }
+
+        // ── RETARGETING ───────────────────────────────────────────────────
+        else if (audienceType === 'retargeting') {
           if (!pixelId) {
             audienceLog.push({ ad_set: adSet.name, audience_type: 'retargeting', action: 'create', result: 'skip', detail: 'no pixel configured' })
-            console.warn(`[publish-campaign] "${adSet.name}": retargeting requested but no pixel → broad`)
+            await tryInterestFallback('no pixel')
+          } else if (pixelData && !pixelData.canRetargetViewContent) {
+            const detail = `pixel insufficient (VC30=${pixelData.events.ViewContent.count_30d}, need 100+)`
+            console.warn(`[publish-campaign] "${adSet.name}": ${detail}`)
+            audienceLog.push({ ad_set: adSet.name, audience_type: 'retargeting', action: 'gate', result: 'skip', detail })
+            await tryInterestFallback('pixel data low')
           } else {
-            // Heuristic: parse retention + event from ad set name
+            // Parse retention + event from ad set name
             const lower = adSet.name.toLowerCase()
             const retentionDays = /(?:^|\D)7(?:\D|$)/.test(lower) || /caliente|hot|carrito|cart/.test(lower) ? 7
               : /(?:^|\D)14(?:\D|$)/.test(lower) ? 14
-              : /(?:^|\D)30(?:\D|$)/.test(lower) || /tibio|warm|frio|cold/.test(lower) ? 30
               : 30
-            const eventType: string | undefined = /carrito|cart/.test(lower) ? 'AddToCart'
+            const eventType: string = /carrito|cart/.test(lower) ? 'AddToCart'
               : /compra|purchase/.test(lower) ? 'Purchase'
               : /vista|view/.test(lower) ? 'ViewContent'
-              : undefined
-            const audName = `[AdFlow] ${eventType || 'Visitantes'} ${retentionDays}d`
-            const cacheKey = `${audName}|${pixelId}`
-            let audienceId: string | null = audienceCache[cacheKey] || null
-            if (!audienceId) {
-              audienceId = await findOrCreateCustomAudience(
-                adAccountId, token, pixelId, audName, retentionDays, eventType,
-              )
-              if (audienceId) audienceCache[cacheKey] = audienceId
-            }
-            if (audienceId) {
-              targetingSpec.custom_audiences = [{ id: audienceId }]
-              audienceLog.push({ ad_set: adSet.name, audience_type: 'retargeting', action: 'attach', result: 'ok', detail: `${audName} (${retentionDays}d, ${eventType || 'all'})`, ids: [audienceId] })
-              console.log(`[publish-campaign] ✓ "${adSet.name}": retargeting audience attached → ${audienceId}`)
+              : 'ViewContent'
+
+            // Per-event capability gating
+            const eventOk = eventType === 'Purchase' ? pixelData?.canRetargetPurchase ?? true
+              : eventType === 'AddToCart' ? pixelData?.canRetargetAddToCart ?? true
+              : pixelData?.canRetargetViewContent ?? true
+            if (!eventOk) {
+              audienceLog.push({ ad_set: adSet.name, audience_type: 'retargeting', action: 'gate', result: 'skip', detail: `pixel can't support ${eventType}` })
+              await tryInterestFallback(`pixel low for ${eventType}`)
             } else {
-              audienceLog.push({ ad_set: adSet.name, audience_type: 'retargeting', action: 'create', result: 'fail', detail: `${audName} (${retentionDays}d, ${eventType || 'all'})` })
-              console.warn(`[publish-campaign] "${adSet.name}": retargeting unavailable → broad`)
+              const audName = `${eventType} ${retentionDays}d`
+              const cacheKey = `${audName}|${pixelId}`
+              let audienceId: string | null = audienceCache[cacheKey] || null
+              if (!audienceId) {
+                audienceId = await findOrCreateRetargetingAudience(
+                  adAccountId, token, pixelId,
+                  { name: audName, retentionDays, eventType },
+                )
+                if (audienceId) audienceCache[cacheKey] = audienceId
+              }
+              if (audienceId) {
+                targetingSpec.custom_audiences = [{ id: audienceId }]
+                audienceLog.push({ ad_set: adSet.name, audience_type: 'retargeting', action: 'attach', result: 'ok', detail: `${audName}`, ids: [audienceId] })
+                console.log(`[publish-campaign] ✓ "${adSet.name}": retargeting → ${audienceId}`)
+              } else {
+                audienceLog.push({ ad_set: adSet.name, audience_type: 'retargeting', action: 'create', result: 'fail', detail: audName })
+                await tryInterestFallback('audience creation failed')
+              }
             }
           }
-        } else if (audienceType === 'lookalike') {
+        }
+
+        // ── LOOKALIKE ─────────────────────────────────────────────────────
+        else if (audienceType === 'lookalike') {
           if (!pixelId) {
             audienceLog.push({ ad_set: adSet.name, audience_type: 'lookalike', action: 'create', result: 'skip', detail: 'no pixel configured' })
-            console.warn(`[publish-campaign] "${adSet.name}": lookalike requested but no pixel → broad`)
+            await tryInterestFallback('no pixel')
+          } else if (pixelData && !pixelData.canCreateLookalike) {
+            const detail = `pixel insufficient (P180=${pixelData.events.Purchase.count_180d}, need 100+)`
+            console.warn(`[publish-campaign] "${adSet.name}": ${detail}`)
+            audienceLog.push({ ad_set: adSet.name, audience_type: 'lookalike', action: 'gate', result: 'skip', detail })
+            await tryInterestFallback('pixel purchases too low')
           } else {
             const cacheKey = `lal|${primaryCountry}|${pixelId}`
             let lookalikeId: string | null = audienceCache[cacheKey] || null
             if (!lookalikeId) {
-              const result = await findOrCreateLookalike(
-                adAccountId, token, pixelId, primaryCountry, 180, 0.01,
-              )
-              lookalikeId = result.lookalikeId
+              lookalikeId = await findOrCreateLookalike(adAccountId, token, pixelId, {
+                sourceName: 'Compradores 180d',
+                sourceRetentionDays: 180,
+                sourceEventType: 'Purchase',
+                country: primaryCountry,
+                ratio: 0.01,
+              })
               if (lookalikeId) audienceCache[cacheKey] = lookalikeId
             }
             if (lookalikeId) {
               targetingSpec.custom_audiences = [{ id: lookalikeId }]
               audienceLog.push({ ad_set: adSet.name, audience_type: 'lookalike', action: 'attach', result: 'ok', detail: `LAL 1% ${primaryCountry}`, ids: [lookalikeId] })
-              console.log(`[publish-campaign] ✓ "${adSet.name}": lookalike attached → ${lookalikeId}`)
+              console.log(`[publish-campaign] ✓ "${adSet.name}": lookalike → ${lookalikeId}`)
             } else {
-              audienceLog.push({ ad_set: adSet.name, audience_type: 'lookalike', action: 'create', result: 'fail', detail: `LAL 1% ${primaryCountry} — likely insufficient pixel data` })
-              console.warn(`[publish-campaign] "${adSet.name}": lookalike unavailable (often: pixel has <100 Purchase events) → broad`)
+              audienceLog.push({ ad_set: adSet.name, audience_type: 'lookalike', action: 'create', result: 'fail', detail: `LAL 1% ${primaryCountry}` })
+              await tryInterestFallback('lookalike creation failed')
             }
           }
-        } else {
-          // 'broad' or unknown — use Advantage+ if AI flagged it
-          if ((t as any).advantage_plus === true) {
-            (targetingSpec as Record<string, unknown>).targeting_automation = { advantage_audience: 1 }
-          }
-          audienceLog.push({ ad_set: adSet.name, audience_type: audienceType, action: 'attach', result: 'ok', detail: 'broad targeting (geo+age+gender)' })
         }
       } catch (audErr: any) {
         // Audience resolution must NEVER block ad set creation
         audienceLog.push({ ad_set: adSet.name, audience_type: audienceType, action: 'exception', result: 'fail', detail: audErr.message })
-        console.error(`[publish-campaign] "${adSet.name}": audience resolution exception → broad. ${audErr.message}`)
+        console.error(`[publish-campaign] "${adSet.name}": audience exception → broad. ${audErr.message}`)
       }
 
       // ════════════════════════════════════════════════════════════════════

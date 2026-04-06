@@ -22,7 +22,8 @@
       "WebSearch",
       "WebFetch(domain:developers.facebook.com)",
       "mcp__claude_ai_Vercel__get_runtime_logs",
-      "mcp__claude_ai_Supabase__list_projects"
+      "mcp__claude_ai_Supabase__list_projects",
+      "mcp__claude_ai_Supabase__apply_migration"
     ]
   }
 }
