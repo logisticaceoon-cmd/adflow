@@ -19,8 +19,8 @@ const STRATEGY_CONFIG = {
   TOFU: {
     label: 'Top of Funnel — Reconocimiento',
     structure: `2 conjuntos de anuncios:
-    - Ad Set 1 "Audiencia Amplia": advantage_plus DEBE ser true. NO pongas intereses (array vacío). Solo geo, edad y género. Dejar que Meta optimice con Advantage+.
-    - Ad Set 2 "Intereses Específicos": advantage_plus false. Incluir 3-5 intereses REALES de Meta Business Manager (nombres exactos como aparecen en la plataforma, ej: "Emprendimiento", "Marketing digital", "Facebook for Business", "Shopify", "Mercado Libre").
+    - Ad Set 1 "Audiencia Amplia": audience_type "broad", advantage_plus DEBE ser true. NO pongas intereses (interests: []). Solo geo, edad y género. Dejar que Meta optimice con Advantage+.
+    - Ad Set 2 "Intereses Específicos": audience_type "interest", advantage_plus false. OBLIGATORIO: incluir 5-10 intereses REALES de Meta Business Manager (nombres exactos como aparecen en la plataforma) en el array "interests". Cada uno con shape {"name": "Nombre exacto del interés"}. Ejemplos válidos: "Emprendimiento", "Marketing digital", "Facebook for Business", "Shopify", "Mercado Libre", "Comercio electrónico", "Pequeña empresa", "Negocios desde casa", "Marketing en línea", "Publicidad en línea". Adaptá los nombres al producto/nicho del cliente.
     3 ads por conjunto con ángulos: emocional, informativo, social_proof`,
   },
   MOFU: {

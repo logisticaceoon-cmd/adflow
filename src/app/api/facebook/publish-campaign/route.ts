@@ -152,110 +152,204 @@ async function graphPost(path: string, token: string, body: Record<string, unkno
 }
 
 // ── Audience resolution helpers ─────────────────────────────────────────────
+// Tracks every audience attempt for post-mortem debugging (saved in metrics)
+type AudienceLogEntry = {
+  ad_set: string
+  audience_type: string
+  action: string
+  result: 'ok' | 'fail' | 'skip'
+  detail?: string
+  ids?: string[]
+}
 
-// Search Meta's interest taxonomy by name → returns real { id, name } or null
-async function searchInterestId(token: string, name: string): Promise<{ id: string; name: string } | null> {
+// Search Meta's interest taxonomy by name. Returns up to `take` results per query.
+async function searchMetaInterestsByName(
+  token: string,
+  name: string,
+  take = 3,
+): Promise<Array<{ id: string; name: string }>> {
   try {
-    const url = `${GRAPH}/search?type=adinterest&q=${encodeURIComponent(name)}&limit=1&access_token=${token}`
+    const url = `${GRAPH}/search?type=adinterest&q=${encodeURIComponent(name)}&limit=10&access_token=${token}`
     const res = await fetch(url)
     const data = await res.json()
-    if (data.error || !data.data?.length) return null
-    const first = data.data[0]
-    if (!first?.id) return null
-    return { id: String(first.id), name: first.name || name }
+    if (data.error) {
+      console.warn(`[publish-campaign] Interest search error for "${name}":`, data.error.message)
+      return []
+    }
+    if (!data.data?.length) return []
+    return data.data.slice(0, take)
+      .filter((i: any) => i?.id)
+      .map((i: any) => ({ id: String(i.id), name: i.name || name }))
   } catch (err: any) {
-    console.warn(`[publish-campaign] Interest search failed for "${name}":`, err.message)
-    return null
+    console.warn(`[publish-campaign] Interest search exception for "${name}":`, err.message)
+    return []
   }
 }
 
-// Resolve a list of AI-generated interest names → real Meta interest IDs.
-// Accepts strings or { id?, name? } objects. Skips ones that can't be found.
-async function resolveInterestIds(
+// Resolve AI-generated interest names → array of 7-15 real Meta interest IDs.
+// Accepts strings or { id?, name?, interest? } objects. Dedupes by id.
+async function searchMetaInterests(
   token: string,
-  raw: Array<{ id?: string; name?: string } | string>,
+  raw: Array<any>,
 ): Promise<Array<{ id: string; name: string }>> {
   const out: Array<{ id: string; name: string }> = []
+  const seen = new Set<string>()
+
+  // Extract usable names from heterogeneous input shapes
+  const names: string[] = []
   for (const item of raw) {
-    if (typeof item === 'string') {
-      const found = await searchInterestId(token, item)
-      if (found) out.push(found)
-      continue
-    }
+    if (!item) continue
+    if (typeof item === 'string') { names.push(item); continue }
+    // Already has a numeric Meta ID — preserve as-is
     if (item.id && /^\d+$/.test(String(item.id))) {
-      out.push({ id: String(item.id), name: item.name || '' })
+      const idStr = String(item.id)
+      if (!seen.has(idStr)) {
+        seen.add(idStr)
+        out.push({ id: idStr, name: item.name || item.interest || '' })
+      }
       continue
     }
-    if (item.name) {
-      const found = await searchInterestId(token, item.name)
-      if (found) out.push(found)
+    const n = item.name || item.interest || item.category
+    if (n && typeof n === 'string') names.push(n)
+  }
+
+  // Search Meta API for each name
+  for (const name of names) {
+    if (out.length >= 15) break
+    const found = await searchMetaInterestsByName(token, name, 3)
+    for (const f of found) {
+      if (out.length >= 15) break
+      if (!seen.has(f.id)) {
+        seen.add(f.id)
+        out.push(f)
+      }
     }
   }
   return out
 }
 
-// Create a Website Custom Audience from pixel data (all visitors, last N days)
-async function createWebsiteCustomAudience(
+// Look up an existing Custom Audience by exact name match within the ad account
+async function findCustomAudienceByName(
+  adAccountId: string,
+  token: string,
+  name: string,
+): Promise<string | null> {
+  try {
+    const filtering = encodeURIComponent(JSON.stringify([
+      { field: 'name', operator: 'CONTAIN', value: name },
+    ]))
+    const url = `${GRAPH}/${adAccountId}/customaudiences?fields=id,name&limit=25&filtering=${filtering}&access_token=${token}`
+    const res = await fetch(url)
+    const data = await res.json()
+    if (data.error) {
+      console.warn(`[publish-campaign] Audience lookup error for "${name}":`, data.error.message)
+      return null
+    }
+    if (!data.data?.length) return null
+    // Prefer exact name match, otherwise the first containing match
+    const exact = data.data.find((a: any) => a.name === name)
+    return (exact || data.data[0]).id || null
+  } catch (err: any) {
+    console.warn(`[publish-campaign] Audience lookup exception for "${name}":`, err.message)
+    return null
+  }
+}
+
+// Find or create a Website Custom Audience from pixel data.
+// `eventType` (e.g. Purchase, AddToCart, ViewContent) restricts the rule.
+async function findOrCreateCustomAudience(
   adAccountId: string,
   token: string,
   pixelId: string,
   name: string,
   retentionDays: number,
+  eventType?: string,
 ): Promise<string | null> {
+  // 1) Reuse existing audience if present
+  const existing = await findCustomAudienceByName(adAccountId, token, name)
+  if (existing) {
+    console.log(`[publish-campaign] ↻ Reusing custom audience "${name}" → ${existing}`)
+    return existing
+  }
+
+  // 2) Build rule (no empty url filter — Meta is picky)
+  const ruleEntry: Record<string, unknown> = {
+    event_sources: [{ id: pixelId, type: 'pixel' }],
+    retention_seconds: retentionDays * 86400,
+  }
+  if (eventType) {
+    ruleEntry.filter = {
+      operator: 'and',
+      filters: [{ field: 'event', operator: 'eq', value: eventType }],
+    }
+  }
+
   try {
-    const body: Record<string, unknown> = {
+    const res = await graphPost(`/${adAccountId}/customaudiences`, token, {
       name,
       subtype: 'WEBSITE',
-      description: `Auto-created by AdFlow — ${name}`,
-      retention_days: retentionDays,
+      description: `Auto-created by AdFlow${eventType ? ` (${eventType})` : ''}`,
       pixel_id: pixelId,
       rule: JSON.stringify({
-        inclusions: {
-          operator: 'or',
-          rules: [{
-            event_sources: [{ id: pixelId, type: 'pixel' }],
-            retention_seconds: retentionDays * 86400,
-            filter: {
-              operator: 'and',
-              filters: [{ field: 'url', operator: 'i_contains', value: '' }],
-            },
-          }],
-        },
+        inclusions: { operator: 'or', rules: [ruleEntry] },
       }),
+    })
+    if (res?.id) {
+      console.log(`[publish-campaign] ✚ Created custom audience "${name}" → ${res.id}`)
+      return res.id
     }
-    const res = await graphPost(`/${adAccountId}/customaudiences`, token, body)
-    return res?.id ?? null
+    return null
   } catch (err: any) {
-    console.warn(`[publish-campaign] Custom Audience creation failed (${name}):`, err.message)
+    console.warn(`[publish-campaign] Custom audience creation failed for "${name}":`, err.message)
     return null
   }
 }
 
-// Create a Lookalike audience from an existing source Custom Audience
-async function createLookalikeAudience(
+// Find or create a Lookalike audience built on top of a Purchase-source audience
+async function findOrCreateLookalike(
   adAccountId: string,
   token: string,
-  sourceAudienceId: string,
+  pixelId: string,
   countryCode: string,
-  name: string,
+  retentionDays = 180,
   ratio = 0.01,
-): Promise<string | null> {
+): Promise<{ lookalikeId: string | null; sourceId: string | null }> {
+  const sourceName = `[AdFlow] Compradores ${retentionDays}d`
+  const lookalikeName = `[AdFlow] LAL 1% ${countryCode} — Compradores ${retentionDays}d`
+
+  // 1) Try to reuse the lookalike directly
+  const existingLal = await findCustomAudienceByName(adAccountId, token, lookalikeName)
+  if (existingLal) {
+    console.log(`[publish-campaign] ↻ Reusing lookalike "${lookalikeName}" → ${existingLal}`)
+    return { lookalikeId: existingLal, sourceId: null }
+  }
+
+  // 2) Find or create the source (Purchase event audience)
+  const sourceId = await findOrCreateCustomAudience(
+    adAccountId, token, pixelId, sourceName, retentionDays, 'Purchase',
+  )
+  if (!sourceId) return { lookalikeId: null, sourceId: null }
+
+  // 3) Create the lookalike from that source
   try {
-    const body: Record<string, unknown> = {
-      name,
+    const res = await graphPost(`/${adAccountId}/customaudiences`, token, {
+      name: lookalikeName,
       subtype: 'LOOKALIKE',
-      origin_audience_id: sourceAudienceId,
+      origin_audience_id: sourceId,
       lookalike_spec: JSON.stringify({
         type: 'similarity',
         ratio,
         country: countryCode,
       }),
+    })
+    if (res?.id) {
+      console.log(`[publish-campaign] ✚ Created lookalike "${lookalikeName}" → ${res.id}`)
+      return { lookalikeId: res.id, sourceId }
     }
-    const res = await graphPost(`/${adAccountId}/customaudiences`, token, body)
-    return res?.id ?? null
+    return { lookalikeId: null, sourceId }
   } catch (err: any) {
-    console.warn(`[publish-campaign] Lookalike creation failed (${name}):`, err.message)
-    return null
+    console.warn(`[publish-campaign] Lookalike creation failed for "${lookalikeName}":`, err.message)
+    return { lookalikeId: null, sourceId }
   }
 }
 
@@ -396,6 +490,8 @@ export async function POST(req: NextRequest) {
 
     // Cache custom audience IDs across ad sets in this run (key → audience id)
     const audienceCache: Record<string, string> = {}
+    // Per-publish audit trail of what we tried for each ad set's audience
+    const audienceLog: AudienceLogEntry[] = []
 
     for (let si = 0; si < structure.ad_sets.length; si++) {
       const adSet = structure.ad_sets[si] as AdSetItem
@@ -444,84 +540,108 @@ export async function POST(req: NextRequest) {
       // ════════════════════════════════════════════════════════════════════
       // 2.b RESOLVE AUDIENCE — interest IDs / custom audiences / lookalikes
       //     Falls back to broad targeting if anything fails (never blocks).
+      //     Every attempt is recorded in audienceLog → saved to metrics.
       // ════════════════════════════════════════════════════════════════════
-      const audienceType = ((adSet as any).audience_type as string | undefined)?.toLowerCase()
+      const rawAudienceType = ((adSet as any).audience_type as string | undefined)?.toLowerCase()
+      const isTofu = (campaign.strategy_type || '').toUpperCase() === 'TOFU'
+      // Default to "interest" for TOFU when AI didn't tag it explicitly
+      const audienceType = rawAudienceType
+        || (isTofu ? 'interest' : 'broad')
       const primaryCountry = countries[0] || 'US'
 
       try {
-        if (audienceType === 'interest' || (!audienceType && (t.interests?.length ?? 0) > 0)) {
-          // Resolve AI-generated interest names → real Meta IDs
-          const rawInterests = (t.interests || []) as Array<{ id?: string; name?: string }>
-          const resolved = await resolveInterestIds(token, rawInterests)
-          if (resolved.length) {
-            targetingSpec.flexible_spec = [{ interests: resolved }]
-            delete (targetingSpec as Record<string, unknown>).interests
-            console.log(`[publish-campaign] ✓ "${adSet.name}": resolved ${resolved.length} interest IDs:`, resolved.map(r => `${r.name}(${r.id})`).join(', '))
+        if (audienceType === 'interest') {
+          // Pull names from every shape the AI may emit
+          const rawInterests: any[] = [
+            ...(Array.isArray(t.interests) ? t.interests : []),
+            ...((adSet as any).interests || []),
+            ...((campaign.ai_copies as any)?.targeting?.interests || []),
+          ]
+          if (!rawInterests.length) {
+            audienceLog.push({ ad_set: adSet.name, audience_type: 'interest', action: 'search', result: 'skip', detail: 'AI did not generate any interest names' })
+            console.warn(`[publish-campaign] "${adSet.name}": no interest names from AI → broad`)
           } else {
-            console.warn(`[publish-campaign] "${adSet.name}": no interests resolved → broad targeting`)
+            const resolved = await searchMetaInterests(token, rawInterests)
+            if (resolved.length) {
+              targetingSpec.flexible_spec = [{ interests: resolved }]
+              delete (targetingSpec as Record<string, unknown>).interests
+              audienceLog.push({
+                ad_set: adSet.name, audience_type: 'interest', action: 'search', result: 'ok',
+                detail: `${resolved.length} interests`,
+                ids: resolved.map(r => `${r.name}(${r.id})`),
+              })
+              console.log(`[publish-campaign] ✓ "${adSet.name}": ${resolved.length} interests resolved`, resolved.map(r => `${r.name}(${r.id})`).join(', '))
+            } else {
+              audienceLog.push({ ad_set: adSet.name, audience_type: 'interest', action: 'search', result: 'fail', detail: 'no Meta search results for any name' })
+              console.warn(`[publish-campaign] "${adSet.name}": Meta returned no results for AI interest names → broad`)
+            }
           }
         } else if (audienceType === 'retargeting') {
           if (!pixelId) {
-            console.warn(`[publish-campaign] "${adSet.name}": retargeting requested but no pixel configured → broad`)
+            audienceLog.push({ ad_set: adSet.name, audience_type: 'retargeting', action: 'create', result: 'skip', detail: 'no pixel configured' })
+            console.warn(`[publish-campaign] "${adSet.name}": retargeting requested but no pixel → broad`)
           } else {
-            const retentionDays = /caliente|hot|carrito|cart|7/i.test(adSet.name) ? 7
-              : /tibio|warm|14|30/i.test(adSet.name) ? 30
+            // Heuristic: parse retention + event from ad set name
+            const lower = adSet.name.toLowerCase()
+            const retentionDays = /(?:^|\D)7(?:\D|$)/.test(lower) || /caliente|hot|carrito|cart/.test(lower) ? 7
+              : /(?:^|\D)14(?:\D|$)/.test(lower) ? 14
+              : /(?:^|\D)30(?:\D|$)/.test(lower) || /tibio|warm|frio|cold/.test(lower) ? 30
               : 30
-            const cacheKey = `web_${retentionDays}_${pixelId}`
+            const eventType: string | undefined = /carrito|cart/.test(lower) ? 'AddToCart'
+              : /compra|purchase/.test(lower) ? 'Purchase'
+              : /vista|view/.test(lower) ? 'ViewContent'
+              : undefined
+            const audName = `[AdFlow] ${eventType || 'Visitantes'} ${retentionDays}d`
+            const cacheKey = `${audName}|${pixelId}`
             let audienceId: string | null = audienceCache[cacheKey] || null
             if (!audienceId) {
-              audienceId = await createWebsiteCustomAudience(
-                adAccountId, token, pixelId,
-                `AdFlow — Visitantes Web ${retentionDays}d`,
-                retentionDays,
+              audienceId = await findOrCreateCustomAudience(
+                adAccountId, token, pixelId, audName, retentionDays, eventType,
               )
               if (audienceId) audienceCache[cacheKey] = audienceId
             }
             if (audienceId) {
               targetingSpec.custom_audiences = [{ id: audienceId }]
-              console.log(`[publish-campaign] ✓ "${adSet.name}": retargeting audience ${audienceId} (${retentionDays}d)`)
+              audienceLog.push({ ad_set: adSet.name, audience_type: 'retargeting', action: 'attach', result: 'ok', detail: `${audName} (${retentionDays}d, ${eventType || 'all'})`, ids: [audienceId] })
+              console.log(`[publish-campaign] ✓ "${adSet.name}": retargeting audience attached → ${audienceId}`)
             } else {
-              console.warn(`[publish-campaign] "${adSet.name}": retargeting audience unavailable → broad`)
+              audienceLog.push({ ad_set: adSet.name, audience_type: 'retargeting', action: 'create', result: 'fail', detail: `${audName} (${retentionDays}d, ${eventType || 'all'})` })
+              console.warn(`[publish-campaign] "${adSet.name}": retargeting unavailable → broad`)
             }
           }
         } else if (audienceType === 'lookalike') {
           if (!pixelId) {
-            console.warn(`[publish-campaign] "${adSet.name}": lookalike requested but no pixel configured → broad`)
+            audienceLog.push({ ad_set: adSet.name, audience_type: 'lookalike', action: 'create', result: 'skip', detail: 'no pixel configured' })
+            console.warn(`[publish-campaign] "${adSet.name}": lookalike requested but no pixel → broad`)
           } else {
-            // 1) Source audience: website visitors last 180 days
-            const sourceKey = `web_180_${pixelId}`
-            let sourceId: string | null = audienceCache[sourceKey] || null
-            if (!sourceId) {
-              sourceId = await createWebsiteCustomAudience(
-                adAccountId, token, pixelId,
-                `AdFlow — Source 180d`, 180,
+            const cacheKey = `lal|${primaryCountry}|${pixelId}`
+            let lookalikeId: string | null = audienceCache[cacheKey] || null
+            if (!lookalikeId) {
+              const result = await findOrCreateLookalike(
+                adAccountId, token, pixelId, primaryCountry, 180, 0.01,
               )
-              if (sourceId) audienceCache[sourceKey] = sourceId
+              lookalikeId = result.lookalikeId
+              if (lookalikeId) audienceCache[cacheKey] = lookalikeId
             }
-            // 2) Lookalike from source
-            if (sourceId) {
-              const lalKey = `lal_${sourceId}_${primaryCountry}`
-              let lalId: string | null = audienceCache[lalKey] || null
-              if (!lalId) {
-                lalId = await createLookalikeAudience(
-                  adAccountId, token, sourceId, primaryCountry,
-                  `AdFlow — Lookalike 1% ${primaryCountry}`,
-                )
-                if (lalId) audienceCache[lalKey] = lalId
-              }
-              if (lalId) {
-                targetingSpec.custom_audiences = [{ id: lalId }]
-                console.log(`[publish-campaign] ✓ "${adSet.name}": lookalike ${lalId} (source=${sourceId}, country=${primaryCountry})`)
-              } else {
-                console.warn(`[publish-campaign] "${adSet.name}": lookalike unavailable → broad`)
-              }
+            if (lookalikeId) {
+              targetingSpec.custom_audiences = [{ id: lookalikeId }]
+              audienceLog.push({ ad_set: adSet.name, audience_type: 'lookalike', action: 'attach', result: 'ok', detail: `LAL 1% ${primaryCountry}`, ids: [lookalikeId] })
+              console.log(`[publish-campaign] ✓ "${adSet.name}": lookalike attached → ${lookalikeId}`)
             } else {
-              console.warn(`[publish-campaign] "${adSet.name}": lookalike source unavailable → broad`)
+              audienceLog.push({ ad_set: adSet.name, audience_type: 'lookalike', action: 'create', result: 'fail', detail: `LAL 1% ${primaryCountry} — likely insufficient pixel data` })
+              console.warn(`[publish-campaign] "${adSet.name}": lookalike unavailable (often: pixel has <100 Purchase events) → broad`)
             }
           }
+        } else {
+          // 'broad' or unknown — use Advantage+ if AI flagged it
+          if ((t as any).advantage_plus === true) {
+            (targetingSpec as Record<string, unknown>).targeting_automation = { advantage_audience: 1 }
+          }
+          audienceLog.push({ ad_set: adSet.name, audience_type: audienceType, action: 'attach', result: 'ok', detail: 'broad targeting (geo+age+gender)' })
         }
       } catch (audErr: any) {
         // Audience resolution must NEVER block ad set creation
+        audienceLog.push({ ad_set: adSet.name, audience_type: audienceType, action: 'exception', result: 'fail', detail: audErr.message })
         console.error(`[publish-campaign] "${adSet.name}": audience resolution exception → broad. ${audErr.message}`)
       }
 
@@ -642,7 +762,7 @@ export async function POST(req: NextRequest) {
       meta_creative_ids: creativeIds,
       meta_status:       isShellOnly ? 'ERROR' : isPartial ? 'PARTIAL' : 'PAUSED',
       status:            isShellOnly ? 'error' : 'active',
-      metrics:           { publish_errors: errors, publish_date: new Date().toISOString(), adsets_attempted: numAdSets, adsets_created: adSetIds.length, ads_created: adIds.length },
+      metrics:           { publish_errors: errors, publish_date: new Date().toISOString(), adsets_attempted: numAdSets, adsets_created: adSetIds.length, ads_created: adIds.length, audience_log: audienceLog },
     }).eq('id', campaign_id)
 
     console.log('[publish-campaign] ✓ DONE:', { adSets: adSetIds.length, ads: adIds.length, errors: errors.length })

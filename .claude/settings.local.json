@@ -17,7 +17,12 @@
       "Bash(curl:*)",
       "Bash(echo === $chunk ===:*)",
       "Bash(python3 -c \"\ncontent = open\\('/tmp/create_page_part1.txt', 'r', encoding='utf-8'\\).read\\(\\) if __import__\\('os'\\).path.exists\\('/tmp/create_page_part1.txt'\\) else 'not found'\nprint\\(content[:200]\\)\n\")",
-      "Bash(NODE_OPTIONS=\"--max-old-space-size=4096\" npm run build 2>&1 | tail -40)"
+      "Bash(NODE_OPTIONS=\"--max-old-space-size=4096\" npm run build 2>&1 | tail -40)",
+      "mcp__claude_ai_Supabase__execute_sql",
+      "WebSearch",
+      "WebFetch(domain:developers.facebook.com)",
+      "mcp__claude_ai_Vercel__get_runtime_logs",
+      "mcp__claude_ai_Supabase__list_projects"
     ]
   }
 }
