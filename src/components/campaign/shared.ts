@@ -110,7 +110,18 @@ export const APPROX_RATES: Record<string, number> = {
   PEN: 3.8, BRL: 5.2, EUR: 0.92, GBP: 0.79, UYU: 41, PYG: 7500, BOB: 6.9,
 }
 
-export function inferStrategyFromDiagnosis(d: DiagnosisData): StrategyType {
+export function inferStrategyFromDiagnosis(d: DiagnosisData, pixelLevel = 0): StrategyType {
+  // Pixel sin datos suficientes → SIEMPRE TOFU (no podemos hacer retargeting/lookalike)
+  if (pixelLevel < 3) return 'TOFU'
+
+  // Pixel con ViewContent pero sin Purchase → MOFU máximo
+  if (pixelLevel < 5) {
+    if (d.mainObjective === 'leads' || d.mainObjective === 'whatsapp') return 'MOFU'
+    if (d.advertisingStatus === 'improving') return 'MOFU'
+    return 'TOFU'
+  }
+
+  // Pixel nivel 5+: tiene purchases, BOFU está habilitado
   if (d.advertisingStatus === 'scaling') return 'BOFU'
   if (d.mainObjective === 'retention') return 'BOFU'
   if (d.businessType === 'ecommerce' && d.mainObjective === 'sales') return 'BOFU'

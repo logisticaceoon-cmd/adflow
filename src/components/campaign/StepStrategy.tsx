@@ -10,11 +10,24 @@ interface Props {
   recommended: StrategyType
   diagnosis: DiagnosisData
   error: string
+  availableStrategies?: string[]
+  pixelLevelName?: string
   onBack: () => void
   onNext: () => void
 }
 
-export default function StepStrategy({ form, setField, recommended, diagnosis, error, onBack, onNext }: Props) {
+// Minimum pixel level required to unlock each strategy
+const STRATEGY_REQUIREMENT: Record<StrategyType, { level: number; need: string }> = {
+  TOFU: { level: 0, need: 'sin requisitos' },
+  MOFU: { level: 3, need: '1.000+ ViewContent en 30 días' },
+  BOFU: { level: 5, need: '50+ Purchases en 30 días' },
+}
+
+export default function StepStrategy({
+  form, setField, recommended, diagnosis, error,
+  availableStrategies, pixelLevelName, onBack, onNext,
+}: Props) {
+  const allowed = new Set<string>(availableStrategies && availableStrategies.length ? availableStrategies : ['TOFU', 'MOFU', 'BOFU'])
   return (
     <div className="space-y-5">
       <style>{`
@@ -64,9 +77,16 @@ export default function StepStrategy({ form, setField, recommended, diagnosis, e
         {(Object.entries(STRATEGY_CONFIG) as [StrategyType, typeof STRATEGY_CONFIG[StrategyType]][]).map(([type, cfg], idx) => {
           const selected      = form.strategy_type === type
           const isRecommended = recommended === type
+          const isLocked      = !allowed.has(type)
+          const requirement   = STRATEGY_REQUIREMENT[type]
           return (
             <button key={type}
-              onClick={() => setField('strategy_type', type)}
+              onClick={() => {
+                if (isLocked) return
+                setField('strategy_type', type)
+              }}
+              disabled={isLocked}
+              title={isLocked ? `🔒 Tu pixel necesita más datos. Nivel actual: ${pixelLevelName || 'Sin Data'}. Necesitás: ${requirement.need}` : undefined}
               className="strat-card w-full text-left"
               style={{
                 animationDelay: `${idx * 60}ms`,
@@ -74,14 +94,29 @@ export default function StepStrategy({ form, setField, recommended, diagnosis, e
                 background: selected ? cfg.bg : 'linear-gradient(160deg, rgba(18,4,10,0.90), rgba(12,3,7,0.94))',
                 border: `${selected ? '1.5px' : '1px'} solid ${selected ? cfg.borderColor : 'rgba(255,255,255,0.10)'}`,
                 boxShadow: selected ? `0 0 28px ${cfg.color}25, 0 8px 32px rgba(0,0,0,0.50)` : '0 4px 20px rgba(0,0,0,0.40)',
-                cursor: 'pointer', position: 'relative', transition: 'all 0.22s ease',
+                cursor: isLocked ? 'not-allowed' : 'pointer',
+                opacity: isLocked ? 0.45 : 1,
+                position: 'relative',
+                transition: 'all 0.22s ease',
               }}>
-              {isRecommended && (
+              {isLocked && (
+                <div style={{
+                  position: 'absolute', top: 14, right: 14,
+                  padding: '4px 12px', borderRadius: 20,
+                  fontSize: 10, fontWeight: 700,
+                  background: 'rgba(239,68,68,0.15)',
+                  border: '1px solid rgba(239,68,68,0.40)',
+                  color: '#f87171',
+                }}>
+                  🔒 Necesitás Nivel {requirement.level}
+                </div>
+              )}
+              {!isLocked && isRecommended && (
                 <div style={{ position: 'absolute', top: 14, right: 14, padding: '3px 10px', borderRadius: 20, fontSize: 10, fontWeight: 700, background: `${cfg.color}25`, border: `1px solid ${cfg.color}50`, color: cfg.color }}>
                   ★ Recomendado
                 </div>
               )}
-              {selected && !isRecommended && (
+              {!isLocked && selected && !isRecommended && (
                 <div style={{ position: 'absolute', top: 14, right: 14, width: 22, height: 22, borderRadius: '50%', background: `linear-gradient(135deg, ${cfg.color}, ${cfg.color}aa)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#fff', fontWeight: 900 }}>✓</div>
               )}
               <div className="flex items-start gap-4">
@@ -102,7 +137,7 @@ export default function StepStrategy({ form, setField, recommended, diagnosis, e
                   <p style={{ fontSize: 12, color: '#8892b0', margin: '0 0 10px' }}>{cfg.metaObjectives}</p>
                   <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.80)', margin: '0 0 6px' }}>{cfg.message}</p>
                   <p style={{ fontSize: 11.5, color: '#8892b0', margin: 0 }}>{cfg.forWho}</p>
-                  {selected && (
+                  {selected && !isLocked && (
                     <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
                       {cfg.results.map((r, ri) => (
                         <span key={ri} style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: `${cfg.color}18`, border: `1px solid ${cfg.color}30`, color: cfg.color }}>
@@ -110,6 +145,11 @@ export default function StepStrategy({ form, setField, recommended, diagnosis, e
                         </span>
                       ))}
                     </div>
+                  )}
+                  {isLocked && (
+                    <p style={{ fontSize: 11, marginTop: 10, color: '#f87171', lineHeight: 1.5 }}>
+                      Para desbloquear: {requirement.need}. Tu pixel está en nivel {pixelLevelName || 'Sin Data'}.
+                    </p>
                   )}
                 </div>
               </div>

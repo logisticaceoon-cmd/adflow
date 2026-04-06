@@ -48,6 +48,12 @@ export default function CreateCampaignPage() {
   const [pageName,  setPageName]  = useState('Tu Página')
   const [pixelId,   setPixelId]   = useState<string | null>(null)
 
+  // ── Pixel level + capabilities (loaded from /api/pixel/analyze) ──────────
+  const [pixelLevel,          setPixelLevel]          = useState(0)
+  const [pixelLevelName,      setPixelLevelName]      = useState('Sin Data')
+  const [availableStrategies, setAvailableStrategies] = useState<string[]>(['TOFU'])
+  const [pixelAnalysis,       setPixelAnalysis]       = useState<any>(null)
+
   // ── Media ─────────────────────────────────────────────────────────────────
   const [mediaFiles,       setMediaFiles]       = useState<File[]>([])
   const [mediaPreviews,    setMediaPreviews]    = useState<Array<string | null>>([])
@@ -95,6 +101,21 @@ export default function CreateCampaignPage() {
           destination_url: prev.destination_url || biz.website_url || '',
           whatsapp_number: prev.whatsapp_number || biz.whatsapp_number || '',
         }))
+
+        // Analyze pixel to determine the user's level + which strategies are available
+        if (biz.pixel_id) {
+          try {
+            const pixelRes  = await fetch('/api/pixel/analyze')
+            const pixelJson = await pixelRes.json()
+            const a = pixelJson?.analysis
+            if (a && typeof a.level === 'number') {
+              setPixelLevel(a.level)
+              setPixelLevelName(a.levelName || 'Sin Data')
+              setAvailableStrategies(a.availableStrategies?.length ? a.availableStrategies : ['TOFU'])
+              setPixelAnalysis(a)
+            }
+          } catch { /* default: nivel 0 = solo TOFU */ }
+        }
       } catch { /* ignore */ }
     }
     load()
@@ -169,7 +190,11 @@ export default function CreateCampaignPage() {
     if (diagnosis.mainObjective === 'whatsapp' && !form.whatsapp_number) {
       setError('Para mensajes de WhatsApp, ingresá tu número con código de país (ej: +549...).'); return
     }
-    const rec = inferStrategyFromDiagnosis(diagnosis)
+    let rec = inferStrategyFromDiagnosis(diagnosis, pixelLevel)
+    // Safety net: never recommend a strategy the pixel can't support
+    if (!availableStrategies.includes(rec)) {
+      rec = (availableStrategies[availableStrategies.length - 1] as StrategyType) || 'TOFU'
+    }
     setRecommended(rec)
     setField('strategy_type', rec)
     setError(''); setStep(2)
@@ -391,6 +416,24 @@ export default function CreateCampaignPage() {
         <p style={{ fontSize: 13, color: 'var(--muted)' }}>
           Describí tu negocio y la IA diseña una estrategia completa lista para publicar en Meta
         </p>
+        {pixelAnalysis && (
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '6px 14px', borderRadius: 99, marginTop: 10,
+            background: pixelLevel >= 5 ? 'rgba(6,214,160,0.10)' : pixelLevel >= 3 ? 'rgba(245,158,11,0.10)' : 'rgba(239,68,68,0.10)',
+            border: `1px solid ${pixelLevel >= 5 ? 'rgba(6,214,160,0.30)' : pixelLevel >= 3 ? 'rgba(245,158,11,0.30)' : 'rgba(239,68,68,0.30)'}`,
+          }}>
+            <span style={{ fontSize: 14 }}>
+              {pixelLevel >= 6 ? '🚀' : pixelLevel >= 3 ? '📊' : '🌱'}
+            </span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: pixelLevel >= 5 ? '#06d6a0' : pixelLevel >= 3 ? '#f59e0b' : '#f87171' }}>
+              Nivel {pixelLevel}: {pixelLevelName}
+            </span>
+            <span style={{ fontSize: 11, color: 'var(--muted)' }}>
+              · {availableStrategies.join(' · ')} disponibles
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Steps indicator */}
@@ -450,6 +493,8 @@ export default function CreateCampaignPage() {
           form={form} setField={setField}
           recommended={recommended} diagnosis={diagnosis}
           error={error}
+          availableStrategies={availableStrategies}
+          pixelLevelName={pixelLevelName}
           onBack={() => setStep(1)}
           onNext={() => { setError(''); setStep(3) }}
         />

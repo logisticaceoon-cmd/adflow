@@ -40,6 +40,15 @@ const STRATEGY_CONFIG = {
   },
 }
 
+interface PixelContext {
+  level: number
+  levelName: string
+  canRetargetViewContent: boolean
+  canRetargetAddToCart: boolean
+  canRetargetPurchase: boolean
+  canCreateLookalike: boolean
+}
+
 function buildPrompt(
   strategyType: StrategyType,
   productDescription: string,
@@ -56,6 +65,7 @@ function buildPrompt(
   currency = 'USD',
   destinationUrl?: string,
   whatsappNumber?: string,
+  pixelCtx?: PixelContext,
 ): string {
   const cfg = STRATEGY_CONFIG[strategyType]
   const budgetCents = dailyBudget * 100
@@ -92,8 +102,24 @@ function buildPrompt(
     ctaGuidance = 'Los CTAs deben capturar leads: "Solicitar info", "Quiero saber más", "Registrarme". cta_type: "GET_QUOTE" o "SIGN_UP".'
   }
 
-  return `Sos el mejor estratega de Meta Ads del mundo hispanohablante, con experiencia en más de 500 negocios de Latinoamérica y España.
+  // Pixel context block — tells the AI what audience types are realistically possible
+  const pixelBlock = pixelCtx ? `
+CAPACIDAD DEL PIXEL DEL CLIENTE (CRÍTICO — RESPETAR ESTAS LIMITACIONES):
+- Nivel del pixel: ${pixelCtx.level} (${pixelCtx.levelName})
+- Puede hacer retargeting de visitantes (ViewContent): ${pixelCtx.canRetargetViewContent ? 'SÍ' : 'NO'}
+- Puede hacer retargeting de carrito (AddToCart): ${pixelCtx.canRetargetAddToCart ? 'SÍ' : 'NO'}
+- Puede hacer retargeting de compradores (Purchase): ${pixelCtx.canRetargetPurchase ? 'SÍ' : 'NO'}
+- Puede crear Lookalikes (necesita 100+ compras): ${pixelCtx.canCreateLookalike ? 'SÍ' : 'NO'}
 
+REGLAS DE AUDIENCIA OBLIGATORIAS SEGÚN EL PIXEL:
+${!pixelCtx.canRetargetViewContent ? '- NO generes ad sets con audience_type "retargeting" (el pixel no tiene datos suficientes). Usá "broad" o "interest" en su lugar.' : ''}
+${!pixelCtx.canCreateLookalike ? '- NO generes ad sets con audience_type "lookalike" (el pixel no tiene 100+ compras). Usá "interest" en su lugar.' : ''}
+${!pixelCtx.canRetargetAddToCart ? '- NO menciones retargeting de carrito abandonado en los nombres de ad sets.' : ''}
+${pixelCtx.level < 3 ? '- El pixel está vacío. TODOS los ad sets deben ser "broad" o "interest" — generá nombres descriptivos basados en audiencias frías y comportamientos, NO en eventos del pixel.' : ''}
+` : ''
+
+  return `Sos el mejor estratega de Meta Ads del mundo hispanohablante, con experiencia en más de 500 negocios de Latinoamérica y España.
+${pixelBlock}
 CONTEXTO DEL NEGOCIO:
 - Descripción: ${productDescription}
 - Tipo de negocio: ${businessType || 'No especificado'}
@@ -262,6 +288,21 @@ export async function POST(req: NextRequest) {
     const strategyType: StrategyType = strategy_type
       || (objective ? objectiveToStrategy(objective) : 'TOFU')
 
+    // ── Load pixel capabilities (server-side, not from client) ─────────────
+    const { data: pa } = await supabase
+      .from('pixel_analysis')
+      .select('level, level_name, can_retarget_view_content, can_retarget_add_to_cart, can_retarget_purchase, can_create_lookalike')
+      .eq('user_id', user.id)
+      .maybeSingle()
+    const pixelCtx = pa ? {
+      level: pa.level ?? 0,
+      levelName: pa.level_name ?? 'Sin Data',
+      canRetargetViewContent: !!pa.can_retarget_view_content,
+      canRetargetAddToCart: !!pa.can_retarget_add_to_cart,
+      canRetargetPurchase: !!pa.can_retarget_purchase,
+      canCreateLookalike: !!pa.can_create_lookalike,
+    } : undefined
+
     // ── Credits check ──────────────────────────────────────────────────────
     await resetCreditsIfNeeded(user.id)
     const hasCredits = await checkCredits(user.id)
@@ -288,6 +329,7 @@ export async function POST(req: NextRequest) {
       currency || 'USD',
       destination_url,
       whatsapp_number,
+      pixelCtx,
     )
 
     // ── Build message content ───────────────────────────────────────────────
