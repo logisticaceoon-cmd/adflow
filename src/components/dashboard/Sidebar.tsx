@@ -13,39 +13,54 @@ import type { Profile } from '@/types'
 import { PLAN_CREDITS } from '@/lib/plans'
 import { useSidebar } from './SidebarContext'
 
-type NavItem = { href: string; icon: any; label: string; badge?: string }
-
-const bottomItems = [
-  { href: '/dashboard/billing',  icon: CreditCard, label: 'Plan y créditos' },
-  { href: '/dashboard/settings', icon: Settings,   label: 'Configuración' },
-  { href: '/dashboard/help',     icon: HelpCircle, label: 'Ayuda' },
-]
+type NavItem = { href: string; icon: any; label: string; badge?: string; badgeColor?: string }
 
 interface Props { user: User; profile: Profile | null }
+
+// Level color mapping
+const LEVEL_COLORS: Record<number, string> = {
+  0: '#8892b0', 1: '#ef4444', 2: '#ef4444', 3: '#f59e0b', 4: '#f59e0b',
+  5: '#06d6a0', 6: '#06d6a0', 7: '#3b82f6', 8: '#8b5cf6',
+}
+
+const LEVEL_ICONS: Record<number, string> = {
+  0: '🌑', 1: '🌱', 2: '📚', 3: '🧠', 4: '🛒', 5: '💼', 6: '🚀', 7: '👑', 8: '🏰',
+}
+
+// Compute next-level metric from pixel events
+function nextLevelMetric(level: number, events: any) {
+  const map: Record<number, { metric: string; target: number; current: number }> = {
+    0: { metric: 'PageView', target: 100,  current: events?.PageView?.count_30d    ?? 0 },
+    1: { metric: 'PageView', target: 500,  current: events?.PageView?.count_30d    ?? 0 },
+    2: { metric: 'ViewContent', target: 1000, current: events?.ViewContent?.count_30d ?? 0 },
+    3: { metric: 'AddToCart', target: 100,  current: events?.AddToCart?.count_30d   ?? 0 },
+    4: { metric: 'Purchase', target: 50,    current: events?.Purchase?.count_30d    ?? 0 },
+    5: { metric: 'Purchase', target: 100,   current: events?.Purchase?.count_30d    ?? 0 },
+    6: { metric: 'Purchase', target: 500,   current: events?.Purchase?.count_180d   ?? 0 },
+    7: { metric: 'Purchase', target: 1000,  current: events?.Purchase?.count_180d   ?? 0 },
+  }
+  return map[level] || { metric: '', target: 1, current: 1 }
+}
 
 export default function Sidebar({ user, profile }: Props) {
   const pathname = usePathname()
   const router   = useRouter()
   const { mobileOpen, close } = useSidebar()
 
-  // ── Live credits: always fetch fresh from DB ────────────────────────────────
-  // The layout server component may be stale when admin changes credits or when
-  // the user navigates within the dashboard without a full reload.
-  // Refetching on every pathname change ensures the widget is always current.
-  const [liveCredits, setLiveCredits] = useState<{
-    total: number; used: number; plan: string
-  } | null>(null)
-  const [pixelLevel, setPixelLevel] = useState<number>(0)
+  // ── Live data ────────────────────────────────────────────────────────────
+  const [liveCredits, setLiveCredits] = useState<{ total: number; used: number; plan: string } | null>(null)
+  const [pixelLevel,    setPixelLevel]    = useState<number>(0)
+  const [pixelLevelName, setPixelLevelName] = useState<string>('Sin Data')
+  const [pixelEvents,    setPixelEvents]    = useState<any>(null)
+  const [campaignCount,  setCampaignCount]  = useState<number>(0)
+  const [hasPixel,       setHasPixel]       = useState<boolean>(false)
 
   useEffect(() => {
     let active = true
     const supabase = createClient()
 
-    supabase
-      .from('profiles')
-      .select('credits_total, credits_used, plan')
-      .eq('id', user.id)
-      .single()
+    // Credits
+    supabase.from('profiles').select('credits_total, credits_used, plan').eq('id', user.id).single()
       .then(({ data }) => {
         if (data && active) {
           setLiveCredits({
@@ -56,33 +71,25 @@ export default function Sidebar({ user, profile }: Props) {
         }
       })
 
-    supabase
-      .from('pixel_analysis')
-      .select('level')
-      .eq('user_id', user.id)
-      .maybeSingle()
+    // Pixel
+    supabase.from('pixel_analysis').select('level, level_name, events_data').eq('user_id', user.id).maybeSingle()
       .then(({ data }) => {
-        if (data && active && typeof data.level === 'number') setPixelLevel(data.level)
+        if (data && active) {
+          setPixelLevel(data.level ?? 0)
+          setPixelLevelName(data.level_name ?? 'Sin Data')
+          setPixelEvents(data.events_data)
+          setHasPixel(true)
+        }
+      })
+
+    // Campaigns count
+    supabase.from('campaigns').select('id', { count: 'exact', head: true }).eq('user_id', user.id)
+      .then(({ count }) => {
+        if (active && typeof count === 'number') setCampaignCount(count)
       })
 
     return () => { active = false }
-  }, [user.id, pathname]) // re-fetch every time user navigates to a new page
-
-  // Plataforma: navegación core (Mi Pixel sube a la posición 2 con badge de nivel)
-  const platformItems: NavItem[] = [
-    { href: '/dashboard',           icon: LayoutDashboard, label: 'Resumen' },
-    { href: '/dashboard/pixel',     icon: Activity,        label: 'Mi Pixel',     badge: pixelLevel > 0 ? `Nv${pixelLevel}` : undefined },
-    { href: '/dashboard/campaigns', icon: Megaphone,       label: 'Mis campañas' },
-    { href: '/dashboard/create',    icon: Sparkles,        label: 'Crear con IA', badge: 'IA' },
-    { href: '/dashboard/creatives', icon: Images,          label: 'Creativos' },
-  ]
-
-  // Gestión: módulos de growth/budget/reportes
-  const managementItems: NavItem[] = [
-    { href: '/dashboard/budget',  icon: DollarSign, label: 'Presupuesto' },
-    { href: '/dashboard/phases',  icon: BarChart2,  label: 'Fases' },
-    { href: '/dashboard/reports', icon: BarChart2,  label: 'Reportes' },
-  ]
+  }, [user.id, pathname])
 
   async function handleLogout() {
     const supabase = createClient()
@@ -98,24 +105,60 @@ export default function Sidebar({ user, profile }: Props) {
     return href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(href)
   }
 
-  // Use live data when available (after client-side fetch), else fall back to
-  // layout props for the initial SSR render.
-  const resolvedPlan         = liveCredits?.plan  ?? profile?.plan  ?? 'free'
-  const creditsTotal         = liveCredits?.total ?? profile?.credits_total ?? PLAN_CREDITS[profile?.plan ?? 'free'] ?? 10
-  const creditsUsed          = liveCredits?.used  ?? profile?.credits_used  ?? 0
+  const resolvedPlan = liveCredits?.plan ?? profile?.plan ?? 'free'
+  const creditsTotal = liveCredits?.total ?? profile?.credits_total ?? PLAN_CREDITS[profile?.plan ?? 'free'] ?? 10
+  const creditsUsed  = liveCredits?.used  ?? profile?.credits_used  ?? 0
+  const creditsRemaining = Math.max(0, creditsTotal - creditsUsed)
+  const creditsPct       = creditsTotal > 0 ? (creditsUsed / creditsTotal) * 100 : 0
+  const creditsLow       = creditsRemaining === 0 || creditsPct >= 80
+  const creditsPlenty    = !creditsLow && creditsPct < 50
 
   const planLabel = resolvedPlan === 'pro' ? 'Pro' : resolvedPlan === 'agency' ? 'Agencia' : resolvedPlan === 'starter' ? 'Starter' : 'Free'
   const planColor = resolvedPlan === 'pro' ? '#e91e8c' : resolvedPlan === 'agency' ? '#f59e0b' : resolvedPlan === 'starter' ? '#f472b6' : '#62c4b0'
 
-  const creditsRemaining = Math.max(0, creditsTotal - creditsUsed)
-  const creditsPct       = creditsTotal > 0 ? (creditsUsed / creditsTotal) * 100 : 0
-  const creditsLow       = creditsRemaining === 0 || creditsPct >= 80
+  // Growth score
+  const growthScore = hasPixel
+    ? Math.round(
+        pixelLevel * 100 +
+        Math.min(200, (pixelEvents?.PageView?.count_30d  ?? 0) / 5) +
+        Math.min(150, (pixelEvents?.Purchase?.count_180d ?? 0) * 2) +
+        campaignCount * 10,
+      )
+    : 0
 
-  const barGrad = creditsRemaining === 0
-    ? '#ef4444, #ef4444'
-    : creditsPct >= 80
-      ? '#f59e0b, #ef8c22'
-      : '#e91e8c, #62c4b0'   // brand pink → teal
+  // Next level progress
+  const nextMetric = nextLevelMetric(pixelLevel, pixelEvents)
+  const progressPct = nextMetric.target > 0
+    ? Math.min(100, Math.round((nextMetric.current / nextMetric.target) * 100))
+    : 100
+  const lvColor = LEVEL_COLORS[pixelLevel]
+  const nextLevel = Math.min(pixelLevel + 1, 8)
+  const remaining = Math.max(0, nextMetric.target - nextMetric.current)
+
+  // Nav items
+  const platformItems: NavItem[] = [
+    { href: '/dashboard',           icon: LayoutDashboard, label: 'Resumen' },
+    { href: '/dashboard/pixel',     icon: Activity,        label: 'Mi Pixel',     badge: hasPixel ? `Nv${pixelLevel}` : undefined },
+    { href: '/dashboard/create',    icon: Sparkles,        label: 'Crear campaña', badge: 'IA' },
+    { href: '/dashboard/campaigns', icon: Megaphone,       label: 'Mis campañas', badge: campaignCount > 0 ? String(campaignCount) : undefined },
+    { href: '/dashboard/creatives', icon: Images,          label: 'Creativos' },
+  ]
+
+  const managementItems: NavItem[] = [
+    { href: '/dashboard/budget',  icon: DollarSign, label: 'Presupuesto' },
+    { href: '/dashboard/phases',  icon: BarChart2,  label: 'Fases' },
+    { href: '/dashboard/reports', icon: BarChart2,  label: 'Reportes' },
+  ]
+
+  const accountItems: NavItem[] = [
+    { href: '/dashboard/billing',  icon: CreditCard, label: 'Plan y créditos' },
+    { href: '/dashboard/settings', icon: Settings,   label: 'Configuración' },
+    { href: '/dashboard/help',     icon: HelpCircle, label: 'Ayuda' },
+  ]
+
+  const barGrad = creditsRemaining === 0 ? '#ef4444, #ef4444'
+    : creditsPct >= 80 ? '#f59e0b, #ef8c22'
+    : '#e91e8c, #62c4b0'
 
   return (
     <>
@@ -127,285 +170,346 @@ export default function Sidebar({ user, profile }: Props) {
           onClick={close}
         />
       )}
-    <aside
-      className={`fixed left-0 top-0 h-screen w-56 flex flex-col transition-transform duration-300 ease-out md:translate-x-0 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}
-      style={{
-        /* Premium sidebar: slightly lighter than background, teal-tinted border */
-        background: 'linear-gradient(180deg, rgba(10,3,6,0.97) 0%, rgba(6,8,6,0.99) 100%)',
-        borderRight: '1px solid rgba(98,196,176,0.12)',
-        backdropFilter: 'blur(32px)',
-        WebkitBackdropFilter: 'blur(32px)',
-        zIndex: 50,
-        boxShadow: '4px 0 48px rgba(0,0,0,0.65), 0 0 80px rgba(0,0,0,0.30)',
-      }}
-    >
-      {/* ── Multi-layer inner gradient overlays ── */}
-      <div style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: 'linear-gradient(180deg, rgba(234,27,126,0.10) 0%, rgba(234,27,126,0.03) 30%, transparent 55%, rgba(98,196,176,0.05) 100%)',
-        borderRadius: 'inherit',
-      }} />
-      {/* Right edge pink glow line */}
-      <div style={{
-        position: 'absolute', top: 0, right: 0, bottom: 0, width: 1, pointerEvents: 'none',
-        background: 'linear-gradient(180deg, transparent 0%, rgba(234,27,126,0.20) 30%, rgba(98,196,176,0.15) 70%, transparent 100%)',
-      }} />
-
-      {/* ── Logo ── */}
-      <div
-        className="flex items-center gap-3 px-5 py-[18px]"
-        style={{ borderBottom: '1px solid rgba(98,196,176,0.10)', position: 'relative', zIndex: 1 }}
+      <aside
+        className={`fixed left-0 top-0 h-screen w-60 flex flex-col transition-transform duration-300 ease-out md:translate-x-0 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        style={{
+          background: 'linear-gradient(180deg, rgba(10,3,6,0.97) 0%, rgba(6,8,6,0.99) 100%)',
+          borderRight: '1px solid rgba(98,196,176,0.12)',
+          backdropFilter: 'blur(32px)',
+          WebkitBackdropFilter: 'blur(32px)',
+          zIndex: 50,
+          boxShadow: '4px 0 48px rgba(0,0,0,0.65), 0 0 80px rgba(0,0,0,0.30)',
+        }}
       >
+        {/* Ambient layers */}
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: 'linear-gradient(180deg, rgba(234,27,126,0.10) 0%, rgba(234,27,126,0.03) 30%, transparent 55%, rgba(98,196,176,0.05) 100%)',
+          borderRadius: 'inherit',
+        }} />
+        <div style={{
+          position: 'absolute', top: 0, right: 0, bottom: 0, width: 1, pointerEvents: 'none',
+          background: 'linear-gradient(180deg, transparent 0%, rgba(234,27,126,0.20) 30%, rgba(98,196,176,0.15) 70%, transparent 100%)',
+        }} />
+
+        {/* ── LOGO ── */}
         <div
-          className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-          style={{
-            background: 'linear-gradient(135deg, #e91e8c, #c5006a)',
-            /* Stronger, layered glow for logo */
-            boxShadow: '0 0 24px rgba(233,30,140,0.70), 0 0 48px rgba(233,30,140,0.25), 0 2px 8px rgba(0,0,0,0.40)',
-          }}
+          className="flex items-center gap-3 px-5 py-[18px]"
+          style={{ borderBottom: '1px solid rgba(98,196,176,0.10)', position: 'relative', zIndex: 1 }}
         >
-          <Zap size={15} color="#fff" strokeWidth={2.5} />
+          <div
+            className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{
+              background: 'linear-gradient(135deg, #e91e8c, #c5006a)',
+              boxShadow: '0 0 24px rgba(233,30,140,0.70), 0 0 48px rgba(233,30,140,0.25), 0 2px 8px rgba(0,0,0,0.40)',
+            }}
+          >
+            <Zap size={15} color="#fff" strokeWidth={2.5} />
+          </div>
+          <div>
+            <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 800, letterSpacing: '-0.04em', color: '#ffffff', textShadow: '0 0 20px rgba(255,255,255,0.15)' }}>
+              AdFlow
+            </span>
+            <div className="ambient-line mt-0.5" style={{ width: 44 }} />
+          </div>
         </div>
-        <div>
-          <span style={{ fontSize: 17, fontWeight: 800, letterSpacing: '-0.04em', color: '#ffffff', textShadow: '0 0 20px rgba(255,255,255,0.15)' }}>
-            AdFlow
-          </span>
-          <div className="ambient-line mt-0.5" style={{ width: 44 }} />
-        </div>
-      </div>
 
-      {/* ── Main nav ── */}
-      <nav className="flex-1 px-3 py-4 flex flex-col gap-0.5 overflow-y-auto" style={{ position: 'relative', zIndex: 1 }}>
-        <p className="section-label px-2 pb-2.5">Plataforma</p>
-
-        {platformItems.map(({ href, icon: Icon, label, badge }) => {
-          const active = isActive(href)
-          // Pixel-level badge has its own color when present
-          const isLevelBadge = label === 'Mi Pixel' && badge && pixelLevel > 0
-          return (
-            <Link key={href} href={href} onClick={close}
-              className={`nav-item ${active ? 'nav-item-active' : 'nav-item-inactive'}`}
-            >
-              <Icon
-                size={16}
-                strokeWidth={active ? 2.2 : 1.75}
-                style={{
-                  color: active ? '#e91e8c' : '#8892b0',
-                  filter: active ? 'drop-shadow(0 0 6px rgba(233,30,140,0.60))' : 'none',
-                  flexShrink: 0,
-                }}
-              />
-              <span style={{
-                fontSize: 13,
-                color: active ? '#ffffff' : '#a0a8c0',
-                textShadow: active ? '0 0 12px rgba(255,255,255,0.15)' : 'none',
-              }}>
-                {label}
-              </span>
-              {badge && (
-                <span
-                  className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full font-bold"
-                  style={isLevelBadge ? {
-                    background: pixelLevel >= 5 ? 'rgba(6,214,160,0.20)' : pixelLevel >= 3 ? 'rgba(245,158,11,0.20)' : 'rgba(239,68,68,0.20)',
-                    color:      pixelLevel >= 5 ? '#06d6a0'              : pixelLevel >= 3 ? '#fbbf24'              : '#fca5a5',
-                    border:     `1px solid ${pixelLevel >= 5 ? 'rgba(6,214,160,0.40)' : pixelLevel >= 3 ? 'rgba(245,158,11,0.40)' : 'rgba(239,68,68,0.40)'}`,
-                    boxShadow:  `0 0 8px ${pixelLevel >= 5 ? 'rgba(6,214,160,0.30)' : pixelLevel >= 3 ? 'rgba(245,158,11,0.30)' : 'rgba(239,68,68,0.30)'}`,
-                  } : {
-                    background: 'rgba(234,27,126,0.18)',
-                    color: '#f9a8d4',
-                    border: '1px solid rgba(234,27,126,0.30)',
-                    boxShadow: '0 0 8px rgba(234,27,126,0.20)',
-                  }}
-                >
-                  {badge}
-                </span>
-              )}
-            </Link>
-          )
-        })}
-
-        {/* ── Gestión section ── */}
-        <p className="section-label px-2 pt-4 pb-2.5">Gestión</p>
-        {managementItems.map(({ href, icon: Icon, label }) => {
-          const active = isActive(href)
-          return (
-            <Link key={href} href={href} onClick={close}
-              className={`nav-item ${active ? 'nav-item-active' : 'nav-item-inactive'}`}
-            >
-              <Icon size={16} strokeWidth={active ? 2.2 : 1.75}
-                style={{
-                  color: active ? '#e91e8c' : '#8892b0',
-                  filter: active ? 'drop-shadow(0 0 6px rgba(233,30,140,0.60))' : 'none',
-                  flexShrink: 0,
-                }} />
-              <span style={{
-                fontSize: 13,
-                color: active ? '#ffffff' : '#a0a8c0',
-                textShadow: active ? '0 0 12px rgba(255,255,255,0.15)' : 'none',
-              }}>
-                {label}
-              </span>
-            </Link>
-          )
-        })}
-
-        {/* ── CREDITS WIDGET ── */}
-        <div style={{ marginTop: 14, marginBottom: 2 }}>
-          <Link href="/dashboard/billing" style={{ textDecoration: 'none', display: 'block' }}>
+        {/* ── SCROLL CONTAINER ── */}
+        <nav className="flex-1 px-3 py-4 flex flex-col gap-0.5 overflow-y-auto" style={{ position: 'relative', zIndex: 1 }}>
+          {/* ── LEVEL WIDGET ── */}
+          <Link href={hasPixel ? '/dashboard/pixel' : '/dashboard/settings'} onClick={close} style={{ textDecoration: 'none', display: 'block', marginBottom: 14 }}>
             <div style={{
-              borderRadius: 14,
               padding: '14px 14px 12px',
-              background: creditsLow
-                ? 'linear-gradient(135deg, rgba(239,68,68,0.14) 0%, rgba(220,38,38,0.07) 100%)'
-                : 'linear-gradient(135deg, rgba(234,27,126,0.14) 0%, rgba(98,196,176,0.08) 60%, rgba(98,196,176,0.04) 100%)',
-              border: creditsLow
-                ? '1px solid rgba(239,68,68,0.38)'
-                : '1px solid rgba(234,27,126,0.28)',
-              boxShadow: creditsLow
-                ? '0 4px 16px rgba(239,68,68,0.14), 0 1px 0 rgba(255,255,255,0.05) inset'
-                : '0 4px 20px rgba(234,27,126,0.18), 0 1px 0 rgba(255,255,255,0.06) inset',
-              cursor: 'pointer',
-              position: 'relative', overflow: 'hidden',
+              borderRadius: 14,
+              background: hasPixel
+                ? `linear-gradient(135deg, ${lvColor}14, ${lvColor}04)`
+                : 'linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))',
+              border: hasPixel ? `1px solid ${lvColor}40` : '1px solid rgba(255,255,255,0.08)',
+              boxShadow: hasPixel ? `0 4px 20px rgba(0,0,0,0.25), 0 0 24px ${lvColor}10` : '0 4px 16px rgba(0,0,0,0.25)',
+              cursor: 'pointer', position: 'relative', overflow: 'hidden',
               transition: 'all 0.2s ease',
             }}>
-              {/* Top edge glow line */}
-              <div style={{
-                position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-                background: creditsLow
-                  ? 'linear-gradient(90deg, transparent, rgba(239,68,68,0.55), transparent)'
-                  : 'linear-gradient(90deg, transparent, rgba(234,27,126,0.60), rgba(98,196,176,0.35), transparent)',
-                pointerEvents: 'none',
-              }} />
-
-              {/* Plan badge + label row */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+              {hasPixel ? (
+                <>
+                  {/* Top glow */}
                   <div style={{
-                    width: 6, height: 6, borderRadius: '50%',
-                    background: creditsLow ? '#ef4444' : planColor,
-                    boxShadow: `0 0 8px ${creditsLow ? '#ef4444' : planColor}`,
+                    position: 'absolute', top: 0, left: 0, right: 0, height: 1,
+                    background: `linear-gradient(90deg, transparent, ${lvColor}80, transparent)`,
+                    pointerEvents: 'none',
                   }} />
-                  <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.10em', textTransform: 'uppercase', color: creditsLow ? '#fca5a5' : '#d0d0f0' }}>
-                    Plan {planLabel}
-                  </span>
-                </div>
-                <span style={{ fontSize: 10, color: '#8892b0', letterSpacing: '0.04em' }}>créditos IA</span>
-              </div>
-
-              {/* Big credit number */}
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 8 }}>
-                <span style={{
-                  fontSize: 26, fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1,
-                  color: creditsLow ? '#fca5a5' : '#ffffff',
-                  textShadow: creditsLow
-                    ? '0 0 16px rgba(239,68,68,0.70)'
-                    : '0 0 20px rgba(255,255,255,0.25)',
-                }}>
-                  {creditsRemaining}
-                </span>
-                <span style={{ fontSize: 12, color: '#8892b0', fontWeight: 500 }}>
-                  / {creditsTotal}
-                </span>
-              </div>
-
-              {/* Progress bar */}
-              <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 99, height: 5, overflow: 'hidden', marginBottom: 8 }}>
-                <div style={{
-                  height: '100%',
-                  width: `${Math.min(100, creditsPct)}%`,
-                  borderRadius: 99,
-                  background: `linear-gradient(90deg, ${barGrad})`,
-                  boxShadow: creditsLow ? '0 0 8px #ef444490' : '0 0 10px rgba(234,27,126,0.70)',
-                  transition: 'width 0.6s cubic-bezier(0.16,1,0.3,1)',
-                }} />
-              </div>
-
-              {/* Status line */}
-              <p style={{
-                fontSize: 10, fontWeight: 600,
-                color: creditsRemaining === 0 ? '#f87171' : creditsPct >= 80 ? '#f59e0b' : '#8892b0',
-              }}>
-                {creditsRemaining === 0
-                  ? '⚠ Sin créditos · Mejorá tu plan →'
-                  : creditsPct >= 80
-                    ? `⚠ Pocos créditos · Ver planes →`
-                    : `Ver planes y créditos →`}
-              </p>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span style={{ fontSize: 18 }}>{LEVEL_ICONS[pixelLevel]}</span>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ fontSize: 11, fontWeight: 800, color: '#fff', lineHeight: 1.2 }}>
+                        Nivel {pixelLevel}: {pixelLevelName}
+                      </p>
+                      <p style={{ fontSize: 10, fontWeight: 700, color: lvColor, marginTop: 1 }}>
+                        ⭐ {growthScore.toLocaleString()} pts
+                      </p>
+                    </div>
+                  </div>
+                  {pixelLevel < 8 && (
+                    <>
+                      <div style={{ height: 6, borderRadius: 99, background: 'rgba(255,255,255,0.06)', overflow: 'hidden', marginBottom: 5 }}>
+                        <div style={{
+                          height: '100%',
+                          width: `${progressPct}%`,
+                          background: `linear-gradient(90deg, ${lvColor}, ${LEVEL_COLORS[nextLevel]})`,
+                          boxShadow: `0 0 8px ${lvColor}80`,
+                          borderRadius: 99,
+                          transition: 'width 0.6s ease',
+                        }} />
+                      </div>
+                      <p style={{ fontSize: 9.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.3 }}>
+                        {remaining > 0
+                          ? `${remaining} ${nextMetric.metric} para Nivel ${nextLevel}`
+                          : `¡Listo para Nivel ${nextLevel}!`}
+                      </p>
+                    </>
+                  )}
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span style={{ fontSize: 18 }}>🌑</span>
+                    <p style={{ fontSize: 11, fontWeight: 800, color: '#fff' }}>Sin pixel</p>
+                  </div>
+                  <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.55)', marginBottom: 6 }}>
+                    Configuralo para empezar a medir
+                  </p>
+                  <p style={{ fontSize: 10, color: '#f9a8d4', fontWeight: 600 }}>
+                    Configurar →
+                  </p>
+                </>
+              )}
             </div>
           </Link>
-        </div>
 
-        {/* ── Bottom items ── */}
-        <div className="mt-auto pt-4 flex flex-col gap-0.5">
-          <div style={{ height: 1, background: 'rgba(98,196,176,0.08)', marginBottom: 10 }} />
-          <p className="section-label px-2 pb-2.5">Cuenta</p>
-
-          {bottomItems.map(({ href, icon: Icon, label }) => {
+          {/* ── SECTION: PLATAFORMA ── */}
+          <p className="section-label px-2 pb-2">Plataforma</p>
+          {platformItems.map(({ href, icon: Icon, label, badge }) => {
             const active = isActive(href)
+            const isLevelBadge = label === 'Mi Pixel' && badge && hasPixel
             return (
-              <Link key={href} href={href}
+              <Link key={href} href={href} onClick={close}
                 className={`nav-item ${active ? 'nav-item-active' : 'nav-item-inactive'}`}
               >
                 <Icon size={16} strokeWidth={active ? 2.2 : 1.75}
                   style={{
                     color: active ? '#e91e8c' : '#8892b0',
-                    filter: active ? 'drop-shadow(0 0 5px rgba(233,30,140,0.55))' : 'none',
+                    filter: active ? 'drop-shadow(0 0 6px rgba(233,30,140,0.60))' : 'none',
                     flexShrink: 0,
-                  }} />
-                <span style={{ fontSize: 13, color: active ? '#ffffff' : '#a0a8c0' }}>{label}</span>
+                  }}
+                />
+                <span style={{
+                  fontSize: 13,
+                  color: active ? '#ffffff' : '#a0a8c0',
+                  textShadow: active ? '0 0 12px rgba(255,255,255,0.15)' : 'none',
+                }}>
+                  {label}
+                </span>
+                {badge && (
+                  <span
+                    className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full font-bold"
+                    style={isLevelBadge ? {
+                      background: `${lvColor}20`,
+                      color: lvColor,
+                      border: `1px solid ${lvColor}50`,
+                      boxShadow: `0 0 8px ${lvColor}30`,
+                    } : {
+                      background: 'rgba(234,27,126,0.18)',
+                      color: '#f9a8d4',
+                      border: '1px solid rgba(234,27,126,0.30)',
+                      boxShadow: '0 0 8px rgba(234,27,126,0.20)',
+                    }}
+                  >
+                    {badge}
+                  </span>
+                )}
               </Link>
             )
           })}
 
-          {(profile?.role === 'admin' || profile?.role === 'super_admin') && (
-            <Link href="/admin" className="nav-item nav-item-inactive">
-              <Shield size={16} strokeWidth={1.75} style={{ color: '#62c4b0', flexShrink: 0 }} />
-              <span style={{ fontSize: 13, color: '#62c4b0' }}>Panel Admin</span>
+          {/* ── SECTION: GESTIÓN ── */}
+          <p className="section-label px-2 pt-4 pb-2">Gestión</p>
+          {managementItems.map(({ href, icon: Icon, label }) => {
+            const active = isActive(href)
+            return (
+              <Link key={href} href={href} onClick={close}
+                className={`nav-item ${active ? 'nav-item-active' : 'nav-item-inactive'}`}
+              >
+                <Icon size={16} strokeWidth={active ? 2.2 : 1.75}
+                  style={{
+                    color: active ? '#e91e8c' : '#8892b0',
+                    filter: active ? 'drop-shadow(0 0 6px rgba(233,30,140,0.60))' : 'none',
+                    flexShrink: 0,
+                  }} />
+                <span style={{
+                  fontSize: 13,
+                  color: active ? '#ffffff' : '#a0a8c0',
+                  textShadow: active ? '0 0 12px rgba(255,255,255,0.15)' : 'none',
+                }}>
+                  {label}
+                </span>
+              </Link>
+            )
+          })}
+
+          {/* ── CREDITS WIDGET ── */}
+          <div style={{ marginTop: 14, marginBottom: 4 }}>
+            <Link href="/dashboard/billing" onClick={close} style={{ textDecoration: 'none', display: 'block' }}>
+              <div style={{
+                borderRadius: 14,
+                padding: '14px 14px 12px',
+                background: creditsLow
+                  ? 'linear-gradient(135deg, rgba(239,68,68,0.14) 0%, rgba(220,38,38,0.07) 100%)'
+                  : creditsPlenty
+                    ? 'linear-gradient(135deg, rgba(234,27,126,0.14) 0%, rgba(98,196,176,0.08) 100%)'
+                    : 'linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(234,27,126,0.04) 100%)',
+                border: creditsLow
+                  ? '1px solid rgba(239,68,68,0.40)'
+                  : creditsPlenty
+                    ? '1.5px solid transparent'
+                    : '1px solid rgba(245,158,11,0.30)',
+                backgroundImage: creditsPlenty
+                  ? 'linear-gradient(rgba(10,3,6,0.8), rgba(6,8,6,0.8)), linear-gradient(135deg, #e91e8c, #62c4b0)'
+                  : undefined,
+                backgroundOrigin: creditsPlenty ? 'border-box' : undefined,
+                backgroundClip: creditsPlenty ? 'padding-box, border-box' : undefined,
+                boxShadow: creditsLow
+                  ? '0 4px 16px rgba(239,68,68,0.14), 0 1px 0 rgba(255,255,255,0.05) inset'
+                  : '0 4px 20px rgba(234,27,126,0.18), 0 1px 0 rgba(255,255,255,0.06) inset',
+                cursor: 'pointer',
+                position: 'relative', overflow: 'hidden',
+                transition: 'all 0.2s ease',
+              }}>
+                <div style={{
+                  position: 'absolute', top: 0, left: 0, right: 0, height: 1,
+                  background: creditsLow
+                    ? 'linear-gradient(90deg, transparent, rgba(239,68,68,0.55), transparent)'
+                    : 'linear-gradient(90deg, transparent, rgba(234,27,126,0.60), rgba(98,196,176,0.35), transparent)',
+                  pointerEvents: 'none',
+                }} />
+
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-1.5">
+                    <Zap size={10} style={{ color: creditsLow ? '#fca5a5' : '#f9a8d4' }} strokeWidth={2.2} />
+                    <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.10em', textTransform: 'uppercase', color: creditsLow ? '#fca5a5' : '#d0d0f0' }}>
+                      Créditos IA
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-baseline gap-1.5 mb-2">
+                  <span style={{
+                    fontFamily: 'Syne, sans-serif',
+                    fontSize: 24, fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1,
+                    color: creditsLow ? '#fca5a5' : '#ffffff',
+                    textShadow: creditsLow ? '0 0 16px rgba(239,68,68,0.70)' : '0 0 20px rgba(255,255,255,0.25)',
+                  }}>
+                    {creditsRemaining}
+                  </span>
+                  <span style={{ fontSize: 11, color: '#8892b0', fontWeight: 500 }}>
+                    / {creditsTotal}
+                  </span>
+                </div>
+
+                <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 99, height: 5, overflow: 'hidden', marginBottom: 6 }}>
+                  <div style={{
+                    height: '100%',
+                    width: `${Math.min(100, creditsPct)}%`,
+                    borderRadius: 99,
+                    background: `linear-gradient(90deg, ${barGrad})`,
+                    boxShadow: creditsLow ? '0 0 8px #ef444490' : '0 0 10px rgba(234,27,126,0.70)',
+                    transition: 'width 0.6s cubic-bezier(0.16,1,0.3,1)',
+                  }} />
+                </div>
+
+                <p style={{
+                  fontSize: 10, fontWeight: 600,
+                  color: creditsRemaining === 0 ? '#f87171' : creditsPct >= 80 ? '#f59e0b' : '#a0a8c0',
+                }}>
+                  {creditsRemaining === 0
+                    ? '⚠ Sin créditos · Mejorar →'
+                    : creditsPct >= 80
+                      ? `⚠ Pocos créditos · Ver planes →`
+                      : `Ver planes →`}
+                </p>
+              </div>
             </Link>
-          )}
+          </div>
 
-          <button onClick={handleLogout} className="nav-item nav-item-inactive text-left">
-            <LogOut size={16} strokeWidth={1.75} style={{ color: '#8892b0', flexShrink: 0 }} />
-            <span style={{ fontSize: 13, color: '#8892b0' }}>Cerrar sesión</span>
-          </button>
-        </div>
-      </nav>
+          {/* ── SECTION: CUENTA ── */}
+          <div className="mt-auto pt-4 flex flex-col gap-0.5">
+            <div style={{ height: 1, background: 'rgba(98,196,176,0.08)', marginBottom: 10 }} />
+            <p className="section-label px-2 pb-2">Cuenta</p>
 
-      {/* ── User footer ── */}
-      <div
-        className="px-3 py-3 flex items-center gap-2.5"
-        style={{
-          borderTop: '1px solid rgba(98,196,176,0.10)',
-          position: 'relative', zIndex: 1,
-          background: 'rgba(0,0,0,0.35)',
-        }}
-      >
+            {accountItems.map(({ href, icon: Icon, label }) => {
+              const active = isActive(href)
+              return (
+                <Link key={href} href={href} onClick={close}
+                  className={`nav-item ${active ? 'nav-item-active' : 'nav-item-inactive'}`}
+                >
+                  <Icon size={16} strokeWidth={active ? 2.2 : 1.75}
+                    style={{
+                      color: active ? '#e91e8c' : '#8892b0',
+                      filter: active ? 'drop-shadow(0 0 5px rgba(233,30,140,0.55))' : 'none',
+                      flexShrink: 0,
+                    }} />
+                  <span style={{ fontSize: 13, color: active ? '#ffffff' : '#a0a8c0' }}>{label}</span>
+                </Link>
+              )
+            })}
+
+            {(profile?.role === 'admin' || profile?.role === 'super_admin') && (
+              <Link href="/admin" onClick={close} className="nav-item nav-item-inactive">
+                <Shield size={16} strokeWidth={1.75} style={{ color: '#62c4b0', flexShrink: 0 }} />
+                <span style={{ fontSize: 13, color: '#62c4b0' }}>Panel Admin</span>
+              </Link>
+            )}
+
+            <button onClick={handleLogout} className="nav-item nav-item-inactive text-left">
+              <LogOut size={16} strokeWidth={1.75} style={{ color: '#8892b0', flexShrink: 0 }} />
+              <span style={{ fontSize: 13, color: '#8892b0' }}>Cerrar sesión</span>
+            </button>
+          </div>
+        </nav>
+
+        {/* ── USER FOOTER ── */}
         <div
-          className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+          className="px-3 py-3 flex items-center gap-2.5"
           style={{
-            background: 'linear-gradient(135deg, #e91e8c, #c5006a)',
-            boxShadow: '0 0 16px rgba(233,30,140,0.50), 0 0 32px rgba(233,30,140,0.18)',
-            fontSize: 11, fontWeight: 700, color: '#fff',
+            borderTop: '1px solid rgba(98,196,176,0.10)',
+            position: 'relative', zIndex: 1,
+            background: 'rgba(0,0,0,0.35)',
           }}
         >
-          {initials}
+          <div
+            className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+            style={{
+              background: 'linear-gradient(135deg, #e91e8c, #c5006a)',
+              boxShadow: '0 0 16px rgba(233,30,140,0.50), 0 0 32px rgba(233,30,140,0.18)',
+              fontSize: 11, fontWeight: 700, color: '#fff',
+            }}
+          >
+            {initials}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p style={{ fontSize: 12, fontWeight: 600, color: '#e0e0f8' }} className="truncate">
+              {profile?.full_name || user.email?.split('@')[0] || 'Usuario'}
+            </p>
+            <p style={{ fontSize: 11, color: planColor, display: 'flex', alignItems: 'center', gap: 4 }}>
+              <span style={{
+                width: 5, height: 5, borderRadius: '50%',
+                background: planColor,
+                display: 'inline-block',
+                boxShadow: `0 0 8px ${planColor}`,
+              }} />
+              Plan {planLabel}
+            </p>
+          </div>
         </div>
-        <div className="flex-1 min-w-0">
-          <p style={{ fontSize: 12, fontWeight: 600, color: '#e0e0f8' }} className="truncate">
-            {profile?.full_name || user.email?.split('@')[0] || 'Usuario'}
-          </p>
-          <p style={{ fontSize: 11, color: planColor, display: 'flex', alignItems: 'center', gap: 4 }}>
-            <span style={{
-              width: 5, height: 5, borderRadius: '50%',
-              background: planColor,
-              display: 'inline-block',
-              boxShadow: `0 0 8px ${planColor}`,
-            }} />
-            Plan {planLabel}
-          </p>
-        </div>
-      </div>
-    </aside>
+      </aside>
     </>
   )
 }

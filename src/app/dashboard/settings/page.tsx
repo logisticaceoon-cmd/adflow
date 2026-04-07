@@ -45,8 +45,15 @@ export default async function SettingsPage() {
   return (
     <div className="max-w-2xl">
       <div className="mb-8">
-        <h1 className="page-title mb-1">Configuración ⚙️</h1>
-        <p className="text-sm" style={{ color: 'var(--muted)' }}>Gestioná tu cuenta, integraciones y activos de marca</p>
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#f9a8d4', marginBottom: 8 }}>
+          Configuración · AdFlow
+        </p>
+        <h1 style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.03em' }}>
+          Tu cuenta y activos ⚙️
+        </h1>
+        <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+          Gestioná tu cuenta, integraciones con Meta, y activos de marca para que la IA entienda tu negocio
+        </p>
       </div>
 
       {/* Checklist de completitud */}

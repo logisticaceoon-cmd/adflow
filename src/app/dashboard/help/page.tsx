@@ -48,10 +48,50 @@ export default function HelpPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   return (
-    <div className="max-w-2xl">
-      <div className="mb-8">
-        <h1 className="page-title mb-1">Centro de ayuda</h1>
-        <p className="text-sm" style={{ color: 'var(--muted)' }}>Guías, FAQ y soporte para sacarle el máximo a AdFlow</p>
+    <div className="max-w-3xl">
+      <div className="mb-6">
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#f9a8d4', marginBottom: 8 }}>
+          Centro de ayuda · AdFlow
+        </p>
+        <h1 style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.03em' }}>
+          Cómo sacarle el máximo a AdFlow 📚
+        </h1>
+        <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+          Guías, FAQ y conceptos clave del Growth OS para que domines cada módulo
+        </p>
+      </div>
+
+      {/* Growth OS concept cards */}
+      <div className="grid grid-cols-2 gap-4 mb-8">
+        {[
+          { icon: '⭐', title: '¿Cómo funciona el sistema de niveles?', desc: 'Tu nivel del pixel (0-8) determina qué estrategias podés usar. Más datos = más nivel = más herramientas desbloqueadas.' },
+          { icon: '🎯', title: '¿Qué son las fases F1-F4?',              desc: 'F1 Reconocimiento atrae tráfico. F2 Ventas convierte. F3 Remarketing recupera. F4 WhatsApp cierra.' },
+          { icon: '🔌', title: '¿Cómo configuro mi pixel?',               desc: 'Andá a Configuración → Activos de Meta y seleccioná tu pixel. Sin pixel no medimos nada.' },
+          { icon: '💰', title: '¿Cómo se distribuye el presupuesto?',    desc: 'El Budget Engine recomienda cómo dividir tu inversión entre las 4 fases según tu nivel del pixel.' },
+          { icon: '📊', title: '¿Qué significa cada métrica?',            desc: 'ROAS = retorno por peso invertido. CPA = costo por venta. CTR = clicks / impresiones. En cada página tenés tooltips explicativos.' },
+          { icon: '🤖', title: '¿Cómo funciona la IA?',                   desc: 'Claude analiza tu negocio + tu nivel + tus datos y genera copies, audiencias y recomendaciones adaptadas a vos.' },
+        ].map((card, i) => (
+          <div key={i} className="card p-5" style={{
+            background: 'linear-gradient(160deg, rgba(18,4,10,0.92), rgba(12,3,7,0.96))',
+            border: '1px solid rgba(255,255,255,0.08)',
+            transition: 'all 0.2s',
+          }}>
+            <div style={{
+              width: 40, height: 40, borderRadius: 11,
+              background: 'rgba(234,27,126,0.12)',
+              border: '1px solid rgba(234,27,126,0.25)',
+              boxShadow: '0 0 14px rgba(234,27,126,0.15)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 18, marginBottom: 12,
+            }}>{card.icon}</div>
+            <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 6, lineHeight: 1.3 }}>
+              {card.title}
+            </h3>
+            <p style={{ fontSize: 11.5, color: 'var(--muted)', lineHeight: 1.55 }}>
+              {card.desc}
+            </p>
+          </div>
+        ))}
       </div>
 
       {/* Video tutorial placeholder */}

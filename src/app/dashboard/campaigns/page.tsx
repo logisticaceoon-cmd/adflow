@@ -27,6 +27,15 @@ function RoasCell({ roas }: { roas?: number }) {
   )
 }
 
+// Phase classifier: uses strategy_type + name heuristics
+function classifyPhase(c: Campaign): { key: string; label: string; color: string; icon: string } {
+  const name = (c.name || '').toLowerCase()
+  if (/whatsapp|wa\b|mensaje/.test(name))                           return { key: 'F4', label: 'F4', color: '#25D366', icon: '💬' }
+  if (/retargeting|remarketing|carrito|tibio|caliente/.test(name)) return { key: 'F3', label: 'F3', color: '#f59e0b', icon: '🎯' }
+  if (c.strategy_type === 'BOFU' || /bofu|conversion|purchase|venta/.test(name)) return { key: 'F2', label: 'F2', color: '#e91e8c', icon: '💰' }
+  return { key: 'F1', label: 'F1', color: '#62c4b0', icon: '📢' }
+}
+
 const OBJ_LABELS: Record<string, string> = {
   OUTCOME_AWARENESS: '👁 Reconocimiento',
   OUTCOME_TRAFFIC: '🖱 Tráfico',
@@ -60,10 +69,15 @@ export default async function CampaignsPage() {
       {/* ── Header ── */}
       <div className="flex justify-between items-start mb-8 dash-anim-1">
         <div>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#e91e8c', marginBottom: 6 }}>
-            Mis campañas
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#f9a8d4', marginBottom: 8 }}>
+            Mis campañas · AdFlow
           </p>
-          <h1 className="page-title mb-1.5">Gestión de campañas</h1>
+          <h1 style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.03em' }}>
+            Gestión de campañas 📣
+          </h1>
+          <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 10 }}>
+            Todas tus campañas en Meta en un solo lugar — rendimiento, estado y acciones rápidas
+          </p>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 12, color: 'var(--muted)' }}>
             <span>{total} total</span>
             <span style={{ color: 'rgba(255,255,255,0.20)' }}>·</span>
@@ -131,19 +145,33 @@ export default async function CampaignsPage() {
             <table className="w-full">
               <thead>
                 <tr className="table-head">
-                  {['CAMPAÑA', 'OBJETIVO', 'ESTADO', 'PRESUP./DÍA', 'GASTO', 'ROAS', 'CONV.', ''].map(h => (
+                  {['CAMPAÑA', 'FASE', 'OBJETIVO', 'ESTADO', 'PRESUP./DÍA', 'GASTO', 'ROAS', 'CONV.', ''].map(h => (
                     <th key={h}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {campaigns.map(c => (
+                {campaigns.map(c => {
+                  const phase = classifyPhase(c)
+                  return (
                   <tr key={c.id} className="table-row">
                     <td className="px-5 py-4">
                       <p style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.88)' }}>{c.name}</p>
                       <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>
                         {new Date(c.created_at).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' })}
                       </p>
+                    </td>
+                    <td className="px-5 py-4">
+                      <span style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 4,
+                        fontSize: 10, fontWeight: 800,
+                        padding: '4px 10px', borderRadius: 99,
+                        background: `${phase.color}15`,
+                        color: phase.color,
+                        border: `1px solid ${phase.color}40`,
+                      }}>
+                        {phase.icon} {phase.label}
+                      </span>
                     </td>
                     <td className="px-5 py-4" style={{ fontSize: 12, color: 'var(--muted)' }}>
                       {OBJ_LABELS[c.objective] || c.objective}
@@ -182,7 +210,8 @@ export default async function CampaignsPage() {
                       </div>
                     </td>
                   </tr>
-                ))}
+                  )
+                })}
               </tbody>
             </table>
           </div>

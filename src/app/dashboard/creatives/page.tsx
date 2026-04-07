@@ -82,11 +82,16 @@ export default function CreativesPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-start mb-8">
+      <div className="flex justify-between items-start mb-6">
         <div>
-          <h1 className="page-title mb-1">Biblioteca de creativos</h1>
-          <p className="text-sm" style={{ color: 'var(--muted)' }}>
-            {files.length} archivo{files.length !== 1 ? 's' : ''} · Imágenes y videos para tus anuncios
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#f9a8d4', marginBottom: 8 }}>
+            Biblioteca de creativos · AdFlow
+          </p>
+          <h1 style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.03em' }}>
+            Tus creativos 🖼
+          </h1>
+          <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+            {files.length} archivo{files.length !== 1 ? 's' : ''} · Imágenes y videos listos para usar en tus campañas
           </p>
         </div>
         <button onClick={() => fileRef.current?.click()} disabled={uploading} className="btn-primary">
@@ -95,6 +100,32 @@ export default function CreativesPage() {
         </button>
         <input ref={fileRef} type="file" multiple accept="image/*,video/*" className="hidden"
                onChange={e => e.target.files && uploadFiles(e.target.files)} />
+      </div>
+
+      {/* Educational card */}
+      <div className="mb-6 p-5 rounded-2xl" style={{
+        background: 'linear-gradient(135deg, rgba(234,27,126,0.08) 0%, rgba(98,196,176,0.05) 100%)',
+        border: '1px solid rgba(234,27,126,0.20)',
+        display: 'flex', gap: 14, alignItems: 'flex-start',
+      }}>
+        <div style={{
+          width: 42, height: 42, borderRadius: 12, flexShrink: 0,
+          background: 'rgba(234,27,126,0.15)',
+          border: '1px solid rgba(234,27,126,0.30)',
+          boxShadow: '0 0 16px rgba(234,27,126,0.25)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
+        }}>🎨</div>
+        <div style={{ flex: 1 }}>
+          <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+            Tus creativos son la cara de tus anuncios
+          </h3>
+          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.72)', lineHeight: 1.6, marginBottom: 6 }}>
+            Subí imágenes y videos de alta calidad para que la IA tenga material real con el que trabajar. Mejor material = mejores anuncios = mejor rendimiento.
+          </p>
+          <p style={{ fontSize: 11, color: '#f9a8d4', fontWeight: 600 }}>
+            💡 Recomendamos tener al menos 3-5 variaciones de imagen por campaña para que Meta pueda optimizar
+          </p>
+        </div>
       </div>
 
       {uploadError && (
