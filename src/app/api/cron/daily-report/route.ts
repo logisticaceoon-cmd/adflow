@@ -8,6 +8,7 @@ import { Resend } from 'resend'
 import { createAdminClient } from '@/lib/supabase/server'
 import { analyzePixel, savePixelAnalysis } from '@/lib/pixel-analyzer'
 import { generateMonthlyReport } from '@/lib/monthly-report-engine'
+import { syncUserMetrics } from '@/lib/meta-sync-engine'
 import type { Campaign, CampaignMetrics, Recommendation } from '@/types'
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
@@ -77,6 +78,14 @@ async function processUserReport(supabase: any, userId: string) {
 
   const fbToken = fbConn?.access_token
   if (!fbToken) return
+
+  // 3.0 Sincronizar métricas diarias desde Meta Ads API
+  try {
+    const syncResult = await syncUserMetrics(userId, 'last_7d')
+    console.log(`[cron] sync ${userId}: ${syncResult.status} (${syncResult.campaignsSynced} campaigns, ${syncResult.adsetsSynced} adsets, ${syncResult.errors.length} errors)`)
+  } catch (err) {
+    console.warn(`[cron] meta sync failed for ${userId}:`, err)
+  }
 
   // 3.5 Refrescar pixel analysis (siempre, así las recomendaciones están al día)
   try {

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { PHASES, type Phase } from '@/lib/budget-engine'
 import PhaseChart from '@/components/dashboard/PhaseChart'
+import SyncButton from '@/components/dashboard/SyncButton'
 
 interface CampaignRow {
   name: string
@@ -150,10 +151,18 @@ export default async function PhasesPage() {
   const monthYear = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
   const monthLabel = `${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()}`
 
-  const [{ data: campaigns }, { data: budget }, { data: pixelAnalysis }] = await Promise.all([
+  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0]
+  const lastDay  = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0]
+
+  const [{ data: campaigns }, { data: budget }, { data: pixelAnalysis }, { data: dailyMetrics }] = await Promise.all([
     supabase.from('campaigns').select('name, status, strategy_type, daily_budget, metrics').eq('user_id', user.id),
     supabase.from('monthly_budgets').select('total_budget, currency, phase_budgets, phase_budgets_recommended').eq('user_id', user.id).eq('month_year', monthYear).maybeSingle(),
     supabase.from('pixel_analysis').select('level, level_name').eq('user_id', user.id).maybeSingle(),
+    supabase.from('campaign_metrics_daily')
+      .select('phase, spend, purchase_value, purchases, clicks, impressions')
+      .eq('user_id', user.id)
+      .gte('date', firstDay)
+      .lte('date', lastDay),
   ])
 
   const rows = (campaigns || []) as CampaignRow[]
@@ -169,14 +178,18 @@ export default async function PhasesPage() {
     F4: { spend: 0, revenue: 0, conversions: 0, count: 0, recommended: phaseBudgetsRec.F4 ?? 0, assigned: phaseBudgets.F4 ?? 0 },
   }
 
+  // Count how many campaigns fall into each phase (for the "X campañas" label)
   for (const c of rows) {
-    const ph = classifyPhase(c)
-    const sp = c.metrics?.spend || 0
-    const r  = c.metrics?.roas || 0
-    grouped[ph].spend       += sp
-    grouped[ph].revenue     += r * sp
-    grouped[ph].conversions += c.metrics?.conversions || 0
-    grouped[ph].count       += 1
+    grouped[classifyPhase(c)].count += 1
+  }
+
+  // ── Real aggregated metrics from campaign_metrics_daily (month-to-date) ──
+  for (const m of (dailyMetrics || []) as any[]) {
+    const ph = (m.phase as Phase) || 'F2'
+    if (!grouped[ph]) continue
+    grouped[ph].spend       += Number(m.spend)          || 0
+    grouped[ph].revenue     += Number(m.purchase_value) || 0
+    grouped[ph].conversions += Number(m.purchases)      || 0
   }
 
   const totals = (Object.values(grouped) as PhaseAccum[]).reduce(
@@ -221,15 +234,18 @@ export default async function PhasesPage() {
         <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.78)', maxWidth: 580, lineHeight: 1.55, marginBottom: 14 }}>
           Compará lo planeado vs lo real y encontrá oportunidades de optimización en cada fase del funnel.
         </p>
-        <span style={{
-          display: 'inline-flex', alignItems: 'center', gap: 6,
-          padding: '6px 14px', borderRadius: 99,
-          background: 'rgba(98,196,176,0.10)',
-          border: '1px solid rgba(98,196,176,0.30)',
-          fontSize: 12, fontWeight: 600, color: '#62c4b0',
-        }}>
-          📅 {monthLabel}
-        </span>
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            padding: '6px 14px', borderRadius: 99,
+            background: 'rgba(98,196,176,0.10)',
+            border: '1px solid rgba(98,196,176,0.30)',
+            fontSize: 12, fontWeight: 600, color: '#62c4b0',
+          }}>
+            📅 {monthLabel}
+          </span>
+          <SyncButton variant="compact" />
+        </div>
       </div>
 
       {!hasAnyData ? (

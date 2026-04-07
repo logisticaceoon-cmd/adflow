@@ -9,6 +9,7 @@ import MonthSummary from '@/components/dashboard/MonthSummary'
 import PhaseSummary from '@/components/dashboard/PhaseSummary'
 import AchievementsBadges from '@/components/dashboard/AchievementsBadges'
 import AlertsOpportunities from '@/components/dashboard/AlertsOpportunities'
+import SyncButton from '@/components/dashboard/SyncButton'
 import type { Phase } from '@/lib/budget-engine'
 
 const AI_TIPS = [
@@ -212,6 +213,11 @@ export default async function DashboardPage() {
       <OnboardingWizard show={showOnboarding} />
 
       <div>
+        {/* ── Sync control (top-right, above hero) ────────────────────── */}
+        <div className="flex justify-end mb-4 dash-anim-1">
+          <SyncButton variant="full" />
+        </div>
+
         {/* ── BLOCK A: Hero ────────────────────────────────────────────── */}
         <HeroLevel
           fullName={fullName}

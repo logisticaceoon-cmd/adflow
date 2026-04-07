@@ -82,23 +82,35 @@ export async function generateMonthlyReport(
     .eq('month_year', targetMonth)
     .maybeSingle()
 
-  // 5) Aggregate metrics across campaigns
+  // 4.5) Daily metrics from Meta Sync Engine — source of truth for this month
+  const firstDayOnly = firstDay.split('T')[0]
+  const lastDayOnly  = new Date(year, monthIdx + 1, 0).toISOString().split('T')[0]
+  const { data: dailyMetrics } = await db
+    .from('campaign_metrics_daily')
+    .select('phase, spend, purchase_value, purchases, clicks, impressions')
+    .eq('user_id', userId)
+    .gte('date', firstDayOnly)
+    .lte('date', lastDayOnly)
+
+  // 5) Aggregate totals from campaign_metrics_daily
   const all = (campaigns || []) as Array<{ name: string; status: string; strategy_type: string | null; daily_budget: number; metrics: any }>
-  const totalSpend       = all.reduce((s, c) => s + (c.metrics?.spend       || 0), 0)
-  const totalRevenue     = all.reduce((s, c) => s + ((c.metrics?.roas || 0) * (c.metrics?.spend || 0)), 0)
-  const totalConversions = all.reduce((s, c) => s + (c.metrics?.conversions || 0), 0)
+  let totalSpend = 0, totalRevenue = 0, totalConversions = 0
+  for (const m of (dailyMetrics || []) as any[]) {
+    totalSpend       += Number(m.spend)          || 0
+    totalRevenue     += Number(m.purchase_value) || 0
+    totalConversions += Number(m.purchases)      || 0
+  }
   const avgRoas = totalSpend       > 0 ? totalRevenue / totalSpend       : 0
   const avgCpa  = totalConversions > 0 ? totalSpend   / totalConversions : 0
 
-  // 6) Per-phase metrics
+  // 6) Per-phase metrics from the daily table (phase is already classified server-side)
   const phaseMetrics: Record<string, { spend: number; revenue: number; roas: number; conversions: number; cpa: number }> = {}
-  for (const c of all) {
-    const ph = STRATEGY_TO_PHASE[c.strategy_type || ''] || 'F1'
+  for (const m of (dailyMetrics || []) as any[]) {
+    const ph = m.phase || STRATEGY_TO_PHASE['TOFU'] || 'F1'
     if (!phaseMetrics[ph]) phaseMetrics[ph] = { spend: 0, revenue: 0, roas: 0, conversions: 0, cpa: 0 }
-    const spend = c.metrics?.spend || 0
-    phaseMetrics[ph].spend       += spend
-    phaseMetrics[ph].conversions += c.metrics?.conversions || 0
-    phaseMetrics[ph].revenue     += (c.metrics?.roas || 0) * spend
+    phaseMetrics[ph].spend       += Number(m.spend)          || 0
+    phaseMetrics[ph].revenue     += Number(m.purchase_value) || 0
+    phaseMetrics[ph].conversions += Number(m.purchases)      || 0
   }
   for (const ph of Object.keys(phaseMetrics)) {
     const p = phaseMetrics[ph]
