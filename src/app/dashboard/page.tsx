@@ -10,6 +10,8 @@ import PhaseSummary from '@/components/dashboard/PhaseSummary'
 import AchievementsBadges from '@/components/dashboard/AchievementsBadges'
 import AlertsOpportunities from '@/components/dashboard/AlertsOpportunities'
 import SyncButton from '@/components/dashboard/SyncButton'
+import OnboardingChecklist from '@/components/dashboard/OnboardingChecklist'
+import { calculateOnboardingStatus } from '@/lib/onboarding-engine'
 import type { Phase } from '@/lib/budget-engine'
 
 const AI_TIPS = [
@@ -76,6 +78,7 @@ export default async function DashboardPage() {
     { data: monthlyBudget },
     { data: levelHistory },
     { data: prevMonthReport },
+    { data: fbConnection },
   ] = await Promise.all([
     supabase.from('profiles').select('full_name, plan').eq('id', user.id).single(),
     supabase.from('campaigns').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
@@ -89,7 +92,18 @@ export default async function DashboardPage() {
       .order('month_year', { ascending: false })
       .limit(1)
       .maybeSingle(),
+    supabase.from('facebook_connections').select('access_token').eq('user_id', user.id).maybeSingle(),
   ])
+
+  // ── Onboarding status ──────────────────────────────────────────────────
+  const onboardingStatus = calculateOnboardingStatus({
+    hasFbConnection: !!fbConnection?.access_token,
+    hasAdAccount: !!businessProfile?.selected_ad_account_id,
+    hasPixel: !!businessProfile?.pixel_id,
+    pixelLevel: pixelAnalysis?.level ?? null,
+    hasBudget: !!monthlyBudget,
+    campaignCount: (campaigns || []).length,
+  })
 
   const allCampaigns = (campaigns || []) as any[]
   const monthCampaigns = allCampaigns.filter(c => new Date(c.created_at) >= new Date(firstDayMonth))
@@ -195,6 +209,9 @@ export default async function DashboardPage() {
         <div className="flex justify-end mb-4 dash-anim-1">
           <SyncButton variant="full" />
         </div>
+
+        {/* ── Onboarding checklist (only if setup incomplete) ─────────── */}
+        {!onboardingStatus.isComplete && <OnboardingChecklist status={onboardingStatus} />}
 
         {/* ── BLOCK A: Hero ────────────────────────────────────────────── */}
         <HeroLevel

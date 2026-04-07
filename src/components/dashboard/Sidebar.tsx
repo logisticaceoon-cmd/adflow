@@ -54,6 +54,7 @@ export default function Sidebar({ user, profile }: Props) {
   const [pixelEvents,    setPixelEvents]    = useState<any>(null)
   const [campaignCount,  setCampaignCount]  = useState<number>(0)
   const [hasPixel,       setHasPixel]       = useState<boolean>(false)
+  const [onboarding,     setOnboarding]     = useState<{ isComplete: boolean; completedSteps: number; totalSteps: number; completionScore: number } | null>(null)
 
   useEffect(() => {
     let active = true
@@ -87,6 +88,21 @@ export default function Sidebar({ user, profile }: Props) {
       .then(({ count }) => {
         if (active && typeof count === 'number') setCampaignCount(count)
       })
+
+    // Onboarding status (lightweight fetch)
+    fetch('/api/onboarding/status')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (active && data) {
+          setOnboarding({
+            isComplete: data.isComplete,
+            completedSteps: data.completedSteps,
+            totalSteps: data.totalSteps,
+            completionScore: data.completionScore,
+          })
+        }
+      })
+      .catch(() => { /* ignore */ })
 
     return () => { active = false }
   }, [user.id, pathname])
@@ -284,6 +300,40 @@ export default function Sidebar({ user, profile }: Props) {
               )}
             </div>
           </Link>
+
+          {/* ── SETUP MINI WIDGET (only if onboarding incomplete) ── */}
+          {onboarding && !onboarding.isComplete && (
+            <Link href="/dashboard/onboarding" onClick={close} style={{ textDecoration: 'none', display: 'block', marginBottom: 14 }}>
+              <div style={{
+                padding: '11px 12px',
+                borderRadius: 12,
+                background: 'linear-gradient(135deg, rgba(233,30,140,0.12), rgba(98,196,176,0.06))',
+                border: '1px solid rgba(233,30,140,0.35)',
+                boxShadow: '0 4px 16px rgba(233,30,140,0.15)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+                  <span style={{ fontSize: 13 }}>🚀</span>
+                  <span style={{ fontSize: 10.5, fontWeight: 800, color: '#fff', flex: 1 }}>
+                    Setup: {onboarding.completedSteps}/{onboarding.totalSteps}
+                  </span>
+                  <span style={{ fontSize: 9, fontWeight: 800, color: '#f9a8d4' }}>
+                    {onboarding.completionScore}%
+                  </span>
+                </div>
+                <div style={{ height: 4, borderRadius: 99, background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
+                  <div style={{
+                    height: '100%', width: `${onboarding.completionScore}%`,
+                    background: 'linear-gradient(90deg, #e91e8c, #62c4b0)',
+                    boxShadow: '0 0 6px rgba(233,30,140,0.55)',
+                    borderRadius: 99,
+                    transition: 'width 0.6s ease',
+                  }} />
+                </div>
+              </div>
+            </Link>
+          )}
 
           {/* ── SECTION: PLATAFORMA ── */}
           <p className="section-label px-2 pb-2">Plataforma</p>
