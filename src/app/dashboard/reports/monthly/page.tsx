@@ -1,246 +1,456 @@
-'use client'
-// src/app/dashboard/reports/monthly/page.tsx — Monthly report viewer
-import { useEffect, useState } from 'react'
-import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
+// src/app/dashboard/reports/monthly/page.tsx — Monthly report viewer (premium)
+import Link from 'next/link'
+import { createClient } from '@/lib/supabase/server'
+import { generateMonthlyReport } from '@/lib/monthly-report-engine'
 import { PHASES, type Phase } from '@/lib/budget-engine'
+import { TrendingUp, TrendingDown, Minus, ArrowLeft, ArrowRight } from 'lucide-react'
 import LevelBadge from '@/components/dashboard/LevelBadge'
 
-interface MonthlyReportRow {
-  month_year: string
-  total_spend: number
-  total_revenue: number
-  total_conversions: number
-  avg_roas: number
-  avg_cpa: number
-  phase_metrics: Record<string, { spend: number; revenue: number; roas: number; conversions: number; cpa: number }>
-  pixel_level_start: number
-  pixel_level_end: number
-  budget_planned: number
-  budget_spent: number
-  budget_efficiency: number
-  growth_rate: number
-  campaigns_created: number
-  campaigns_active: number
-  ai_analysis: string
-  recommendations: any[]
+const MONTH_NAMES = [
+  'Enero','Febrero','Marzo','Abril','Mayo','Junio',
+  'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre',
+]
+
+function fmtMonthYear(my: string) {
+  const [y, m] = my.split('-').map(Number)
+  return `${MONTH_NAMES[m - 1]} ${y}`
 }
 
-function buildMonthOptions(): string[] {
-  const out: string[] = []
+function prevMonth(my: string): string {
+  const [y, m] = my.split('-').map(Number)
+  const d = new Date(y, m - 2, 1)
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+}
+function nextMonth(my: string): string {
+  const [y, m] = my.split('-').map(Number)
+  const d = new Date(y, m, 1)
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+}
+
+function ChangeIndicator({ value, suffix = '%' }: { value: number; suffix?: string }) {
+  if (value > 0) return (
+    <span style={{ color: '#06d6a0', display: 'inline-flex', alignItems: 'center', gap: 4, fontWeight: 700, fontSize: 11 }}>
+      <TrendingUp size={12} /> +{value.toFixed(0)}{suffix}
+    </span>
+  )
+  if (value < 0) return (
+    <span style={{ color: '#fca5a5', display: 'inline-flex', alignItems: 'center', gap: 4, fontWeight: 700, fontSize: 11 }}>
+      <TrendingDown size={12} /> {value.toFixed(0)}{suffix}
+    </span>
+  )
+  return (
+    <span style={{ color: 'var(--muted)', display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11 }}>
+      <Minus size={12} /> Sin cambios
+    </span>
+  )
+}
+
+function calcTrend(curr: number, prev: number): number {
+  if (!prev || prev === 0) return 0
+  return ((curr - prev) / prev) * 100
+}
+
+interface PageProps {
+  searchParams: { month?: string }
+}
+
+export default async function MonthlyReportPage({ searchParams }: PageProps) {
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
+
   const now = new Date()
-  for (let i = 0; i < 12; i++) {
-    const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
-    out.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`)
-  }
-  return out
-}
+  const defaultMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+  const targetMonth  = searchParams?.month || defaultMonth
+  const prevMonthYear = prevMonth(targetMonth)
 
-function ChangeArrow({ value }: { value: number }) {
-  if (value > 0) return <span style={{ color: '#06d6a0', display: 'inline-flex', alignItems: 'center', gap: 4 }}><TrendingUp size={14} /> +{value.toFixed(0)}%</span>
-  if (value < 0) return <span style={{ color: '#ef4444', display: 'inline-flex', alignItems: 'center', gap: 4 }}><TrendingDown size={14} /> {value.toFixed(0)}%</span>
-  return <span style={{ color: 'var(--muted)', display: 'inline-flex', alignItems: 'center', gap: 4 }}><Minus size={14} /> 0%</span>
-}
+  let [
+    { data: report },
+    { data: previous },
+    { data: pixelAnalysis },
+    { data: monthlyBudget },
+    { data: levelHistory },
+  ] = await Promise.all([
+    supabase.from('monthly_reports').select('*').eq('user_id', user.id).eq('month_year', targetMonth).maybeSingle(),
+    supabase.from('monthly_reports').select('*').eq('user_id', user.id).eq('month_year', prevMonthYear).maybeSingle(),
+    supabase.from('pixel_analysis').select('*').eq('user_id', user.id).maybeSingle(),
+    supabase.from('monthly_budgets').select('*').eq('user_id', user.id).eq('month_year', targetMonth).maybeSingle(),
+    supabase.from('level_history').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(5),
+  ])
 
-export default function MonthlyReportPage() {
-  const months = buildMonthOptions()
-  const [selected, setSelected] = useState<string>(months[0])
-  const [report, setReport] = useState<MonthlyReportRow | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [generating, setGenerating] = useState(false)
-
-  async function loadReport(monthYear: string) {
-    setLoading(true)
+  // Generate on-the-fly if missing
+  if (!report) {
     try {
-      const res = await fetch(`/api/reports/monthly?month_year=${monthYear}`)
-      const data = await res.json()
-      if (data.report) setReport(data.report)
-      else setReport(null)
-    } finally {
-      setLoading(false)
+      await generateMonthlyReport(user.id, targetMonth)
+      const { data: freshReport } = await supabase.from('monthly_reports').select('*').eq('user_id', user.id).eq('month_year', targetMonth).maybeSingle()
+      report = freshReport
+    } catch (err) {
+      // continue with null — will show empty state
     }
   }
 
-  useEffect(() => { loadReport(selected) }, [selected])
-
-  async function regenerate() {
-    setGenerating(true)
-    try {
-      const res = await fetch(`/api/reports/monthly?month_year=${selected}&force=1`)
-      const data = await res.json()
-      if (data.report) setReport(data.report)
-    } finally {
-      setGenerating(false)
-    }
-  }
+  // Calculate trends vs previous month
+  const trendSpend    = calcTrend(report?.total_spend       ?? 0, previous?.total_spend       ?? 0)
+  const trendRevenue  = calcTrend(report?.total_revenue     ?? 0, previous?.total_revenue     ?? 0)
+  const trendConv     = calcTrend(report?.total_conversions ?? 0, previous?.total_conversions ?? 0)
+  const trendRoas     = calcTrend(report?.avg_roas          ?? 0, previous?.avg_roas          ?? 0)
+  const budgetPlanned = (report?.budget_planned as number) ?? (monthlyBudget?.total_budget as number) ?? 0
+  const budgetEffic   = budgetPlanned > 0 ? ((report?.total_spend ?? 0) / budgetPlanned) * 100 : 0
 
   return (
     <div className="max-w-5xl mx-auto">
-      <div className="flex justify-between items-start mb-8">
-        <div>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#e91e8c', marginBottom: 6 }}>
-            Reporte mensual · AdFlow
-          </p>
-          <h1 className="page-title mb-1.5">Cómo te fue este mes 📊</h1>
-          <p style={{ fontSize: 13, color: 'var(--muted)' }}>
-            Análisis consolidado: gasto, ROAS, fases, evolución del pixel y próximas acciones
-          </p>
+      {/* ── SECTION A: HERO ───────────────────────────────────────────── */}
+      <div className="dash-anim-1 mb-6" style={{
+        position: 'relative',
+        borderRadius: 22, padding: '28px 32px',
+        background: 'linear-gradient(135deg, rgba(139,92,246,0.10) 0%, rgba(233,30,140,0.06) 50%, rgba(98,196,176,0.04) 100%)',
+        border: '1px solid rgba(255,255,255,0.08)',
+        backdropFilter: 'blur(20px)',
+        overflow: 'hidden',
+      }}>
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, height: 1,
+          background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.55), rgba(234,27,126,0.40), transparent)',
+        }} />
+
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <Link href="/dashboard/reports" style={{ fontSize: 11, color: '#c4b5fd', display: 'inline-flex', alignItems: 'center', gap: 4, textDecoration: 'none', marginBottom: 8 }}>
+              <ArrowLeft size={12} /> Volver a reportes
+            </Link>
+            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#c4b5fd', marginBottom: 4 }}>
+              Reporte mensual
+            </p>
+            <h1 style={{
+              fontFamily: 'Syne, sans-serif', fontSize: 32, fontWeight: 800,
+              color: '#fff', letterSpacing: '-0.03em',
+            }}>
+              {fmtMonthYear(targetMonth)} 📊
+            </h1>
+          </div>
+
+          {/* Month navigator */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Link href={`/dashboard/reports/monthly?month=${prevMonth(targetMonth)}`} style={{
+              padding: '8px 12px', borderRadius: 10,
+              background: 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(255,255,255,0.10)',
+              color: '#fff', textDecoration: 'none',
+              display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12,
+            }}>
+              <ArrowLeft size={14} /> Anterior
+            </Link>
+            <Link href={`/dashboard/reports/monthly?month=${nextMonth(targetMonth)}`} style={{
+              padding: '8px 12px', borderRadius: 10,
+              background: 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(255,255,255,0.10)',
+              color: '#fff', textDecoration: 'none',
+              display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12,
+            }}>
+              Siguiente <ArrowRight size={14} />
+            </Link>
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <select value={selected} onChange={e => setSelected(e.target.value)}
-            style={{ padding: '8px 14px', borderRadius: 10, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.10)', color: '#fff', fontSize: 13 }}>
-            {months.map(m => <option key={m} value={m}>{m}</option>)}
-          </select>
-          <button onClick={regenerate} disabled={generating || loading} className="btn-primary" style={{ fontSize: 12 }}>
-            {generating ? 'Regenerando...' : '🤖 Regenerar'}
-          </button>
-        </div>
+
+        <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.78)', maxWidth: 620, lineHeight: 1.55 }}>
+          Tu consultor IA analizó el mes. Acá está el resumen ejecutivo, las métricas clave, y las acciones recomendadas para el próximo mes.
+        </p>
       </div>
 
-      {loading ? (
-        <div className="card p-10 text-center" style={{ color: 'var(--muted)' }}>Cargando reporte...</div>
-      ) : !report ? (
-        <div className="card p-10 text-center">
-          <div style={{ fontSize: 40, marginBottom: 14 }}>📭</div>
-          <h2 className="section-title mb-2">No hay reporte para {selected}</h2>
-          <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 18 }}>
-            Generá el reporte ahora — vamos a calcular todas las métricas y pedirle a la IA un análisis ejecutivo.
+      {!report ? (
+        /* ── EMPTY STATE ────────────────────────────────────────────── */
+        <div className="card p-12 text-center">
+          <div style={{ fontSize: 48, marginBottom: 18 }}>📭</div>
+          <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: 8 }}>
+            No hay datos para {fmtMonthYear(targetMonth)}
+          </h2>
+          <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 22, maxWidth: 420, margin: '0 auto 22px' }}>
+            Todavía no tenés campañas activas en este mes o no hay métricas registradas. El reporte se genera automáticamente cuando empezás a acumular datos.
           </p>
-          <button onClick={regenerate} disabled={generating} className="btn-primary">
-            {generating ? 'Generando...' : 'Generar reporte →'}
-          </button>
+          <Link href="/dashboard/create" className="btn-primary">Crear una campaña →</Link>
         </div>
       ) : (
         <>
-          {/* ── Top metrics ── */}
-          <div className="grid grid-cols-4 gap-4 mb-6">
+          {/* ── SECTION B: TOP METRICS WITH TRENDS ─────────────────── */}
+          <div className="grid grid-cols-4 gap-4 mb-6 dash-anim-2">
             {[
-              { label: 'Gasto total',  value: `$${report.total_spend.toFixed(0)}`, color: '#e91e8c' },
-              { label: 'Revenue',      value: `$${report.total_revenue.toFixed(0)}`, color: '#06d6a0' },
-              { label: 'ROAS',         value: `${report.avg_roas.toFixed(2)}x`, color: '#f59e0b' },
-              { label: 'Conversiones', value: String(report.total_conversions), color: '#62c4b0' },
+              { label: 'Inversión total',  value: `$${(report.total_spend ?? 0).toFixed(0)}`,     trend: trendSpend,   color: '#e91e8c', inverse: true },
+              { label: 'Ventas generadas', value: `$${(report.total_revenue ?? 0).toFixed(0)}`,   trend: trendRevenue, color: '#06d6a0', inverse: false },
+              { label: 'ROAS promedio',    value: `${(report.avg_roas ?? 0).toFixed(2)}x`,        trend: trendRoas,    color: '#f59e0b', inverse: false },
+              { label: 'Conversiones',     value: String(report.total_conversions ?? 0),         trend: trendConv,    color: '#62c4b0', inverse: false },
             ].map(m => (
-              <div key={m.label} className="card p-4" style={{ borderTop: `2px solid ${m.color}` }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 6 }}>
+              <div key={m.label} className="card p-5" style={{
+                borderTop: `2px solid ${m.color}`,
+                boxShadow: `0 10px 32px rgba(0,0,0,0.35), 0 0 28px ${m.color}12`,
+              }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8 }}>
                   {m.label}
                 </p>
-                <p style={{ fontSize: 22, fontWeight: 800, color: m.color }}>{m.value}</p>
+                <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff', lineHeight: 1, letterSpacing: '-0.02em', marginBottom: 8 }}>
+                  {m.value}
+                </p>
+                <ChangeIndicator value={m.trend} />
               </div>
             ))}
           </div>
 
-          {/* ── Growth + level evolution ── */}
-          <div className="grid grid-cols-3 gap-6 mb-6">
-            <div className="card p-5">
-              <p style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8 }}>
-                Crecimiento vs mes anterior
-              </p>
-              <p style={{ fontSize: 22, fontWeight: 800 }}>
-                <ChangeArrow value={report.growth_rate} />
-              </p>
-              <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 6 }}>
-                en conversiones totales del mes
-              </p>
-            </div>
-
-            <div className="card p-5">
-              <p style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 12 }}>
-                Evolución del nivel
-              </p>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-                <LevelBadge level={report.pixel_level_start} size="sm" showName={false} />
-                <span style={{ fontSize: 18, color: 'var(--muted)' }}>→</span>
-                <LevelBadge level={report.pixel_level_end} size="sm" showName={false} />
-              </div>
-            </div>
-
-            <div className="card p-5">
-              <p style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8 }}>
-                Eficiencia de presupuesto
-              </p>
-              <p style={{ fontSize: 22, fontWeight: 800, color: '#fff' }}>
-                {report.budget_efficiency.toFixed(0)}%
-              </p>
-              <div style={{ height: 6, borderRadius: 4, background: 'rgba(255,255,255,0.05)', marginTop: 8, overflow: 'hidden' }}>
-                <div style={{
-                  height: '100%', width: `${Math.min(100, report.budget_efficiency)}%`,
-                  background: 'linear-gradient(90deg, #e91e8c, #62c4b0)',
-                }} />
-              </div>
-              <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 6 }}>
-                ${report.budget_spent.toFixed(0)} / ${report.budget_planned.toFixed(0)} planeado
-              </p>
-            </div>
-          </div>
-
-          {/* ── Phase metrics ── */}
-          <div className="card p-6 mb-6">
-            <h2 className="section-title mb-4">Métricas por fase</h2>
-            <table className="w-full">
-              <thead>
-                <tr className="table-head">
-                  <th>Fase</th><th>Gasto</th><th>Revenue</th><th>ROAS</th><th>Conv.</th><th>CPA</th>
-                </tr>
-              </thead>
-              <tbody>
-                {PHASES.map(p => {
-                  const m = report.phase_metrics[p.key as Phase]
-                  if (!m) return (
-                    <tr key={p.key} className="table-row">
-                      <td className="px-3 py-3" style={{ fontSize: 12, color: 'var(--muted)' }}>{p.icon} {p.fullName}</td>
-                      <td colSpan={5} className="px-3 py-3" style={{ fontSize: 11, color: 'var(--muted)' }}>Sin actividad este mes</td>
-                    </tr>
-                  )
-                  return (
-                    <tr key={p.key} className="table-row">
-                      <td className="px-3 py-3" style={{ fontSize: 12, fontWeight: 700, color: p.color }}>{p.icon} {p.fullName}</td>
-                      <td className="px-3 py-3" style={{ fontSize: 12 }}>${m.spend.toFixed(0)}</td>
-                      <td className="px-3 py-3" style={{ fontSize: 12 }}>${m.revenue.toFixed(0)}</td>
-                      <td className="px-3 py-3" style={{ fontSize: 12, fontWeight: 700, color: m.roas >= 3 ? '#06d6a0' : m.roas > 0 ? '#f59e0b' : 'var(--muted)' }}>
-                        {m.roas > 0 ? `${m.roas.toFixed(1)}x` : '—'}
-                      </td>
-                      <td className="px-3 py-3" style={{ fontSize: 12 }}>{m.conversions}</td>
-                      <td className="px-3 py-3" style={{ fontSize: 12 }}>{m.cpa > 0 ? `$${m.cpa.toFixed(0)}` : '—'}</td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-
-          {/* ── AI analysis ── */}
+          {/* ── SECTION C: EXECUTIVE AI ANALYSIS ───────────────────── */}
           {report.ai_analysis && (
-            <div className="card p-6 mb-6" style={{
-              background: 'linear-gradient(135deg, rgba(234,27,126,0.06), rgba(98,196,176,0.04))',
+            <div className="card p-6 mb-6 dash-anim-3" style={{
+              background: 'linear-gradient(135deg, rgba(234,27,126,0.08) 0%, rgba(98,196,176,0.05) 50%, rgba(139,92,246,0.04) 100%)',
+              border: '1px solid rgba(234,27,126,0.22)',
+              boxShadow: '0 12px 48px rgba(234,27,126,0.10)',
             }}>
-              <div className="flex items-center gap-2 mb-3">
-                <span style={{ fontSize: 18 }}>🤖</span>
-                <h2 className="section-title">Análisis IA del mes</h2>
+              <div className="flex items-start gap-4">
+                <div style={{
+                  width: 52, height: 52, borderRadius: 14, flexShrink: 0,
+                  background: 'rgba(234,27,126,0.18)',
+                  border: '1px solid rgba(234,27,126,0.35)',
+                  boxShadow: '0 0 24px rgba(234,27,126,0.35)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26,
+                }}>🤖</div>
+                <div style={{ flex: 1 }}>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: '#f9a8d4', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6 }}>
+                    Análisis ejecutivo · Tu consultor IA
+                  </p>
+                  <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 14 }}>
+                    Qué pasó este mes y qué hacer ahora
+                  </h2>
+                  <p style={{
+                    fontSize: 14, color: 'rgba(255,255,255,0.88)',
+                    lineHeight: 1.75, whiteSpace: 'pre-wrap',
+                  }}>
+                    {report.ai_analysis}
+                  </p>
+                </div>
               </div>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
-                {report.ai_analysis}
-              </p>
             </div>
           )}
 
-          {/* ── Recommendations ── */}
-          {report.recommendations?.length > 0 && (
-            <div className="card p-6 mb-6">
-              <h2 className="section-title mb-4">Próximas acciones recomendadas</h2>
-              <div className="flex flex-col gap-2.5">
-                {report.recommendations.slice(0, 6).map((r, i) => {
-                  const color = r.priority === 'high' ? '#f9a8d4' : r.priority === 'medium' ? '#fbbf24' : '#8892b0'
-                  const bg    = r.priority === 'high' ? 'rgba(233,30,140,0.06)' : r.priority === 'medium' ? 'rgba(245,158,11,0.06)' : 'rgba(255,255,255,0.03)'
-                  const border = r.priority === 'high' ? 'rgba(233,30,140,0.30)' : r.priority === 'medium' ? 'rgba(245,158,11,0.30)' : 'rgba(255,255,255,0.10)'
+          {/* ── SECTION D: LEVEL EVOLUTION + BUDGET EFFICIENCY + GROWTH ── */}
+          <div className="grid grid-cols-3 gap-4 mb-6 dash-anim-4">
+            {/* Level evolution */}
+            <div className="card p-5">
+              <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 14 }}>
+                Evolución de nivel
+              </p>
+              <div className="flex items-center justify-center gap-4" style={{ minHeight: 80 }}>
+                <LevelBadge level={report.pixel_level_start ?? 0} size="sm" showName={false} />
+                <ArrowRight size={18} style={{ color: 'var(--muted)' }} />
+                <LevelBadge level={report.pixel_level_end ?? 0} size="sm" showName={false} />
+              </div>
+              {(report.pixel_level_end ?? 0) > (report.pixel_level_start ?? 0) ? (
+                <p style={{ fontSize: 11, color: '#06d6a0', textAlign: 'center', marginTop: 10, fontWeight: 600 }}>
+                  🎉 Subiste {(report.pixel_level_end ?? 0) - (report.pixel_level_start ?? 0)} nivel{(report.pixel_level_end ?? 0) - (report.pixel_level_start ?? 0) !== 1 ? 'es' : ''} este mes
+                </p>
+              ) : (
+                <p style={{ fontSize: 11, color: 'var(--muted)', textAlign: 'center', marginTop: 10 }}>
+                  Mismo nivel que el inicio del mes
+                </p>
+              )}
+            </div>
+
+            {/* Budget efficiency */}
+            <div className="card p-5">
+              <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8 }}>
+                Eficiencia de presupuesto
+              </p>
+              <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', lineHeight: 1, marginBottom: 10 }}>
+                {budgetEffic.toFixed(0)}%
+              </p>
+              <div style={{ height: 6, borderRadius: 4, background: 'rgba(255,255,255,0.05)', overflow: 'hidden', marginBottom: 8 }}>
+                <div style={{
+                  height: '100%',
+                  width: `${Math.min(100, budgetEffic)}%`,
+                  background: budgetEffic > 100
+                    ? 'linear-gradient(90deg, #ef4444, #f87171)'
+                    : budgetEffic > 90
+                      ? 'linear-gradient(90deg, #06d6a0, #62c4b0)'
+                      : 'linear-gradient(90deg, #f59e0b, #fbbf24)',
+                  boxShadow: '0 0 12px rgba(98,196,176,0.40)',
+                }} />
+              </div>
+              <p style={{ fontSize: 10, color: 'var(--muted)', lineHeight: 1.5 }}>
+                ${(report.total_spend ?? 0).toFixed(0)} gastado de ${budgetPlanned.toFixed(0)} planeado
+              </p>
+            </div>
+
+            {/* Growth rate */}
+            <div className="card p-5">
+              <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8 }}>
+                Crecimiento vs mes anterior
+              </p>
+              <p style={{
+                fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800,
+                color: (report.growth_rate ?? 0) > 0 ? '#06d6a0' : (report.growth_rate ?? 0) < 0 ? '#fca5a5' : '#a0a8c0',
+                lineHeight: 1, marginBottom: 10,
+              }}>
+                {(report.growth_rate ?? 0) > 0 ? '+' : ''}{(report.growth_rate ?? 0).toFixed(0)}%
+              </p>
+              <p style={{ fontSize: 10, color: 'var(--muted)', lineHeight: 1.5 }}>
+                en conversiones totales del mes
+              </p>
+              {(report.growth_rate ?? 0) > 0 && (
+                <p style={{ fontSize: 10, color: '#06d6a0', marginTop: 6, fontWeight: 600 }}>
+                  📈 Mejoraste vs el mes anterior
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* ── SECTION E: PHASE METRICS BREAKDOWN ──────────────────── */}
+          <div className="card p-6 mb-6 dash-anim-5">
+            <div className="mb-4">
+              <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+                Rendimiento por fase
+              </h2>
+              <p style={{ fontSize: 12, color: 'var(--muted)' }}>
+                Cuánto aportó cada fase del funnel al resultado del mes
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {PHASES.map(p => {
+                const m = (report.phase_metrics as any)?.[p.key]
+                if (!m) return (
+                  <div key={p.key} className="p-4 rounded-xl" style={{
+                    background: 'rgba(255,255,255,0.02)',
+                    border: '1px solid rgba(255,255,255,0.05)',
+                    opacity: 0.55,
+                    display: 'grid',
+                    gridTemplateColumns: '180px 1fr',
+                    gap: 16, alignItems: 'center',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <span style={{ fontSize: 22 }}>{p.icon}</span>
+                      <div>
+                        <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 13, fontWeight: 700, color: p.color }}>{p.fullName}</p>
+                        <p style={{ fontSize: 10, color: 'var(--muted)' }}>{p.objective}</p>
+                      </div>
+                    </div>
+                    <p style={{ fontSize: 11, color: 'var(--muted)', fontStyle: 'italic' }}>
+                      Sin actividad en esta fase durante el mes
+                    </p>
+                  </div>
+                )
+
+                return (
+                  <div key={p.key} className="p-4 rounded-xl" style={{
+                    background: `linear-gradient(135deg, ${p.color}08, ${p.color}02)`,
+                    border: `1px solid ${p.color}25`,
+                    display: 'grid',
+                    gridTemplateColumns: '200px 1fr 80px 80px 80px',
+                    gap: 16, alignItems: 'center',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div style={{
+                        width: 40, height: 40, borderRadius: 10, flexShrink: 0,
+                        background: `${p.color}20`, border: `1px solid ${p.color}45`,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
+                      }}>{p.icon}</div>
+                      <div>
+                        <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 13, fontWeight: 700, color: p.color }}>{p.fullName}</p>
+                        <p style={{ fontSize: 10, color: 'var(--muted)' }}>{p.objective}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>Inversión</p>
+                      <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 800, color: '#fff' }}>
+                        ${m.spend.toFixed(0)}
+                      </p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>Ventas</p>
+                      <p style={{ fontSize: 13, fontWeight: 700, color: '#06d6a0' }}>${m.revenue.toFixed(0)}</p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>ROAS</p>
+                      <p style={{
+                        fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 800,
+                        color: m.roas >= 3 ? '#06d6a0' : m.roas >= 1.5 ? '#fbbf24' : m.roas > 0 ? '#fca5a5' : 'var(--muted)',
+                      }}>
+                        {m.roas > 0 ? `${m.roas.toFixed(1)}x` : '—'}
+                      </p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>Conv.</p>
+                      <p style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{m.conversions || 0}</p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* ── SECTION F: RECOMMENDATIONS ───────────────────────────── */}
+          {report.recommendations && (report.recommendations as any[]).length > 0 && (
+            <div className="card p-6 mb-6 dash-anim-6">
+              <div className="mb-4">
+                <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+                  🎯 Próximas acciones recomendadas
+                </h2>
+                <p style={{ fontSize: 12, color: 'var(--muted)' }}>
+                  Qué hacer el próximo mes basado en este análisis
+                </p>
+              </div>
+              <div className="space-y-3">
+                {(report.recommendations as any[]).slice(0, 6).map((r, i) => {
+                  const color  = r.priority === 'high' ? '#f9a8d4' : r.priority === 'medium' ? '#fbbf24' : '#8892b0'
+                  const bg     = r.priority === 'high' ? 'rgba(233,30,140,0.06)' : r.priority === 'medium' ? 'rgba(245,158,11,0.06)' : 'rgba(255,255,255,0.025)'
+                  const border = r.priority === 'high' ? 'rgba(233,30,140,0.30)' : r.priority === 'medium' ? 'rgba(245,158,11,0.30)' : 'rgba(255,255,255,0.08)'
                   return (
-                    <div key={i} className="p-3 rounded-xl" style={{ background: bg, border: `1px solid ${border}` }}>
-                      <p style={{ fontSize: 12, fontWeight: 700, color, marginBottom: 4 }}>{r.icon} {r.title}</p>
-                      <p style={{ fontSize: 11, color: 'var(--muted)' }}>{r.description}</p>
+                    <div key={i} className="p-4 rounded-xl flex items-start gap-3" style={{ background: bg, border: `1px solid ${border}` }}>
+                      <span style={{ fontSize: 18, flexShrink: 0 }}>{r.icon}</span>
+                      <div style={{ flex: 1 }}>
+                        <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 13, fontWeight: 700, color, marginBottom: 4 }}>
+                          {r.title}
+                        </p>
+                        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.78)', lineHeight: 1.55, marginBottom: r.action?.href ? 8 : 0 }}>
+                          {r.description}
+                        </p>
+                        {r.action?.href && (
+                          <Link href={r.action.href} style={{ fontSize: 11, color, fontWeight: 600 }}>
+                            {r.action.label}
+                          </Link>
+                        )}
+                      </div>
                     </div>
                   )
                 })}
               </div>
             </div>
           )}
+
+          {/* ── SECTION G: CAMPAIGN STATS ───────────────────────────── */}
+          <div className="card p-5 mb-6 dash-anim-6" style={{
+            background: 'linear-gradient(135deg, rgba(98,196,176,0.06), rgba(233,30,140,0.03))',
+            border: '1px solid rgba(98,196,176,0.18)',
+          }}>
+            <div className="grid grid-cols-2 gap-6">
+              <div>
+                <p style={{ fontSize: 11, fontWeight: 700, color: '#62c4b0', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 6 }}>
+                  🎬 Campañas creadas este mes
+                </p>
+                <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', lineHeight: 1 }}>
+                  {report.campaigns_created ?? 0}
+                </p>
+                <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 6 }}>
+                  {report.campaigns_active ?? 0} activa{(report.campaigns_active ?? 0) !== 1 ? 's' : ''} al cierre del mes
+                </p>
+              </div>
+              <div>
+                <p style={{ fontSize: 11, fontWeight: 700, color: '#62c4b0', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 6 }}>
+                  📊 CPA promedio
+                </p>
+                <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', lineHeight: 1 }}>
+                  ${(report.avg_cpa ?? 0).toFixed(0)}
+                </p>
+                <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 6 }}>
+                  Costo promedio por cada conversión generada
+                </p>
+              </div>
+            </div>
+          </div>
         </>
       )}
     </div>

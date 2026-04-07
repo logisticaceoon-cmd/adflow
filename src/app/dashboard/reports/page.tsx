@@ -1,264 +1,291 @@
-// src/app/dashboard/reports/page.tsx
+// src/app/dashboard/reports/page.tsx — Reports hub (premium server component)
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import type { DailyReport, Recommendation } from '@/types'
-import { BarChart2, Clock, Mail, Zap, ArrowRight } from 'lucide-react'
+import { ArrowRight, TrendingUp, TrendingDown, Minus, Sparkles, Clock } from 'lucide-react'
 
-const TYPE_CONFIG: Record<string, { label: string; color: string; bg: string; border: string; icon: string }> = {
-  scale_up:         { label: 'Escalar',          color: 'var(--accent3)',  bg: 'rgba(6,214,160,0.07)',    border: 'rgba(6,214,160,0.22)',    icon: '📈' },
-  scale_down:       { label: 'Reducir gasto',    color: 'var(--warn)',     bg: 'rgba(245,158,11,0.07)',   border: 'rgba(245,158,11,0.22)',   icon: '⚠️' },
-  pause:            { label: 'Pausar',            color: 'var(--danger)',   bg: 'rgba(239,68,68,0.07)',    border: 'rgba(239,68,68,0.22)',    icon: '🛑' },
-  refresh_creative: { label: 'Renovar creativo', color: 'var(--accent)',   bg: 'rgba(233,30,140,0.07)',   border: 'rgba(233,30,140,0.22)',   icon: '🔄' },
-  maintain:         { label: 'Mantener',          color: 'var(--muted)',    bg: 'rgba(255,255,255,0.04)',  border: 'rgba(255,255,255,0.10)',  icon: '→' },
-  duplicate:        { label: 'Duplicar campaña', color: 'var(--accent)',   bg: 'rgba(233,30,140,0.07)',   border: 'rgba(233,30,140,0.22)',   icon: '✨' },
+const MONTH_NAMES = [
+  'Enero','Febrero','Marzo','Abril','Mayo','Junio',
+  'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre',
+]
+
+function fmtMonthYear(my: string) {
+  const [y, m] = my.split('-').map(Number)
+  return `${MONTH_NAMES[m - 1]} ${y}`
 }
 
-function RecommendationCard({ rec }: { rec: Recommendation }) {
-  const cfg = TYPE_CONFIG[rec.type] || TYPE_CONFIG.maintain
+function ChangeArrow({ value }: { value: number }) {
+  if (value > 0) return (
+    <span style={{ color: '#06d6a0', display: 'inline-flex', alignItems: 'center', gap: 4, fontWeight: 700, fontSize: 12 }}>
+      <TrendingUp size={13} /> +{value.toFixed(0)}%
+    </span>
+  )
+  if (value < 0) return (
+    <span style={{ color: '#fca5a5', display: 'inline-flex', alignItems: 'center', gap: 4, fontWeight: 700, fontSize: 12 }}>
+      <TrendingDown size={13} /> {value.toFixed(0)}%
+    </span>
+  )
   return (
-    <div className="p-5 rounded-2xl flex gap-4 transition-all duration-200 hover:-translate-y-0.5"
-      style={{
-        background: cfg.bg,
-        border: `1px solid ${cfg.border}`,
-        backdropFilter: 'blur(12px)',
-        boxShadow: `0 4px 16px rgba(0,0,0,0.25)`,
-      }}>
-      <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
-        style={{ background: 'rgba(255,255,255,0.06)', border: `1px solid ${cfg.border}` }}>
-        {cfg.icon}
-      </div>
-      <div className="flex-1">
-        <div className="flex items-center gap-2 mb-2">
-          <span style={{
-            fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 20,
-            background: 'rgba(255,255,255,0.06)', color: cfg.color, border: `1px solid ${cfg.border}`,
-            letterSpacing: '0.06em', textTransform: 'uppercase',
-          }}>
-            {cfg.label}
-          </span>
-          {rec.priority === 'high' && (
-            <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--danger)', display: 'flex', alignItems: 'center', gap: 3 }}>
-              <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--danger)', display: 'inline-block', boxShadow: '0 0 6px rgba(239,68,68,0.7)' }} className="glow-dot" />
-              Alta prioridad
-            </span>
-          )}
-        </div>
-        <p style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.92)', marginBottom: 6 }}>{rec.title}</p>
-        <p style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.6 }}>{rec.description}</p>
-        {rec.action && (
-          <button style={{ marginTop: 12, fontSize: 12, fontWeight: 600, color: cfg.color, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-            → {rec.action.label}
-          </button>
-        )}
-      </div>
-    </div>
+    <span style={{ color: 'var(--muted)', display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12 }}>
+      <Minus size={13} /> Sin cambios
+    </span>
   )
 }
 
-export default async function ReportsPage() {
+export default async function ReportsHubPage() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
 
-  const { data: reports } = await supabase
-    .from('daily_reports')
-    .select('*')
-    .eq('user_id', user!.id)
-    .order('report_date', { ascending: false })
-    .limit(10) as { data: DailyReport[] | null }
+  const now = new Date()
+  const monthYear = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
 
-  const latestReport    = reports?.[0]
-  const recommendations = (latestReport?.recommendations || []) as Recommendation[]
-  const highPriority    = recommendations.filter(r => r.priority === 'high')
+  const [
+    { data: pixelAnalysis },
+    { data: currentReport },
+    { data: previousReports },
+    { data: campaigns },
+  ] = await Promise.all([
+    supabase.from('pixel_analysis').select('level, level_name').eq('user_id', user.id).maybeSingle(),
+    supabase.from('monthly_reports').select('*').eq('user_id', user.id).eq('month_year', monthYear).maybeSingle(),
+    supabase.from('monthly_reports').select('month_year, total_spend, total_revenue, total_conversions, avg_roas, growth_rate, pixel_level_end').eq('user_id', user.id).order('month_year', { ascending: false }).limit(12),
+    supabase.from('campaigns').select('id, name, status, strategy_type, daily_budget, metrics, created_at').eq('user_id', user.id),
+  ])
+
+  const allReports = (previousReports || []) as any[]
+  const priorMonths = allReports.filter(r => r.month_year !== monthYear)
+  const activeCount = (campaigns || []).filter((c: any) => c.status === 'active').length
+
+  // Monthly trend: pick numeric growth vs prev month report if available
+  const prev = priorMonths[0]
+  const trendRoas = prev?.avg_roas > 0 && currentReport?.avg_roas
+    ? Math.round(((currentReport.avg_roas - prev.avg_roas) / prev.avg_roas) * 100) : 0
 
   return (
-    <div>
-      {/* ── Header ── */}
-      <div className="flex justify-between items-start mb-6 dash-anim-1">
-        <div>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#e91e8c', marginBottom: 6 }}>
-            Inteligencia artificial
-          </p>
-          <h1 className="page-title mb-1.5">Reportes IA</h1>
-          <p style={{ fontSize: 13, color: 'var(--muted)' }}>
-            Análisis diario automático + reporte mensual consolidado
-          </p>
-        </div>
+    <div className="max-w-6xl mx-auto">
+      {/* ── SECTION A: HERO ───────────────────────────────────────────── */}
+      <div className="dash-anim-1 mb-6" style={{
+        position: 'relative',
+        borderRadius: 22, padding: '28px 32px',
+        background: 'linear-gradient(135deg, rgba(139,92,246,0.10) 0%, rgba(233,30,140,0.06) 50%, rgba(98,196,176,0.04) 100%)',
+        border: '1px solid rgba(255,255,255,0.08)',
+        backdropFilter: 'blur(20px)',
+        overflow: 'hidden',
+      }}>
         <div style={{
-          display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', borderRadius: 12,
-          background: 'rgba(6,214,160,0.06)', border: '1px solid rgba(6,214,160,0.18)',
-        }}>
-          <Clock size={13} style={{ color: 'var(--accent3)' }} />
-          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.78)' }}>
-            Próximo: <strong style={{ color: 'var(--accent3)' }}>mañana 8:00 AM</strong>
-          </span>
+          position: 'absolute', top: 0, left: 0, right: 0, height: 1,
+          background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.55), rgba(234,27,126,0.40), transparent)',
+        }} />
+        <div className="flex items-start justify-between gap-6">
+          <div style={{ flex: 1 }}>
+            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#c4b5fd', marginBottom: 8 }}>
+              Reportes · AdFlow
+            </p>
+            <h1 style={{
+              fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800,
+              color: '#fff', marginBottom: 8, letterSpacing: '-0.03em',
+            }}>
+              Cómo viene tu negocio 📊
+            </h1>
+            <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.78)', maxWidth: 580, lineHeight: 1.55, marginBottom: 14 }}>
+              Tu consultor IA analiza cada mes tu rendimiento y te dice exactamente qué hacer después.
+              Reporte mensual consolidado + historial completo de tu crecimiento.
+            </p>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              {pixelAnalysis && (
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  padding: '6px 14px', borderRadius: 99,
+                  background: 'rgba(139,92,246,0.12)',
+                  border: '1px solid rgba(139,92,246,0.30)',
+                  fontSize: 12, fontWeight: 600, color: '#c4b5fd',
+                }}>
+                  ⭐ Nivel {pixelAnalysis.level}: {pixelAnalysis.level_name}
+                </span>
+              )}
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                padding: '6px 14px', borderRadius: 99,
+                background: 'rgba(98,196,176,0.10)',
+                border: '1px solid rgba(98,196,176,0.30)',
+                fontSize: 12, fontWeight: 600, color: '#62c4b0',
+              }}>
+                📅 {fmtMonthYear(monthYear)}
+              </span>
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                padding: '6px 14px', borderRadius: 99,
+                background: 'rgba(6,214,160,0.10)',
+                border: '1px solid rgba(6,214,160,0.30)',
+                fontSize: 12, fontWeight: 600, color: '#06d6a0',
+              }}>
+                🎬 {activeCount} campaña{activeCount !== 1 ? 's' : ''} activa{activeCount !== 1 ? 's' : ''}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* ── Monthly report hero card ── */}
-      <Link href="/dashboard/reports/monthly" className="block mb-6 dash-anim-2" style={{ textDecoration: 'none' }}>
-        <div className="p-5 transition-all hover:-translate-y-0.5" style={{
-          borderRadius: 18,
-          background: 'linear-gradient(135deg, rgba(234,27,126,0.10) 0%, rgba(98,196,176,0.07) 100%)',
-          border: '1px solid rgba(234,27,126,0.25)',
+      {/* ── SECTION B: CURRENT MONTH SUMMARY — Hero card ──────────────── */}
+      <Link href={`/dashboard/reports/monthly?month=${monthYear}`} className="block mb-6 dash-anim-2" style={{ textDecoration: 'none' }}>
+        <div className="transition-all hover:-translate-y-0.5" style={{
+          borderRadius: 20, padding: '24px 28px',
+          background: 'linear-gradient(135deg, rgba(234,27,126,0.12) 0%, rgba(98,196,176,0.06) 100%)',
+          border: '1px solid rgba(234,27,126,0.28)',
           backdropFilter: 'blur(16px)',
-          display: 'flex', alignItems: 'center', gap: 18,
+          boxShadow: '0 12px 48px rgba(234,27,126,0.15), 0 0 80px rgba(234,27,126,0.06)',
           cursor: 'pointer',
         }}>
-          <div style={{
-            width: 56, height: 56, borderRadius: 14, flexShrink: 0,
-            background: 'rgba(234,27,126,0.15)', border: '1px solid rgba(234,27,126,0.30)',
-            boxShadow: '0 0 20px rgba(234,27,126,0.30)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26,
-          }}>📊</div>
-          <div style={{ flex: 1 }}>
-            <p style={{ fontSize: 11, fontWeight: 700, color: '#f9a8d4', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 4 }}>
-              Reporte mensual consolidado
-            </p>
-            <h2 style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
-              Cómo te fue este mes
-            </h2>
-            <p style={{ fontSize: 12, color: 'var(--muted)' }}>
-              Gasto, ROAS, fases, evolución del nivel + análisis IA + próximas acciones
-            </p>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div style={{
+                width: 48, height: 48, borderRadius: 14,
+                background: 'rgba(234,27,126,0.18)',
+                border: '1px solid rgba(234,27,126,0.35)',
+                boxShadow: '0 0 24px rgba(234,27,126,0.35)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22,
+              }}>📊</div>
+              <div>
+                <p style={{ fontSize: 11, fontWeight: 700, color: '#f9a8d4', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                  Reporte del mes actual
+                </p>
+                <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 22, fontWeight: 800, color: '#fff' }}>
+                  {fmtMonthYear(monthYear)}
+                </h2>
+              </div>
+            </div>
+            <ArrowRight size={22} style={{ color: '#f9a8d4' }} />
           </div>
-          <ArrowRight size={18} style={{ color: '#f9a8d4', flexShrink: 0 }} />
+
+          {currentReport ? (
+            <div className="grid grid-cols-4 gap-4">
+              {[
+                { label: 'Inversión',   value: `$${(currentReport.total_spend || 0).toFixed(0)}`,    color: '#e91e8c' },
+                { label: 'Ventas',      value: `$${(currentReport.total_revenue || 0).toFixed(0)}`,  color: '#06d6a0' },
+                { label: 'ROAS',        value: `${(currentReport.avg_roas || 0).toFixed(2)}x`,       color: '#f59e0b' },
+                { label: 'Conversiones', value: String(currentReport.total_conversions || 0),        color: '#62c4b0' },
+              ].map(m => (
+                <div key={m.label} className="p-3 rounded-xl" style={{
+                  background: 'rgba(0,0,0,0.30)',
+                  border: `1px solid ${m.color}25`,
+                  borderTop: `2px solid ${m.color}`,
+                }}>
+                  <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 4 }}>
+                    {m.label}
+                  </p>
+                  <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 20, fontWeight: 800, color: m.color, lineHeight: 1.2 }}>
+                    {m.value}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-5 rounded-xl" style={{ background: 'rgba(0,0,0,0.30)', border: '1px solid rgba(255,255,255,0.08)' }}>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.78)', marginBottom: 8 }}>
+                Todavía no hay reporte generado para este mes. Hacé click y lo calculamos con tu consultor IA.
+              </p>
+              <span style={{ fontSize: 12, color: '#f9a8d4', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                <Sparkles size={13} /> Generar reporte mensual →
+              </span>
+            </div>
+          )}
+
+          {currentReport && trendRoas !== 0 && (
+            <div className="mt-4 flex items-center gap-2">
+              <span style={{ fontSize: 11, color: 'var(--muted)' }}>vs mes anterior:</span>
+              <ChangeArrow value={trendRoas} />
+              <span style={{ fontSize: 11, color: 'var(--muted)' }}>en ROAS</span>
+            </div>
+          )}
         </div>
       </Link>
 
-      {/* ── Empty state ── */}
-      {!reports?.length ? (
-        <div className="card p-16 text-center dash-anim-2" style={{ maxWidth: 540, margin: '0 auto' }}>
+      {/* ── SECTION C: PREVIOUS MONTHS GRID ──────────────────────────── */}
+      <div className="mb-6 dash-anim-3">
+        <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+          Historial de meses
+        </h2>
+        <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 18 }}>
+          Tu recorrido completo — click en cualquier mes para ver su reporte detallado
+        </p>
+
+        {priorMonths.length === 0 ? (
+          <div className="card p-10 text-center">
+            <div style={{ fontSize: 42, marginBottom: 14 }}>🌱</div>
+            <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 6 }}>
+              Este es tu primer mes con AdFlow
+            </h3>
+            <p style={{ fontSize: 12.5, color: 'var(--muted)', maxWidth: 400, margin: '0 auto' }}>
+              A fin de mes vas a ver acá tu primer reporte consolidado. Seguí publicando campañas para alimentar los datos.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-3 gap-4">
+            {priorMonths.map((r: any) => {
+              const roasColor = r.avg_roas >= 3 ? '#06d6a0' : r.avg_roas >= 1.5 ? '#fbbf24' : r.avg_roas > 0 ? '#fca5a5' : '#8892b0'
+              return (
+                <Link key={r.month_year} href={`/dashboard/reports/monthly?month=${r.month_year}`} className="block" style={{ textDecoration: 'none' }}>
+                  <div className="card p-5 transition-all hover:-translate-y-0.5">
+                    <div className="flex items-center justify-between mb-3">
+                      <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 700, color: '#fff' }}>
+                        {fmtMonthYear(r.month_year)}
+                      </p>
+                      <ArrowRight size={14} style={{ color: 'var(--muted)' }} />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      <div className="flex items-center justify-between">
+                        <span style={{ fontSize: 10, color: 'var(--muted)' }}>Inversión</span>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>${(r.total_spend || 0).toFixed(0)}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span style={{ fontSize: 10, color: 'var(--muted)' }}>Ventas</span>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: '#06d6a0' }}>${(r.total_revenue || 0).toFixed(0)}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span style={{ fontSize: 10, color: 'var(--muted)' }}>ROAS</span>
+                        <span style={{ fontSize: 13, fontWeight: 800, color: roasColor, fontFamily: 'Syne, sans-serif' }}>
+                          {r.avg_roas > 0 ? `${r.avg_roas.toFixed(1)}x` : '—'}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between" style={{ paddingTop: 6, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                        <span style={{ fontSize: 10, color: 'var(--muted)' }}>Crecimiento</span>
+                        <ChangeArrow value={r.growth_rate || 0} />
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* ── SECTION D: DAILY REPORTS INFO ────────────────────────────── */}
+      <div className="card p-5 mb-6" style={{
+        background: 'linear-gradient(135deg, rgba(98,196,176,0.06), rgba(233,30,140,0.04))',
+        border: '1px solid rgba(98,196,176,0.18)',
+      }}>
+        <div className="flex items-start gap-4">
           <div style={{
-            width: 72, height: 72, borderRadius: '50%', margin: '0 auto 20px',
-            background: 'rgba(233,30,140,0.08)', border: '1px solid rgba(233,30,140,0.20)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32,
+            width: 44, height: 44, borderRadius: 12, flexShrink: 0,
+            background: 'rgba(98,196,176,0.15)', border: '1px solid rgba(98,196,176,0.30)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
+            boxShadow: '0 0 16px rgba(98,196,176,0.30)',
           }}>
-            📊
+            <Clock size={20} style={{ color: '#62c4b0' }} />
           </div>
-          <h2 style={{ fontSize: 20, fontWeight: 700, color: 'rgba(255,255,255,0.92)', marginBottom: 10 }}>Sin reportes todavía</h2>
-          <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.7, marginBottom: 8 }}>
-            Los reportes se generan automáticamente cada mañana una vez que tenés campañas activas.
-          </p>
-          <p style={{ fontSize: 12, color: 'var(--muted)' }}>
-            Creá una campaña → conectá Facebook → activá la campaña.
-          </p>
+          <div style={{ flex: 1 }}>
+            <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+              Reporte automático cada mañana
+            </h3>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.72)', lineHeight: 1.6, marginBottom: 8 }}>
+              Todas las mañanas a las 8 AM analizamos tus campañas activas y te mandamos por email un resumen + las 3 acciones más importantes del día.
+            </p>
+            <p style={{ fontSize: 11, color: 'var(--muted)' }}>
+              Si el primer día del mes caés acá, también generamos tu reporte mensual del mes anterior automáticamente.
+            </p>
+          </div>
         </div>
-      ) : (
-        <>
-          {/* ── Latest report summary ── */}
-          <div className="dash-anim-2" style={{
-            padding: '20px 24px', borderRadius: 20, marginBottom: 24,
-            background: 'linear-gradient(135deg, rgba(234,27,126,0.09) 0%, rgba(98,196,176,0.06) 100%)',
-            border: '1px solid rgba(233,30,140,0.22)',
-            backdropFilter: 'blur(16px)',
-            display: 'flex', alignItems: 'center', gap: 20,
-          }}>
-            <div style={{
-              width: 56, height: 56, borderRadius: 16, flexShrink: 0,
-              background: 'rgba(233,30,140,0.12)', border: '1px solid rgba(233,30,140,0.25)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26,
-            }}>
-              📊
-            </div>
-            <div style={{ flex: 1 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: '#f9a8d4', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>
-                Último reporte
-              </p>
-              <h2 style={{ fontSize: 16, fontWeight: 700, color: '#ffffff', marginBottom: 6, letterSpacing: '-0.02em' }}>
-                {new Date(latestReport!.report_date).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-              </h2>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-                <span style={{ fontSize: 12, color: 'var(--muted)' }}>
-                  {recommendations.length} recomendaciones
-                </span>
-                {highPriority.length > 0 && (
-                  <>
-                    <span style={{ color: 'rgba(255,255,255,0.15)' }}>·</span>
-                    <span style={{ fontSize: 12, color: 'var(--danger)', display: 'flex', alignItems: 'center', gap: 4 }}>
-                      <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--danger)', display: 'inline-block' }} />
-                      {highPriority.length} alta prioridad
-                    </span>
-                  </>
-                )}
-                <span style={{ color: 'rgba(255,255,255,0.15)' }}>·</span>
-                <span style={{ fontSize: 12, color: latestReport?.email_status === 'sent' ? 'var(--accent3)' : 'var(--muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <Mail size={11} />
-                  {latestReport?.email_status === 'sent' ? 'Email enviado' : 'Pendiente'}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* ── AI analysis ── */}
-          {latestReport?.ai_analysis && (
-            <div className="card p-6 mb-6 dash-anim-3">
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-                <div style={{
-                  width: 28, height: 28, borderRadius: 8,
-                  background: 'rgba(98,196,176,0.10)', border: '1px solid rgba(98,196,176,0.22)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14,
-                }}>🤖</div>
-                <h2 className="section-title">Análisis de la IA</h2>
-              </div>
-              <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.8 }}>
-                {latestReport.ai_analysis}
-              </p>
-            </div>
-          )}
-
-          {/* ── Recommendations ── */}
-          {recommendations.length > 0 && (
-            <div className="mb-6 dash-anim-4">
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-                <Zap size={14} style={{ color: '#e91e8c' }} />
-                <h2 className="section-title">Acciones recomendadas</h2>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                {recommendations.map((rec, i) => (
-                  <RecommendationCard key={i} rec={rec} />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* ── History table ── */}
-          <div className="card dash-anim-5">
-            <div className="flex items-center gap-2 px-5 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-              <BarChart2 size={14} style={{ color: '#62c4b0' }} />
-              <h2 className="section-title">Historial de reportes</h2>
-            </div>
-            <table className="w-full">
-              <thead>
-                <tr className="table-head">
-                  {['FECHA', 'RECOMENDACIONES', 'ENVIADO A LAS', 'ESTADO'].map(h => <th key={h}>{h}</th>)}
-                </tr>
-              </thead>
-              <tbody>
-                {reports.map(r => (
-                  <tr key={r.id} className="table-row">
-                    <td className="px-5 py-3.5" style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.88)' }}>
-                      {new Date(r.report_date).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' })}
-                    </td>
-                    <td className="px-5 py-3.5" style={{ fontSize: 13, color: 'var(--muted)' }}>
-                      {(r.recommendations as Recommendation[]).length} acciones
-                    </td>
-                    <td className="px-5 py-3.5" style={{ fontSize: 12, color: 'var(--muted)' }}>
-                      {r.email_sent_at
-                        ? new Date(r.email_sent_at).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
-                        : '—'}
-                    </td>
-                    <td className="px-5 py-3.5">
-                      <span className={`badge ${r.email_status === 'sent' ? 'badge-active' : r.email_status === 'error' ? 'badge-error' : 'badge-draft'}`}>
-                        {r.email_status === 'sent' ? '✓ Enviado' : r.email_status === 'error' ? '⚠ Error' : 'Pendiente'}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
-      )}
+      </div>
     </div>
   )
 }
