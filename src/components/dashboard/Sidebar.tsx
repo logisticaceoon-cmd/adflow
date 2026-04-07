@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import {
   LayoutDashboard, Megaphone, Sparkles, Images,
   BarChart2, Settings, HelpCircle, LogOut, Zap, Shield, CreditCard,
-  Activity, DollarSign,
+  Activity, DollarSign, Brain,
 } from 'lucide-react'
 import type { User } from '@supabase/supabase-js'
 import type { Profile } from '@/types'
@@ -158,6 +158,7 @@ export default function Sidebar({ user, profile }: Props) {
     { href: '/dashboard/create',    icon: Sparkles,        label: 'Crear campaña', badge: 'IA' },
     { href: '/dashboard/campaigns', icon: Megaphone,       label: 'Mis campañas', badge: campaignCount > 0 ? String(campaignCount) : undefined },
     { href: '/dashboard/creatives', icon: Images,          label: 'Creativos' },
+    { href: '/dashboard/strategist', icon: Brain,          label: 'Estratega IA', badge: 'Pronto', badgeColor: '#a855f7' },
   ]
 
   const managementItems: NavItem[] = [
@@ -337,9 +338,10 @@ export default function Sidebar({ user, profile }: Props) {
 
           {/* ── SECTION: PLATAFORMA ── */}
           <p className="section-label px-2 pb-2">Plataforma</p>
-          {platformItems.map(({ href, icon: Icon, label, badge }) => {
+          {platformItems.map(({ href, icon: Icon, label, badge, badgeColor }) => {
             const active = isActive(href)
             const isLevelBadge = label === 'Mi Pixel' && badge && hasPixel
+            const customBadge = !!badgeColor
             return (
               <Link key={href} href={href} onClick={close}
                 className={`nav-item ${active ? 'nav-item-active' : 'nav-item-inactive'}`}
@@ -366,6 +368,12 @@ export default function Sidebar({ user, profile }: Props) {
                       color: lvColor,
                       border: `1px solid ${lvColor}50`,
                       boxShadow: `0 0 8px ${lvColor}30`,
+                    } : customBadge ? {
+                      background: `${badgeColor}1f`,
+                      color: badgeColor,
+                      border: `1px solid ${badgeColor}66`,
+                      boxShadow: `0 0 8px ${badgeColor}33`,
+                      opacity: 0.85,
                     } : {
                       background: 'rgba(234,27,126,0.18)',
                       color: '#f9a8d4',
