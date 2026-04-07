@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import type { Campaign } from '@/types'
 import SyncButton from './SyncButton'
+import EmptyState from '@/components/ui/EmptyState'
 import { Play, Pause } from 'lucide-react'
 
 interface Props {
@@ -168,15 +169,23 @@ export default function CampaignsListView({ campaigns }: Props) {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="card p-12 text-center">
-          <div style={{ fontSize: 42, marginBottom: 14 }}>🔍</div>
-          <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 6 }}>
-            Sin campañas con estos filtros
-          </h3>
-          <p style={{ fontSize: 12, color: 'var(--muted)' }}>
-            Probá con otros filtros o creá una nueva campaña.
-          </p>
-        </div>
+        campaigns.length === 0 ? (
+          <EmptyState
+            variant="large"
+            icon="🚀"
+            title="Tu primera campaña te espera"
+            description="Creá tu primera campaña con IA y empezá a crecer. Te lleva menos de 2 minutos: describí tu producto y AdFlow arma todo."
+            action={{ label: 'Crear campaña →', href: '/dashboard/create' }}
+          />
+        ) : (
+          <EmptyState
+            variant="default"
+            icon="🔍"
+            title="Sin campañas con estos filtros"
+            description="Probá con otros filtros o creá una nueva campaña."
+            action={{ label: 'Crear campaña →', href: '/dashboard/create' }}
+          />
+        )
       ) : (
         <div className="card dash-anim-3">
           <div className="overflow-x-auto">

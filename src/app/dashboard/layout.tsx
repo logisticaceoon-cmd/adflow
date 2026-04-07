@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import Sidebar from '@/components/dashboard/Sidebar'
 import TopBar from '@/components/dashboard/TopBar'
 import { SidebarProvider } from '@/components/dashboard/SidebarContext'
+import { ToastProvider } from '@/components/ui/ToastProvider'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   noStore()
@@ -75,17 +76,19 @@ export default async function DashboardLayout({ children }: { children: React.Re
         maskImage: 'radial-gradient(ellipse 75% 75% at 50% 40%, black 20%, transparent 100%)',
       }} />
 
-      <SidebarProvider>
-        <div className="flex min-h-screen" style={{ position: 'relative', zIndex: 1 }}>
-          <Sidebar user={user} profile={profile} />
-          <div className="flex-1 ml-0 md:ml-60 flex flex-col min-h-screen" style={{ scrollBehavior: 'smooth' }}>
-            <TopBar />
-            <main className="flex-1 p-4 md:p-8">
-              {children}
-            </main>
+      <ToastProvider>
+        <SidebarProvider>
+          <div className="flex min-h-screen" style={{ position: 'relative', zIndex: 1 }}>
+            <Sidebar user={user} profile={profile} />
+            <div className="flex-1 ml-0 md:ml-60 flex flex-col min-h-screen" style={{ scrollBehavior: 'smooth' }}>
+              <TopBar />
+              <main className="flex-1 p-4 md:p-8 dashboard-content">
+                {children}
+              </main>
+            </div>
           </div>
-        </div>
-      </SidebarProvider>
+        </SidebarProvider>
+      </ToastProvider>
     </div>
   )
 }
