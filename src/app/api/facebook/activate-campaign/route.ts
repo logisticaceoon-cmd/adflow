@@ -1,5 +1,5 @@
 // src/app/api/facebook/activate-campaign/route.ts
-// Activate or pause a Meta Ads campaign
+// Activate or pause a Meta Ads campaign, with action logging.
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
@@ -13,13 +13,13 @@ export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null)
   const { campaign_id, action } = body || {}
 
-  if (!campaign_id || !action) {
-    return NextResponse.json({ error: 'campaign_id y action requeridos' }, { status: 400 })
+  if (!campaign_id || !action || !['activate', 'pause'].includes(action)) {
+    return NextResponse.json({ error: 'campaign_id y action (activate|pause) requeridos' }, { status: 400 })
   }
 
   const { data: campaign } = await supabase
     .from('campaigns')
-    .select('meta_campaign_id')
+    .select('meta_campaign_id, status')
     .eq('id', campaign_id)
     .eq('user_id', user.id)
     .single()
@@ -42,23 +42,60 @@ export async function POST(req: NextRequest) {
 
   const metaStatus = action === 'activate' ? 'ACTIVE' : 'PAUSED'
   const appStatus  = action === 'activate' ? 'active'  : 'paused'
+  const previousStatus = campaign.status
 
-  const res  = await fetch(`${GRAPH}/${campaign.meta_campaign_id}`, {
-    method:  'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body:    JSON.stringify({ status: metaStatus, access_token: conn.access_token }),
-  })
-  const data = await res.json()
+  try {
+    const res  = await fetch(`${GRAPH}/${campaign.meta_campaign_id}`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ status: metaStatus, access_token: conn.access_token }),
+    })
+    const data = await res.json()
 
-  if (data.error) {
-    const msg = data.error.error_user_msg || data.error.message || JSON.stringify(data.error)
-    return NextResponse.json({ error: msg }, { status: 400 })
+    if (data.error) {
+      const msg = data.error.error_user_msg || data.error.message || JSON.stringify(data.error)
+      // Log failure
+      await supabase.from('campaign_actions').insert({
+        user_id: user.id,
+        campaign_id,
+        meta_campaign_id: campaign.meta_campaign_id,
+        action_type: action,
+        status: 'failed',
+        previous_value: { status: previousStatus },
+        new_value: { status: appStatus },
+        error_message: msg,
+      })
+      return NextResponse.json({ error: msg }, { status: 400 })
+    }
+
+    await supabase.from('campaigns').update({
+      meta_status: metaStatus,
+      status:      appStatus,
+      updated_at:  new Date().toISOString(),
+    }).eq('id', campaign_id)
+
+    // Log success
+    await supabase.from('campaign_actions').insert({
+      user_id: user.id,
+      campaign_id,
+      meta_campaign_id: campaign.meta_campaign_id,
+      action_type: action,
+      status: 'success',
+      previous_value: { status: previousStatus },
+      new_value: { status: appStatus },
+    })
+
+    return NextResponse.json({ success: true, status: metaStatus })
+  } catch (err: any) {
+    await supabase.from('campaign_actions').insert({
+      user_id: user.id,
+      campaign_id,
+      meta_campaign_id: campaign.meta_campaign_id,
+      action_type: action,
+      status: 'failed',
+      previous_value: { status: previousStatus },
+      error_message: err.message || 'Exception',
+    })
+    return NextResponse.json({ error: err.message || 'Error' }, { status: 500 })
   }
-
-  await supabase.from('campaigns').update({
-    meta_status: metaStatus,
-    status:      appStatus,
-  }).eq('id', campaign_id)
-
-  return NextResponse.json({ success: true, status: metaStatus })
 }

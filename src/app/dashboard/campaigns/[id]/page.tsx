@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Campaign, AdSetItem, AdCopyItem } from '@/types'
-import CampaignActivateButton from '@/components/dashboard/CampaignActivateButton'
+import CampaignActions from '@/components/dashboard/CampaignActions'
 import CampaignPublishFlow from '@/components/dashboard/CampaignPublishFlow'
 import { ArrowLeft, Target, DollarSign, Calendar, Globe, MessageCircle, LayoutGrid, Users, Zap } from 'lucide-react'
 
@@ -95,15 +95,8 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
             </p>
           </div>
 
-          {/* Actions */}
+          {/* Publish flow (legacy button stays for first-time publish) */}
           <div className="flex items-center gap-3 flex-wrap">
-            {isPublished && (
-              <CampaignActivateButton
-                campaignId={campaign.id}
-                metaCampaignId={campaign.meta_campaign_id}
-                currentStatus={campaign.status}
-              />
-            )}
             <CampaignPublishFlow
               campaignId={campaign.id}
               isAlreadyPublished={isPublished}
@@ -149,6 +142,16 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
           </div>
         )}
       </div>
+
+      {/* ── Campaign actions panel ── */}
+      <CampaignActions
+        campaignId={campaign.id}
+        campaignName={campaign.name}
+        status={campaign.status}
+        metaCampaignId={campaign.meta_campaign_id}
+        dailyBudget={Number(campaign.daily_budget) || 0}
+        lastSync={(campaign.metrics as any)?.last_sync || null}
+      />
 
       {/* ── Performance metrics ── */}
       {(campaign.metrics?.spend || 0) > 0 && (
