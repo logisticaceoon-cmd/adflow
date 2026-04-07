@@ -181,28 +181,6 @@ export default async function DashboardPage() {
     }
   }
 
-  // ── Achievements ───────────────────────────────────────────────────────
-  const totalPurchases30d  = events?.Purchase?.count_30d  ?? 0
-  const totalPurchases180d = events?.Purchase?.count_180d ?? 0
-  const totalSales         = totalConversions + totalPurchases30d
-  const anyProfitable      = allCampaigns.some(c => (c.metrics?.roas ?? 0) >= 2)
-  const hadGrowth          = (trendConv ?? 0) > 0
-
-  const achievements = [
-    { id: 'first10',      icon: '🏆', title: 'Primeras 10 ventas',         description: 'Llegaste a tus primeras 10 ventas medidas.', unlocked: totalSales >= 10 },
-    { id: 'first50',      icon: '🌟', title: 'Primeras 50 ventas',         description: 'Llegaste a 50 ventas — el algoritmo ya tiene data.', unlocked: totalSales >= 50 },
-    { id: 'first100',     icon: '💎', title: 'Primeras 100 ventas',        description: '100 ventas — empezás a ser interesante para Meta.', unlocked: totalSales >= 100 },
-    { id: 'profitable',   icon: '🚀', title: 'Primer ROAS rentable',       description: 'Tuviste al menos una campaña con ROAS ≥ 2x.', unlocked: anyProfitable },
-    { id: 'growth',       icon: '📈', title: 'Primer mes con crecimiento', description: 'Crecimiento positivo en conversiones vs el mes anterior.', unlocked: hadGrowth },
-    { id: 'remarketing',  icon: '🎯', title: 'Remarketing desbloqueado',   description: 'Tu pixel ya soporta retargeting de visitantes.', unlocked: !!pixelAnalysis?.can_retarget_view_content },
-    { id: 'lookalike',    icon: '🔮', title: 'Lookalike desbloqueado',     description: 'Tu pixel tiene 100+ compras: podés crear LAL.', unlocked: !!pixelAnalysis?.can_create_lookalike },
-    { id: 'bofu',         icon: '🏅', title: 'BOFU alcanzado',             description: 'Llegaste al nivel 5: estrategia BOFU disponible.', unlocked: level >= 5 },
-    { id: 'scaled',       icon: '⚡', title: 'Primera campaña escalada',   description: 'Creaste 5+ campañas — empezás a iterar.', unlocked: allCampaigns.length >= 5 },
-    { id: 'master',       icon: '👑', title: 'Nivel Maestro',              description: 'Llegaste al nivel 7 (500+ compras).', unlocked: level >= 7 },
-    { id: 'imperio',      icon: '🌍', title: 'Nivel Imperio',              description: 'Llegaste al nivel 8 (1.000+ compras).', unlocked: level >= 8 },
-    { id: 'firstcamp',    icon: '🎬', title: 'Primera campaña creada',     description: 'Lanzaste tu primera campaña en AdFlow.', unlocked: allCampaigns.length >= 1 },
-  ]
-
   const showOnboarding = !allCampaigns.length && !businessProfile?.selected_ad_account_id
   const todayTip = AI_TIPS[new Date().getDay()]
   const fullName = profile?.full_name?.split(' ')[0] || 'crecedor'
@@ -274,7 +252,7 @@ export default async function DashboardPage() {
         <PhaseSummary currency={currency} phaseData={phaseData} />
 
         {/* ── BLOCK F: Achievements ───────────────────────────────────── */}
-        <AchievementsBadges achievements={achievements} />
+        <AchievementsBadges />
 
         {/* ── BLOCK G: Alerts + opportunities ─────────────────────────── */}
         <AlertsOpportunities />

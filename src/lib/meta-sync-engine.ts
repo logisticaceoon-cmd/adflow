@@ -2,6 +2,7 @@
 // Syncs daily campaign + ad set metrics from Meta Ads API into Supabase.
 // Source of truth for the dashboards, reports, phases, and monthly reports.
 import { createAdminClient } from '@/lib/supabase/server'
+import { evaluateAchievements } from '@/lib/achievement-engine'
 
 const GRAPH = 'https://graph.facebook.com/v20.0'
 const INSIGHT_FIELDS = 'spend,impressions,reach,frequency,clicks,ctr,cpc,cpm,actions,action_values,date_start,date_stop,adset_name'
@@ -264,6 +265,17 @@ export async function syncUserMetrics(
     })
 
     console.log(`[meta-sync] User ${userId}: ${campaignsSynced} campaigns, ${adsetsSynced} adsets, ${errors.length} errors, ${durationMs}ms`)
+
+    // Evaluate achievements after sync (non-blocking for the sync result itself)
+    try {
+      const newAchievements = await evaluateAchievements(userId)
+      if (newAchievements.length > 0) {
+        console.log(`[meta-sync] User ${userId} unlocked ${newAchievements.length} achievements:`, newAchievements.map(a => a.code))
+      }
+    } catch (err) {
+      console.warn('[meta-sync] Achievement evaluation failed:', err)
+    }
+
     return { userId, status, campaignsSynced, adsetsSynced, errors, durationMs }
 
   } catch (err: any) {

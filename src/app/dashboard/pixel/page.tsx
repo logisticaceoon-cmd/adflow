@@ -156,27 +156,6 @@ export default function PixelDashboardPage() {
     { label: 'Tener al menos una compra registrada', earned: (events?.Purchase.count_30d ?? 0) >= 1 },
   ]
 
-  // Achievements (full wall)
-  const totalSales = events?.Purchase.count_180d ?? 0
-  const achievements = [
-    { id: 'first_camp',  icon: '🎬', title: 'Primera campaña',          description: 'Lanzaste tu primera campaña',                 unlocked: campaignsCount >= 1 },
-    { id: 'first_pixel', icon: '🔌', title: 'Pixel instalado',           description: 'Tu pixel está midiendo eventos',              unlocked: !!pa },
-    { id: 'first_data',  icon: '📡', title: 'Primer dato del pixel',     description: '100+ PageView en 30 días',                    unlocked: (events?.PageView.count_30d ?? 0) >= 100 },
-    { id: 'first10',     icon: '🏆', title: 'Primeras 10 ventas',        description: '10 compras registradas',                      unlocked: totalSales >= 10 },
-    { id: 'first50',     icon: '🌟', title: 'Primeras 50 ventas',        description: '50 compras — el algoritmo ya tiene data',     unlocked: totalSales >= 50 },
-    { id: 'first100',    icon: '💎', title: 'Primeras 100 ventas',       description: '100 compras — sos interesante para Meta',     unlocked: totalSales >= 100 },
-    { id: 'first500',    icon: '🏅', title: '500 ventas',                description: '500 compras en 180 días',                     unlocked: totalSales >= 500 },
-    { id: 'first1000',   icon: '👑', title: '1.000 ventas',               description: '1.000 compras — nivel Imperio',               unlocked: totalSales >= 1000 },
-    { id: 'profitable',  icon: '🚀', title: 'Primer ROAS rentable',      description: 'Una campaña con ROAS ≥ 2x',                   unlocked: hasAnyProfitable },
-    { id: 'mofu',        icon: '🎯', title: 'Remarketing desbloqueado',  description: 'Tu pixel soporta retargeting',                unlocked: !!pa?.can_retarget_view_content },
-    { id: 'cart',        icon: '🛒', title: 'Carrito desbloqueado',      description: 'Retargeting de carrito disponible',           unlocked: !!pa?.can_retarget_add_to_cart },
-    { id: 'lookalike',   icon: '🔮', title: 'Lookalike desbloqueado',    description: '100+ compras → Lookalikes activos',           unlocked: !!pa?.can_create_lookalike },
-    { id: 'bofu',        icon: '💼', title: 'BOFU alcanzado',            description: 'Estrategia BOFU disponible',                  unlocked: level >= 5 },
-    { id: 'master',      icon: '🎓', title: 'Nivel Maestro',             description: 'Llegaste al nivel 7',                          unlocked: level >= 7 },
-    { id: 'imperio',     icon: '🏰', title: 'Nivel Imperio',             description: 'Llegaste al nivel máximo',                     unlocked: level >= 8 },
-    { id: 'iterator',    icon: '⚡', title: 'Iterador',                  description: '5+ campañas creadas',                          unlocked: campaignsCount >= 5 },
-  ]
-
   return (
     <div className="max-w-6xl mx-auto">
       {/* ── SECTION A: HERO ───────────────────────────────────────────── */}
@@ -305,7 +284,7 @@ export default function PixelDashboardPage() {
       <CapabilitiesCard level={level} />
 
       {/* ── SECTION F: ACHIEVEMENTS WALL ──────────────────────────────── */}
-      <AchievementsWall achievements={achievements} />
+      <AchievementsWall />
 
       {/* ── SECTION G: GROWTH TIMELINE ────────────────────────────────── */}
       <div className="card p-6 mb-6">

@@ -9,6 +9,7 @@ import { createAdminClient } from '@/lib/supabase/server'
 import { analyzePixel, savePixelAnalysis } from '@/lib/pixel-analyzer'
 import { generateMonthlyReport } from '@/lib/monthly-report-engine'
 import { syncUserMetrics } from '@/lib/meta-sync-engine'
+import { evaluateAchievements } from '@/lib/achievement-engine'
 import type { Campaign, CampaignMetrics, Recommendation } from '@/types'
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
@@ -85,6 +86,16 @@ async function processUserReport(supabase: any, userId: string) {
     console.log(`[cron] sync ${userId}: ${syncResult.status} (${syncResult.campaignsSynced} campaigns, ${syncResult.adsetsSynced} adsets, ${syncResult.errors.length} errors)`)
   } catch (err) {
     console.warn(`[cron] meta sync failed for ${userId}:`, err)
+  }
+
+  // 3.1 Evaluar logros persistentes después del sync
+  try {
+    const newAchievements = await evaluateAchievements(userId)
+    if (newAchievements.length > 0) {
+      console.log(`[cron] User ${userId} unlocked ${newAchievements.length} achievements:`, newAchievements.map(a => a.code))
+    }
+  } catch (err) {
+    console.warn(`[cron] achievement evaluation failed for ${userId}:`, err)
   }
 
   // 3.5 Refrescar pixel analysis (siempre, así las recomendaciones están al día)

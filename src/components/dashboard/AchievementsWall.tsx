@@ -1,23 +1,65 @@
 'use client'
 // src/components/dashboard/AchievementsWall.tsx
-// Full grid wall of achievements (vs the horizontal scrollable AchievementsBadges)
+// Full grid wall of achievements. Fetches from /api/achievements.
+// Supports category filtering and shows real unlock dates.
+import { useEffect, useMemo, useState } from 'react'
 
-interface Achievement {
+interface ApiAchievement {
   id: string
-  icon: string
-  title: string
+  code: string
+  name: string
   description: string
+  icon: string
+  category: string
+  rarity: string
   unlocked: boolean
-  unlockedAt?: string
+  unlocked_at: string | null
 }
 
-interface Props {
-  achievements: Achievement[]
-}
+const CATEGORIES: Array<{ key: string; label: string }> = [
+  { key: 'all',          label: 'Todos' },
+  { key: 'ventas',       label: 'Ventas' },
+  { key: 'nivel',        label: 'Nivel' },
+  { key: 'estrategia',   label: 'Estrategia' },
+  { key: 'hito',         label: 'Hitos' },
+  { key: 'consistencia', label: 'Consistencia' },
+]
 
-export default function AchievementsWall({ achievements }: Props) {
+export default function AchievementsWall() {
+  const [achievements, setAchievements] = useState<ApiAchievement[]>([])
+  const [category, setCategory] = useState<string>('all')
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let cancelled = false
+    fetch('/api/achievements')
+      .then(r => r.json())
+      .then(data => {
+        if (cancelled) return
+        setAchievements(data.achievements || [])
+      })
+      .catch(() => { /* silent */ })
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [])
+
+  const filtered = useMemo(
+    () => category === 'all' ? achievements : achievements.filter(a => a.category === category),
+    [achievements, category],
+  )
+
   const unlockedCount = achievements.filter(a => a.unlocked).length
   const pct = achievements.length > 0 ? Math.round((unlockedCount / achievements.length) * 100) : 0
+
+  if (loading) {
+    return (
+      <div className="card p-6 mb-6">
+        <p style={{ fontSize: 12, color: 'var(--muted)' }}>Cargando logros…</p>
+      </div>
+    )
+  }
+
+  if (!achievements.length) return null
 
   return (
     <div className="card p-6 mb-6">
@@ -39,7 +81,7 @@ export default function AchievementsWall({ achievements }: Props) {
       </div>
 
       {/* Progress bar */}
-      <div style={{ height: 6, borderRadius: 4, background: 'rgba(255,255,255,0.05)', overflow: 'hidden', marginBottom: 22 }}>
+      <div style={{ height: 6, borderRadius: 4, background: 'rgba(255,255,255,0.05)', overflow: 'hidden', marginBottom: 18 }}>
         <div style={{
           height: '100%', width: `${pct}%`,
           background: 'linear-gradient(90deg, #f59e0b, #fbbf24)',
@@ -48,12 +90,32 @@ export default function AchievementsWall({ achievements }: Props) {
         }} />
       </div>
 
+      {/* Category tabs */}
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 22 }}>
+        {CATEGORIES.map(cat => {
+          const active = category === cat.key
+          return (
+            <button key={cat.key} onClick={() => setCategory(cat.key)}
+              style={{
+                fontSize: 11, fontWeight: 700,
+                padding: '6px 14px', borderRadius: 99,
+                background: active ? 'rgba(245,158,11,0.15)' : 'rgba(255,255,255,0.03)',
+                color: active ? '#fbbf24' : 'var(--muted)',
+                border: active ? '1px solid rgba(245,158,11,0.45)' : '1px solid rgba(255,255,255,0.08)',
+                cursor: 'pointer', transition: 'all 0.18s',
+              }}>
+              {cat.label}
+            </button>
+          )
+        })}
+      </div>
+
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
         gap: 16,
       }}>
-        {achievements.map(a => (
+        {filtered.map(a => (
           <div key={a.id}
             style={{
               padding: '16px 12px',
@@ -91,7 +153,7 @@ export default function AchievementsWall({ achievements }: Props) {
               color: a.unlocked ? '#fff' : '#5a6478',
               lineHeight: 1.3, marginBottom: 4,
             }}>
-              {a.title}
+              {a.name}
             </p>
             <p style={{
               fontSize: 10, color: 'var(--muted)', lineHeight: 1.4,
@@ -99,9 +161,9 @@ export default function AchievementsWall({ achievements }: Props) {
             }}>
               {a.description}
             </p>
-            {a.unlocked && a.unlockedAt && (
+            {a.unlocked && a.unlocked_at && (
               <p style={{ fontSize: 9, color: '#fbbf24', marginTop: 4, fontWeight: 600 }}>
-                ✓ {new Date(a.unlockedAt).toLocaleDateString('es', { day: 'numeric', month: 'short' })}
+                ✓ {new Date(a.unlocked_at).toLocaleDateString('es', { day: 'numeric', month: 'short' })}
               </p>
             )}
           </div>
