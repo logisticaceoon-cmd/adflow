@@ -29,7 +29,7 @@ const INTENTS: IntentDef[] = [
     icon: ShoppingBag,
     title: 'Quiero generar más ventas',
     subtitle: 'Convertir tráfico en compradores reales',
-    color: '#e91e8c',
+    color: 'var(--ds-color-primary)',
     guidance: 'Para ventas necesitamos audiencias calificadas y un destino claro (tu tienda).',
   },
   {
@@ -37,7 +37,7 @@ const INTENTS: IntentDef[] = [
     icon: Target,
     title: 'Quiero conseguir leads',
     subtitle: 'Capturar prospectos calificados',
-    color: '#62c4b0',
+    color: 'var(--ds-color-primary)',
     guidance: 'Vamos a buscar gente interesada en tu propuesta para llenar tu pipeline.',
   },
   {
@@ -53,7 +53,7 @@ const INTENTS: IntentDef[] = [
     icon: Eye,
     title: 'Quiero que me conozcan',
     subtitle: 'Visibilidad y reconocimiento de marca',
-    color: '#62c4b0',
+    color: 'var(--ds-color-primary)',
     guidance: 'Vamos a llegar a la mayor cantidad de personas relevantes.',
   },
   {
@@ -61,7 +61,7 @@ const INTENTS: IntentDef[] = [
     icon: Repeat,
     title: 'Quiero que vuelvan',
     subtitle: 'Reactivar clientes existentes',
-    color: '#f59e0b',
+    color: 'var(--ds-color-warning)',
     guidance: 'Apuntamos a quienes ya te conocen y tienen más probabilidad de comprar.',
   },
   {
@@ -82,7 +82,7 @@ export default function StepEssential({ form, setField, currency, currSymbol, bu
     <div className="space-y-6">
       {/* ── Hero: Intent picker ─────────────────────────────────────────── */}
       <div>
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#f9a8d4', marginBottom: 8 }}>
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 8 }}>
           Paso 1 de 5 · Tu intención
         </p>
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 6, letterSpacing: '-0.02em' }}>
@@ -104,8 +104,8 @@ export default function StepEssential({ form, setField, currency, currSymbol, bu
                   padding: '18px 20px', borderRadius: 16,
                   background: isSelected
                     ? `linear-gradient(135deg, ${it.color}18, ${it.color}06)`
-                    : 'linear-gradient(160deg, rgba(18,4,10,0.92) 0%, rgba(12,3,7,0.96) 100%)',
-                  border: `${isSelected ? '1.5px' : '1px'} solid ${isSelected ? `${it.color}55` : 'rgba(255,255,255,0.08)'}`,
+                    : 'var(--ds-card-bg)',
+                  border: `${isSelected ? '1.5px' : '1px'} solid ${isSelected ? `${it.color}55` : 'var(--ds-card-border)'}`,
                   boxShadow: isSelected
                     ? `0 0 28px ${it.color}25, 0 8px 32px rgba(0,0,0,0.40)`
                     : '0 4px 16px rgba(0,0,0,0.30)',
@@ -155,7 +155,7 @@ export default function StepEssential({ form, setField, currency, currSymbol, bu
             display: 'flex', alignItems: 'flex-start', gap: 10,
           }}>
             <span style={{ fontSize: 16 }}>💡</span>
-            <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.85)', lineHeight: 1.6 }}>
+            <p style={{ fontSize: 12.5, color: 'var(--ds-text-primary)', lineHeight: 1.6 }}>
               <b style={{ color: selected.color }}>Buena elección.</b> {selected.guidance}
             </p>
           </div>
@@ -176,8 +176,8 @@ export default function StepEssential({ form, setField, currency, currSymbol, bu
 
           <div style={{
             borderRadius: 18, padding: 22,
-            background: 'linear-gradient(160deg, rgba(18,4,10,0.92) 0%, rgba(12,3,7,0.96) 100%)',
-            border: '1px solid rgba(255,255,255,0.09)',
+            background: 'var(--ds-card-bg)',
+            border: '1px solid var(--ds-card-border)',
           }}>
             <div className="space-y-5">
               {/* Product description */}
@@ -198,7 +198,7 @@ export default function StepEssential({ form, setField, currency, currSymbol, bu
                 <div>
                   <label className="label">
                     URL de destino
-                    <span style={{ marginLeft: 6, fontSize: 10, padding: '2px 8px', borderRadius: 10, background: 'rgba(233,30,140,0.15)', color: '#f9a8d4', border: '1px solid rgba(233,30,140,0.25)' }}>
+                    <span style={{ marginLeft: 6, fontSize: 10, padding: '2px 8px', borderRadius: 10, background: 'var(--ds-color-primary-soft)', color: 'var(--ds-color-primary)', border: '1px solid var(--ds-color-primary-border)' }}>
                       Recomendado
                     </span>
                   </label>

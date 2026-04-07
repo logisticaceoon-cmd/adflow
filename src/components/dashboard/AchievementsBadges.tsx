@@ -74,8 +74,8 @@ export default function AchievementsBadges() {
           <span style={{
             fontSize: 11, fontWeight: 700,
             padding: '4px 12px', borderRadius: 99,
-            background: 'rgba(245,158,11,0.10)', color: '#fbbf24',
-            border: '1px solid rgba(245,158,11,0.30)',
+            background: 'var(--ds-color-warning-soft)', color: 'var(--ds-color-warning)',
+            border: '1px solid var(--ds-color-warning-border)',
           }}>
             {unlockedCount} / {achievements.length} desbloqueados
           </span>

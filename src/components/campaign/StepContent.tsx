@@ -39,7 +39,7 @@ export default function StepContent({
     <div className="space-y-5">
       {/* Step header */}
       <div>
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#f9a8d4', marginBottom: 8 }}>
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 8 }}>
           Paso 4 de 5 · Contenido
         </p>
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 6, letterSpacing: '-0.02em' }}>
@@ -53,8 +53,8 @@ export default function StepContent({
       {/* Media upload card */}
       <div style={{
         borderRadius: 18, padding: 22,
-        background: 'linear-gradient(160deg, rgba(18,4,10,0.92) 0%, rgba(12,3,7,0.96) 100%)',
-        border: '1px solid rgba(255,255,255,0.09)',
+        background: 'var(--ds-card-bg)',
+        border: '1px solid var(--ds-card-border)',
       }}>
         <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
           🎨 Materiales creativos
@@ -73,7 +73,7 @@ export default function StepContent({
           style={{
             border: `1.5px dashed ${isDragging ? 'rgba(233,30,140,0.60)' : 'rgba(255,255,255,0.15)'}`,
             padding: '32px 20px', textAlign: 'center',
-            background: isDragging ? 'rgba(233,30,140,0.04)' : 'rgba(255,255,255,0.02)',
+            background: isDragging ? 'var(--ds-color-primary-soft)' : 'rgba(255,255,255,0.02)',
           }}
         >
           <input
@@ -90,7 +90,7 @@ export default function StepContent({
             Formatos: JPG, PNG, WebP, GIF, MP4, MOV
           </p>
           {mediaFiles.length > 0 && (
-            <p className="mt-2 text-xs font-semibold" style={{ color: '#62c4b0' }}>
+            <p className="mt-2 text-xs font-semibold" style={{ color: 'var(--ds-color-primary)' }}>
               {mediaFiles.length} archivo{mediaFiles.length > 1 ? 's' : ''} seleccionado{mediaFiles.length > 1 ? 's' : ''}
             </p>
           )}
@@ -155,8 +155,8 @@ export default function StepContent({
       {/* Optional extras */}
       <div style={{
         borderRadius: 18, padding: 22,
-        background: 'linear-gradient(160deg, rgba(18,4,10,0.92) 0%, rgba(12,3,7,0.96) 100%)',
-        border: '1px solid rgba(255,255,255,0.09)',
+        background: 'var(--ds-card-bg)',
+        border: '1px solid var(--ds-card-border)',
       }}>
         <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
           ✏️ Información adicional

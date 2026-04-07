@@ -38,7 +38,7 @@ export default function StepStrategy({
 
       {/* Step header */}
       <div>
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#f9a8d4', marginBottom: 8 }}>
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 8 }}>
           Paso 3 de 5 · Estrategia
         </p>
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 6, letterSpacing: '-0.02em' }}>
@@ -50,7 +50,7 @@ export default function StepStrategy({
       </div>
 
       {/* Diagnosis result banner */}
-      <div style={{ borderRadius: 16, padding: '16px 20px', background: 'linear-gradient(135deg, rgba(233,30,140,0.10), rgba(98,196,176,0.07))', border: '1px solid rgba(233,30,140,0.25)' }}>
+      <div style={{ borderRadius: 16, padding: '16px 20px', background: 'linear-gradient(135deg, var(--ds-color-primary-soft), rgba(98,196,176,0.07))', border: '1px solid var(--ds-color-primary-border)' }}>
         <div className="flex items-start gap-3">
           <span style={{ fontSize: 20, flexShrink: 0 }}>🤖</span>
           <div>
@@ -77,7 +77,7 @@ export default function StepStrategy({
         <div style={{ borderRadius: 14, padding: '12px 16px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
           <span style={{ fontSize: 16, flexShrink: 0 }}>⚠️</span>
           <div>
-            <p className="text-xs font-semibold" style={{ color: '#f59e0b' }}>Esta estrategia requiere Pixel de Meta instalado</p>
+            <p className="text-xs font-semibold" style={{ color: 'var(--ds-color-warning)' }}>Esta estrategia requiere Pixel de Meta instalado</p>
             <p className="text-xs mt-0.5" style={{ color: 'rgba(245,158,11,0.75)' }}>
               {recommended} usa retargeting/lookalike que necesitan el Pixel en tu sitio web. Si no lo tenés, seleccioná TOFU con Advantage+ que funciona sin Pixel.
             </p>
@@ -105,7 +105,7 @@ export default function StepStrategy({
                 animationDelay: `${idx * 60}ms`,
                 borderRadius: 18, padding: '20px 22px',
                 background: selected ? cfg.bg : 'linear-gradient(160deg, rgba(18,4,10,0.90), rgba(12,3,7,0.94))',
-                border: `${selected ? '1.5px' : '1px'} solid ${selected ? cfg.borderColor : 'rgba(255,255,255,0.10)'}`,
+                border: `${selected ? '1.5px' : '1px'} solid ${selected ? cfg.borderColor : 'var(--ds-card-border)'}`,
                 boxShadow: selected ? `0 0 28px ${cfg.color}25, 0 8px 32px rgba(0,0,0,0.50)` : '0 4px 20px rgba(0,0,0,0.40)',
                 cursor: isLocked ? 'not-allowed' : 'pointer',
                 opacity: isLocked ? 0.45 : 1,

@@ -33,7 +33,7 @@ export default function CapabilitiesCard({ level }: Props) {
   return (
     <div className="grid grid-cols-2 gap-4 mb-6">
       {/* ── Unlocked ── */}
-      <div className="card p-5" style={{ borderLeft: '3px solid #06d6a0' }}>
+      <div className="card p-5" style={{ borderLeft: '3px solid var(--ds-color-success)' }}>
         <div className="flex items-center justify-between mb-3">
           <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff' }}>
             ✨ Lo que ya podés hacer
@@ -41,7 +41,7 @@ export default function CapabilitiesCard({ level }: Props) {
           <span style={{
             fontSize: 10, fontWeight: 700,
             padding: '3px 10px', borderRadius: 99,
-            background: 'rgba(6,214,160,0.10)', color: '#06d6a0',
+            background: 'var(--ds-color-success-soft)', color: 'var(--ds-color-success)',
             border: '1px solid rgba(6,214,160,0.30)',
           }}>
             {unlocked.length} desbloqueadas
@@ -67,14 +67,14 @@ export default function CapabilitiesCard({ level }: Props) {
                   {cap.description}
                 </p>
               </div>
-              <span style={{ color: '#06d6a0', fontWeight: 800, fontSize: 14, flexShrink: 0 }}>✓</span>
+              <span style={{ color: 'var(--ds-color-success)', fontWeight: 800, fontSize: 14, flexShrink: 0 }}>✓</span>
             </li>
           ))}
         </ul>
       </div>
 
       {/* ── Locked / next ── */}
-      <div className="card p-5" style={{ borderLeft: '3px solid #fbbf24' }}>
+      <div className="card p-5" style={{ borderLeft: '3px solid var(--ds-color-warning)' }}>
         <div className="flex items-center justify-between mb-3">
           <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff' }}>
             🔒 Lo que viene
@@ -82,8 +82,8 @@ export default function CapabilitiesCard({ level }: Props) {
           <span style={{
             fontSize: 10, fontWeight: 700,
             padding: '3px 10px', borderRadius: 99,
-            background: 'rgba(245,158,11,0.10)', color: '#fbbf24',
-            border: '1px solid rgba(245,158,11,0.30)',
+            background: 'var(--ds-color-warning-soft)', color: 'var(--ds-color-warning)',
+            border: '1px solid var(--ds-color-warning-border)',
           }}>
             {upcoming.length + futureLocked.length} bloqueadas
           </span>
@@ -94,7 +94,7 @@ export default function CapabilitiesCard({ level }: Props) {
 
         {upcoming.length > 0 && (
           <>
-            <p style={{ fontSize: 10, fontWeight: 700, color: '#fbbf24', textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 6 }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-color-warning)', textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 6 }}>
               En el próximo nivel ({lockedNextLevel})
             </p>
             <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 12px', display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -102,13 +102,13 @@ export default function CapabilitiesCard({ level }: Props) {
                 <li key={i} style={{
                   padding: '10px 12px', borderRadius: 10,
                   background: 'rgba(245,158,11,0.05)',
-                  border: '1px dashed rgba(245,158,11,0.30)',
+                  border: '1px dashed var(--ds-color-warning-border)',
                   display: 'flex', alignItems: 'flex-start', gap: 10,
                   opacity: 0.85,
                 }}>
                   <span style={{ fontSize: 16, flexShrink: 0 }}>{cap.icon}</span>
                   <div style={{ flex: 1 }}>
-                    <p style={{ fontSize: 12, fontWeight: 700, color: '#fbbf24', marginBottom: 2 }}>
+                    <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ds-color-warning)', marginBottom: 2 }}>
                       {cap.title}
                     </p>
                     <p style={{ fontSize: 11, color: 'var(--muted)', lineHeight: 1.4 }}>

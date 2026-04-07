@@ -41,12 +41,12 @@ function deriveStatus(ph: Phase, acc: PhaseAccum, level: number): {
   if (level < PHASE_MIN_LEVEL[ph]) return { key: 'locked', label: '🔒 No disponible', color: '#8892b0' }
   const roas = acc.count > 0 ? acc.revenue / acc.spend : 0
   const overspent = acc.assigned > 0 && acc.spend > acc.assigned * 1.20
-  if (acc.count === 0) return { key: 'optimize', label: '🔧 Por activar', color: '#f9a8d4' }
-  if (overspent) return { key: 'risk', label: '⚠️ En riesgo', color: '#fbbf24' }
-  if (ph === 'F1') return { key: 'healthy', label: '✅ Saludable', color: '#06d6a0' }
-  if (roas >= 2) return { key: 'healthy', label: '✅ Saludable', color: '#06d6a0' }
-  if (roas >= 1) return { key: 'risk', label: '⚠️ En riesgo', color: '#fbbf24' }
-  return { key: 'optimize', label: '🔧 Por optimizar', color: '#f9a8d4' }
+  if (acc.count === 0) return { key: 'optimize', label: '🔧 Por activar', color: 'var(--ds-color-primary)' }
+  if (overspent) return { key: 'risk', label: '⚠️ En riesgo', color: 'var(--ds-color-warning)' }
+  if (ph === 'F1') return { key: 'healthy', label: '✅ Saludable', color: 'var(--ds-color-success)' }
+  if (roas >= 2) return { key: 'healthy', label: '✅ Saludable', color: 'var(--ds-color-success)' }
+  if (roas >= 1) return { key: 'risk', label: '⚠️ En riesgo', color: 'var(--ds-color-warning)' }
+  return { key: 'optimize', label: '🔧 Por optimizar', color: 'var(--ds-color-primary)' }
 }
 
 const PHASE_INSIGHT: Record<Phase, (acc: PhaseAccum) => string> = {
@@ -213,7 +213,7 @@ export default async function PhasesPage() {
       <div className="dash-anim-1 mb-6" style={{
         position: 'relative',
         borderRadius: 22, padding: '28px 32px',
-        background: 'linear-gradient(135deg, rgba(98,196,176,0.10) 0%, rgba(245,158,11,0.05) 100%)',
+        background: 'linear-gradient(135deg, var(--ds-card-border) 0%, rgba(245,158,11,0.05) 100%)',
         border: '1px solid rgba(255,255,255,0.08)',
         backdropFilter: 'blur(20px)',
         overflow: 'hidden',
@@ -222,7 +222,7 @@ export default async function PhasesPage() {
           position: 'absolute', top: 0, left: 0, right: 0, height: 1,
           background: 'linear-gradient(90deg, transparent, rgba(98,196,176,0.55), rgba(245,158,11,0.40), transparent)',
         }} />
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#62c4b0', marginBottom: 8 }}>
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 8 }}>
           Phase Performance · AdFlow
         </p>
         <h1 style={{
@@ -231,16 +231,16 @@ export default async function PhasesPage() {
         }}>
           Rendimiento por fases 🎯
         </h1>
-        <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.78)', maxWidth: 580, lineHeight: 1.55, marginBottom: 14 }}>
+        <p style={{ fontSize: 13.5, color: 'var(--ds-text-secondary)', maxWidth: 580, lineHeight: 1.55, marginBottom: 14 }}>
           Compará lo planeado vs lo real y encontrá oportunidades de optimización en cada fase del funnel.
         </p>
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
             padding: '6px 14px', borderRadius: 99,
-            background: 'rgba(98,196,176,0.10)',
-            border: '1px solid rgba(98,196,176,0.30)',
-            fontSize: 12, fontWeight: 600, color: '#62c4b0',
+            background: 'var(--ds-card-border)',
+            border: '1px solid var(--ds-card-border)',
+            fontSize: 12, fontWeight: 600, color: 'var(--ds-color-primary)',
           }}>
             📅 {monthLabel}
           </span>
@@ -356,7 +356,7 @@ export default async function PhasesPage() {
                         <p style={{ fontSize: 10, color: 'var(--muted)' }} title="Retorno por cada peso invertido">ROAS</p>
                         <p style={{
                           fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 800,
-                          color: phaseRoas >= 3 ? '#06d6a0' : phaseRoas >= 1.5 ? '#fbbf24' : phaseRoas > 0 ? '#fca5a5' : '#8892b0',
+                          color: phaseRoas >= 3 ? 'var(--ds-color-success)' : phaseRoas >= 1.5 ? 'var(--ds-color-warning)' : phaseRoas > 0 ? 'var(--ds-color-danger)' : '#8892b0',
                         }}>
                           {phaseRoas > 0 ? `${phaseRoas.toFixed(1)}x` : '—'}
                         </p>
@@ -380,7 +380,7 @@ export default async function PhasesPage() {
                       padding: '10px 12px', borderRadius: 10,
                       background: `${status.color}08`,
                       border: `1px solid ${status.color}25`,
-                      fontSize: 11, color: 'rgba(255,255,255,0.78)', lineHeight: 1.55,
+                      fontSize: 11, color: 'var(--ds-text-secondary)', lineHeight: 1.55,
                     }}>
                       💡 {insight}
                     </div>
@@ -442,10 +442,10 @@ export default async function PhasesPage() {
                   <span style={{ fontSize: 12, color: 'var(--muted)' }}>{currency}{acc.recommended.toLocaleString()}</span>
                   <span style={{ fontSize: 12, color: '#a0a8c0' }}>{currency}{acc.assigned.toLocaleString()}</span>
                   <span style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>{currency}{acc.spend.toFixed(0)}</span>
-                  <span style={{ fontSize: 12, color: '#06d6a0' }}>{currency}{acc.revenue.toFixed(0)}</span>
+                  <span style={{ fontSize: 12, color: 'var(--ds-color-success)' }}>{currency}{acc.revenue.toFixed(0)}</span>
                   <span style={{
                     fontSize: 12, fontWeight: 700,
-                    color: phaseRoas >= 3 ? '#06d6a0' : phaseRoas >= 1.5 ? '#fbbf24' : phaseRoas > 0 ? '#fca5a5' : 'var(--muted)',
+                    color: phaseRoas >= 3 ? 'var(--ds-color-success)' : phaseRoas >= 1.5 ? 'var(--ds-color-warning)' : phaseRoas > 0 ? 'var(--ds-color-danger)' : 'var(--muted)',
                   }}>{phaseRoas > 0 ? `${phaseRoas.toFixed(1)}x` : '—'}</span>
                   <span style={{ fontSize: 12 }}>{cpa > 0 ? `${currency}${cpa.toFixed(0)}` : '—'}</span>
                   <span style={{
@@ -475,10 +475,10 @@ export default async function PhasesPage() {
               <span style={{ fontSize: 12, color: 'var(--muted)' }}>{currency}{totals.recommended.toLocaleString()}</span>
               <span style={{ fontSize: 12, color: '#a0a8c0' }}>{currency}{totals.assigned.toLocaleString()}</span>
               <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 800, color: '#fff' }}>{currency}{totals.spend.toFixed(0)}</span>
-              <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 800, color: '#06d6a0' }}>{currency}{totals.revenue.toFixed(0)}</span>
+              <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 800, color: 'var(--ds-color-success)' }}>{currency}{totals.revenue.toFixed(0)}</span>
               <span style={{
                 fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 800,
-                color: totalRoas >= 3 ? '#06d6a0' : totalRoas >= 1.5 ? '#fbbf24' : totalRoas > 0 ? '#fca5a5' : 'var(--muted)',
+                color: totalRoas >= 3 ? 'var(--ds-color-success)' : totalRoas >= 1.5 ? 'var(--ds-color-warning)' : totalRoas > 0 ? 'var(--ds-color-danger)' : 'var(--muted)',
               }}>{totalRoas > 0 ? `${totalRoas.toFixed(1)}x` : '—'}</span>
               <span style={{ fontSize: 12 }}>—</span>
               <span></span>
@@ -499,14 +499,14 @@ export default async function PhasesPage() {
               <div className="space-y-3">
                 {insights.map((ins, i) => (
                   <div key={i} className="p-4 rounded-xl flex items-start gap-3" style={{
-                    background: 'rgba(255,255,255,0.025)',
+                    background: 'var(--ds-card-bg)',
                     border: '1px solid rgba(255,255,255,0.06)',
                   }}>
                     <span style={{ fontSize: 18, flexShrink: 0 }}>{ins.icon}</span>
                     <div style={{ flex: 1 }}>
-                      <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.85)', lineHeight: 1.55 }}>{ins.text}</p>
+                      <p style={{ fontSize: 12.5, color: 'var(--ds-text-primary)', lineHeight: 1.55 }}>{ins.text}</p>
                       {ins.action && (
-                        <Link href={ins.action.href} style={{ fontSize: 11, color: '#f9a8d4', fontWeight: 600, marginTop: 6, display: 'inline-block' }}>
+                        <Link href={ins.action.href} style={{ fontSize: 11, color: 'var(--ds-color-primary)', fontWeight: 600, marginTop: 6, display: 'inline-block' }}>
                           {ins.action.label}
                         </Link>
                       )}
@@ -542,16 +542,16 @@ export default async function PhasesPage() {
 
       {/* ── SECTION F: EDUCATION ──────────────────────────────────────── */}
       <div className="card p-6 mb-6" style={{
-        background: 'linear-gradient(135deg, rgba(98,196,176,0.06), rgba(245,158,11,0.04))',
+        background: 'linear-gradient(135deg, transparent, rgba(245,158,11,0.04))',
         border: '1px solid rgba(98,196,176,0.18)',
       }}>
         <div className="flex items-start gap-4">
           <div style={{
             width: 44, height: 44, borderRadius: 12, flexShrink: 0,
-            background: 'rgba(98,196,176,0.15)',
-            border: '1px solid rgba(98,196,176,0.30)',
+            background: 'var(--ds-card-border)',
+            border: '1px solid var(--ds-card-border)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
-            boxShadow: '0 0 16px rgba(98,196,176,0.30)',
+            boxShadow: '0 0 16px var(--ds-card-border)',
           }}>📚</div>
           <div style={{ flex: 1 }}>
             <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 12 }}>
@@ -569,7 +569,7 @@ export default async function PhasesPage() {
                     <span style={{ fontSize: 18 }}>{s.icon}</span>
                     <span style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, color: '#fff' }}>{s.p} {s.name}</span>
                     <span style={{ color: 'var(--muted)' }}>—</span>
-                    <span style={{ color: 'rgba(255,255,255,0.78)' }}>{s.text}</span>
+                    <span style={{ color: 'var(--ds-text-secondary)' }}>{s.text}</span>
                   </div>
                   {s.arrow === '↓' && (
                     <span style={{ display: 'inline-block', marginLeft: 8, fontSize: 14, color: 'rgba(255,255,255,0.20)', marginTop: 2, marginBottom: 2 }}>↓</span>

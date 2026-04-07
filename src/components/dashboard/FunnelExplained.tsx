@@ -29,7 +29,7 @@ const STEPS: StepDef[] = [
     emoji: '👀',
     description: 'Personas que entraron a tu sitio web',
     insight: n => `Llegaron ${n.toLocaleString()} personas a tu web en los últimos 30 días.`,
-    color: '#62c4b0',
+    color: 'var(--ds-color-primary)',
   },
   {
     label: 'ViewContent',
@@ -39,7 +39,7 @@ const STEPS: StepDef[] = [
       const pct = prev > 0 ? Math.round((n / prev) * 100) : 0
       return `${pct}% de tus visitantes miraron un producto. ${pct >= 50 ? 'Excelente interés.' : pct >= 20 ? 'Interés moderado.' : 'Pocos llegan al producto — revisá tu home.'}`
     },
-    color: '#3aa9d8',
+    color: 'var(--ds-color-primary)',
   },
   {
     label: 'AddToCart',
@@ -49,7 +49,7 @@ const STEPS: StepDef[] = [
       const pct = prev > 0 ? Math.round((n / prev) * 100) : 0
       return `${pct}% de los que vieron un producto lo agregaron al carrito. ${pct >= 30 ? 'Muy bueno.' : pct >= 10 ? 'Promedio.' : 'Bajo — revisá precios y CTAs.'}`
     },
-    color: '#f59e0b',
+    color: 'var(--ds-color-warning)',
   },
   {
     label: 'InitiateCheckout',
@@ -59,7 +59,7 @@ const STEPS: StepDef[] = [
       const pct = prev > 0 ? Math.round((n / prev) * 100) : 0
       return `${pct}% de los carritos llegaron al checkout. ${pct >= 60 ? 'Tu checkout convierte bien.' : 'Algunos abandonan el carrito.'}`
     },
-    color: '#e91e8c',
+    color: 'var(--ds-color-primary)',
   },
   {
     label: 'Purchase',
@@ -69,7 +69,7 @@ const STEPS: StepDef[] = [
       const pct = prev > 0 ? Math.round((n / prev) * 100) : 0
       return `${pct}% de los que llegaron al checkout completaron la compra. ${pct >= 70 ? '¡Excelente!' : pct >= 40 ? 'Promedio.' : 'Muchos abandonan al pagar — revisá métodos de pago.'}`
     },
-    color: '#06d6a0',
+    color: 'var(--ds-color-success)',
   },
 ]
 
@@ -115,38 +115,48 @@ export default function FunnelExplained({ events }: Props) {
 
           return (
             <div key={step.label} style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              {/* Funnel slice */}
+              {/* Funnel slice — uniform card base, only the icon keeps the accent */}
               <div style={{
                 width: `${widthPct}%`,
                 padding: '14px 22px',
-                borderRadius: 14,
-                background: `linear-gradient(135deg, ${step.color}18, ${step.color}05)`,
-                border: `1px solid ${step.color}40`,
-                boxShadow: `0 0 24px ${step.color}10`,
+                borderRadius: 'var(--ds-card-radius-sm)',
+                background: 'var(--ds-card-bg)',
+                border: '1px solid var(--ds-card-border)',
                 display: 'flex', alignItems: 'center', gap: 14,
                 transition: 'all 0.3s',
               }}>
                 <div style={{
-                  width: 44, height: 44, borderRadius: 12, flexShrink: 0,
-                  background: `${step.color}20`, border: `1px solid ${step.color}50`,
+                  width: 40, height: 40, borderRadius: 10, flexShrink: 0,
+                  background: 'var(--ds-bg-elevated)',
+                  border: '1px solid var(--ds-card-border)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 22,
+                  fontSize: 20,
                 }}>
                   {step.emoji}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div className="flex items-center justify-between mb-1 gap-2">
-                    <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 13, fontWeight: 700, color: step.color, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                    <p style={{
+                      fontFamily: 'Syne, sans-serif',
+                      fontSize: 12, fontWeight: 700,
+                      color: 'var(--ds-text-label)',
+                      textTransform: 'uppercase', letterSpacing: '0.08em',
+                    }}>
                       {step.label}
                     </p>
-                    <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 22, fontWeight: 900, color: '#fff', letterSpacing: '-0.02em' }}>
+                    <p style={{
+                      fontFamily: 'Syne, sans-serif',
+                      fontSize: 22, fontWeight: 800,
+                      color: 'var(--ds-text-primary)',
+                      letterSpacing: '-0.02em',
+                    }}>
                       {value.toLocaleString()}
                     </p>
                   </div>
-                  <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)', marginBottom: 4 }}>
+                  <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', marginBottom: 4 }}>
                     {step.description}
                   </p>
-                  <p style={{ fontSize: 10.5, color: 'var(--muted)', fontStyle: 'italic' }}>
+                  <p style={{ fontSize: 10.5, color: 'var(--ds-text-muted)', fontStyle: 'italic' }}>
                     💡 {step.insight(value, prev)}
                   </p>
                 </div>

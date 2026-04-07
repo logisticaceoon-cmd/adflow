@@ -25,7 +25,7 @@ export default function PhaseChart({ data }: Props) {
           <Tooltip
             contentStyle={{
               background: 'rgba(14,4,9,0.95)',
-              border: '1px solid rgba(234,27,126,0.30)',
+              border: '1px solid var(--ds-color-primary-border)',
               borderRadius: 10,
               fontSize: 12,
               backdropFilter: 'blur(12px)',
@@ -37,8 +37,8 @@ export default function PhaseChart({ data }: Props) {
             iconType="circle"
           />
           <Bar dataKey="recomendado" fill="#5a6478" name="Recomendado" radius={[6, 6, 0, 0]} />
-          <Bar dataKey="asignado"    fill="#62c4b0" name="Asignado"    radius={[6, 6, 0, 0]} />
-          <Bar dataKey="gastado"     fill="#e91e8c" name="Gastado"     radius={[6, 6, 0, 0]} />
+          <Bar dataKey="asignado"    fill="var(--ds-color-primary)" name="Asignado"    radius={[6, 6, 0, 0]} />
+          <Bar dataKey="gastado"     fill="var(--ds-color-primary)" name="Gastado"     radius={[6, 6, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

@@ -12,7 +12,7 @@ interface Props {
 
 export default function LevelProgress({
   current, required, metric, nextLevel,
-  currentColor = '#62c4b0', nextColor = '#06d6a0',
+  currentColor = 'var(--ds-color-primary)', nextColor = 'var(--ds-color-success)',
 }: Props) {
   const pct = Math.min(100, required > 0 ? Math.round((current / required) * 100) : 0)
   const dailyRate = current / 30

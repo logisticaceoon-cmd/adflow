@@ -94,14 +94,14 @@ export default function StepReview({
     return (
       <div style={{
         borderRadius: 20, padding: 40, textAlign: 'center',
-        background: 'linear-gradient(160deg, rgba(18,4,10,0.92) 0%, rgba(12,3,7,0.96) 100%)',
-        border: '1px solid rgba(255,255,255,0.09)',
+        background: 'var(--ds-card-bg)',
+        border: '1px solid var(--ds-card-border)',
       }}>
         <div className="space-y-6">
           <div style={{
             width: 64, height: 64, margin: '0 auto', borderRadius: '50%',
-            background: 'linear-gradient(135deg, rgba(233,30,140,0.15), rgba(98,196,176,0.10))',
-            border: '1px solid rgba(233,30,140,0.25)',
+            background: 'linear-gradient(135deg, var(--ds-color-primary-soft), var(--ds-card-border))',
+            border: '1px solid var(--ds-color-primary-border)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28,
           }}>
             🤖
@@ -111,10 +111,10 @@ export default function StepReview({
               <div key={i} className="flex items-center gap-3 justify-center">
                 <div style={{
                   width: 20, height: 20, borderRadius: '50%', flexShrink: 0,
-                  background: i < genStep ? 'linear-gradient(135deg, #62c4b0, #3a9a8a)'
-                    : i === genStep ? 'linear-gradient(135deg, #ea1b7e, #c5006a)'
-                      : 'rgba(255,255,255,0.06)',
-                  border: i > genStep ? '1px solid rgba(255,255,255,0.10)' : 'none',
+                  background: i < genStep ? 'linear-gradient(135deg, var(--ds-color-primary), #3a9a8a)'
+                    : i === genStep ? 'linear-gradient(135deg, var(--ds-color-success), var(--ds-color-primary))'
+                      : 'var(--ds-card-border)',
+                  border: i > genStep ? '1px solid var(--ds-card-border)' : 'none',
                   boxShadow: i === genStep ? '0 0 12px rgba(233,30,140,0.45)' : 'none',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 9, color: '#fff', fontWeight: 900,
@@ -160,7 +160,7 @@ export default function StepReview({
       <div style={{
         borderRadius: 20, overflow: 'hidden',
         background: 'linear-gradient(160deg, rgba(18,4,10,0.92), rgba(12,3,7,0.96))',
-        border: '1px solid rgba(255,255,255,0.09)',
+        border: '1px solid var(--ds-card-border)',
       }}>
 
         {/* Header row */}
@@ -201,8 +201,8 @@ export default function StepReview({
                     <button key={idx} onClick={() => handleSwitchImage(idx)}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all"
                       style={{
-                        background: isActive ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.04)',
-                        border: `1px solid ${isActive ? 'rgba(255,255,255,0.30)' : 'rgba(255,255,255,0.09)'}`,
+                        background: isActive ? 'rgba(255,255,255,0.14)' : 'var(--ds-bg-elevated)',
+                        border: `1px solid ${isActive ? 'rgba(255,255,255,0.30)' : 'var(--ds-card-border)'}`,
                         color: isActive ? '#fff' : '#8892b0',
                       }}>
                       {/* Mini thumbnail */}
@@ -214,7 +214,7 @@ export default function StepReview({
                       </span>
                       Imagen {idx + 1}
                       {isChosen && (
-                        <Check size={10} style={{ color: '#62c4b0', flexShrink: 0 }} />
+                        <Check size={10} style={{ color: 'var(--ds-color-primary)', flexShrink: 0 }} />
                       )}
                     </button>
                   )
@@ -236,19 +236,19 @@ export default function StepReview({
                   className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all"
                   style={{
                     background: activeVariant === i
-                      ? 'linear-gradient(135deg, rgba(233,30,140,0.18), rgba(233,30,140,0.08))'
-                      : 'rgba(255,255,255,0.04)',
-                    border: `1px solid ${activeVariant === i ? 'rgba(233,30,140,0.45)' : 'rgba(255,255,255,0.09)'}`,
+                      ? 'linear-gradient(135deg, var(--ds-color-success-soft), var(--ds-color-primary-soft))'
+                      : 'var(--ds-bg-elevated)',
+                    border: `1px solid ${activeVariant === i ? 'rgba(233,30,140,0.45)' : 'var(--ds-card-border)'}`,
                     color: activeVariant === i ? '#fff' : '#8892b0',
-                    boxShadow: activeVariant === i ? '0 0 14px rgba(233,30,140,0.15)' : 'none',
+                    boxShadow: activeVariant === i ? '0 0 14px var(--ds-color-primary-soft)' : 'none',
                   }}>
                   <span>{ANGLE_ICONS[angle] || '📝'}</span>
                   <span>Variante {i + 1}</span>
                   {hasEdits && (
-                    <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#62c4b0', flexShrink: 0 }} title="Editada" />
+                    <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--ds-color-primary)', flexShrink: 0 }} title="Editada" />
                   )}
                   {isChosen && (
-                    <Check size={9} style={{ color: '#62c4b0', flexShrink: 0 }} />
+                    <Check size={9} style={{ color: 'var(--ds-color-primary)', flexShrink: 0 }} />
                   )}
                 </button>
               )
@@ -277,7 +277,7 @@ export default function StepReview({
         </div>
 
         {/* ── Copy detail panel — full readable text outside the mockup ────── */}
-        <div style={{ margin: '16px 20px 20px', borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }}>
+        <div style={{ margin: '16px 20px 20px', borderRadius: 14, overflow: 'hidden', border: '1px solid var(--ds-card-border)' }}>
           {/* Panel header */}
           <div style={{
             padding: '10px 14px',
@@ -290,7 +290,7 @@ export default function StepReview({
                 Copy completo — Variante {activeVariant + 1}
               </span>
               <span className="text-[10px] px-2 py-0.5 rounded-full" style={{
-                background: 'rgba(233,30,140,0.10)', border: '1px solid rgba(233,30,140,0.25)', color: '#f9a8d4',
+                background: 'var(--ds-color-primary-soft)', border: '1px solid var(--ds-color-primary-border)', color: 'var(--ds-color-primary)',
               }}>
                 {ANGLE_LABELS[activeAd.copy_angle] || activeAd.copy_angle || 'Sin ángulo'}
               </span>
@@ -303,9 +303,9 @@ export default function StepReview({
                 <button onClick={() => handleSelectVariant(activeVariant)}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
                   style={{
-                    background: chosen ? 'rgba(98,196,176,0.15)' : 'rgba(255,255,255,0.06)',
-                    border: `1px solid ${chosen ? 'rgba(98,196,176,0.40)' : 'rgba(255,255,255,0.14)'}`,
-                    color: chosen ? '#62c4b0' : '#8892b0',
+                    background: chosen ? 'var(--ds-card-border)' : 'var(--ds-card-border)',
+                    border: `1px solid ${chosen ? 'var(--ds-card-border)' : 'rgba(255,255,255,0.14)'}`,
+                    color: chosen ? 'var(--ds-color-primary)' : '#8892b0',
                   }}>
                   <Check size={10} />
                   {chosen ? 'Variante elegida ✓' : 'Elegir esta variante'}
@@ -315,7 +315,7 @@ export default function StepReview({
           </div>
 
           {/* Headline */}
-          <div style={{ padding: '12px 14px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ padding: '12px 14px', borderBottom: '1px solid var(--ds-card-border)' }}>
             <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--muted)' }}>
               Headline
             </p>
@@ -325,7 +325,7 @@ export default function StepReview({
           </div>
 
           {/* Primary text */}
-          <div style={{ padding: '12px 14px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ padding: '12px 14px', borderBottom: '1px solid var(--ds-card-border)' }}>
             <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--muted)' }}>
               Texto principal
             </p>
@@ -361,7 +361,7 @@ export default function StepReview({
                   })
                 }}
                 style={{
-                  background: 'rgba(255,255,255,0.08)',
+                  background: 'var(--ds-card-border)',
                   border: '1px solid rgba(255,255,255,0.22)',
                   borderRadius: 8,
                   padding: '6px 10px',
@@ -383,7 +383,7 @@ export default function StepReview({
           </div>
 
           {/* All-variants summary strip */}
-          <div style={{ padding: '10px 14px', background: 'rgba(255,255,255,0.02)', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ padding: '10px 14px', background: 'rgba(255,255,255,0.02)', borderTop: '1px solid var(--ds-card-border)' }}>
             <p className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--muted)' }}>
               Las {numVariants} variantes en resumen
             </p>
@@ -397,20 +397,20 @@ export default function StepReview({
                   <button key={i} onClick={() => handleSelectVariant(i)}
                     className="w-full text-left flex items-start gap-2.5 px-3 py-2 rounded-lg transition-all"
                     style={{
-                      background: isActive ? 'rgba(233,30,140,0.08)' : 'transparent',
-                      border: `1px solid ${isActive ? 'rgba(233,30,140,0.25)' : 'transparent'}`,
+                      background: isActive ? 'var(--ds-color-primary-soft)' : 'transparent',
+                      border: `1px solid ${isActive ? 'var(--ds-color-primary-border)' : 'transparent'}`,
                     }}>
                     <div style={{
                       width: 18, height: 18, borderRadius: 5, flexShrink: 0, marginTop: 1,
-                      background: isChosen ? 'rgba(98,196,176,0.25)' : 'rgba(255,255,255,0.07)',
-                      border: `1px solid ${isChosen ? 'rgba(98,196,176,0.50)' : 'rgba(255,255,255,0.12)'}`,
+                      background: isChosen ? 'var(--ds-card-border)' : 'rgba(255,255,255,0.07)',
+                      border: `1px solid ${isChosen ? 'transparent' : 'rgba(255,255,255,0.12)'}`,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: 8, color: isChosen ? '#62c4b0' : 'transparent',
+                      fontSize: 8, color: isChosen ? 'var(--ds-color-primary)' : 'transparent',
                     }}>
                       {isChosen ? '✓' : ''}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <span className="text-[10px] font-semibold" style={{ color: isActive ? '#f9a8d4' : '#8892b0' }}>
+                      <span className="text-[10px] font-semibold" style={{ color: isActive ? 'var(--ds-color-primary)' : '#8892b0' }}>
                         {ANGLE_ICONS[vAd.copy_angle] || '📝'} V{i + 1} · {ANGLE_LABELS[vAd.copy_angle] || vAd.copy_angle}
                       </span>
                       <p className="text-[11px] mt-0.5 truncate" style={{ color: '#8892b0' }}>
@@ -438,7 +438,7 @@ export default function StepReview({
       </div>
 
       {/* ── Collapsible strategy summary ─────────────────────────────────────── */}
-      <div style={{ borderRadius: 18, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.09)' }}>
+      <div style={{ borderRadius: 18, overflow: 'hidden', border: '1px solid var(--ds-card-border)' }}>
         <button
           onClick={() => setStrategyExpanded(s => !s)}
           className="w-full flex items-center justify-between px-5 py-4 transition-all"
@@ -466,7 +466,7 @@ export default function StepReview({
         </button>
 
         {strategyExpanded && (
-          <div style={{ background: 'linear-gradient(160deg, rgba(14,3,8,0.95), rgba(10,2,6,0.97))', padding: '0 20px 20px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ background: 'linear-gradient(160deg, rgba(14,3,8,0.95), rgba(10,2,6,0.97))', padding: '0 20px 20px', borderTop: '1px solid var(--ds-card-border)' }}>
             <div className="mt-4 space-y-3">
               {adSets.map((s, si) => (
                 <div key={si} className="p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
@@ -478,10 +478,10 @@ export default function StepReview({
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {s.targeting?.advantage_plus && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(98,196,176,0.12)', color: '#62c4b0' }}>⚡ Advantage+</span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'var(--ds-card-border)', color: 'var(--ds-color-primary)' }}>⚡ Advantage+</span>
                     )}
                     {(s.targeting?.interests || []).slice(0, 3).map((interest: any, ii: number) => (
-                      <span key={ii} className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--muted)' }}>
+                      <span key={ii} className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'var(--ds-card-border)', color: 'var(--muted)' }}>
                         🎯 {interest.name}
                       </span>
                     ))}
@@ -502,8 +502,8 @@ export default function StepReview({
             </div>
 
             {aiStrategy.estimated_results && (
-              <div className="mt-4 p-3 rounded-xl" style={{ background: 'rgba(98,196,176,0.06)', border: '1px solid rgba(98,196,176,0.18)' }}>
-                <p className="text-xs font-semibold mb-3" style={{ color: '#62c4b0' }}>📊 Resultados estimados</p>
+              <div className="mt-4 p-3 rounded-xl" style={{ background: 'transparent', border: '1px solid rgba(98,196,176,0.18)' }}>
+                <p className="text-xs font-semibold mb-3" style={{ color: 'var(--ds-color-primary)' }}>📊 Resultados estimados</p>
                 <div className="grid grid-cols-2 gap-y-2 gap-x-4">
                   {Object.entries(aiStrategy.estimated_results)
                     .filter(([, v]) => v && v !== 'N/A')
@@ -537,7 +537,7 @@ export default function StepReview({
 
       {/* Publish error */}
       {publishError && (
-        <div className="p-4 rounded-xl" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.30)' }}>
+        <div className="p-4 rounded-xl" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid var(--ds-color-danger-border)' }}>
           <p className="text-sm font-semibold mb-1" style={{ color: '#f87171' }}>Error al publicar en Meta</p>
           <p className="text-xs leading-relaxed" style={{ color: 'rgba(248,113,113,0.80)' }}>{publishError}</p>
         </div>
@@ -561,9 +561,9 @@ export default function StepReview({
           disabled={savingDraft || isPublishing}
           className="flex-1 min-w-[160px] flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:scale-100"
           style={{
-            background: isPublishing ? 'rgba(233,30,140,0.45)' : 'linear-gradient(135deg, #ea1b7e, #c5006a)',
+            background: isPublishing ? 'rgba(233,30,140,0.45)' : 'linear-gradient(135deg, var(--ds-color-success), var(--ds-color-primary))',
             color: '#fff',
-            boxShadow: isPublishing ? 'none' : '0 4px 20px rgba(233,30,140,0.40)',
+            boxShadow: isPublishing ? 'none' : '0 4px 20px var(--ds-color-success-border)',
           }}
         >
           {isPublishing

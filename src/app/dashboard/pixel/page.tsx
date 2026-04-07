@@ -34,17 +34,17 @@ interface PixelAnalysisRow {
   analyzed_at: string
 }
 
-// Hero gradient backgrounds per level
+// Hero accents per level — uniform card base with sober per-level emoji
 const LEVEL_GRADIENT: Record<number, { from: string; to: string; main: string; emoji: string }> = {
-  0: { from: 'rgba(80,80,100,0.18)',     to: 'rgba(40,40,52,0.05)',    main: '#8892b0', emoji: '🌑' },
-  1: { from: 'rgba(239,68,68,0.20)',     to: 'rgba(245,158,11,0.05)',  main: '#ef4444', emoji: '🌱' },
-  2: { from: 'rgba(239,68,68,0.20)',     to: 'rgba(245,158,11,0.05)',  main: '#ef4444', emoji: '📚' },
-  3: { from: 'rgba(245,158,11,0.20)',    to: 'rgba(251,191,36,0.05)',  main: '#f59e0b', emoji: '🧠' },
-  4: { from: 'rgba(245,158,11,0.20)',    to: 'rgba(251,191,36,0.05)',  main: '#f59e0b', emoji: '🛒' },
-  5: { from: 'rgba(6,214,160,0.18)',     to: 'rgba(16,185,129,0.05)',  main: '#06d6a0', emoji: '💼' },
-  6: { from: 'rgba(6,214,160,0.18)',     to: 'rgba(16,185,129,0.05)',  main: '#06d6a0', emoji: '🚀' },
-  7: { from: 'rgba(59,130,246,0.20)',    to: 'rgba(37,99,235,0.05)',   main: '#3b82f6', emoji: '👑' },
-  8: { from: 'rgba(139,92,246,0.22)',    to: 'rgba(245,158,11,0.10)',  main: '#8b5cf6', emoji: '🏰' },
+  0: { from: 'var(--ds-card-bg)', to: 'var(--ds-card-bg)', main: 'var(--ds-text-muted)',     emoji: '🌑' },
+  1: { from: 'var(--ds-card-bg)', to: 'var(--ds-card-bg)', main: 'var(--ds-color-primary)',  emoji: '🌱' },
+  2: { from: 'var(--ds-card-bg)', to: 'var(--ds-card-bg)', main: 'var(--ds-color-primary)',  emoji: '📚' },
+  3: { from: 'var(--ds-card-bg)', to: 'var(--ds-card-bg)', main: 'var(--ds-color-primary)',  emoji: '🧠' },
+  4: { from: 'var(--ds-card-bg)', to: 'var(--ds-card-bg)', main: 'var(--ds-color-primary)',  emoji: '🛒' },
+  5: { from: 'var(--ds-card-bg)', to: 'var(--ds-card-bg)', main: 'var(--ds-color-primary)',  emoji: '💼' },
+  6: { from: 'var(--ds-card-bg)', to: 'var(--ds-card-bg)', main: 'var(--ds-color-primary)',  emoji: '🚀' },
+  7: { from: 'var(--ds-card-bg)', to: 'var(--ds-card-bg)', main: 'var(--ds-color-primary)',  emoji: '👑' },
+  8: { from: 'var(--ds-card-bg)', to: 'var(--ds-card-bg)', main: 'var(--ds-color-primary)',  emoji: '🏰' },
 }
 
 function nextLevelMetric(level: number, events: PixelEvents | undefined) {
@@ -176,8 +176,8 @@ export default function PixelDashboardPage() {
         {/* Imperio: extra glow particles */}
         {level === 8 && (
           <>
-            <div style={{ position: 'absolute', top: '15%', right: '10%', width: 4, height: 4, borderRadius: '50%', background: '#fbbf24', boxShadow: '0 0 20px #fbbf24' }} />
-            <div style={{ position: 'absolute', top: '60%', right: '25%', width: 3, height: 3, borderRadius: '50%', background: '#fbbf24', boxShadow: '0 0 16px #fbbf24' }} />
+            <div style={{ position: 'absolute', top: '15%', right: '10%', width: 4, height: 4, borderRadius: '50%', background: 'var(--ds-color-warning)', boxShadow: '0 0 20px var(--ds-color-warning)' }} />
+            <div style={{ position: 'absolute', top: '60%', right: '25%', width: 3, height: 3, borderRadius: '50%', background: 'var(--ds-color-warning)', boxShadow: '0 0 16px var(--ds-color-warning)' }} />
             <div style={{ position: 'absolute', top: '30%', left: '15%', width: 5, height: 5, borderRadius: '50%', background: '#c4b5fd', boxShadow: '0 0 22px #c4b5fd' }} />
           </>
         )}
@@ -218,11 +218,11 @@ export default function PixelDashboardPage() {
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             padding: '8px 18px', borderRadius: 99, marginBottom: 24,
-            background: 'rgba(245,158,11,0.10)',
-            border: '1px solid rgba(245,158,11,0.30)',
+            background: 'var(--ds-color-warning-soft)',
+            border: '1px solid var(--ds-color-warning-border)',
           }}>
             <span style={{ fontSize: 16 }}>⭐</span>
-            <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 800, color: '#fbbf24' }}>
+            <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 800, color: 'var(--ds-color-warning)' }}>
               {totalScore.toLocaleString()} puntos de crecimiento
             </span>
           </div>
@@ -242,7 +242,7 @@ export default function PixelDashboardPage() {
                   transition: 'width 1s cubic-bezier(0.16,1,0.3,1)',
                 }} />
               </div>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.85)', marginBottom: 8 }}>
+              <p style={{ fontSize: 14, color: 'var(--ds-text-primary)', marginBottom: 8 }}>
                 <b style={{ color: '#fff' }}>{nextMetric.current.toLocaleString()}</b> de{' '}
                 <b style={{ color: '#fff' }}>{nextMetric.required.toLocaleString()}</b> {nextMetric.label} para nivel{' '}
                 <b style={{ color: LEVEL_GRADIENT[nextLevel].main }}>{nextLevel}: {LEVEL_NAMES[nextLevel]}</b>
@@ -250,7 +250,7 @@ export default function PixelDashboardPage() {
             </>
           )}
 
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.78)', fontStyle: 'italic', marginTop: 6 }}>
+          <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', fontStyle: 'italic', marginTop: 6 }}>
             {motivation}
           </p>
 
@@ -270,9 +270,9 @@ export default function PixelDashboardPage() {
         totalScore={totalScore}
         breakdown={[
           { label: `Nivel ${level}`,    points: scoreLevel,   color: grad.main },
-          { label: 'Tráfico web',       points: scoreTraffic, color: '#62c4b0' },
-          { label: 'Compras (180d)',    points: scoreSales,   color: '#06d6a0' },
-          { label: `Campañas (${campaignsCount})`, points: scoreCamps, color: '#e91e8c' },
+          { label: 'Tráfico web',       points: scoreTraffic, color: 'var(--ds-color-primary)' },
+          { label: 'Compras (180d)',    points: scoreSales,   color: 'var(--ds-color-success)' },
+          { label: `Campañas (${campaignsCount})`, points: scoreCamps, color: 'var(--ds-color-primary)' },
         ]}
         monthStars={monthStars}
       />

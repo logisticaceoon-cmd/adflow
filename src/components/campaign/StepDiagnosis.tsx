@@ -31,17 +31,17 @@ function OptionCard({ icon, label, selected, onClick }: OptionCardProps) {
       style={{
         padding: '14px 16px', borderRadius: 14,
         background: selected
-          ? 'linear-gradient(135deg, rgba(233,30,140,0.14), rgba(233,30,140,0.04))'
-          : 'rgba(255,255,255,0.025)',
-        border: `${selected ? '1.5px' : '1px'} solid ${selected ? 'rgba(233,30,140,0.50)' : 'rgba(255,255,255,0.08)'}`,
-        boxShadow: selected ? '0 0 20px rgba(233,30,140,0.18)' : 'none',
+          ? 'var(--ds-color-success-soft)'
+          : 'var(--ds-card-bg)',
+        border: `${selected ? '1.5px' : '1px'} solid ${selected ? 'var(--ds-color-success-border)' : 'var(--ds-card-border)'}`,
+        boxShadow: selected ? '0 0 20px var(--ds-color-success-soft)' : 'none',
         cursor: 'pointer',
         display: 'flex', alignItems: 'center', gap: 12,
       }}>
       <div style={{
         width: 38, height: 38, borderRadius: 10, flexShrink: 0,
-        background: selected ? 'rgba(233,30,140,0.18)' : 'rgba(255,255,255,0.04)',
-        border: selected ? '1px solid rgba(233,30,140,0.40)' : '1px solid rgba(255,255,255,0.06)',
+        background: selected ? 'var(--ds-color-success-soft)' : 'var(--ds-bg-elevated)',
+        border: selected ? '1px solid var(--ds-color-success-border)' : '1px solid var(--ds-card-border)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: 18,
       }}>
@@ -49,7 +49,7 @@ function OptionCard({ icon, label, selected, onClick }: OptionCardProps) {
       </div>
       <span style={{
         fontSize: 13, fontWeight: selected ? 700 : 500,
-        color: selected ? '#ffffff' : 'rgba(255,255,255,0.78)',
+        color: selected ? '#ffffff' : 'var(--ds-text-secondary)',
         lineHeight: 1.35, flex: 1,
       }}>
         {label}
@@ -57,10 +57,10 @@ function OptionCard({ icon, label, selected, onClick }: OptionCardProps) {
       {selected && (
         <div style={{
           width: 20, height: 20, borderRadius: '50%',
-          background: '#ea1b7e',
+          background: 'var(--ds-color-success)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 10, color: '#fff', fontWeight: 900, flexShrink: 0,
-          boxShadow: '0 0 12px rgba(234,27,126,0.50)',
+          boxShadow: '0 0 12px transparent',
         }}>✓</div>
       )}
     </button>
@@ -78,16 +78,16 @@ function QuestionBlock({ number, title, helper, children }: QuestionBlockProps) 
   return (
     <div style={{
       borderRadius: 18, padding: 22,
-      background: 'linear-gradient(160deg, rgba(18,4,10,0.92) 0%, rgba(12,3,7,0.96) 100%)',
-      border: '1px solid rgba(255,255,255,0.09)',
+      background: 'var(--ds-card-bg)',
+      border: '1px solid var(--ds-card-border)',
     }}>
       <div className="flex items-start gap-3 mb-4">
         <div style={{
           width: 28, height: 28, borderRadius: 8, flexShrink: 0,
-          background: 'linear-gradient(135deg, rgba(233,30,140,0.20), rgba(98,196,176,0.10))',
-          border: '1px solid rgba(233,30,140,0.30)',
+          background: 'linear-gradient(135deg, var(--ds-color-primary-soft), var(--ds-card-border))',
+          border: '1px solid var(--ds-color-primary-border)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 12, fontWeight: 800, color: '#f9a8d4',
+          fontSize: 12, fontWeight: 800, color: 'var(--ds-color-primary)',
         }}>{number}</div>
         <div>
           <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff', lineHeight: 1.3 }}>
@@ -108,7 +108,7 @@ export default function StepDiagnosis({ diagnosis, setDiagField, form, setField,
     <div className="space-y-5">
       {/* Step header */}
       <div>
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#f9a8d4', marginBottom: 8 }}>
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 8 }}>
           Paso 2 de 5 · Diagnóstico
         </p>
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 6, letterSpacing: '-0.02em' }}>
@@ -199,9 +199,9 @@ export default function StepDiagnosis({ diagnosis, setDiagField, form, setField,
                   style={{
                     padding: '14px 16px', borderRadius: 14,
                     background: diagnosis.monthlyBudget === opt.value
-                      ? 'linear-gradient(135deg, rgba(233,30,140,0.14), rgba(233,30,140,0.04))'
-                      : 'rgba(255,255,255,0.025)',
-                    border: `${diagnosis.monthlyBudget === opt.value ? '1.5px' : '1px'} solid ${diagnosis.monthlyBudget === opt.value ? 'rgba(233,30,140,0.50)' : 'rgba(255,255,255,0.08)'}`,
+                      ? 'var(--ds-color-success-soft)'
+                      : 'var(--ds-card-bg)',
+                    border: `${diagnosis.monthlyBudget === opt.value ? '1.5px' : '1px'} solid ${diagnosis.monthlyBudget === opt.value ? 'var(--ds-color-success-border)' : 'var(--ds-card-border)'}`,
                     color: diagnosis.monthlyBudget === opt.value ? '#fff' : 'rgba(255,255,255,0.65)',
                     fontSize: 13, fontWeight: diagnosis.monthlyBudget === opt.value ? 700 : 500,
                   }}>

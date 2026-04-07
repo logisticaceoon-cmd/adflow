@@ -127,7 +127,7 @@ export function FacebookAdPreview({
       <div style={{ padding: '12px 16px 0', display: 'flex', alignItems: 'center', gap: 10 }}>
         <div style={{
           width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
-          background: 'linear-gradient(135deg, #ea1b7e, #62c4b0)',
+          background: 'linear-gradient(135deg, var(--ds-color-success), var(--ds-color-primary))',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 14, color: '#fff', fontWeight: 700,
         }}>
@@ -239,7 +239,7 @@ export function InstagramAdPreview({
 
       {/* Header */}
       <div style={{ position: 'absolute', top: 22, left: 12, right: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
-        <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'linear-gradient(135deg, #ea1b7e, #62c4b0)', border: '1.5px solid rgba(255,255,255,0.8)', flexShrink: 0 }} />
+        <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'linear-gradient(135deg, var(--ds-color-success), var(--ds-color-primary))', border: '1.5px solid rgba(255,255,255,0.8)', flexShrink: 0 }} />
         <div>
           <p style={{ fontSize: 13, fontWeight: 600, margin: 0, textShadow: '0 1px 3px rgba(0,0,0,0.5)' }}>{pageName}</p>
           <p style={{ fontSize: 10, margin: 0, opacity: 0.75 }}>Patrocinado</p>

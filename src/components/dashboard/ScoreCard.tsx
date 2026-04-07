@@ -44,11 +44,11 @@ export default function ScoreCard({ totalScore, breakdown, monthStars }: Props) 
             display: 'inline-flex', alignItems: 'center', gap: 8,
             marginBottom: 4,
           }}>
-            <Star size={22} style={{ color: '#fbbf24', fill: '#fbbf24', filter: 'drop-shadow(0 0 8px #f59e0b)' }} />
+            <Star size={22} style={{ color: 'var(--ds-color-warning)', fill: 'var(--ds-color-warning)', filter: 'drop-shadow(0 0 8px var(--ds-color-warning))' }} />
           </div>
           <p style={{
             fontFamily: 'Syne, sans-serif',
-            fontSize: 48, fontWeight: 900, color: '#fbbf24',
+            fontSize: 48, fontWeight: 900, color: 'var(--ds-color-warning)',
             letterSpacing: '-0.04em', lineHeight: 1,
             textShadow: '0 0 32px rgba(245,158,11,0.45)',
           }}>
@@ -62,7 +62,7 @@ export default function ScoreCard({ totalScore, breakdown, monthStars }: Props) 
 
         {/* ── COL 2: Breakdown ── */}
         <div>
-          <p style={{ fontSize: 11, fontWeight: 700, color: '#fbbf24', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 14 }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ds-color-warning)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 14 }}>
             Cómo ganaste tus puntos
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -90,7 +90,7 @@ export default function ScoreCard({ totalScore, breakdown, monthStars }: Props) 
 
         {/* ── COL 3: Monthly stars ── */}
         <div>
-          <p style={{ fontSize: 11, fontWeight: 700, color: '#fbbf24', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 14 }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ds-color-warning)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 14 }}>
             Estrellas de este mes
           </p>
           <div style={{ display: 'flex', gap: 10, justifyContent: 'space-between', marginBottom: 12 }}>
@@ -99,8 +99,8 @@ export default function ScoreCard({ totalScore, breakdown, monthStars }: Props) 
                 <Star
                   size={26}
                   style={{
-                    color: s.earned ? '#fbbf24' : '#3a3a48',
-                    fill: s.earned ? '#fbbf24' : 'none',
+                    color: s.earned ? 'var(--ds-color-warning)' : '#3a3a48',
+                    fill: s.earned ? 'var(--ds-color-warning)' : 'none',
                     filter: s.earned ? 'drop-shadow(0 0 8px rgba(245,158,11,0.70))' : 'none',
                     transition: 'all 0.3s',
                   }}
@@ -109,13 +109,13 @@ export default function ScoreCard({ totalScore, breakdown, monthStars }: Props) 
               </div>
             ))}
           </div>
-          <p style={{ fontSize: 11, color: '#fbbf24', textAlign: 'center', fontWeight: 700 }}>
+          <p style={{ fontSize: 11, color: 'var(--ds-color-warning)', textAlign: 'center', fontWeight: 700 }}>
             {earnedStars} / {monthStars.length} estrellas ganadas
           </p>
           <ul style={{ listStyle: 'none', padding: 0, margin: '10px 0 0', display: 'flex', flexDirection: 'column', gap: 4 }}>
             {monthStars.map((s, i) => (
               <li key={i} style={{ fontSize: 10, color: s.earned ? '#a0a8c0' : '#5a6478', display: 'flex', gap: 6, alignItems: 'center' }}>
-                <span style={{ color: s.earned ? '#fbbf24' : '#3a3a48' }}>{s.earned ? '★' : '☆'}</span>
+                <span style={{ color: s.earned ? 'var(--ds-color-warning)' : '#3a3a48' }}>{s.earned ? '★' : '☆'}</span>
                 {s.label}
               </li>
             ))}

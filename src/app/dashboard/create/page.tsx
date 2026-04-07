@@ -427,11 +427,11 @@ export default function CreateCampaignPage() {
   // ── Render ────────────────────────────────────────────────────────────────
   return (
     <div className="max-w-3xl mx-auto">
-      <style>{`.drop-zone-active { border-color: rgba(233,30,140,0.60) !important; background: rgba(233,30,140,0.06) !important; }`}</style>
+      <style>{`.drop-zone-active { border-color: rgba(233,30,140,0.60) !important; background: var(--ds-color-primary-soft) !important; }`}</style>
 
       {/* Header */}
       <div className="mb-8">
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#f9a8d4', marginBottom: 8 }}>
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 8 }}>
           Estratega digital · AdFlow
         </p>
         <h1 style={{ fontFamily: 'Syne, sans-serif', fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.03em', lineHeight: 1.1 }}>
@@ -444,13 +444,13 @@ export default function CreateCampaignPage() {
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             padding: '6px 14px', borderRadius: 99, marginTop: 10,
-            background: pixelLevel >= 5 ? 'rgba(6,214,160,0.10)' : pixelLevel >= 3 ? 'rgba(245,158,11,0.10)' : 'rgba(239,68,68,0.10)',
-            border: `1px solid ${pixelLevel >= 5 ? 'rgba(6,214,160,0.30)' : pixelLevel >= 3 ? 'rgba(245,158,11,0.30)' : 'rgba(239,68,68,0.30)'}`,
+            background: pixelLevel >= 5 ? 'var(--ds-color-success-soft)' : pixelLevel >= 3 ? 'var(--ds-color-warning-soft)' : 'var(--ds-color-danger-soft)',
+            border: `1px solid ${pixelLevel >= 5 ? 'rgba(6,214,160,0.30)' : pixelLevel >= 3 ? 'var(--ds-color-warning-border)' : 'var(--ds-color-danger-border)'}`,
           }}>
             <span style={{ fontSize: 14 }}>
               {pixelLevel >= 6 ? '🚀' : pixelLevel >= 3 ? '📊' : '🌱'}
             </span>
-            <span style={{ fontSize: 12, fontWeight: 600, color: pixelLevel >= 5 ? '#06d6a0' : pixelLevel >= 3 ? '#f59e0b' : '#f87171' }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: pixelLevel >= 5 ? 'var(--ds-color-success)' : pixelLevel >= 3 ? 'var(--ds-color-warning)' : '#f87171' }}>
               Nivel {pixelLevel}: {pixelLevelName}
             </span>
             <span style={{ fontSize: 11, color: 'var(--muted)' }}>
@@ -463,19 +463,19 @@ export default function CreateCampaignPage() {
       {/* No-pixel banner */}
       {noPixelConfigured && (
         <div className="mb-6 p-4 rounded-xl text-sm" style={{
-          background: 'rgba(245,158,11,0.08)',
-          border: '1px solid rgba(245,158,11,0.30)',
-          color: '#f59e0b',
+          background: 'var(--ds-color-warning-soft)',
+          border: '1px solid var(--ds-color-warning-border)',
+          color: 'var(--ds-color-warning)',
           display: 'flex', gap: 12, alignItems: 'flex-start',
         }}>
           <span style={{ fontSize: 18, flexShrink: 0 }}>⚠️</span>
           <div style={{ lineHeight: 1.55 }}>
-            <p style={{ fontWeight: 700, marginBottom: 4, color: '#f59e0b' }}>
+            <p style={{ fontWeight: 700, marginBottom: 4, color: 'var(--ds-color-warning)' }}>
               No tenés pixel de Meta configurado
             </p>
             <p style={{ fontSize: 12.5, color: 'rgba(245,158,11,0.85)' }}>
               Solo podés crear campañas <b>TOFU</b> con audiencias amplias. Configurá tu pixel en{' '}
-              <a href="/dashboard/settings" style={{ textDecoration: 'underline', color: '#fbbf24' }}>
+              <a href="/dashboard/settings" style={{ textDecoration: 'underline', color: 'var(--ds-color-warning)' }}>
                 Configuración → Activos de Meta
               </a>
               {' '}para desbloquear MOFU (retargeting) y BOFU (lookalikes).
@@ -490,21 +490,21 @@ export default function CreateCampaignPage() {
           <div key={i} className="flex items-center flex-1">
             <div className="flex items-center gap-1.5 flex-shrink-0">
               <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all" style={{
-                background: i < step ? 'linear-gradient(135deg, #62c4b0, #3a9a8a)'
-                  : i === step ? 'linear-gradient(135deg, #ea1b7e, #c5006a)'
+                background: i < step ? 'linear-gradient(135deg, var(--ds-color-primary), #3a9a8a)'
+                  : i === step ? 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))'
                     : 'rgba(255,255,255,0.05)',
                 border: i > step ? '1px solid rgba(255,255,255,0.10)' : 'none',
                 color: i <= step ? '#fff' : 'rgba(255,255,255,0.35)',
-                boxShadow: i === step ? '0 0 18px rgba(233,30,140,0.50)' : 'none', fontSize: 11,
+                boxShadow: i === step ? '0 0 18px var(--ds-color-primary-border)' : 'none', fontSize: 11,
               }}>
                 {i < step ? '✓' : i + 1}
               </div>
-              <span style={{ fontSize: 11, color: i === step ? '#ffffff' : i < step ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.25)', fontWeight: i === step ? 600 : 400 }}>
+              <span style={{ fontSize: 11, color: i === step ? '#ffffff' : i < step ? 'var(--ds-text-secondary)' : 'rgba(255,255,255,0.25)', fontWeight: i === step ? 600 : 400 }}>
                 {label}
               </span>
             </div>
             {i < STEPS.length - 1 && (
-              <div className="flex-1 mx-2 h-px" style={{ background: i < step ? 'linear-gradient(to right, #ea1b7e, #62c4b0)' : 'rgba(255,255,255,0.07)' }} />
+              <div className="flex-1 mx-2 h-px" style={{ background: i < step ? 'linear-gradient(to right, var(--ds-color-primary), var(--ds-color-primary))' : 'rgba(255,255,255,0.07)' }} />
             )}
           </div>
         ))}
@@ -582,15 +582,15 @@ export default function CreateCampaignPage() {
       {step === 5 && (
         <div style={{
           borderRadius: 20, padding: 40, textAlign: 'center',
-          background: 'linear-gradient(160deg, rgba(18,4,10,0.92) 0%, rgba(12,3,7,0.96) 100%)',
+          background: 'var(--ds-card-bg)',
           border: '1px solid rgba(255,255,255,0.10)',
         }}>
           <div style={{
             width: 72, height: 72, margin: '0 auto 20px', borderRadius: '50%',
             background: publishedOk
               ? 'linear-gradient(135deg, rgba(24,119,242,0.15), rgba(24,119,242,0.08))'
-              : 'linear-gradient(135deg, rgba(98,196,176,0.15), rgba(98,196,176,0.08))',
-            border: `1px solid ${publishedOk ? 'rgba(24,119,242,0.30)' : 'rgba(98,196,176,0.30)'}`,
+              : 'linear-gradient(135deg, var(--ds-card-border), transparent)',
+            border: `1px solid ${publishedOk ? 'rgba(24,119,242,0.30)' : 'var(--ds-card-border)'}`,
             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30,
           }}>
             {publishedOk ? '🚀' : '🎉'}
@@ -649,7 +649,7 @@ export default function CreateCampaignPage() {
             border: '1px solid rgba(239,68,68,0.28)',
             borderRadius: 20, padding: 36, width: '100%', maxWidth: 380,
             textAlign: 'center',
-            boxShadow: '0 24px 64px rgba(0,0,0,0.72), 0 0 80px rgba(239,68,68,0.06)',
+            boxShadow: '0 24px 64px rgba(0,0,0,0.72), 0 0 80px var(--ds-color-danger-soft)',
           }}>
             <div style={{ fontSize: 38, marginBottom: 14 }}>⚡</div>
             <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8, color: '#ffffff' }}>
@@ -662,7 +662,7 @@ export default function CreateCampaignPage() {
               onClick={() => router.push('/dashboard/billing')}
               style={{
                 width: '100%', padding: '12px 0', borderRadius: 12, cursor: 'pointer',
-                background: 'linear-gradient(135deg, #ea1b7e, #c5006a)',
+                background: 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))',
                 color: '#ffffff', fontSize: 14, fontWeight: 700, border: 'none',
                 boxShadow: '0 4px 20px rgba(234,27,126,0.32)',
                 marginBottom: 12, display: 'block',

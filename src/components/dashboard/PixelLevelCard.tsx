@@ -16,9 +16,9 @@ interface PixelRow {
 
 const LEVEL_COLORS: Record<number, string> = {
   0: '#8892b0',
-  1: '#ef4444', 2: '#ef4444',
-  3: '#f59e0b', 4: '#f59e0b',
-  5: '#06d6a0', 6: '#06d6a0',
+  1: 'var(--ds-color-danger)', 2: 'var(--ds-color-danger)',
+  3: 'var(--ds-color-warning)', 4: 'var(--ds-color-warning)',
+  5: 'var(--ds-color-success)', 6: 'var(--ds-color-success)',
   7: '#3b82f6',
   8: '#8b5cf6',
 }

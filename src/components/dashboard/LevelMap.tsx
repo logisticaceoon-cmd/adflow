@@ -13,12 +13,12 @@ interface LevelDef {
 
 const LEVELS: LevelDef[] = [
   { level: 0, name: 'Sin Data',     emoji: '🌑', color: '#8892b0', requirement: 'Instalá tu pixel',                    unlocks: ['Medición básica de visitantes'] },
-  { level: 1, name: 'Explorador',   emoji: '🌱', color: '#ef4444', requirement: '100+ PageView en 30 días',            unlocks: ['Audiencias por intereses'] },
-  { level: 2, name: 'Aprendiz',     emoji: '📚', color: '#ef4444', requirement: '500+ PageView en 30 días',            unlocks: ['Mejor optimización del pixel'] },
-  { level: 3, name: 'Estratega',    emoji: '🧠', color: '#f59e0b', requirement: '1.000+ ViewContent en 30 días',       unlocks: ['Retargeting de visitantes', 'Estrategia MOFU'] },
-  { level: 4, name: 'Vendedor',     emoji: '🛒', color: '#f59e0b', requirement: '100+ AddToCart en 30 días',           unlocks: ['Retargeting de carrito abandonado'] },
-  { level: 5, name: 'Profesional',  emoji: '💼', color: '#06d6a0', requirement: '50+ Purchases en 30 días',            unlocks: ['Retargeting de compradores', 'Estrategia BOFU'] },
-  { level: 6, name: 'Escalador',    emoji: '🚀', color: '#06d6a0', requirement: '100+ Purchases en 30 días',           unlocks: ['Lookalike Audiences'] },
+  { level: 1, name: 'Explorador',   emoji: '🌱', color: 'var(--ds-color-danger)', requirement: '100+ PageView en 30 días',            unlocks: ['Audiencias por intereses'] },
+  { level: 2, name: 'Aprendiz',     emoji: '📚', color: 'var(--ds-color-danger)', requirement: '500+ PageView en 30 días',            unlocks: ['Mejor optimización del pixel'] },
+  { level: 3, name: 'Estratega',    emoji: '🧠', color: 'var(--ds-color-warning)', requirement: '1.000+ ViewContent en 30 días',       unlocks: ['Retargeting de visitantes', 'Estrategia MOFU'] },
+  { level: 4, name: 'Vendedor',     emoji: '🛒', color: 'var(--ds-color-warning)', requirement: '100+ AddToCart en 30 días',           unlocks: ['Retargeting de carrito abandonado'] },
+  { level: 5, name: 'Profesional',  emoji: '💼', color: 'var(--ds-color-success)', requirement: '50+ Purchases en 30 días',            unlocks: ['Retargeting de compradores', 'Estrategia BOFU'] },
+  { level: 6, name: 'Escalador',    emoji: '🚀', color: 'var(--ds-color-success)', requirement: '100+ Purchases en 30 días',           unlocks: ['Lookalike Audiences'] },
   { level: 7, name: 'Maestro',      emoji: '👑', color: '#3b82f6', requirement: '500+ Purchases en 180 días',          unlocks: ['Lookalikes ampliados', 'Audiencias premium'] },
   { level: 8, name: 'Imperio',      emoji: '🏰', color: '#8b5cf6', requirement: '1.000+ Purchases en 180 días',        unlocks: ['Expansión global', 'Nivel máximo'] },
 ]
@@ -65,7 +65,7 @@ export default function LevelMap({ currentLevel }: Props) {
                     width: '100%',
                     height: 3,
                     background: passed || (current && lv.level < currentLevel)
-                      ? 'linear-gradient(90deg, #06d6a0, rgba(6,214,160,0.30))'
+                      ? 'linear-gradient(90deg, var(--ds-color-success), rgba(6,214,160,0.30))'
                       : 'rgba(255,255,255,0.06)',
                     borderRadius: 2,
                     zIndex: 0,
@@ -102,7 +102,7 @@ export default function LevelMap({ currentLevel }: Props) {
                     <span style={{
                       position: 'absolute', top: -4, right: -4,
                       width: 18, height: 18, borderRadius: '50%',
-                      background: '#06d6a0',
+                      background: 'var(--ds-color-success)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       fontSize: 10, color: '#fff', fontWeight: 900,
                       boxShadow: '0 0 8px rgba(6,214,160,0.60)',
@@ -158,7 +158,7 @@ export default function LevelMap({ currentLevel }: Props) {
               <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 700, color: lv.color, marginBottom: 2 }}>
                 Nivel {lv.level}: {lv.name}
               </p>
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.85)', marginBottom: 8 }}>
+              <p style={{ fontSize: 12, color: 'var(--ds-text-primary)', marginBottom: 8 }}>
                 Requisito: {lv.requirement}
               </p>
               <p style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 4 }}>

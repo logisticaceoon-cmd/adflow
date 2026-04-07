@@ -14,8 +14,8 @@ interface MonthlyBudgetRow {
 }
 
 const LEVEL_COLORS: Record<number, string> = {
-  0: '#8892b0', 1: '#ef4444', 2: '#ef4444', 3: '#f59e0b', 4: '#f59e0b',
-  5: '#06d6a0', 6: '#06d6a0', 7: '#3b82f6', 8: '#8b5cf6',
+  0: '#8892b0', 1: 'var(--ds-color-danger)', 2: 'var(--ds-color-danger)', 3: 'var(--ds-color-warning)', 4: 'var(--ds-color-warning)',
+  5: 'var(--ds-color-success)', 6: 'var(--ds-color-success)', 7: '#3b82f6', 8: '#8b5cf6',
 }
 
 // Minimum pixel level to unlock each phase
@@ -59,13 +59,13 @@ function InputCard({ icon, label, helper, value, onChange, prefix, suffix, requi
   return (
     <div style={{
       padding: '18px 20px', borderRadius: 16,
-      background: 'linear-gradient(160deg, rgba(18,4,10,0.92) 0%, rgba(12,3,7,0.96) 100%)',
+      background: 'var(--ds-card-bg)',
       border: '1px solid rgba(255,255,255,0.08)',
     }}>
       <div className="flex items-center gap-2 mb-2">
         <span style={{ fontSize: 18 }}>{icon}</span>
         <p style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>
-          {label} {required && <span style={{ color: '#f9a8d4' }}>*</span>}
+          {label} {required && <span style={{ color: 'var(--ds-color-primary)' }}>*</span>}
         </p>
       </div>
       <p style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 12, lineHeight: 1.5 }}>{helper}</p>
@@ -243,18 +243,18 @@ export default function BudgetPage() {
       <div className="dash-anim-1 mb-6" style={{
         position: 'relative',
         borderRadius: 22, padding: '28px 32px',
-        background: 'linear-gradient(135deg, rgba(233,30,140,0.12) 0%, rgba(98,196,176,0.06) 50%, rgba(233,30,140,0.04) 100%)',
+        background: 'linear-gradient(135deg, var(--ds-color-primary-soft) 0%, transparent 50%, var(--ds-color-primary-soft) 100%)',
         border: '1px solid rgba(255,255,255,0.08)',
         backdropFilter: 'blur(20px)',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.50), 0 0 80px rgba(234,27,126,0.06)',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.50), 0 0 80px transparent',
         overflow: 'hidden',
       }}>
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-          background: 'linear-gradient(90deg, transparent, rgba(234,27,126,0.55), rgba(98,196,176,0.40), transparent)',
+          background: 'linear-gradient(90deg, transparent, rgba(234,27,126,0.55), var(--ds-card-border), transparent)',
         }} />
 
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#f9a8d4', marginBottom: 8 }}>
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 8 }}>
           Budget Engine · AdFlow
         </p>
         <h1 style={{
@@ -263,7 +263,7 @@ export default function BudgetPage() {
         }}>
           Planificá tu inversión del mes 💰
         </h1>
-        <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.78)', maxWidth: 580, lineHeight: 1.55, marginBottom: 16 }}>
+        <p style={{ fontSize: 13.5, color: 'var(--ds-text-secondary)', maxWidth: 580, lineHeight: 1.55, marginBottom: 16 }}>
           Distribuí tu presupuesto entre las fases de crecimiento. El sistema te recomienda la mejor distribución según tu nivel.
         </p>
 
@@ -280,9 +280,9 @@ export default function BudgetPage() {
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
             padding: '6px 14px', borderRadius: 99,
-            background: 'rgba(98,196,176,0.10)',
-            border: '1px solid rgba(98,196,176,0.30)',
-            fontSize: 12, fontWeight: 600, color: '#62c4b0',
+            background: 'var(--ds-card-border)',
+            border: '1px solid var(--ds-card-border)',
+            fontSize: 12, fontWeight: 600, color: 'var(--ds-color-primary)',
           }}>
             📅 {monthLabel}
           </span>
@@ -290,9 +290,9 @@ export default function BudgetPage() {
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: 6,
               padding: '6px 14px', borderRadius: 99,
-              background: 'rgba(245,158,11,0.10)',
-              border: '1px solid rgba(245,158,11,0.30)',
-              fontSize: 12, fontWeight: 600, color: '#fbbf24',
+              background: 'var(--ds-color-warning-soft)',
+              border: '1px solid var(--ds-color-warning-border)',
+              fontSize: 12, fontWeight: 600, color: 'var(--ds-color-warning)',
             }}>
               💼 Presupuesto activo: {currency} {activeBudget.total_budget.toLocaleString()}
             </span>
@@ -349,7 +349,7 @@ export default function BudgetPage() {
         {/* Goal textarea full-width */}
         <div style={{
           padding: '18px 20px', borderRadius: 16,
-          background: 'linear-gradient(160deg, rgba(18,4,10,0.92) 0%, rgba(12,3,7,0.96) 100%)',
+          background: 'var(--ds-card-bg)',
           border: '1px solid rgba(255,255,255,0.08)',
         }}>
           <div className="flex items-center gap-2 mb-2">
@@ -432,9 +432,9 @@ export default function BudgetPage() {
                       <span style={{
                         padding: '4px 12px', borderRadius: 99,
                         fontSize: 10, fontWeight: 700,
-                        background: 'rgba(245,158,11,0.10)',
-                        color: '#fbbf24',
-                        border: '1px solid rgba(245,158,11,0.30)',
+                        background: 'var(--ds-color-warning-soft)',
+                        color: 'var(--ds-color-warning)',
+                        border: '1px solid var(--ds-color-warning-border)',
                       }}>🔒 Disponible en Nivel {minLevel}</span>
                     ) : (
                       <span style={{
@@ -505,9 +505,9 @@ export default function BudgetPage() {
                   {!isLocked && deviated && (
                     <div style={{
                       marginTop: 10, padding: '8px 12px', borderRadius: 8,
-                      background: 'rgba(245,158,11,0.08)',
+                      background: 'var(--ds-color-warning-soft)',
                       border: '1px solid rgba(245,158,11,0.25)',
-                      fontSize: 11, color: '#fbbf24',
+                      fontSize: 11, color: 'var(--ds-color-warning)',
                     }}>
                       ⚠️ Estás asignando {assignedPct < recPct ? 'menos' : 'más'} de lo recomendado ({recPct}% sugerido)
                     </div>
@@ -518,7 +518,7 @@ export default function BudgetPage() {
           </div>
 
           {/* Total bar */}
-          <div style={{ marginTop: 22, padding: '16px 20px', borderRadius: 14, background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <div style={{ marginTop: 22, padding: '16px 20px', borderRadius: 14, background: 'var(--ds-card-bg)', border: '1px solid rgba(255,255,255,0.08)' }}>
             <div className="flex items-center justify-between mb-2">
               <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.10em' }}>
                 Total asignado
@@ -534,15 +534,15 @@ export default function BudgetPage() {
               <div style={{
                 height: '100%', width: `${Math.min(100, totalNum > 0 ? (totalAssigned / totalNum) * 100 : 0)}%`,
                 background: diff === 0
-                  ? 'linear-gradient(90deg, #06d6a0, #62c4b0)'
+                  ? 'linear-gradient(90deg, var(--ds-color-success), var(--ds-color-primary))'
                   : diff > 0
-                    ? 'linear-gradient(90deg, #ef4444, #f87171)'
-                    : 'linear-gradient(90deg, #f59e0b, #fbbf24)',
-                boxShadow: '0 0 14px rgba(98,196,176,0.40)',
+                    ? 'linear-gradient(90deg, var(--ds-color-danger), #f87171)'
+                    : 'linear-gradient(90deg, var(--ds-color-warning), var(--ds-color-warning))',
+                boxShadow: '0 0 14px var(--ds-card-border)',
                 transition: 'width 0.5s ease',
               }} />
             </div>
-            <p style={{ fontSize: 12, color: diff === 0 ? '#06d6a0' : diff > 0 ? '#ef4444' : '#fbbf24', fontWeight: 600 }}>
+            <p style={{ fontSize: 12, color: diff === 0 ? 'var(--ds-color-success)' : diff > 0 ? 'var(--ds-color-danger)' : 'var(--ds-color-warning)', fontWeight: 600 }}>
               {diff === 0
                 ? '✅ Presupuesto completamente asignado'
                 : diff > 0
@@ -565,10 +565,10 @@ export default function BudgetPage() {
 
           <div className="grid grid-cols-4 gap-4">
             {[
-              { icon: '👥', label: 'Alcance estimado',    value: recommendation.projections.estimatedReach,       color: '#62c4b0', tooltip: `Con ${currency} ${totalNum.toLocaleString()} invertidos` },
-              { icon: '🖱', label: 'Clicks estimados',    value: recommendation.projections.estimatedClicks,      color: '#e91e8c', tooltip: 'Personas que harán click en tus anuncios' },
-              { icon: '🛒', label: 'Conversiones',         value: recommendation.projections.estimatedConversions, color: '#f59e0b', tooltip: 'Ventas o leads estimados según tu nivel' },
-              { icon: '📈', label: 'ROAS proyectado',      value: recommendation.projections.estimatedRoas,        color: '#06d6a0', tooltip: 'Retorno por cada peso invertido' },
+              { icon: '👥', label: 'Alcance estimado',    value: recommendation.projections.estimatedReach,       color: 'var(--ds-color-primary)', tooltip: `Con ${currency} ${totalNum.toLocaleString()} invertidos` },
+              { icon: '🖱', label: 'Clicks estimados',    value: recommendation.projections.estimatedClicks,      color: 'var(--ds-color-primary)', tooltip: 'Personas que harán click en tus anuncios' },
+              { icon: '🛒', label: 'Conversiones',         value: recommendation.projections.estimatedConversions, color: 'var(--ds-color-warning)', tooltip: 'Ventas o leads estimados según tu nivel' },
+              { icon: '📈', label: 'ROAS proyectado',      value: recommendation.projections.estimatedRoas,        color: 'var(--ds-color-success)', tooltip: 'Retorno por cada peso invertido' },
             ].map(p => (
               <div key={p.label} title={p.tooltip} className="p-4 rounded-xl" style={{
                 background: `${p.color}08`,
@@ -603,10 +603,10 @@ export default function BudgetPage() {
         <div className="mb-6">
           <div className="flex items-center gap-4 mb-6">
             <button onClick={handleSave} disabled={saving} className="btn-primary"
-              style={{ fontSize: 14, padding: '14px 32px', boxShadow: '0 0 32px rgba(234,27,126,0.45), 0 6px 24px rgba(234,27,126,0.30)' }}>
+              style={{ fontSize: 14, padding: '14px 32px', boxShadow: '0 0 32px rgba(234,27,126,0.45), 0 6px 24px var(--ds-color-primary-border)' }}>
               {saving ? 'Guardando...' : '💾 Guardar presupuesto del mes'}
             </button>
-            {savedMsg && <span style={{ fontSize: 13, color: '#06d6a0', fontWeight: 600 }}>{savedMsg}</span>}
+            {savedMsg && <span style={{ fontSize: 13, color: 'var(--ds-color-success)', fontWeight: 600 }}>{savedMsg}</span>}
           </div>
         </div>
       )}
@@ -631,14 +631,14 @@ export default function BudgetPage() {
         {historyOpen && history.length > 0 && (
           <div className="mt-4 space-y-2">
             {history.map(h => (
-              <div key={h.month_year} className="p-3 rounded-lg flex items-center justify-between" style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div key={h.month_year} className="p-3 rounded-lg flex items-center justify-between" style={{ background: 'var(--ds-card-bg)', border: '1px solid rgba(255,255,255,0.06)' }}>
                 <div>
                   <p style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{h.month_year}</p>
                   <p style={{ fontSize: 11, color: 'var(--muted)' }}>
                     F1 {(h.phase_budgets?.F1 ?? 0).toLocaleString()} · F2 {(h.phase_budgets?.F2 ?? 0).toLocaleString()} · F3 {(h.phase_budgets?.F3 ?? 0).toLocaleString()} · F4 {(h.phase_budgets?.F4 ?? 0).toLocaleString()}
                   </p>
                 </div>
-                <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 800, color: '#06d6a0' }}>
+                <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 800, color: 'var(--ds-color-success)' }}>
                   {h.currency} {h.total_budget?.toLocaleString()}
                 </p>
               </div>
@@ -649,27 +649,27 @@ export default function BudgetPage() {
 
       {/* ── SECTION F: EDUCATION ──────────────────────────────────────── */}
       <div className="card p-6 mb-6" style={{
-        background: 'linear-gradient(135deg, rgba(234,27,126,0.06), rgba(98,196,176,0.04))',
-        border: '1px solid rgba(234,27,126,0.18)',
+        background: 'linear-gradient(135deg, transparent, rgba(98,196,176,0.04))',
+        border: '1px solid var(--ds-color-primary-soft)',
       }}>
         <div className="flex items-start gap-4">
           <div style={{
             width: 44, height: 44, borderRadius: 12, flexShrink: 0,
-            background: 'rgba(234,27,126,0.15)',
-            border: '1px solid rgba(234,27,126,0.30)',
+            background: 'var(--ds-color-primary-soft)',
+            border: '1px solid var(--ds-color-primary-border)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
-            boxShadow: '0 0 16px rgba(234,27,126,0.30)',
+            boxShadow: '0 0 16px var(--ds-color-primary-border)',
           }}>💡</div>
           <div style={{ flex: 1 }}>
             <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 8 }}>
               ¿Cómo funciona la distribución por fases?
             </h3>
-            <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.78)', lineHeight: 1.7, marginBottom: 12 }}>
+            <p style={{ fontSize: 12.5, color: 'var(--ds-text-secondary)', lineHeight: 1.7, marginBottom: 12 }}>
               Tu negocio necesita 4 tipos de campañas trabajando juntas:
             </p>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
               {PHASES.map(p => (
-                <li key={p.key} style={{ fontSize: 12, color: 'rgba(255,255,255,0.78)', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                <li key={p.key} style={{ fontSize: 12, color: 'var(--ds-text-secondary)', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
                   <span style={{ fontSize: 14 }}>{p.icon}</span>
                   <span>
                     <b style={{ color: p.color }}>{p.fullName}:</b> {PHASE_DETAIL[p.key].why}
