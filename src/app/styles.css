@@ -78,6 +78,72 @@
   /* ── Button glow ── */
   --btn-glow:       0 0 36px rgba(233,30,140,0.60), 0 0 72px rgba(233,30,140,0.20), 0 2px 8px rgba(0,0,0,0.45);
   --btn-glow-hover: 0 0 52px rgba(233,30,140,0.78), 0 0 104px rgba(233,30,140,0.28), 0 4px 20px rgba(0,0,0,0.50);
+
+  /* ─────────────────────────────────────────────────────────────
+     UNIFIED DESIGN SYSTEM (--ds-* tokens)
+     New components and refactors should use these. Legacy tokens
+     above are preserved so existing pages don't break.
+  ───────────────────────────────────────────────────────────── */
+
+  /* Backgrounds */
+  --ds-bg-deep:     #07070c;
+  --ds-bg-surface:  #0c0e16;
+  --ds-bg-elevated: #12141f;
+  --ds-bg-hover:    #181b28;
+
+  /* Cards */
+  --ds-card-bg:           rgba(14, 16, 24, 0.65);
+  --ds-card-bg-hover:     rgba(20, 23, 35, 0.75);
+  --ds-card-border:       rgba(255, 255, 255, 0.06);
+  --ds-card-border-hover: rgba(255, 255, 255, 0.10);
+  --ds-card-blur:         20px;
+  --ds-card-radius:       16px;
+  --ds-card-radius-sm:    12px;
+
+  /* State colors */
+  --ds-color-primary:        #8b7bf5;
+  --ds-color-primary-soft:   rgba(139, 123, 245, 0.12);
+  --ds-color-primary-border: rgba(139, 123, 245, 0.20);
+
+  --ds-color-success:        #34d399;
+  --ds-color-success-soft:   rgba(52, 211, 153, 0.10);
+  --ds-color-success-border: rgba(52, 211, 153, 0.25);
+
+  --ds-color-warning:        #f5c542;
+  --ds-color-warning-soft:   rgba(245, 197, 66, 0.08);
+  --ds-color-warning-border: rgba(245, 197, 66, 0.20);
+
+  --ds-color-danger:         #ef5a6f;
+  --ds-color-danger-soft:    rgba(239, 90, 111, 0.10);
+  --ds-color-danger-border:  rgba(239, 90, 111, 0.20);
+
+  --ds-color-locked:         rgba(255, 255, 255, 0.04);
+  --ds-color-locked-border:  rgba(255, 255, 255, 0.04);
+
+  /* Text */
+  --ds-text-primary:   rgba(255, 255, 255, 0.92);
+  --ds-text-secondary: rgba(255, 255, 255, 0.55);
+  --ds-text-muted:     rgba(255, 255, 255, 0.35);
+  --ds-text-label:     rgba(255, 255, 255, 0.45);
+
+  /* Spacing */
+  --ds-space-xs:  4px;
+  --ds-space-sm:  8px;
+  --ds-space-md:  16px;
+  --ds-space-lg:  24px;
+  --ds-space-xl:  32px;
+  --ds-space-2xl: 48px;
+  --ds-space-3xl: 64px;
+
+  /* Shadows */
+  --ds-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30);
+  --ds-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --ds-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.30);
+
+  /* Transitions */
+  --ds-transition-fast:   150ms ease;
+  --ds-transition-normal: 200ms ease;
+  --ds-transition-slow:   300ms ease;
 }
 
 /* ─── Base ───────────────────────────────────────────────────── */
@@ -724,18 +790,17 @@
     border: 1px solid transparent;
   }
   .nav-item-active {
-    color: #ffffff;
-    background: linear-gradient(135deg, rgba(233,30,140,0.18) 0%, rgba(233,30,140,0.06) 100%);
-    box-shadow: inset 3px 0 0 #e91e8c, 0 0 24px rgba(233,30,140,0.10);
-    border: 1px solid rgba(233,30,140,0.22);
+    color: var(--ds-text-primary);
+    background: var(--ds-color-primary-soft);
+    box-shadow: inset 2px 0 0 var(--ds-color-primary);
+    border: 1px solid var(--ds-color-primary-border);
     font-weight: 600;
   }
-  .nav-item-inactive { color: #a0a8c0; background: transparent; font-weight: 400; }  /* WCAG ✓ */
+  .nav-item-inactive { color: var(--ds-text-secondary); background: transparent; font-weight: 400; }
   .nav-item-inactive:hover {
-    color: #f0f0ff;
-    background: rgba(255,255,255,0.06);
-    border-color: rgba(255,255,255,0.10);
-    transform: translateX(2px);
+    color: var(--ds-text-primary);
+    background: var(--ds-bg-hover);
+    border-color: var(--ds-card-border);
   }
   .nav-item-inactive:focus-visible {
     outline: 2px solid var(--accent2);
@@ -747,12 +812,11 @@
   ───────────────────────────────────────────────────────────── */
   .topbar {
     @apply sticky top-0 z-40 flex items-center justify-end px-8 py-3.5 border-b;
-    background: rgba(8,8,18,0.88);
-    border-color: rgba(255,255,255,0.06);
-    backdrop-filter: blur(28px) saturate(1.4);
-    -webkit-backdrop-filter: blur(28px) saturate(1.4);
+    background: var(--ds-bg-surface);
+    border-color: var(--ds-card-border);
+    backdrop-filter: blur(20px) saturate(1.2);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
     min-height: 56px;
-    box-shadow: 0 1px 0 rgba(233,30,140,0.05), 0 4px 24px rgba(0,0,0,0.30);
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -810,7 +874,47 @@
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  .dashboard-content { animation: dashboardContentFade 300ms ease-out; }
+  .dashboard-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--ds-space-lg) var(--ds-space-xl);
+    overflow-x: hidden;
+    animation: dashboardContentFade 300ms ease-out;
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     UNIFIED DESIGN SYSTEM — layout helpers
+  ───────────────────────────────────────────────────────────── */
+  .dashboard-layout {
+    background: var(--ds-bg-deep);
+    min-height: 100vh;
+  }
+
+  .ds-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--ds-space-lg); }
+  .ds-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--ds-space-lg); }
+  .ds-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--ds-space-lg); }
+  .ds-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--ds-space-lg); }
+
+  @media (max-width: 1024px) {
+    .ds-grid-4, .ds-grid-5 { grid-template-columns: repeat(2, 1fr); }
+    .ds-grid-3             { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .ds-grid-2, .ds-grid-3, .ds-grid-4, .ds-grid-5 { grid-template-columns: 1fr; }
+    .dashboard-content { padding: var(--ds-space-md); }
+  }
+
+  .ds-section-gap    { margin-bottom: var(--ds-space-2xl); }
+  .ds-section-gap-sm { margin-bottom: var(--ds-space-xl); }
+
+  /* Card hover effect for the new Card primitive */
+  .ds-card.ds-card--hover:hover {
+    background: var(--ds-card-bg-hover) !important;
+    border-color: var(--ds-card-border-hover) !important;
+    transform: translateY(-1px);
+  }
+
+  .ds-section-action:hover { text-decoration: underline; }
 
   /* ─────────────────────────────────────────────────────────────
      GLOW EFFECTS
@@ -872,11 +976,11 @@
      SECTION LABEL
   ───────────────────────────────────────────────────────────── */
   .section-label {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.10em;
     text-transform: uppercase;
-    color: #62c4b0;  /* WCAG ✓ on dark */
+    color: var(--ds-text-muted);
   }
 
   /* ─────────────────────────────────────────────────────────────

@@ -190,44 +190,30 @@ export default function Sidebar({ user, profile }: Props) {
       <aside
         className={`fixed left-0 top-0 h-screen w-60 flex flex-col transition-transform duration-300 ease-out md:translate-x-0 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}
         style={{
-          background: 'linear-gradient(180deg, rgba(10,3,6,0.97) 0%, rgba(6,8,6,0.99) 100%)',
-          borderRight: '1px solid rgba(98,196,176,0.12)',
-          backdropFilter: 'blur(32px)',
-          WebkitBackdropFilter: 'blur(32px)',
+          background: 'var(--ds-bg-surface)',
+          borderRight: '1px solid var(--ds-card-border)',
           zIndex: 50,
-          boxShadow: '4px 0 48px rgba(0,0,0,0.65), 0 0 80px rgba(0,0,0,0.30)',
         }}
       >
-        {/* Ambient layers */}
-        <div style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'linear-gradient(180deg, rgba(234,27,126,0.10) 0%, rgba(234,27,126,0.03) 30%, transparent 55%, rgba(98,196,176,0.05) 100%)',
-          borderRadius: 'inherit',
-        }} />
-        <div style={{
-          position: 'absolute', top: 0, right: 0, bottom: 0, width: 1, pointerEvents: 'none',
-          background: 'linear-gradient(180deg, transparent 0%, rgba(234,27,126,0.20) 30%, rgba(98,196,176,0.15) 70%, transparent 100%)',
-        }} />
 
         {/* ── LOGO ── */}
         <div
           className="flex items-center gap-3 px-5 py-[18px]"
-          style={{ borderBottom: '1px solid rgba(98,196,176,0.10)', position: 'relative', zIndex: 1 }}
+          style={{ borderBottom: '1px solid var(--ds-card-border)', position: 'relative', zIndex: 1 }}
         >
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
             style={{
-              background: 'linear-gradient(135deg, #e91e8c, #c5006a)',
-              boxShadow: '0 0 24px rgba(233,30,140,0.70), 0 0 48px rgba(233,30,140,0.25), 0 2px 8px rgba(0,0,0,0.40)',
+              background: 'var(--ds-color-primary-soft)',
+              border: '1px solid var(--ds-color-primary-border)',
             }}
           >
-            <Zap size={15} color="#fff" strokeWidth={2.5} />
+            <Zap size={14} color="var(--ds-color-primary)" strokeWidth={2.5} />
           </div>
           <div>
-            <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 800, letterSpacing: '-0.04em', color: '#ffffff', textShadow: '0 0 20px rgba(255,255,255,0.15)' }}>
+            <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 17, fontWeight: 700, letterSpacing: '-0.03em', color: 'var(--ds-text-primary)' }}>
               AdFlow
             </span>
-            <div className="ambient-line mt-0.5" style={{ width: 44 }} />
           </div>
         </div>
 
@@ -294,7 +280,7 @@ export default function Sidebar({ user, profile }: Props) {
                   <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.55)', marginBottom: 6 }}>
                     Configuralo para empezar a medir
                   </p>
-                  <p style={{ fontSize: 10, color: '#f9a8d4', fontWeight: 600 }}>
+                  <p style={{ fontSize: 10, color: 'var(--ds-color-primary)', fontWeight: 600 }}>
                     Configurar →
                   </p>
                 </>
@@ -308,26 +294,24 @@ export default function Sidebar({ user, profile }: Props) {
               <div style={{
                 padding: '11px 12px',
                 borderRadius: 12,
-                background: 'linear-gradient(135deg, rgba(233,30,140,0.12), rgba(98,196,176,0.06))',
-                border: '1px solid rgba(233,30,140,0.35)',
-                boxShadow: '0 4px 16px rgba(233,30,140,0.15)',
+                background: 'var(--ds-color-primary-soft)',
+                border: '1px solid var(--ds-color-primary-border)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
                   <span style={{ fontSize: 13 }}>🚀</span>
-                  <span style={{ fontSize: 10.5, fontWeight: 800, color: '#fff', flex: 1 }}>
+                  <span style={{ fontSize: 10.5, fontWeight: 700, color: 'var(--ds-text-primary)', flex: 1 }}>
                     Setup: {onboarding.completedSteps}/{onboarding.totalSteps}
                   </span>
-                  <span style={{ fontSize: 9, fontWeight: 800, color: '#f9a8d4' }}>
+                  <span style={{ fontSize: 9, fontWeight: 800, color: 'var(--ds-color-primary)' }}>
                     {onboarding.completionScore}%
                   </span>
                 </div>
                 <div style={{ height: 4, borderRadius: 99, background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
                   <div style={{
                     height: '100%', width: `${onboarding.completionScore}%`,
-                    background: 'linear-gradient(90deg, #e91e8c, #62c4b0)',
-                    boxShadow: '0 0 6px rgba(233,30,140,0.55)',
+                    background: 'var(--ds-color-primary)',
                     borderRadius: 99,
                     transition: 'width 0.6s ease',
                   }} />
@@ -348,8 +332,8 @@ export default function Sidebar({ user, profile }: Props) {
               >
                 <Icon size={16} strokeWidth={active ? 2.2 : 1.75}
                   style={{
-                    color: active ? '#e91e8c' : '#8892b0',
-                    filter: active ? 'drop-shadow(0 0 6px rgba(233,30,140,0.60))' : 'none',
+                    color: active ? 'var(--ds-color-primary)' : 'var(--ds-text-secondary)',
+                    filter: 'none',
                     flexShrink: 0,
                   }}
                 />
@@ -372,13 +356,11 @@ export default function Sidebar({ user, profile }: Props) {
                       background: `${badgeColor}1f`,
                       color: badgeColor,
                       border: `1px solid ${badgeColor}66`,
-                      boxShadow: `0 0 8px ${badgeColor}33`,
                       opacity: 0.85,
                     } : {
-                      background: 'rgba(234,27,126,0.18)',
-                      color: '#f9a8d4',
-                      border: '1px solid rgba(234,27,126,0.30)',
-                      boxShadow: '0 0 8px rgba(234,27,126,0.20)',
+                      background: 'var(--ds-color-primary-soft)',
+                      color: 'var(--ds-color-primary)',
+                      border: '1px solid var(--ds-color-primary-border)',
                     }}
                   >
                     {badge}
@@ -398,8 +380,8 @@ export default function Sidebar({ user, profile }: Props) {
               >
                 <Icon size={16} strokeWidth={active ? 2.2 : 1.75}
                   style={{
-                    color: active ? '#e91e8c' : '#8892b0',
-                    filter: active ? 'drop-shadow(0 0 6px rgba(233,30,140,0.60))' : 'none',
+                    color: active ? 'var(--ds-color-primary)' : 'var(--ds-text-secondary)',
+                    filter: 'none',
                     flexShrink: 0,
                   }} />
                 <span style={{
