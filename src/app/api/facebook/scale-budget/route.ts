@@ -3,6 +3,7 @@
 // Applies the same multiplier (or new absolute value) to each ad set.
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createNotification } from '@/lib/notification-engine'
 
 const GRAPH = 'https://graph.facebook.com/v20.0'
 
@@ -108,6 +109,22 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       error: `No se pudo actualizar ningún ad set. Primer error: ${failed[0]?.error}`,
     }, { status: 400 })
+  }
+
+  // Notification
+  try {
+    const pct = previousBudget > 0 ? Math.round(((newTotalBudget - previousBudget) / previousBudget) * 100) : 0
+    const sign = pct >= 0 ? '+' : ''
+    await createNotification({
+      userId: user.id,
+      type: 'campaign_scaled',
+      title: `📈 Presupuesto de "${campaign.name}" escalado`,
+      body: `De $${previousBudget.toLocaleString('es')} a $${newTotalBudget.toLocaleString('es')}/día (${sign}${pct}%)`,
+      severity: 'success',
+      actionUrl: `/dashboard/campaigns/${campaign_id}`,
+    })
+  } catch (e) {
+    console.warn('[scale-budget] notification failed:', e)
   }
 
   return NextResponse.json({

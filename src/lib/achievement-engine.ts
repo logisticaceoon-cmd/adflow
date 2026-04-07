@@ -4,6 +4,7 @@
 // and unlocks any newly-qualifying definitions from the catalog.
 // Idempotent: already-unlocked achievements are skipped.
 import { createAdminClient } from '@/lib/supabase/server'
+import { createNotification } from '@/lib/notification-engine'
 
 export interface AchievementUnlock {
   id: string
@@ -138,6 +139,21 @@ export async function evaluateAchievements(userId: string): Promise<AchievementU
         rarity: def.rarity,
       })
       console.log(`[achievements] User ${userId} unlocked: ${def.code} (${def.name})`)
+
+      // Persistent notification (never blocks the unlock flow)
+      try {
+        await createNotification({
+          userId,
+          type: 'achievement_unlocked',
+          title: `🏆 Nuevo logro: ${def.name}`,
+          body: def.description,
+          severity: 'success',
+          actionUrl: '/dashboard/pixel',
+          metadata: { achievement_code: def.code, rarity: def.rarity, icon: def.icon },
+        })
+      } catch (e) {
+        console.warn('[achievements] notification failed:', e)
+      }
     }
   }
 

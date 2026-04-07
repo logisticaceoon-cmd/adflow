@@ -3,6 +3,7 @@
 // Source of truth for the dashboards, reports, phases, and monthly reports.
 import { createAdminClient } from '@/lib/supabase/server'
 import { evaluateAchievements } from '@/lib/achievement-engine'
+import { createNotification } from '@/lib/notification-engine'
 
 const GRAPH = 'https://graph.facebook.com/v20.0'
 const INSIGHT_FIELDS = 'spend,impressions,reach,frequency,clicks,ctr,cpc,cpm,actions,action_values,date_start,date_stop,adset_name'
@@ -265,6 +266,31 @@ export async function syncUserMetrics(
     })
 
     console.log(`[meta-sync] User ${userId}: ${campaignsSynced} campaigns, ${adsetsSynced} adsets, ${errors.length} errors, ${durationMs}ms`)
+
+    // Notification: sync result
+    try {
+      if (status === 'failed') {
+        await createNotification({
+          userId,
+          type: 'sync_failed',
+          title: 'Error al sincronizar métricas',
+          body: errors[0] || 'Verificá tu conexión con Facebook',
+          severity: 'error',
+          actionUrl: '/dashboard/settings',
+        })
+      } else if (campaignsSynced > 0) {
+        await createNotification({
+          userId,
+          type: 'sync_completed',
+          title: 'Métricas sincronizadas',
+          body: `Se sincronizaron ${campaignsSynced} campañas y ${adsetsSynced} ad sets`,
+          severity: 'success',
+          actionUrl: '/dashboard/phases',
+        })
+      }
+    } catch (err) {
+      console.warn('[meta-sync] Failed to create sync notification:', err)
+    }
 
     // Evaluate achievements after sync (non-blocking for the sync result itself)
     try {

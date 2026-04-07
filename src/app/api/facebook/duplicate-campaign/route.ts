@@ -3,6 +3,7 @@
 // The user can then edit it and publish from the detail page.
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createNotification } from '@/lib/notification-engine'
 
 export async function POST(req: NextRequest) {
   const supabase = createClient()
@@ -76,6 +77,20 @@ export async function POST(req: NextRequest) {
     status: 'success',
     new_value: { new_campaign_id: copy.id, new_name: newName },
   })
+
+  // Notification
+  try {
+    await createNotification({
+      userId: user.id,
+      type: 'campaign_duplicated',
+      title: `✨ Campaña duplicada`,
+      body: `Se creó "${newName}" como borrador editable`,
+      severity: 'info',
+      actionUrl: `/dashboard/campaigns/${copy.id}`,
+    })
+  } catch (e) {
+    console.warn('[duplicate-campaign] notification failed:', e)
+  }
 
   return NextResponse.json({
     success: true,

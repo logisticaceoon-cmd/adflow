@@ -4,6 +4,7 @@
 // summary, and upserts into monthly_reports.
 import { createAdminClient } from '@/lib/supabase/server'
 import { generateRecommendations } from './recommendation-engine'
+import { createNotification } from './notification-engine'
 import type { Recommendation } from './recommendation-engine'
 import type { PixelAnalysis } from './pixel-analyzer'
 import Anthropic from '@anthropic-ai/sdk'
@@ -219,6 +220,21 @@ Respondé en español, directo y accionable. Sin formato markdown, solo texto pl
     campaigns_created: all.length,
     campaigns_active:  all.filter(c => c.status === 'active').length,
   }, { onConflict: 'user_id,month_year' })
+
+  // Persistent notification (never breaks the report generation flow)
+  try {
+    await createNotification({
+      userId,
+      type: 'monthly_report_ready',
+      title: `📊 Tu reporte de ${targetMonth} está listo`,
+      body: `${totalConversions} ventas, ROAS ${avgRoas.toFixed(1)}x. Revisá el análisis completo.`,
+      severity: 'info',
+      actionUrl: `/dashboard/reports/monthly?month=${targetMonth}`,
+      metadata: { total_spend: totalSpend, total_revenue: totalRevenue, avg_roas: avgRoas },
+    })
+  } catch (e) {
+    console.warn('[monthly-report] notification failed:', e)
+  }
 
   return report
 }

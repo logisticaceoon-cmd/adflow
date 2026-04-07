@@ -2,6 +2,7 @@
 // Activate or pause a Meta Ads campaign, with action logging.
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createNotification } from '@/lib/notification-engine'
 
 const GRAPH = 'https://graph.facebook.com/v20.0'
 
@@ -19,7 +20,7 @@ export async function POST(req: NextRequest) {
 
   const { data: campaign } = await supabase
     .from('campaigns')
-    .select('meta_campaign_id, status')
+    .select('meta_campaign_id, status, name')
     .eq('id', campaign_id)
     .eq('user_id', user.id)
     .single()
@@ -84,6 +85,21 @@ export async function POST(req: NextRequest) {
       previous_value: { status: previousStatus },
       new_value: { status: appStatus },
     })
+
+    // Notification
+    try {
+      await createNotification({
+        userId: user.id,
+        type: action === 'activate' ? 'campaign_activated' : 'campaign_paused',
+        title: action === 'activate'
+          ? `Campaña "${campaign.name}" activada`
+          : `Campaña "${campaign.name}" pausada`,
+        severity: 'info',
+        actionUrl: `/dashboard/campaigns/${campaign_id}`,
+      })
+    } catch (e) {
+      console.warn('[activate-campaign] notification failed:', e)
+    }
 
     return NextResponse.json({ success: true, status: metaStatus })
   } catch (err: any) {

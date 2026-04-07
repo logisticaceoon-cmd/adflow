@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { analyzePixel, savePixelAnalysis, type PixelAnalysis } from '@/lib/pixel-analyzer'
 import { searchMetaInterests, findOrCreateRetargetingAudience, findOrCreateLookalike } from '@/lib/audience-engine'
+import { createNotification } from '@/lib/notification-engine'
 import type { AdSetItem, AdCopyItem, CampaignStructure } from '@/types'
 
 const GRAPH = 'https://graph.facebook.com/v20.0'
@@ -641,6 +642,23 @@ export async function POST(req: NextRequest) {
     }).eq('id', campaign_id)
 
     console.log('[publish-campaign] ✓ DONE:', { adSets: adSetIds.length, ads: adIds.length, errors: errors.length })
+
+    // Persistent notification (never breaks the publish flow)
+    if (!isShellOnly) {
+      try {
+        await createNotification({
+          userId: user.id,
+          type: 'campaign_published',
+          title: `🚀 Campaña "${structure.name || campaign.name}" publicada en Meta`,
+          body: `${adSetIds.length} conjuntos y ${adIds.length} anuncios creados`,
+          severity: 'success',
+          actionUrl: `/dashboard/campaigns/${campaign_id}`,
+          metadata: { ad_sets: adSetIds.length, ads: adIds.length, partial: isPartial },
+        })
+      } catch (e) {
+        console.warn('[publish-campaign] notification failed:', e)
+      }
+    }
 
     const totalCents = perAdSetCents * numAdSets
     return NextResponse.json({

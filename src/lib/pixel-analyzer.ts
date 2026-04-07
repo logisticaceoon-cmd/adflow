@@ -152,6 +152,24 @@ export async function savePixelAnalysis(userId: string, analysis: PixelAnalysis)
       level_name: analysis.levelName,
       reason: 'Pixel analysis update',
     })
+
+    // Notify only on level-ups (not downgrades)
+    if (existing.level < analysis.level) {
+      try {
+        const { createNotification } = await import('@/lib/notification-engine')
+        await createNotification({
+          userId,
+          type: 'level_up',
+          title: `¡Subiste a Nivel ${analysis.level}: ${analysis.levelName}!`,
+          body: 'Tu negocio creció y desbloqueaste nuevas capacidades. Revisá qué podés hacer ahora.',
+          severity: 'success',
+          actionUrl: '/dashboard/pixel',
+          metadata: { old_level: existing.level, new_level: analysis.level, level_name: analysis.levelName },
+        })
+      } catch (e) {
+        console.warn('[pixel-analyzer] level-up notification failed:', e)
+      }
+    }
   }
 
   await db.from('pixel_analysis').upsert({
