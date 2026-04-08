@@ -1,5 +1,7 @@
 // src/components/ui/OptionCard.tsx
 // Selectable card for wizards, diagnosis flows, strategy pickers.
+// Visual treatment is centralized in styles.css under .ds-option-card —
+// this component only manages state classes.
 import type { CSSProperties, ReactNode } from 'react'
 import { Check, Lock } from 'lucide-react'
 
@@ -20,53 +22,46 @@ export default function OptionCard({
 }: OptionCardProps) {
   const handleClick = locked ? undefined : onClick
 
-  const baseStyle: CSSProperties = {
-    position: 'relative',
-    padding: 'var(--ds-space-lg)',
-    borderRadius: 'var(--ds-card-radius)',
-    backdropFilter: 'blur(var(--ds-card-blur))',
-    WebkitBackdropFilter: 'blur(var(--ds-card-blur))',
-    cursor: locked ? 'not-allowed' : 'pointer',
-    transition: 'all var(--ds-transition-normal)',
-    background: locked
-      ? 'var(--ds-color-locked)'
-      : selected
-        ? 'var(--ds-color-success-soft)'
-        : 'var(--ds-card-bg)',
-    border: `1px solid ${
-      locked
-        ? 'var(--ds-color-locked-border)'
-        : selected
-          ? 'var(--ds-color-success-border)'
-          : 'var(--ds-card-border)'
-    }`,
-    opacity: locked ? 0.55 : 1,
-    boxShadow: selected ? '0 0 0 1px var(--ds-color-success-border)' : 'var(--ds-shadow-sm)',
-    ...style,
-  }
+  // State classes drive all the visual treatment via global CSS rules.
+  const stateClass = locked ? 'is-locked' : selected ? 'is-selected' : ''
 
   return (
     <div
-      className={`ds-option-card ${className || ''}`}
-      style={baseStyle}
+      className={`ds-option-card ${stateClass} ${className || ''}`.trim()}
+      style={{
+        position: 'relative',
+        padding: 'var(--ds-space-lg)',
+        borderRadius: 'var(--ds-card-radius)',
+        background: 'var(--ds-card-bg)',
+        border: '1px solid var(--ds-card-border)',
+        backdropFilter: 'blur(var(--ds-card-blur))',
+        WebkitBackdropFilter: 'blur(var(--ds-card-blur))',
+        cursor: locked ? 'not-allowed' : onClick ? 'pointer' : 'default',
+        boxShadow: 'var(--ds-shadow-sm)',
+        ...style,
+      }}
       onClick={handleClick}
       title={locked ? lockMessage : undefined}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick && !locked ? 0 : undefined}
     >
-      {/* Selection indicator */}
+      {/* Selection indicator — green check on dark background */}
       {selected && !locked && (
         <span
           style={{
             position: 'absolute', top: 12, right: 12,
-            width: 24, height: 24,
+            width: 26, height: 26,
             borderRadius: '50%',
             background: 'var(--ds-color-success)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 4px 12px rgba(52, 211, 153, 0.30)',
+            boxShadow:
+              '0 0 0 2px rgba(52, 211, 153, 0.30), ' +
+              '0 6px 16px rgba(16, 185, 129, 0.40), ' +
+              '0 0 24px rgba(16, 185, 129, 0.30)',
+            zIndex: 2,
           }}
         >
-          <Check size={14} color="#0c0e16" strokeWidth={3} />
+          <Check size={14} color="#06241a" strokeWidth={3} />
         </span>
       )}
 
@@ -80,6 +75,7 @@ export default function OptionCard({
             background: 'rgba(255,255,255,0.06)',
             border: '1px solid rgba(255,255,255,0.10)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 2,
           }}
         >
           <Lock size={11} color="rgba(255,255,255,0.45)" />
@@ -91,12 +87,15 @@ export default function OptionCard({
           fontSize: 28, marginBottom: 12,
           opacity: locked ? 0.4 : 1,
           lineHeight: 1,
+          position: 'relative', zIndex: 2,
         }}>
           {icon}
         </div>
       )}
 
-      {children}
+      <div style={{ position: 'relative', zIndex: 2 }}>
+        {children}
+      </div>
     </div>
   )
 }

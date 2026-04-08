@@ -1,9 +1,11 @@
 // src/components/ui/Card.tsx
 // Base Card primitive for the unified design system.
-// All new feature work should use this — legacy `.card` class still works.
+// Variants drive a state class — visual treatment lives in styles.css under
+// `.ds-glow-{green|blue|purple|red}` and `.ds-card.is-{selected|completed|disabled}`.
+// This keeps every interactive surface in the app on the same premium recipe.
 import type { CSSProperties, ReactNode } from 'react'
 
-export type CardVariant = 'default' | 'selected' | 'info' | 'danger' | 'locked'
+export type CardVariant = 'default' | 'selected' | 'info' | 'danger' | 'locked' | 'completed' | 'secondary'
 export type CardPadding = 'sm' | 'md' | 'lg'
 
 interface CardProps {
@@ -24,35 +26,15 @@ const PADDING_MAP: Record<CardPadding, string> = {
   lg: 'var(--ds-space-xl)',
 }
 
-function variantStyles(variant: CardVariant): CSSProperties {
-  switch (variant) {
-    case 'selected':
-      return {
-        background: 'var(--ds-color-success-soft)',
-        border: '1px solid var(--ds-color-success-border)',
-      }
-    case 'info':
-      return {
-        background: 'var(--ds-color-warning-soft)',
-        border: '1px solid var(--ds-color-warning-border)',
-      }
-    case 'danger':
-      return {
-        background: 'var(--ds-color-danger-soft)',
-        border: '1px solid var(--ds-color-danger-border)',
-      }
-    case 'locked':
-      return {
-        background: 'var(--ds-color-locked)',
-        border: '1px solid var(--ds-color-locked-border)',
-        opacity: 0.6,
-      }
-    default:
-      return {
-        background: 'var(--ds-card-bg)',
-        border: '1px solid var(--ds-card-border)',
-      }
-  }
+// Variants → state classes that the global CSS picks up
+const VARIANT_CLASS: Record<CardVariant, string> = {
+  default:   '',
+  selected:  'ds-glow-green',
+  completed: 'is-completed',
+  info:      'ds-glow-blue',
+  secondary: 'ds-glow-purple',
+  danger:    'ds-glow-red',
+  locked:    'is-disabled',
 }
 
 export default function Card({
@@ -60,18 +42,25 @@ export default function Card({
   className, onClick, style, as = 'div', href,
 }: CardProps) {
   const baseStyle: CSSProperties = {
-    ...variantStyles(variant),
+    background: 'var(--ds-card-bg)',
+    border: '1px solid var(--ds-card-border)',
     borderRadius: 'var(--ds-card-radius)',
     backdropFilter: 'blur(var(--ds-card-blur))',
     WebkitBackdropFilter: 'blur(var(--ds-card-blur))',
     padding: PADDING_MAP[padding],
-    transition: hover ? 'all var(--ds-transition-normal)' : undefined,
+    transition: 'all var(--ds-transition-normal)',
     cursor: onClick || href ? 'pointer' : undefined,
     boxShadow: 'var(--ds-shadow-md)',
+    position: 'relative',
     ...style,
   }
 
-  const cls = `ds-card ${hover ? 'ds-card--hover' : ''} ${className || ''}`.trim()
+  const cls = [
+    'ds-card',
+    hover ? 'ds-card--hover' : '',
+    VARIANT_CLASS[variant],
+    className || '',
+  ].filter(Boolean).join(' ')
 
   if (as === 'a' && href) {
     return (

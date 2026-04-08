@@ -220,26 +220,48 @@
   /* ─────────────────────────────────────────────────────────────
      BUTTONS
   ───────────────────────────────────────────────────────────── */
+  /* ── Primary button — premium glass + blue glow recipe ── */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm text-white
-           transition-all duration-200 cursor-pointer select-none;
+           cursor-pointer select-none;
+    position: relative;
     min-height: var(--touch-min);
     min-width: var(--touch-min);
-    background: linear-gradient(135deg,
-      var(--ds-color-primary) 0%,
-      var(--ds-color-primary-strong) 100%);
-    border: 1px solid var(--ds-color-primary-border);
-    box-shadow: var(--ds-glow-primary);
+    background: linear-gradient(160deg,
+      rgba(96, 165, 250, 0.30) 0%,
+      rgba(37, 99, 235, 0.65) 100%);
+    border: 1px solid var(--ds-border-active);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: all var(--ds-transition-normal);
+    box-shadow:
+      0 0 0 1px rgba(96, 165, 250, 0.30),
+      0 8px 28px rgba(59, 130, 246, 0.30),
+      0 0 56px rgba(59, 130, 246, 0.15),
+      0 1px 0 rgba(255, 255, 255, 0.18) inset;
+  }
+  /* Top edge highlight */
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 16%; right: 16%; height: 1px;
+    background: linear-gradient(90deg,
+      transparent,
+      rgba(186, 213, 255, 0.75),
+      transparent);
+    pointer-events: none;
+    border-radius: inherit;
   }
   .btn-primary:hover {
-    background: linear-gradient(135deg,
-      var(--ds-color-primary-strong) 0%,
-      #2563eb 100%);
+    background: linear-gradient(160deg,
+      rgba(147, 197, 253, 0.40) 0%,
+      rgba(37, 99, 235, 0.78) 100%);
     transform: translateY(-2px);
     box-shadow:
       0 0 0 1px rgba(96, 165, 250, 0.50),
-      0 12px 40px rgba(59, 130, 246, 0.30),
-      0 0 80px rgba(59, 130, 246, 0.18);
+      0 14px 40px rgba(59, 130, 246, 0.42),
+      0 0 80px rgba(59, 130, 246, 0.22),
+      0 1px 0 rgba(255, 255, 255, 0.22) inset;
   }
   .btn-primary:active { transform: translateY(0); }
   .btn-primary:focus-visible {
@@ -289,17 +311,83 @@
     outline-offset: 2px;
   }
 
-  /* ── Danger button for destructive actions ── */
+  /* ── Success button — green glass for confirmations / activations ── */
+  .btn-success {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm text-white
+           cursor-pointer select-none;
+    position: relative;
+    min-height: var(--touch-min);
+    background: linear-gradient(160deg,
+      rgba(110, 231, 183, 0.30) 0%,
+      rgba(6, 95, 70, 0.70) 100%);
+    border: 1px solid var(--ds-border-success);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: all var(--ds-transition-normal);
+    box-shadow:
+      0 0 0 1px rgba(52, 211, 153, 0.30),
+      0 8px 28px rgba(16, 185, 129, 0.30),
+      0 0 56px rgba(16, 185, 129, 0.15),
+      0 1px 0 rgba(255, 255, 255, 0.18) inset;
+  }
+  .btn-success::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 16%; right: 16%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(167, 243, 208, 0.75), transparent);
+    pointer-events: none;
+    border-radius: inherit;
+  }
+  .btn-success:hover {
+    background: linear-gradient(160deg,
+      rgba(167, 243, 208, 0.40) 0%,
+      rgba(6, 95, 70, 0.85) 100%);
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 0 1px rgba(52, 211, 153, 0.50),
+      0 14px 40px rgba(16, 185, 129, 0.42),
+      0 0 80px rgba(16, 185, 129, 0.22),
+      0 1px 0 rgba(255, 255, 255, 0.22) inset;
+  }
+  .btn-success:active { transform: translateY(0); }
+
+  /* ── Danger button — red glass with glow ── */
   .btn-danger {
     @apply inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm text-white
-           transition-all duration-200 cursor-pointer select-none;
+           cursor-pointer select-none;
+    position: relative;
     min-height: var(--touch-min);
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    box-shadow: 0 0 24px rgba(239,68,68,0.40), 0 2px 8px rgba(0,0,0,0.35);
+    background: linear-gradient(160deg,
+      rgba(248, 113, 113, 0.28) 0%,
+      rgba(127, 29, 29, 0.65) 100%);
+    border: 1px solid var(--ds-color-danger-border);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: all var(--ds-transition-normal);
+    box-shadow:
+      0 0 0 1px rgba(248, 113, 113, 0.35),
+      0 8px 28px rgba(239, 68, 68, 0.30),
+      0 0 56px rgba(239, 68, 68, 0.15),
+      0 1px 0 rgba(255, 255, 255, 0.16) inset;
+  }
+  .btn-danger::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 16%; right: 16%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(254, 202, 202, 0.70), transparent);
+    pointer-events: none;
+    border-radius: inherit;
   }
   .btn-danger:hover {
-    box-shadow: 0 0 36px rgba(239,68,68,0.60), 0 4px 16px rgba(0,0,0,0.45);
-    transform: translateY(-1px);
+    background: linear-gradient(160deg,
+      rgba(252, 165, 165, 0.38) 0%,
+      rgba(127, 29, 29, 0.80) 100%);
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 0 1px rgba(248, 113, 113, 0.55),
+      0 14px 40px rgba(239, 68, 68, 0.42),
+      0 0 80px rgba(239, 68, 68, 0.22),
+      0 1px 0 rgba(255, 255, 255, 0.20) inset;
   }
   .btn-danger:active { transform: translateY(0); }
 
@@ -337,33 +425,87 @@
     box-shadow: var(--ds-shadow-lg);
   }
 
-  /* ── Selected state (interactive choice — green) ── */
+  /* ── Selected state (the same premium recipe as the active sidebar item) ── */
   .card-selected,
-  .ds-card.is-selected {
+  .ds-card.is-selected,
+  .ds-option-card.is-selected {
+    position: relative;
     background: var(--ds-surface-glass-green) !important;
-    border-color: var(--ds-border-success) !important;
-    box-shadow: var(--ds-glow-success) !important;
+    border: 1px solid var(--ds-border-success) !important;
+    box-shadow:
+      0 0 0 1px rgba(52, 211, 153, 0.25),
+      0 8px 28px rgba(16, 185, 129, 0.22),
+      0 0 56px rgba(16, 185, 129, 0.14),
+      0 1px 0 rgba(255, 255, 255, 0.10) inset !important;
+    transform: translateY(-1px);
+  }
+  .card-selected::before,
+  .ds-card.is-selected::before,
+  .ds-option-card.is-selected::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 10%; right: 10%; height: 1px;
+    background: linear-gradient(90deg,
+      transparent,
+      rgba(110, 231, 183, 0.65),
+      transparent);
+    pointer-events: none;
+    z-index: 1;
   }
 
-  /* ── Completed state (stronger fill, deeper green) ── */
+  /* ── Completed state (deeper green, stronger fill) ── */
   .card-completed,
   .ds-card.is-completed {
+    position: relative;
     background: linear-gradient(160deg,
-      rgba(16, 185, 129, 0.22) 0%,
-      rgba(6, 78, 59, 0.55) 100%) !important;
-    border-color: var(--ds-color-completed-border) !important;
-    box-shadow: var(--ds-glow-success) !important;
+      rgba(16, 185, 129, 0.28) 0%,
+      rgba(6, 78, 59, 0.65) 100%) !important;
+    border: 1px solid var(--ds-color-completed-border) !important;
+    box-shadow:
+      0 0 0 1px rgba(52, 211, 153, 0.35),
+      0 12px 32px rgba(16, 185, 129, 0.30),
+      0 0 64px rgba(16, 185, 129, 0.18),
+      0 1px 0 rgba(255, 255, 255, 0.12) inset !important;
+  }
+  .card-completed::before,
+  .ds-card.is-completed::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 8%; right: 8%; height: 1px;
+    background: linear-gradient(90deg,
+      transparent,
+      rgba(110, 231, 183, 0.80),
+      transparent);
+    pointer-events: none;
+    z-index: 1;
   }
 
   /* ── Disabled / locked ── */
   .card-disabled,
-  .ds-card.is-disabled {
+  .ds-card.is-disabled,
+  .ds-option-card.is-locked {
     background: var(--ds-color-locked) !important;
-    border-color: var(--ds-color-locked-border) !important;
+    border: 1px solid var(--ds-color-locked-border) !important;
     color: var(--ds-color-disabled-text) !important;
     box-shadow: none !important;
     cursor: not-allowed !important;
     opacity: 0.55;
+  }
+  .ds-option-card.is-locked::before { display: none; }
+
+  /* ── OptionCard interactive default (gentle blue hover lift) ── */
+  .ds-option-card {
+    transition: all var(--ds-transition-normal);
+  }
+  .ds-option-card:not(.is-selected):not(.is-locked):hover {
+    border-color: var(--ds-border-active) !important;
+    background: var(--ds-card-bg-hover) !important;
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 0 1px rgba(96, 165, 250, 0.20),
+      0 8px 24px rgba(59, 130, 246, 0.18),
+      0 0 48px rgba(59, 130, 246, 0.10),
+      0 1px 0 rgba(255, 255, 255, 0.08) inset !important;
   }
 
   /* ── Feature card (landing sections) ── */
@@ -1032,6 +1174,127 @@
     border-color: var(--ds-border-active) !important;
     transform: translateY(-2px);
     box-shadow: var(--ds-glow-primary) !important;
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     PREMIUM GLOW EFFECT TIERS — apply to any interactive surface
+
+     Recipe (the same one that makes the active sidebar item shine):
+       1. tinted glass gradient background
+       2. opaque colored border
+       3. triple-layer shadow: inner ring + medium colored shadow + ambient halo
+       4. ::before — bright top-edge highlight
+       5. ::after  — soft inner glow at the bottom edge
+
+     Apply by:
+       • adding the class .ds-glow-{blue|green|purple|red} to any element
+       • OR letting components use .is-selected / .is-active / .card-hover
+
+     Colors map directly to semantic states:
+       • blue   → interactive default / hover / focused
+       • green  → selected / active / completed
+       • purple → secondary accent
+       • red    → destructive / error
+  ───────────────────────────────────────────────────────────── */
+
+  /* GREEN GLOW — selected / active / completed */
+  .ds-glow-green {
+    position: relative;
+    background: var(--ds-surface-glass-green) !important;
+    border: 1px solid var(--ds-border-success) !important;
+    color: var(--ds-text-primary) !important;
+    box-shadow:
+      0 0 0 1px rgba(52, 211, 153, 0.25),
+      0 8px 28px rgba(16, 185, 129, 0.22),
+      0 0 56px rgba(16, 185, 129, 0.14),
+      0 1px 0 rgba(255, 255, 255, 0.10) inset !important;
+  }
+  .ds-glow-green::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 10%; right: 10%; height: 1px;
+    background: linear-gradient(90deg,
+      transparent,
+      rgba(110, 231, 183, 0.65),
+      transparent);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* BLUE GLOW — interactive / hover / focused */
+  .ds-glow-blue {
+    position: relative;
+    background: var(--ds-surface-glass-blue) !important;
+    border: 1px solid var(--ds-border-active) !important;
+    color: var(--ds-text-primary) !important;
+    box-shadow:
+      0 0 0 1px rgba(96, 165, 250, 0.25),
+      0 8px 28px rgba(59, 130, 246, 0.22),
+      0 0 56px rgba(59, 130, 246, 0.14),
+      0 1px 0 rgba(255, 255, 255, 0.10) inset !important;
+  }
+  .ds-glow-blue::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 10%; right: 10%; height: 1px;
+    background: linear-gradient(90deg,
+      transparent,
+      rgba(147, 197, 253, 0.60),
+      transparent);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* PURPLE GLOW — secondary accent */
+  .ds-glow-purple {
+    position: relative;
+    background: linear-gradient(160deg,
+      rgba(167, 139, 250, 0.16) 0%,
+      rgba(76, 29, 149, 0.42) 100%) !important;
+    border: 1px solid var(--ds-color-secondary-border) !important;
+    color: var(--ds-text-primary) !important;
+    box-shadow:
+      0 0 0 1px rgba(167, 139, 250, 0.25),
+      0 8px 28px rgba(124, 58, 237, 0.22),
+      0 0 56px rgba(124, 58, 237, 0.14),
+      0 1px 0 rgba(255, 255, 255, 0.10) inset !important;
+  }
+  .ds-glow-purple::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 10%; right: 10%; height: 1px;
+    background: linear-gradient(90deg,
+      transparent,
+      rgba(196, 181, 253, 0.60),
+      transparent);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* RED GLOW — destructive / error */
+  .ds-glow-red {
+    position: relative;
+    background: linear-gradient(160deg,
+      rgba(248, 113, 113, 0.14) 0%,
+      rgba(127, 29, 29, 0.42) 100%) !important;
+    border: 1px solid var(--ds-color-danger-border) !important;
+    color: var(--ds-text-primary) !important;
+    box-shadow:
+      0 0 0 1px rgba(248, 113, 113, 0.30),
+      0 8px 28px rgba(239, 68, 68, 0.22),
+      0 0 56px rgba(239, 68, 68, 0.14),
+      0 1px 0 rgba(255, 255, 255, 0.10) inset !important;
+  }
+  .ds-glow-red::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 10%; right: 10%; height: 1px;
+    background: linear-gradient(90deg,
+      transparent,
+      rgba(252, 165, 165, 0.60),
+      transparent);
+    pointer-events: none;
+    z-index: 1;
   }
 
   .ds-section-action:hover { text-decoration: underline; }
