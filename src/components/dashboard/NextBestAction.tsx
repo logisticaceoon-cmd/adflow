@@ -1,135 +1,137 @@
-'use client'
 // src/components/dashboard/NextBestAction.tsx
-// The GPS — "tu siguiente mejor acción". Sits directly under the hero
-// with a focused CTA and no decorative noise.
-import { useEffect, useState } from 'react'
+// The GPS — "tu siguiente mejor acción". Sits directly under the hero.
+// Data now comes from the strategic decision engine (server-side, via props).
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import type { Recommendation } from '@/lib/recommendation-engine'
+import type { PrimaryAction, SecondaryAction } from '@/lib/decision-engine'
 
-const PANEL_BASE: React.CSSProperties = {
-  padding: 24,
-  borderRadius: 'var(--ds-card-radius)',
-  background: 'var(--ds-card-bg)',
-  border: '1px solid var(--ds-card-border)',
-  borderLeft: '3px solid var(--ds-color-primary)',
-  backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-  WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-  boxShadow: 'var(--ds-shadow-sm)',
-  marginBottom: 32,
+interface Props {
+  primaryAction: PrimaryAction
+  secondaryActions: SecondaryAction[]
 }
 
-export default function NextBestAction() {
-  const [items, setItems] = useState<Recommendation[] | null>(null)
+const PRIORITY_BORDER: Record<PrimaryAction['priority'], string> = {
+  critical:    'var(--ds-color-danger)',
+  important:   'var(--ds-color-primary)',
+  opportunity: 'var(--ds-color-success)',
+}
 
-  useEffect(() => {
-    let active = true
-    fetch('/api/recommendations')
-      .then(r => r.json())
-      .then(d => { if (active) setItems(d.recommendations || []) })
-      .catch(() => { if (active) setItems([]) })
-    return () => { active = false }
-  }, [])
+const PRIORITY_OVERLINE: Record<PrimaryAction['priority'], string> = {
+  critical:    'Acción crítica',
+  important:   'Tu siguiente mejor acción',
+  opportunity: 'Oportunidad',
+}
 
-  if (items === null) {
-    return (
-      <div className="dash-anim-2" style={{ ...PANEL_BASE, borderLeftColor: 'var(--ds-card-border)' }}>
-        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>Calculando tu siguiente mejor acción…</p>
-      </div>
-    )
-  }
+const PRIORITY_OVERLINE_COLOR: Record<PrimaryAction['priority'], string> = {
+  critical:    'var(--ds-color-danger)',
+  important:   'var(--ds-color-primary)',
+  opportunity: 'var(--ds-color-success)',
+}
 
-  const ordered = [...items].sort((a, b) => {
-    const order = { high: 0, medium: 1, low: 2 }
-    return order[a.priority] - order[b.priority]
-  })
-  const main = ordered[0]
-  const secondary = ordered.slice(1, 3)
-
-  // Empty state — calm, reassuring
-  if (!main) {
-    return (
-      <div className="dash-anim-2" style={{
-        ...PANEL_BASE,
-        borderLeftColor: 'var(--ds-color-success)',
-      }}>
-        <p style={{
-          fontSize: 10, fontWeight: 600, color: 'var(--ds-color-success)',
-          textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 6,
-        }}>
-          Todo en orden
-        </p>
-        <p style={{ fontSize: 15, color: 'var(--ds-text-primary)', fontWeight: 500, lineHeight: 1.4 }}>
-          Seguí monitoreando tus campañas. Las recomendaciones aparecerán acá cuando haya algo para accionar.
-        </p>
-      </div>
-    )
-  }
+export default function NextBestAction({ primaryAction, secondaryActions }: Props) {
+  const borderColor = PRIORITY_BORDER[primaryAction.priority]
+  const overlineText = PRIORITY_OVERLINE[primaryAction.priority]
+  const overlineColor = PRIORITY_OVERLINE_COLOR[primaryAction.priority]
+  const showReason = primaryAction.priority === 'critical' || primaryAction.priority === 'important'
 
   return (
-    <div className="dash-anim-2" style={PANEL_BASE}>
+    <div className="dash-anim-2" style={{
+      padding: 24,
+      borderRadius: 'var(--ds-card-radius)',
+      background: 'var(--ds-card-bg)',
+      border: '1px solid var(--ds-card-border)',
+      borderLeft: `3px solid ${borderColor}`,
+      backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
+      WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
+      boxShadow: 'var(--ds-shadow-sm)',
+      marginBottom: 32,
+    }}>
       <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-        {/* Icon — 24px, sin contenedor grande que compita */}
+        {/* Icon — inline, no decorative container */}
         <span style={{
           fontSize: 22, lineHeight: 1, flexShrink: 0, marginTop: 2,
-          filter: 'drop-shadow(0 0 8px rgba(96, 165, 250, 0.35))',
         }}>
-          {main.icon || '🧭'}
+          {primaryAction.icon}
         </span>
 
         <div style={{ flex: 1, minWidth: 0 }}>
-          {/* Overline */}
+          {/* Overline — changes with priority */}
           <p style={{
-            fontSize: 10, fontWeight: 600, color: 'var(--ds-color-primary)',
+            fontSize: 10, fontWeight: 600, color: overlineColor,
             textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 6,
           }}>
-            Tu siguiente mejor acción
+            {overlineText}
           </p>
 
-          {/* Main text — directivo, max 2 líneas */}
+          {/* Main title — 15px, clamp to 2 lines */}
           <p style={{
             fontSize: 15, fontWeight: 500, color: 'var(--ds-text-primary)',
-            lineHeight: 1.45, marginBottom: 6,
+            lineHeight: 1.45, marginBottom: 8,
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical' as any,
             overflow: 'hidden',
           }}>
-            {main.title}
+            {primaryAction.title}
           </p>
 
-          {/* Sub-description */}
+          {/* Description — secondary */}
           <p style={{
             fontSize: 13, color: 'var(--ds-text-secondary)', lineHeight: 1.5,
-            marginBottom: 16, maxWidth: 640,
+            marginBottom: showReason ? 8 : 16, maxWidth: 640,
           }}>
-            {main.description}
+            {primaryAction.description}
           </p>
 
-          {/* Primary CTA — button, not a link */}
-          {main.action?.href ? (
-            <Link href={main.action.href} className="btn-primary" style={{
+          {/* Reason — only for critical/important, explains WHY this matters */}
+          {showReason && primaryAction.id !== 'all_good' && (
+            <p style={{
+              fontSize: 12, color: 'var(--ds-text-muted)', lineHeight: 1.45,
+              marginBottom: 16, fontStyle: 'italic', maxWidth: 640,
+            }}>
+              {primaryAction.reason}
+            </p>
+          )}
+
+          {/* Primary CTA — real button */}
+          {primaryAction.cta.href && (
+            <Link href={primaryAction.cta.href} className="btn-primary" style={{
               fontSize: 13, padding: '10px 20px',
             }}>
-              {main.action.label} <ArrowRight size={14} />
+              {primaryAction.cta.label} <ArrowRight size={14} />
             </Link>
-          ) : null}
+          )}
 
-          {/* Secondary actions — max 2 small links */}
-          {secondary.length > 0 && (
+          {/* Secondary actions — max 2, compact links */}
+          {secondaryActions.length > 0 && (
             <div style={{
-              marginTop: 16, display: 'flex', gap: 20, flexWrap: 'wrap',
+              marginTop: 16, paddingTop: 14,
+              borderTop: '1px solid var(--ds-card-border)',
+              display: 'flex', flexDirection: 'column', gap: 8,
             }}>
-              {secondary.map(s => (
-                s.action?.href ? (
-                  <Link key={s.id} href={s.action.href} style={{
-                    fontSize: 13, color: 'var(--ds-text-secondary)',
-                    textDecoration: 'none',
-                    display: 'inline-flex', alignItems: 'center', gap: 4,
+              <p style={{
+                fontSize: 10, fontWeight: 600, color: 'var(--ds-text-muted)',
+                textTransform: 'uppercase', letterSpacing: '0.10em',
+              }}>
+                También podrías
+              </p>
+              {secondaryActions.map(s => (
+                <Link key={s.id} href={s.cta.href} style={{
+                  fontSize: 13, color: 'var(--ds-text-secondary)',
+                  textDecoration: 'none',
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                }}>
+                  <span>{s.icon}</span>
+                  <span style={{
+                    flex: 1,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
                   }}>
-                    {s.title} <ArrowRight size={11} style={{ color: 'var(--ds-color-primary)' }} />
-                  </Link>
-                ) : null
+                    {s.title}
+                  </span>
+                  <ArrowRight size={11} style={{ color: 'var(--ds-color-primary)', flexShrink: 0 }} />
+                </Link>
               ))}
             </div>
           )}

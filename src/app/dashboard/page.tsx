@@ -12,6 +12,7 @@ import AlertsOpportunities from '@/components/dashboard/AlertsOpportunities'
 import SyncButton from '@/components/dashboard/SyncButton'
 import OnboardingChecklist from '@/components/dashboard/OnboardingChecklist'
 import { calculateOnboardingStatus } from '@/lib/onboarding-engine'
+import { generateStrategicDecisions, type DecisionInput } from '@/lib/decision-engine'
 import type { Phase } from '@/lib/budget-engine'
 
 const AI_TIPS = [
@@ -200,6 +201,69 @@ export default async function DashboardPage() {
   const fullName = profile?.full_name?.split(' ')[0] || 'crecedor'
   const currency = businessProfile?.currency === 'USD' ? '$' : (businessProfile?.currency || '$')
 
+  // ── Strategic decision engine ───────────────────────────────────────────
+  // Build the full snapshot of the business state and let the engine decide
+  // what the user should see right now. Fully server-side — no extra fetches.
+  const bestRoasCampaign = allCampaigns.reduce<{ name: string; roas: number; id: string } | undefined>((best, c) => {
+    const roas = c.metrics?.roas || 0
+    if (roas > 0 && (!best || roas > best.roas)) return { name: c.name, roas, id: c.id }
+    return best
+  }, undefined)
+  const worstRoasCampaign = allCampaigns.reduce<{ name: string; roas: number; id: string } | undefined>((worst, c) => {
+    const roas = c.metrics?.roas || 0
+    if (roas > 0 && (!worst || roas < worst.roas)) return { name: c.name, roas, id: c.id }
+    return worst
+  }, undefined)
+
+  const totalCpa = totalConversions > 0 ? totalSpend / totalConversions : 0
+  const budgetSpent = (pixelAnalysis ? totalSpend : 0)
+  const lastSyncAt: string | undefined = allCampaigns
+    .map(c => (c.metrics as any)?.last_sync as string | undefined)
+    .filter(Boolean)
+    .sort()
+    .reverse()[0]
+
+  const decisionInput: DecisionInput = {
+    onboardingComplete:       onboardingStatus.isComplete,
+    onboardingNextStep:       onboardingStatus.nextStep
+      ? { label: onboardingStatus.steps[onboardingStatus.nextStep].label, href: onboardingStatus.steps[onboardingStatus.nextStep].href }
+      : undefined,
+    onboardingCompletedSteps: onboardingStatus.completedSteps,
+    onboardingTotalSteps:     onboardingStatus.totalSteps,
+
+    pixelConfigured:     !!businessProfile?.pixel_id,
+    pixelLevel:          pixelAnalysis?.level || 0,
+    pixelLevelName:      (pixelAnalysis?.level_name as string) || 'Sin Data',
+    pageViews30d:        events?.PageView?.count_30d || 0,
+    viewContent30d:      events?.ViewContent?.count_30d || 0,
+    addToCart30d:        events?.AddToCart?.count_30d || 0,
+    purchases30d:        events?.Purchase?.count_30d || 0,
+    purchases180d:       events?.Purchase?.count_180d || 0,
+    canRetargetVC:       !!pixelAnalysis?.can_retarget_view_content,
+    canRetargetATC:      !!pixelAnalysis?.can_retarget_add_to_cart,
+    canRetargetPurchase: !!pixelAnalysis?.can_retarget_purchase,
+    canCreateLookalike:  !!pixelAnalysis?.can_create_lookalike,
+
+    totalCampaigns:    allCampaigns.length,
+    activeCampaigns:   allCampaigns.filter(c => c.status === 'active').length,
+    totalSpendMonth:   totalSpend,
+    totalRevenueMonth: totalRevenue,
+    avgRoas,
+    avgCpa:            totalCpa,
+    bestRoasCampaign,
+    worstRoasCampaign,
+
+    hasBudget:   !!monthlyBudget,
+    budgetTotal: (monthlyBudget?.total_budget as number) || 0,
+    budgetSpent,
+
+    metaConnected: !!fbConnection?.access_token,
+    tokenExpiresAt: undefined, // token_expires_at column not currently tracked
+    lastSyncAt,
+  }
+
+  const decisions = generateStrategicDecisions(decisionInput)
+
   return (
     <>
       <OnboardingWizard show={showOnboarding} />
@@ -238,7 +302,10 @@ export default async function DashboardPage() {
       />
 
       {/* 2. GPS — "tu siguiente mejor acción", pegado al hero */}
-      <NextBestAction />
+      <NextBestAction
+        primaryAction={decisions.primaryAction}
+        secondaryActions={decisions.secondaryActions}
+      />
 
       {/* ─────────────── LEVEL 2 — QUICK CONTEXT ─────────────── */}
 
@@ -287,7 +354,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* 7. Alertas + oportunidades */}
-      <AlertsOpportunities />
+      <AlertsOpportunities alerts={decisions.alerts} />
 
       {/* 8. Spend chart + Tip del día */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 dash-anim-6">
