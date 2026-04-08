@@ -204,34 +204,71 @@ export default async function DashboardPage() {
     <>
       <OnboardingWizard show={showOnboarding} />
 
-      <div>
-        {/* ── Sync control (top-right, above hero) ────────────────────── */}
-        <div className="flex justify-end mb-4 dash-anim-1">
-          <SyncButton variant="full" />
-        </div>
+      {/* ═══════════════════════════════════════════════════════════════
+          Dashboard layout — strict hierarchy top→bottom
+          L1 primary focus  · hero + GPS
+          L2 quick context  · month summary
+          L3 support        · setup (if incomplete) + phases
+          L4 secondary      · profile/achievements + alerts + chart/tip
+         ═══════════════════════════════════════════════════════════════ */}
 
-        {/* ── Onboarding checklist (only if setup incomplete) ─────────── */}
-        {!onboardingStatus.isComplete && <OnboardingChecklist status={onboardingStatus} />}
+      {/* Sync control */}
+      <div className="flex justify-end mb-4 dash-anim-1">
+        <SyncButton variant="full" />
+      </div>
 
-        {/* ── BLOCK A: Hero ────────────────────────────────────────────── */}
-        <HeroLevel
-          fullName={fullName}
-          level={level}
-          levelName={levelName}
-          metricCurrent={nextMetric.current}
-          metricRequired={nextMetric.required}
-          metricLabel={nextMetric.label}
-          nextLevel={nextLevel}
-          nextLevelName={LEVEL_NAMES[nextLevel]}
-          unlockTeaser={UNLOCK_TEASERS[level] || 'nuevas estrategias y audiencias'}
-          monthSpend={totalSpend}
-          monthSales={totalConversions}
-          monthRoas={avgRoas}
-          daysRemaining={daysRemaining}
-          hasPixel={!!pixelAnalysis}
-        />
+      {/* ─────────────── LEVEL 1 — PRIMARY FOCUS ─────────────── */}
 
-        {/* ── BLOCK B: Growth profile ─────────────────────────────────── */}
+      {/* 1. HERO — el centro de mando, el primer latido visual */}
+      <HeroLevel
+        fullName={fullName}
+        level={level}
+        levelName={levelName}
+        metricCurrent={nextMetric.current}
+        metricRequired={nextMetric.required}
+        metricLabel={nextMetric.label}
+        nextLevel={nextLevel}
+        nextLevelName={LEVEL_NAMES[nextLevel]}
+        unlockTeaser={UNLOCK_TEASERS[level] || 'nuevas estrategias y audiencias'}
+        monthSpend={totalSpend}
+        monthSales={totalConversions}
+        monthRoas={avgRoas}
+        daysRemaining={daysRemaining}
+        hasPixel={!!pixelAnalysis}
+      />
+
+      {/* 2. GPS — "tu siguiente mejor acción", pegado al hero */}
+      <NextBestAction />
+
+      {/* ─────────────── LEVEL 2 — QUICK CONTEXT ─────────────── */}
+
+      {/* 3. Resumen del mes — métricas compactas */}
+      <MonthSummary
+        totalSpend={totalSpend}
+        totalRevenue={totalRevenue}
+        totalConversions={totalConversions}
+        avgRoas={avgRoas}
+        avgTicket={avgTicket}
+        trendSpend={trendSpend}
+        trendRevenue={trendRevenue}
+        trendRoas={trendRoas}
+        trendConv={trendConv}
+        events={events}
+        currency={currency}
+      />
+
+      {/* ─────────────── LEVEL 3 — SUPPORT ─────────────── */}
+
+      {/* 4. Onboarding (solo si incompleto, compacto) */}
+      {!onboardingStatus.isComplete && <OnboardingChecklist status={onboardingStatus} />}
+
+      {/* 5. Fases del funnel — uniformes y compactas */}
+      <PhaseSummary currency={currency} phaseData={phaseData} />
+
+      {/* ─────────────── LEVEL 4 — SECONDARY ─────────────── */}
+
+      {/* 6. Growth profile + achievements lado a lado */}
+      <div className="ds-grid-2">
         <GrowthProfile
           level={level}
           levelName={levelName}
@@ -246,75 +283,70 @@ export default async function DashboardPage() {
           metricRequired={nextMetric.required}
           metricLabel={nextMetric.label}
         />
-
-        {/* ── BLOCK C: Next best action (GPS) ─────────────────────────── */}
-        <NextBestAction />
-
-        {/* ── BLOCK D: Month summary ──────────────────────────────────── */}
-        <MonthSummary
-          totalSpend={totalSpend}
-          totalRevenue={totalRevenue}
-          totalConversions={totalConversions}
-          avgRoas={avgRoas}
-          avgTicket={avgTicket}
-          trendSpend={trendSpend}
-          trendRevenue={trendRevenue}
-          trendRoas={trendRoas}
-          trendConv={trendConv}
-          events={events}
-          currency={currency}
-        />
-
-        {/* ── BLOCK E: Phase summary ──────────────────────────────────── */}
-        <PhaseSummary currency={currency} phaseData={phaseData} />
-
-        {/* ── BLOCK F: Achievements ───────────────────────────────────── */}
         <AchievementsBadges />
+      </div>
 
-        {/* ── BLOCK G: Alerts + opportunities ─────────────────────────── */}
-        <AlertsOpportunities />
+      {/* 7. Alertas + oportunidades */}
+      <AlertsOpportunities />
 
-        {/* ── BLOCK H: Spend chart + tip of the day ───────────────────── */}
-        <div className="grid grid-cols-3 gap-6 mb-6 dash-anim-6">
-          <div className="col-span-2 card p-5">
-            <div className="flex items-center justify-between mb-1">
-              <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff' }}>
-                Gasto semanal
-              </h2>
-              <span style={{
-                fontSize: 11, padding: '4px 12px', borderRadius: 20,
-                background: 'var(--ds-color-primary-soft)', color: 'var(--ds-color-primary)',
-                border: '1px solid var(--ds-color-primary-soft)',
-              }}>
-                Últimos 7 días
-              </span>
-            </div>
-            <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 16 }}>
-              Cuánto invertiste cada día de la semana
-            </p>
-            <SpendChart totalSpend={totalSpend} />
-          </div>
-
-          <div className="card p-5" style={{
-            background: 'linear-gradient(135deg, var(--ds-color-primary-soft) 0%, transparent 100%)',
-            border: '1px solid var(--ds-color-primary-soft)',
-          }}>
-            <div style={{
-              width: 40, height: 40, borderRadius: 12, marginBottom: 14,
-              background: 'var(--ds-color-primary-soft)',
+      {/* 8. Spend chart + Tip del día */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 dash-anim-6">
+        <div className="md:col-span-2" style={{
+          padding: 'var(--ds-space-lg)',
+          background: 'var(--ds-card-bg)',
+          border: '1px solid var(--ds-card-border)',
+          borderRadius: 'var(--ds-card-radius)',
+          backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
+          WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
+          boxShadow: 'var(--ds-shadow-sm)',
+          maxHeight: 280,
+          overflow: 'hidden',
+        }}>
+          <div className="flex items-center justify-between mb-1">
+            <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 600, color: 'var(--ds-text-primary)' }}>
+              Gasto semanal
+            </h2>
+            <span style={{
+              fontSize: 10, padding: '3px 10px', borderRadius: 99,
+              background: 'var(--ds-color-primary-soft)', color: 'var(--ds-color-primary)',
               border: '1px solid var(--ds-color-primary-border)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18,
-              boxShadow: '0 0 16px var(--ds-color-primary-border)',
+              fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em',
             }}>
-              💡
-            </div>
-            <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ds-color-primary)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 6 }}>
-              Tip del día
-            </p>
-            <p style={{ fontSize: 13, color: 'var(--ds-text-primary)', lineHeight: 1.65 }}>
-              {todayTip}
-            </p>
+              Últimos 7 días
+            </span>
           </div>
+          <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 14 }}>
+            Cuánto invertiste cada día
+          </p>
+          <SpendChart totalSpend={totalSpend} />
+        </div>
+
+        <div style={{
+          padding: 'var(--ds-space-lg)',
+          background: 'var(--ds-card-bg)',
+          border: '1px solid var(--ds-card-border)',
+          borderRadius: 'var(--ds-card-radius)',
+          backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
+          WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
+          boxShadow: 'var(--ds-shadow-sm)',
+        }}>
+          <div style={{
+            width: 36, height: 36, borderRadius: 10, marginBottom: 12,
+            background: 'var(--ds-color-primary-soft)',
+            border: '1px solid var(--ds-color-primary-border)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16,
+          }}>
+            💡
+          </div>
+          <p style={{
+            fontSize: 10, fontWeight: 600, color: 'var(--ds-color-primary)',
+            textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 6,
+          }}>
+            Tip del día
+          </p>
+          <p style={{ fontSize: 13, color: 'var(--ds-text-primary)', lineHeight: 1.6 }}>
+            {todayTip}
+          </p>
         </div>
       </div>
     </>

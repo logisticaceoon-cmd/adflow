@@ -1,11 +1,23 @@
 'use client'
 // src/components/dashboard/NextBestAction.tsx
-// The "GPS" of growth: shows the single most important action right now.
-// Migrated to unified design system.
+// The GPS — "tu siguiente mejor acción". Sits directly under the hero
+// with a focused CTA and no decorative noise.
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Compass, ArrowRight } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import type { Recommendation } from '@/lib/recommendation-engine'
+
+const PANEL_BASE: React.CSSProperties = {
+  padding: 24,
+  borderRadius: 'var(--ds-card-radius)',
+  background: 'var(--ds-card-bg)',
+  border: '1px solid var(--ds-card-border)',
+  borderLeft: '3px solid var(--ds-color-primary)',
+  backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
+  WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
+  boxShadow: 'var(--ds-shadow-sm)',
+  marginBottom: 32,
+}
 
 export default function NextBestAction() {
   const [items, setItems] = useState<Recommendation[] | null>(null)
@@ -21,14 +33,8 @@ export default function NextBestAction() {
 
   if (items === null) {
     return (
-      <div className="dash-anim-3" style={{
-        marginBottom: 'var(--ds-space-lg)',
-        padding: 'var(--ds-space-lg)',
-        borderRadius: 'var(--ds-card-radius)',
-        background: 'var(--ds-card-bg)',
-        border: '1px solid var(--ds-card-border)',
-      }}>
-        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>Calculando tu siguiente mejor acción...</p>
+      <div className="dash-anim-2" style={{ ...PANEL_BASE, borderLeftColor: 'var(--ds-card-border)' }}>
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>Calculando tu siguiente mejor acción…</p>
       </div>
     )
   }
@@ -38,124 +44,93 @@ export default function NextBestAction() {
     return order[a.priority] - order[b.priority]
   })
   const main = ordered[0]
-  const secondary = ordered.slice(1, 4)
+  const secondary = ordered.slice(1, 3)
 
+  // Empty state — calm, reassuring
   if (!main) {
     return (
-      <div className="dash-anim-3" style={{
-        marginBottom: 'var(--ds-space-lg)',
-        padding: 'var(--ds-space-lg)',
-        borderRadius: 'var(--ds-card-radius)',
-        background: 'var(--ds-color-success-soft)',
-        border: '1px solid var(--ds-color-success-border)',
-        borderLeft: '3px solid var(--ds-color-success)',
+      <div className="dash-anim-2" style={{
+        ...PANEL_BASE,
+        borderLeftColor: 'var(--ds-color-success)',
       }}>
-        <p style={{ fontSize: 14, color: 'var(--ds-color-success)', fontWeight: 600 }}>
-          ✓ Todo en orden por ahora. Volvé después de publicar nuevas campañas.
+        <p style={{
+          fontSize: 10, fontWeight: 600, color: 'var(--ds-color-success)',
+          textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 6,
+        }}>
+          Todo en orden
+        </p>
+        <p style={{ fontSize: 15, color: 'var(--ds-text-primary)', fontWeight: 500, lineHeight: 1.4 }}>
+          Seguí monitoreando tus campañas. Las recomendaciones aparecerán acá cuando haya algo para accionar.
         </p>
       </div>
     )
   }
 
   return (
-    <div className="dash-anim-3" style={{
-      marginBottom: 'var(--ds-space-lg)',
-      borderRadius: 'var(--ds-card-radius)',
-      padding: 'var(--ds-space-lg)',
-      background: 'var(--ds-card-bg)',
-      border: '1px solid var(--ds-card-border)',
-      borderLeft: '3px solid var(--ds-color-primary)',
-      backdropFilter: 'blur(var(--ds-card-blur))',
-      WebkitBackdropFilter: 'blur(var(--ds-card-blur))',
-      boxShadow: 'var(--ds-shadow-sm)',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 20 }}>
-        <div style={{
-          width: 52, height: 52, borderRadius: 14, flexShrink: 0,
-          background: 'var(--ds-color-primary-soft)',
-          border: '1px solid var(--ds-color-primary-border)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
+    <div className="dash-anim-2" style={PANEL_BASE}>
+      <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+        {/* Icon — 24px, sin contenedor grande que compita */}
+        <span style={{
+          fontSize: 22, lineHeight: 1, flexShrink: 0, marginTop: 2,
+          filter: 'drop-shadow(0 0 8px rgba(96, 165, 250, 0.35))',
         }}>
-          <Compass size={24} style={{ color: 'var(--ds-color-primary)' }} strokeWidth={1.75} />
-        </div>
+          {main.icon || '🧭'}
+        </span>
 
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-            <p style={{
-              fontSize: 10, fontWeight: 700,
-              color: 'var(--ds-color-primary)',
-              letterSpacing: '0.08em', textTransform: 'uppercase',
-            }}>
-              Tu siguiente mejor acción
-            </p>
-            <span style={{
-              fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 99,
-              background: 'var(--ds-color-primary-soft)',
-              color: 'var(--ds-color-primary)',
-              border: '1px solid var(--ds-color-primary-border)',
-            }}>
-              GPS
-            </span>
-          </div>
-          <h2 style={{
-            fontFamily: 'Syne, sans-serif',
-            fontSize: 18, fontWeight: 700,
-            color: 'var(--ds-text-primary)', marginBottom: 4,
-            lineHeight: 1.3,
-          }}>
-            {main.icon} {main.title}
-          </h2>
+          {/* Overline */}
           <p style={{
-            fontSize: 13, color: 'var(--ds-text-secondary)',
-            lineHeight: 1.55, marginBottom: 14, maxWidth: 640,
+            fontSize: 10, fontWeight: 600, color: 'var(--ds-color-primary)',
+            textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 6,
+          }}>
+            Tu siguiente mejor acción
+          </p>
+
+          {/* Main text — directivo, max 2 líneas */}
+          <p style={{
+            fontSize: 15, fontWeight: 500, color: 'var(--ds-text-primary)',
+            lineHeight: 1.45, marginBottom: 6,
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical' as any,
+            overflow: 'hidden',
+          }}>
+            {main.title}
+          </p>
+
+          {/* Sub-description */}
+          <p style={{
+            fontSize: 13, color: 'var(--ds-text-secondary)', lineHeight: 1.5,
+            marginBottom: 16, maxWidth: 640,
           }}>
             {main.description}
           </p>
 
+          {/* Primary CTA — button, not a link */}
           {main.action?.href ? (
-            <Link href={main.action.href} style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              padding: '10px 20px', borderRadius: 99,
-              background: 'var(--ds-color-primary)',
-              color: '#fff', fontWeight: 700, fontSize: 13,
-              textDecoration: 'none',
-              transition: 'all 0.2s',
+            <Link href={main.action.href} className="btn-primary" style={{
+              fontSize: 13, padding: '10px 20px',
             }}>
               {main.action.label} <ArrowRight size={14} />
             </Link>
-          ) : (
-            <span style={{ fontSize: 12, color: 'var(--ds-text-muted)', fontStyle: 'italic' }}>Sin acción directa — revisá manualmente.</span>
-          )}
+          ) : null}
 
+          {/* Secondary actions — max 2 small links */}
           {secondary.length > 0 && (
-            <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid var(--ds-card-border)' }}>
-              <p style={{
-                fontSize: 10, fontWeight: 700,
-                color: 'var(--ds-text-muted)',
-                textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 8,
-              }}>
-                También podés
-              </p>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {secondary.map(s => (
-                  <li key={s.id}>
-                    {s.action?.href ? (
-                      <Link href={s.action.href} style={{
-                        fontSize: 12, color: 'var(--ds-text-secondary)',
-                        textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6,
-                      }}>
-                        <span>{s.icon}</span>
-                        <span>{s.title}</span>
-                        <ArrowRight size={11} style={{ color: 'var(--ds-color-primary)' }} />
-                      </Link>
-                    ) : (
-                      <span style={{ fontSize: 12, color: 'var(--ds-text-muted)' }}>
-                        {s.icon} {s.title}
-                      </span>
-                    )}
-                  </li>
-                ))}
-              </ul>
+            <div style={{
+              marginTop: 16, display: 'flex', gap: 20, flexWrap: 'wrap',
+            }}>
+              {secondary.map(s => (
+                s.action?.href ? (
+                  <Link key={s.id} href={s.action.href} style={{
+                    fontSize: 13, color: 'var(--ds-text-secondary)',
+                    textDecoration: 'none',
+                    display: 'inline-flex', alignItems: 'center', gap: 4,
+                  }}>
+                    {s.title} <ArrowRight size={11} style={{ color: 'var(--ds-color-primary)' }} />
+                  </Link>
+                ) : null
+              ))}
             </div>
           )}
         </div>

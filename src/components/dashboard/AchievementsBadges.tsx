@@ -55,7 +55,15 @@ export default function AchievementsBadges() {
 
   if (loading) {
     return (
-      <div className="dash-anim-6 mb-6 card p-6">
+      <div className="dash-anim-6" style={{
+        padding: 20,
+        borderRadius: 'var(--ds-card-radius)',
+        background: 'var(--ds-card-bg)',
+        border: '1px solid var(--ds-card-border)',
+        backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
+        WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
+        boxShadow: 'var(--ds-shadow-sm)',
+      }}>
         <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>Cargando logros…</p>
       </div>
     )
@@ -63,63 +71,106 @@ export default function AchievementsBadges() {
 
   if (!achievements.length) return null
 
+  // Pick 6: the last unlocked + the next 2 locked (most actionable)
+  const unlocked = achievements.filter(a => a.unlocked)
+  const locked = achievements.filter(a => !a.unlocked)
+  const display = [
+    ...unlocked.slice(-4),
+    ...locked.slice(0, 6 - Math.min(4, unlocked.length)),
+  ].slice(0, 6)
+
   return (
     <>
       <AchievementToast achievements={newUnlocks} onAllDismissed={handleAllDismissed} />
-      <div className="dash-anim-6 mb-6 card p-6">
-        <div className="flex items-center justify-between mb-1">
-          <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff' }}>
-            Tus logros de crecimiento
+      <div className="dash-anim-6" style={{
+        padding: 20,
+        borderRadius: 'var(--ds-card-radius)',
+        background: 'var(--ds-card-bg)',
+        border: '1px solid var(--ds-card-border)',
+        backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
+        WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
+        boxShadow: 'var(--ds-shadow-sm)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+          <h2 style={{
+            fontFamily: 'Syne, sans-serif',
+            fontSize: 16, fontWeight: 600,
+            color: 'var(--ds-text-primary)',
+            letterSpacing: '-0.01em',
+          }}>
+            Logros
           </h2>
           <span style={{
-            fontSize: 11, fontWeight: 700,
-            padding: '4px 12px', borderRadius: 99,
-            background: 'var(--ds-color-warning-soft)', color: 'var(--ds-color-warning)',
+            fontSize: 10, fontWeight: 700,
+            padding: '3px 10px', borderRadius: 99,
+            background: 'var(--ds-color-warning-soft)',
+            color: 'var(--ds-color-warning)',
             border: '1px solid var(--ds-color-warning-border)',
           }}>
-            {unlockedCount} / {achievements.length} desbloqueados
+            {unlockedCount} / {achievements.length}
           </span>
         </div>
-        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 18 }}>
-          Cada hito que vas alcanzando mientras crece tu negocio
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 16 }}>
+          Hitos recientes y próximos
         </p>
 
+        {/* 3 × 2 compact grid, no horizontal scroll */}
         <div style={{
-          display: 'flex', gap: 16, overflowX: 'auto',
-          paddingBottom: 8, scrollbarWidth: 'thin',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: 12,
+          marginBottom: 14,
         }}>
-          {achievements.map(a => (
+          {display.map(a => (
             <div key={a.id}
               title={`${a.name}${a.unlocked_at ? ` · ${new Date(a.unlocked_at).toLocaleDateString('es')}` : ''}: ${a.description}`}
               style={{
-                flexShrink: 0,
-                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-                minWidth: 90,
-                opacity: a.unlocked ? 1 : 0.30,
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+                opacity: a.unlocked ? 1 : 0.35,
                 filter: a.unlocked ? 'none' : 'grayscale(80%)',
-                transition: 'all 0.2s',
                 cursor: 'help',
               }}>
               <div style={{
-                width: 56, height: 56, borderRadius: '50%',
+                width: 42, height: 42, borderRadius: '50%',
                 background: a.unlocked
-                  ? 'radial-gradient(circle at 38% 38%, rgba(245,158,11,0.30), rgba(245,158,11,0.05))'
-                  : 'radial-gradient(circle at 38% 38%, rgba(255,255,255,0.06), rgba(255,255,255,0.01))',
-                border: a.unlocked ? '2px solid rgba(245,158,11,0.55)' : '1.5px solid rgba(255,255,255,0.10)',
-                boxShadow: a.unlocked ? '0 0 24px rgba(245,158,11,0.40), 0 0 48px rgba(245,158,11,0.15)' : 'none',
+                  ? 'var(--ds-color-warning-soft)'
+                  : 'rgba(255,255,255,0.03)',
+                border: a.unlocked
+                  ? '1px solid var(--ds-color-warning-border)'
+                  : '1px solid var(--ds-card-border)',
+                boxShadow: a.unlocked ? '0 0 16px rgba(251,191,36,0.18)' : 'none',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 26,
+                fontSize: 20,
               }}>
                 {a.icon}
               </div>
               <p style={{
-                fontSize: 10, fontWeight: 600, color: a.unlocked ? '#fff' : '#8892b0',
-                textAlign: 'center', lineHeight: 1.3, maxWidth: 90,
+                fontSize: 10, fontWeight: 600,
+                color: a.unlocked ? 'var(--ds-text-primary)' : 'var(--ds-text-muted)',
+                textAlign: 'center', lineHeight: 1.25,
+                overflow: 'hidden',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical' as any,
               }}>
                 {a.name}
               </p>
             </div>
           ))}
+        </div>
+
+        <div style={{
+          paddingTop: 12,
+          borderTop: '1px solid var(--ds-card-border)',
+          textAlign: 'right',
+        }}>
+          <a href="/dashboard/pixel" style={{
+            fontSize: 11, fontWeight: 600,
+            color: 'var(--ds-color-primary)',
+            textDecoration: 'none',
+          }}>
+            Ver todos los logros →
+          </a>
         </div>
       </div>
     </>

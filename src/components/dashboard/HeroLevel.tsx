@@ -1,6 +1,7 @@
 'use client'
-// src/components/dashboard/HeroLevel.tsx — Hero block: greeting + level + monthly snapshot
-// Migrated to unified design system. Same content + behavior, sober palette.
+// src/components/dashboard/HeroLevel.tsx — The command center hero.
+// Dominates ~25% of the initial viewport. No decorative competition,
+// no heavy gradients, no redundant badges. Just the state of the business.
 
 interface Props {
   fullName:        string
@@ -19,7 +20,7 @@ interface Props {
   hasPixel:        boolean
 }
 
-function roasStatus(roas: number): string {
+function roasColor(roas: number): string {
   if (roas >= 3)   return 'var(--ds-color-success)'
   if (roas >= 1.5) return 'var(--ds-color-warning)'
   if (roas > 0)    return 'var(--ds-color-danger)'
@@ -31,135 +32,130 @@ export default function HeroLevel(p: Props) {
     ? Math.min(100, Math.round((p.metricCurrent / p.metricRequired) * 100))
     : 0
 
+  // Compact KPI strip (inline, 4 items)
+  const kpis: Array<{ label: string; value: string; color?: string }> = [
+    { label: 'Invertido',      value: `$${p.monthSpend.toFixed(0)}` },
+    { label: 'Ventas',         value: String(p.monthSales), color: 'var(--ds-color-success)' },
+    { label: 'ROAS',           value: p.monthRoas > 0 ? `${p.monthRoas.toFixed(1)}x` : '—', color: roasColor(p.monthRoas) },
+    { label: 'Días restantes', value: String(p.daysRemaining) },
+  ]
+
   return (
-    <div className="dash-anim-1 ds-hero" style={{
-      marginBottom: 'var(--ds-space-xl)',
+    <div className="dash-anim-1" style={{
+      marginBottom: 8,
       borderRadius: 'var(--ds-card-radius)',
-      padding: '36px 40px',
+      padding: '32px 36px',
       background: 'var(--ds-card-bg)',
       border: '1px solid var(--ds-card-border)',
       backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
       WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
       boxShadow: 'var(--ds-shadow-md)',
-      position: 'relative', overflow: 'hidden',
+      position: 'relative',
     }}>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* ── LEFT 2/3: greeting + level + progress ── */}
-        <div className="md:col-span-2">
-          <p style={{
-            fontSize: 10, fontWeight: 600, letterSpacing: '0.12em',
-            textTransform: 'uppercase', color: 'var(--ds-text-label)',
-            marginBottom: 10,
-          }}>
-            Centro de mando · AdFlow
-          </p>
-          <h1 style={{
-            fontFamily: 'Syne, system-ui, sans-serif',
-            fontSize: 26, fontWeight: 600, letterSpacing: '-0.02em',
-            color: 'var(--ds-text-primary)', marginBottom: 18, lineHeight: 1.2,
-          }}>
-            Bienvenido, {p.fullName} 👋
-          </h1>
+      {/* Overline */}
+      <p style={{
+        fontSize: 10, fontWeight: 600, letterSpacing: '0.12em',
+        textTransform: 'uppercase', color: 'var(--ds-text-label)',
+        marginBottom: 10,
+      }}>
+        Centro de mando · AdFlow
+      </p>
 
-          {p.hasPixel ? (
-            <>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
-                <span style={{ fontSize: 13, color: 'var(--ds-text-secondary)' }}>Tu negocio está en</span>
-                <span style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 6,
-                  padding: '4px 12px', borderRadius: 99,
-                  background: 'var(--ds-color-primary-soft)',
-                  border: '1px solid var(--ds-color-primary-border)',
-                  color: 'var(--ds-color-primary)',
-                  fontSize: 12, fontWeight: 700,
-                }}>
-                  NIVEL {p.level} · {p.levelName}
-                </span>
-              </div>
+      {/* Greeting */}
+      <h1 style={{
+        fontFamily: 'Syne, system-ui, sans-serif',
+        fontSize: 26, fontWeight: 600, letterSpacing: '-0.02em',
+        color: 'var(--ds-text-primary)', marginBottom: 10, lineHeight: 1.2,
+      }}>
+        Bienvenido, {p.fullName} 👋
+      </h1>
 
-              {p.level < 8 && p.metricRequired > 0 && (
-                <>
-                  <div style={{
-                    height: 8, borderRadius: 99,
-                    background: 'rgba(255,255,255,0.05)',
-                    overflow: 'hidden', marginBottom: 8,
-                  }}>
-                    <div style={{
-                      height: '100%', width: `${pct}%`,
-                      background: 'var(--ds-color-primary)',
-                      transition: 'width 0.8s cubic-bezier(0.16,1,0.3,1)',
-                      borderRadius: 99,
-                    }} />
-                  </div>
-                  <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', marginBottom: 6 }}>
-                    <b style={{ color: 'var(--ds-text-primary)' }}>{p.metricCurrent.toLocaleString()}</b> de{' '}
-                    <b style={{ color: 'var(--ds-text-primary)' }}>{p.metricRequired.toLocaleString()}</b>{' '}
-                    {p.metricLabel} para llegar a <b style={{ color: 'var(--ds-color-primary)' }}>nivel {p.nextLevel}: {p.nextLevelName}</b>
-                  </p>
-                  <p style={{ fontSize: 12, color: 'var(--ds-text-muted)', fontStyle: 'italic' }}>
-                    Cuando subas al siguiente nivel, desbloquearás {p.unlockTeaser}.
-                  </p>
-                </>
-              )}
-              {p.level >= 8 && (
-                <p style={{ fontSize: 14, color: 'var(--ds-color-primary)' }}>
-                  👑 Estás en el nivel máximo. Seguí escalando lo que ya funciona.
-                </p>
-              )}
-            </>
-          ) : (
-            <p style={{ fontSize: 14, color: 'var(--ds-text-secondary)' }}>
-              Configurá tu pixel para empezar a medir el crecimiento de tu negocio.{' '}
-              <a href="/dashboard/settings" style={{ color: 'var(--ds-color-primary)', textDecoration: 'underline' }}>
-                Ir a configuración →
-              </a>
-            </p>
-          )}
-        </div>
+      {/* Level line */}
+      {p.hasPixel ? (
+        <p style={{ fontSize: 16, color: 'var(--ds-text-secondary)', marginBottom: 22, lineHeight: 1.4 }}>
+          Tu negocio está en{' '}
+          <strong style={{ color: 'var(--ds-color-primary)', fontWeight: 700 }}>
+            Nivel {p.level}: {p.levelName}
+          </strong>
+        </p>
+      ) : (
+        <p style={{ fontSize: 14, color: 'var(--ds-text-secondary)', marginBottom: 22 }}>
+          Configurá tu pixel para empezar a medir el crecimiento de tu negocio.{' '}
+          <a href="/dashboard/settings" style={{ color: 'var(--ds-color-primary)', textDecoration: 'underline' }}>
+            Ir a configuración →
+          </a>
+        </p>
+      )}
 
-        {/* ── RIGHT 1/3: monthly snapshot ── */}
-        <div style={{
-          padding: 'var(--ds-space-lg)',
-          borderRadius: 'var(--ds-card-radius-sm)',
-          background: 'var(--ds-bg-elevated)',
-          border: '1px solid var(--ds-card-border)',
-          display: 'flex', flexDirection: 'column', gap: 14,
-        }}>
-          <p style={{
-            fontSize: 10, fontWeight: 700, letterSpacing: '0.10em',
-            textTransform: 'uppercase', color: 'var(--ds-text-label)',
-          }}>
-            Este mes
-          </p>
-          <div>
-            <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>Invertido</p>
-            <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 20, fontWeight: 800, color: 'var(--ds-text-primary)' }}>
-              ${p.monthSpend.toFixed(0)}
-            </p>
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>Ventas</p>
-              <p style={{ fontSize: 15, fontWeight: 700, color: 'var(--ds-color-success)' }}>{p.monthSales}</p>
-            </div>
-            <div>
-              <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>ROAS</p>
-              <p style={{ fontSize: 15, fontWeight: 700, color: roasStatus(p.monthRoas) }}>
-                {p.monthRoas > 0 ? `${p.monthRoas.toFixed(1)}x` : '—'}
-              </p>
-            </div>
-          </div>
+      {/* Progress bar (only if hasPixel and level < 8) */}
+      {p.hasPixel && p.level < 8 && p.metricRequired > 0 && (
+        <div style={{ marginBottom: 22 }}>
           <div style={{
-            padding: '6px 12px', borderRadius: 99,
-            background: 'var(--ds-color-primary-soft)',
-            border: '1px solid var(--ds-color-primary-border)',
-            textAlign: 'center',
+            height: 10, borderRadius: 99,
+            background: 'rgba(255, 255, 255, 0.05)',
+            overflow: 'hidden',
+            border: '1px solid var(--ds-card-border)',
           }}>
-            <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--ds-color-primary)' }}>
-              {p.daysRemaining} días restantes del mes
-            </span>
+            <div
+              className="progress-bar-fill"
+              style={{
+                height: '100%', width: `${pct}%`,
+                background: 'linear-gradient(90deg, var(--ds-color-primary) 0%, rgba(96, 165, 250, 0.25) 100%)',
+                boxShadow: '0 0 16px rgba(96, 165, 250, 0.35)',
+                borderRadius: 99,
+              }}
+            />
           </div>
+          <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', marginTop: 10, lineHeight: 1.4 }}>
+            <strong style={{ color: 'var(--ds-text-primary)', fontWeight: 600 }}>
+              {p.metricCurrent.toLocaleString()}
+            </strong>
+            {' '}de{' '}
+            <strong style={{ color: 'var(--ds-text-primary)', fontWeight: 600 }}>
+              {p.metricRequired.toLocaleString()}
+            </strong>
+            {' '}{p.metricLabel} para{' '}
+            <strong style={{ color: 'var(--ds-color-primary)', fontWeight: 600 }}>
+              Nivel {p.nextLevel}: {p.nextLevelName}
+            </strong>
+          </p>
+          <p style={{ fontSize: 12, color: 'var(--ds-text-muted)', marginTop: 6, fontStyle: 'italic' }}>
+            Cuando subas desbloquearás {p.unlockTeaser}.
+          </p>
         </div>
+      )}
+
+      {p.hasPixel && p.level >= 8 && (
+        <p style={{ fontSize: 14, color: 'var(--ds-color-primary)', marginBottom: 22 }}>
+          👑 Estás en el nivel máximo. Seguí escalando lo que ya funciona.
+        </p>
+      )}
+
+      {/* Compact KPI strip */}
+      <div style={{
+        display: 'flex',
+        gap: 32,
+        paddingTop: 18,
+        borderTop: '1px solid var(--ds-card-border)',
+        flexWrap: 'wrap',
+      }}>
+        {kpis.map(k => (
+          <div key={k.label} style={{ flex: '1 1 auto', minWidth: 80 }}>
+            <p style={{
+              fontSize: 10, fontWeight: 600, color: 'var(--ds-text-label)',
+              textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 4,
+            }}>
+              {k.label}
+            </p>
+            <p style={{
+              fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 600,
+              color: k.color || 'var(--ds-text-primary)',
+              letterSpacing: '-0.01em', lineHeight: 1.1,
+            }}>
+              {k.value}
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   )

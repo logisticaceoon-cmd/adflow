@@ -1143,10 +1143,7 @@
     z-index: -1;
     filter: blur(20px);
   }
-  /* Children of the panel get vertical breathing room between modules */
-  .dashboard-panel > * + * {
-    margin-top: var(--ds-space-xl);
-  }
+  /* Children handle their own margin-bottom; the panel just contains them. */
 
   /* ─────────────────────────────────────────────────────────────
      PREMIUM GLASS DESIGN SYSTEM — layout helpers
