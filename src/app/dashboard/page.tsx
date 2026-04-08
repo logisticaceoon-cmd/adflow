@@ -13,6 +13,7 @@ import SyncButton from '@/components/dashboard/SyncButton'
 import OnboardingChecklist from '@/components/dashboard/OnboardingChecklist'
 import { calculateOnboardingStatus } from '@/lib/onboarding-engine'
 import { generateStrategicDecisions, type DecisionInput } from '@/lib/decision-engine'
+import { getDecisionMemory, saveDecision, detectCompletedActions } from '@/lib/memory-engine'
 import type { Phase } from '@/lib/budget-engine'
 
 const AI_TIPS = [
@@ -223,6 +224,17 @@ export default async function DashboardPage() {
     .sort()
     .reverse()[0]
 
+  // ── Strategic memory — auto-complete past decisions + load recall ───────
+  // Both calls are wrapped in try/catch internally; if memory is unavailable
+  // the decision engine still works stateless.
+  let memorySnapshot: Awaited<ReturnType<typeof getDecisionMemory>> | null = null
+  try {
+    await detectCompletedActions(user.id)
+    memorySnapshot = await getDecisionMemory(user.id, 7)
+  } catch {
+    memorySnapshot = null
+  }
+
   const decisionInput: DecisionInput = {
     onboardingComplete:       onboardingStatus.isComplete,
     onboardingNextStep:       onboardingStatus.nextStep
@@ -260,9 +272,32 @@ export default async function DashboardPage() {
     metaConnected: !!fbConnection?.access_token,
     tokenExpiresAt: undefined, // token_expires_at column not currently tracked
     lastSyncAt,
+
+    memory: memorySnapshot ? {
+      ignoredActions:        memorySnapshot.ignoredActions,
+      completedActions:      memorySnapshot.completedActions,
+      repeatedSuggestions:   memorySnapshot.repeatedSuggestions,
+      lastSuggestedActionId: memorySnapshot.lastSuggestedActionId,
+    } : undefined,
   }
 
   const decisions = generateStrategicDecisions(decisionInput)
+
+  // Persist this generation to memory. Never blocks the render.
+  try {
+    await saveDecision({
+      userId:                user.id,
+      primaryActionId:       decisions.primaryAction.id,
+      primaryActionTitle:    decisions.primaryAction.title,
+      primaryActionPriority: decisions.primaryAction.priority,
+      primaryActionImpact:   decisions.primaryAction.impact,
+      primaryActionReason:   decisions.primaryAction.reason,
+      secondaryActionIds:    decisions.secondaryActions.map(a => a.id),
+      contextSnapshot:       decisions.contextSnapshot,
+    })
+  } catch {
+    /* memory write failure never breaks the dashboard */
+  }
 
   return (
     <>

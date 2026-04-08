@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { analyzePixel, savePixelAnalysis, type PixelAnalysis } from '@/lib/pixel-analyzer'
 import { searchMetaInterests, findOrCreateRetargetingAudience, findOrCreateLookalike } from '@/lib/audience-engine'
 import { createNotification } from '@/lib/notification-engine'
+import { markActionCompleted } from '@/lib/memory-engine'
 import type { AdSetItem, AdCopyItem, CampaignStructure } from '@/types'
 
 const GRAPH = 'https://graph.facebook.com/v20.0'
@@ -642,6 +643,11 @@ export async function POST(req: NextRequest) {
     }).eq('id', campaign_id)
 
     console.log('[publish-campaign] ✓ DONE:', { adSets: adSetIds.length, ads: adIds.length, errors: errors.length })
+
+    // Strategic memory: mark "first_campaign" as completed if this is a first publish
+    if (!isShellOnly) {
+      try { await markActionCompleted(user.id, 'first_campaign') } catch { /* ignore */ }
+    }
 
     // Persistent notification (never breaks the publish flow)
     if (!isShellOnly) {

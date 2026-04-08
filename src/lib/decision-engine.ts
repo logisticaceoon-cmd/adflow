@@ -50,6 +50,18 @@ export interface StrategicDecision {
   primaryAction: PrimaryAction
   secondaryActions: SecondaryAction[]
   alerts: DecisionAlert[]
+  /** ID of the primary action — used to persist / correlate with memory */
+  decisionId: string
+  /** Snapshot of the business state at generation time — stored with the decision */
+  contextSnapshot: Record<string, unknown>
+}
+
+/** Memory feedback from past decisions — optional, engine works without it */
+export interface DecisionMemoryInput {
+  ignoredActions: string[]
+  completedActions: string[]
+  repeatedSuggestions: Record<string, number>
+  lastSuggestedActionId: string | null
 }
 
 export interface DecisionInput {
@@ -94,6 +106,9 @@ export interface DecisionInput {
 
   // Last sync
   lastSyncAt?: string
+
+  // Memory (optional — when absent, engine runs stateless like before)
+  memory?: DecisionMemoryInput
 }
 
 const PRIORITY_ORDER: Record<Priority, number> = {
@@ -342,15 +357,54 @@ export function generateStrategicDecisions(input: DecisionInput): StrategicDecis
   }
 
   // ═══════════════════════════════════════════════════════════
+  // MEMORY — adjust decisions based on past behaviour
+  // ═══════════════════════════════════════════════════════════
+
+  let effectiveActions = actions
+  if (input.memory) {
+    const mem = input.memory
+
+    for (const action of effectiveActions) {
+      // If the user already completed this action, demote it to an opportunity
+      // and annotate the description so it doesn't feel like a repeated ask.
+      if (mem.completedActions.includes(action.id)) {
+        action.priority = 'opportunity'
+        if (!action.description.endsWith('(Ya realizaste esta acción recientemente)')) {
+          action.description += ' (Ya realizaste esta acción recientemente)'
+        }
+      }
+
+      // If the same action has been suggested 3+ times without being executed,
+      // reframe the reason to acknowledge the repetition.
+      const repeatCount = mem.repeatedSuggestions[action.id] || 0
+      if (repeatCount >= 3) {
+        action.reason = `Te lo recomendamos ${repeatCount} veces. Es realmente importante para tu crecimiento.`
+      }
+
+      // If this was the last thing we suggested and the user ignored it, emphasize.
+      if (action.id === mem.lastSuggestedActionId && mem.ignoredActions.includes(action.id)) {
+        if (!action.title.startsWith('📌 ')) {
+          action.title = `📌 ${action.title}`
+        }
+      }
+    }
+
+    // Completed non-critical actions are filtered out of the top slot
+    effectiveActions = effectiveActions.filter(a =>
+      !mem.completedActions.includes(a.id) || a.priority === 'critical'
+    )
+  }
+
+  // ═══════════════════════════════════════════════════════════
   // FINALIZE — sort by priority and build result
   // ═══════════════════════════════════════════════════════════
 
-  actions.sort((a, b) => PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority])
+  effectiveActions.sort((a, b) => PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority])
   alerts.sort((a, b) => PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority])
 
   // Default "all good" state
-  if (actions.length === 0) {
-    actions.push({
+  if (effectiveActions.length === 0) {
+    effectiveActions.push({
       id: 'all_good',
       title: 'Todo en orden. Seguí monitoreando tus campañas.',
       description: 'No hay acciones urgentes por ahora. Revisá el dashboard periódicamente para detectar oportunidades.',
@@ -362,9 +416,29 @@ export function generateStrategicDecisions(input: DecisionInput): StrategicDecis
     })
   }
 
+  const primary = effectiveActions[0]
+
+  const contextSnapshot: Record<string, unknown> = {
+    pixelLevel:      input.pixelLevel,
+    pageViews30d:    input.pageViews30d,
+    viewContent30d:  input.viewContent30d,
+    addToCart30d:    input.addToCart30d,
+    purchases30d:    input.purchases30d,
+    purchases180d:   input.purchases180d,
+    totalSpendMonth: input.totalSpendMonth,
+    totalRevenueMonth: input.totalRevenueMonth,
+    avgRoas:         input.avgRoas,
+    totalCampaigns:  input.totalCampaigns,
+    activeCampaigns: input.activeCampaigns,
+    hasBudget:       input.hasBudget,
+    metaConnected:   input.metaConnected,
+    pixelConfigured: input.pixelConfigured,
+    onboardingComplete: input.onboardingComplete,
+  }
+
   return {
-    primaryAction: actions[0],
-    secondaryActions: actions.slice(1, 3).map(a => ({
+    primaryAction: primary,
+    secondaryActions: effectiveActions.slice(1, 3).map(a => ({
       id: a.id,
       title: a.title,
       description: a.description,
@@ -372,5 +446,7 @@ export function generateStrategicDecisions(input: DecisionInput): StrategicDecis
       icon: a.icon,
     })),
     alerts,
+    decisionId: primary.id,
+    contextSnapshot,
   }
 }

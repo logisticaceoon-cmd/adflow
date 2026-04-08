@@ -1,8 +1,8 @@
 // src/components/dashboard/NextBestAction.tsx
 // The GPS — "tu siguiente mejor acción". Sits directly under the hero.
 // Data now comes from the strategic decision engine (server-side, via props).
-import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import TrackedCtaButton from './TrackedCtaButton'
 import type { PrimaryAction, SecondaryAction } from '@/lib/decision-engine'
 
 interface Props {
@@ -93,16 +93,25 @@ export default function NextBestAction({ primaryAction, secondaryActions }: Prop
             </p>
           )}
 
-          {/* Primary CTA — real button */}
+          {/* Primary CTA — tracked button, fires POST /api/actions/track */}
           {primaryAction.cta.href && (
-            <Link href={primaryAction.cta.href} className="btn-primary" style={{
-              fontSize: 13, padding: '10px 20px',
-            }}>
+            <TrackedCtaButton
+              actionId={primaryAction.id}
+              actionLabel={primaryAction.cta.label}
+              href={primaryAction.cta.href}
+              source="dashboard_gps_primary"
+              className="btn-primary"
+              style={{
+                fontSize: 13, padding: '10px 20px',
+                textDecoration: 'none',
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+              }}
+            >
               {primaryAction.cta.label} <ArrowRight size={14} />
-            </Link>
+            </TrackedCtaButton>
           )}
 
-          {/* Secondary actions — max 2, compact links */}
+          {/* Secondary actions — max 2, tracked compact links */}
           {secondaryActions.length > 0 && (
             <div style={{
               marginTop: 16, paddingTop: 14,
@@ -116,11 +125,18 @@ export default function NextBestAction({ primaryAction, secondaryActions }: Prop
                 También podrías
               </p>
               {secondaryActions.map(s => (
-                <Link key={s.id} href={s.cta.href} style={{
-                  fontSize: 13, color: 'var(--ds-text-secondary)',
-                  textDecoration: 'none',
-                  display: 'inline-flex', alignItems: 'center', gap: 6,
-                }}>
+                <TrackedCtaButton
+                  key={s.id}
+                  actionId={s.id}
+                  actionLabel={s.cta.label}
+                  href={s.cta.href}
+                  source="dashboard_gps_secondary"
+                  style={{
+                    fontSize: 13, color: 'var(--ds-text-secondary)',
+                    textDecoration: 'none',
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                  }}
+                >
                   <span>{s.icon}</span>
                   <span style={{
                     flex: 1,
@@ -131,7 +147,7 @@ export default function NextBestAction({ primaryAction, secondaryActions }: Prop
                     {s.title}
                   </span>
                   <ArrowRight size={11} style={{ color: 'var(--ds-color-primary)', flexShrink: 0 }} />
-                </Link>
+                </TrackedCtaButton>
               ))}
             </div>
           )}

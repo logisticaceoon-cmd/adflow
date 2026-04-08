@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { syncUserMetrics, type DatePreset } from '@/lib/meta-sync-engine'
+import { markActionCompleted } from '@/lib/memory-engine'
 
 const VALID_PRESETS: DatePreset[] = ['yesterday', 'last_7d', 'last_14d', 'last_30d']
 
@@ -14,5 +15,11 @@ export async function POST(req: NextRequest) {
   const datePreset = (VALID_PRESETS.includes(body?.date_preset) ? body.date_preset : 'last_7d') as DatePreset
 
   const result = await syncUserMetrics(user.id, datePreset)
+
+  // Strategic memory: first successful sync completes the first_sync action
+  if (result.status === 'success' || result.status === 'partial') {
+    try { await markActionCompleted(user.id, 'first_sync') } catch { /* ignore */ }
+  }
+
   return NextResponse.json({ result })
 }

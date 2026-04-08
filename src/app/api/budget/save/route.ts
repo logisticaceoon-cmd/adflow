@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createNotification } from '@/lib/notification-engine'
+import { markActionCompleted } from '@/lib/memory-engine'
 
 export async function POST(req: NextRequest) {
   const supabase = createClient()
@@ -32,6 +33,9 @@ export async function POST(req: NextRequest) {
   }, { onConflict: 'user_id,month_year' })
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+  // Strategic memory: mark set_budget as completed
+  try { await markActionCompleted(user.id, 'set_budget') } catch { /* ignore */ }
 
   // Persistent notification
   try {

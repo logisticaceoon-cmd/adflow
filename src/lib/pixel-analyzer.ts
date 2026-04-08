@@ -169,6 +169,15 @@ export async function savePixelAnalysis(userId: string, analysis: PixelAnalysis)
       } catch (e) {
         console.warn('[pixel-analyzer] level-up notification failed:', e)
       }
+
+      // Strategic memory: a level-up completes any pending "grow_*" actions
+      try {
+        const { markActionCompleted } = await import('@/lib/memory-engine')
+        await markActionCompleted(userId, 'grow_vc')
+        await markActionCompleted(userId, 'grow_traffic')
+      } catch (e) {
+        console.warn('[pixel-analyzer] memory completion failed:', e)
+      }
     }
   }
 
