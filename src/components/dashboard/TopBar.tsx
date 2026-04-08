@@ -257,12 +257,12 @@ export default function TopBar() {
         </button>
 
         {open && (
-          <div className="absolute right-0 top-11 w-96 rounded-2xl shadow-2xl overflow-hidden z-50"
+          <div className="absolute right-0 top-11 w-96 rounded-2xl overflow-hidden z-50 elevation-3"
                style={{
-                 background: 'linear-gradient(160deg, rgba(14,8,22,0.98), rgba(8,8,16,0.99))',
-                 border: '1px solid rgba(255,255,255,0.08)',
-                 boxShadow: '0 24px 72px rgba(0,0,0,0.80), 0 0 40px var(--ds-color-primary-soft)',
-                 backdropFilter: 'blur(24px)',
+                 background: 'var(--ds-card-bg)',
+                 border: '1px solid var(--ds-card-border)',
+                 backdropFilter: 'blur(28px) saturate(1.4)',
+                 WebkitBackdropFilter: 'blur(28px) saturate(1.4)',
                  maxHeight: 520,
                  display: 'flex',
                  flexDirection: 'column',

@@ -32,31 +32,31 @@ export default function HeroLevel(p: Props) {
     : 0
 
   return (
-    <div className="dash-anim-1" style={{
-      marginBottom: 'var(--ds-space-lg)',
+    <div className="dash-anim-1 ds-hero" style={{
+      marginBottom: 'var(--ds-space-xl)',
       borderRadius: 'var(--ds-card-radius)',
-      padding: 'var(--ds-space-xl)',
+      padding: '36px 40px',
       background: 'var(--ds-card-bg)',
       border: '1px solid var(--ds-card-border)',
-      backdropFilter: 'blur(var(--ds-card-blur))',
-      WebkitBackdropFilter: 'blur(var(--ds-card-blur))',
+      backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
+      WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
       boxShadow: 'var(--ds-shadow-md)',
       position: 'relative', overflow: 'hidden',
     }}>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* ── LEFT 2/3: greeting + level + progress ── */}
         <div className="md:col-span-2">
           <p style={{
-            fontSize: 10, fontWeight: 700, letterSpacing: '0.10em',
+            fontSize: 10, fontWeight: 600, letterSpacing: '0.12em',
             textTransform: 'uppercase', color: 'var(--ds-text-label)',
-            marginBottom: 8,
+            marginBottom: 10,
           }}>
             Centro de mando · AdFlow
           </p>
           <h1 style={{
             fontFamily: 'Syne, system-ui, sans-serif',
-            fontSize: 28, fontWeight: 700, letterSpacing: '-0.02em',
-            color: 'var(--ds-text-primary)', marginBottom: 12, lineHeight: 1.15,
+            fontSize: 26, fontWeight: 600, letterSpacing: '-0.02em',
+            color: 'var(--ds-text-primary)', marginBottom: 18, lineHeight: 1.2,
           }}>
             Bienvenido, {p.fullName} 👋
           </h1>

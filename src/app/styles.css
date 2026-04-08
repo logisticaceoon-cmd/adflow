@@ -112,11 +112,11 @@
   --ds-color-locked-border:  rgba(255, 255, 255, 0.06);
   --ds-color-disabled-text:  rgba(255, 255, 255, 0.30);
 
-  /* ── Text ── */
-  --ds-text-primary:   rgba(255, 255, 255, 0.95);
-  --ds-text-secondary: rgba(220, 226, 245, 0.65);
-  --ds-text-muted:     rgba(220, 226, 245, 0.40);
-  --ds-text-label:     rgba(220, 226, 245, 0.50);
+  /* ── Text — tuned for WCAG AA on deep navy ── */
+  --ds-text-primary:   rgba(255, 255, 255, 0.96);
+  --ds-text-secondary: rgba(220, 226, 245, 0.72);
+  --ds-text-muted:     rgba(220, 226, 245, 0.46);
+  --ds-text-label:     rgba(220, 226, 245, 0.55);
 
   /* ── Spacing ── */
   --ds-space-xs:  4px;
@@ -140,6 +140,12 @@
     0 0 0 1px rgba(148, 168, 255, 0.12) inset,
     0 1px 0 rgba(255, 255, 255, 0.12) inset;
 
+  /* Hover shadow — used by interactive cards on :hover */
+  --ds-shadow-hover:
+    0 16px 40px rgba(2, 6, 23, 0.55),
+    0 0 0 1px rgba(148, 168, 255, 0.12) inset,
+    0 1px 0 rgba(255, 255, 255, 0.12) inset;
+
   /* Color glows (for active / selected states) */
   --ds-glow-primary:
     0 0 0 1px rgba(96, 165, 250, 0.30),
@@ -156,14 +162,22 @@
     0 0 0 1px rgba(248, 113, 113, 0.40),
     0 8px 24px rgba(239, 68, 68, 0.20);
 
-  /* ── Transitions ── */
-  --ds-transition-fast:   150ms ease;
-  --ds-transition-normal: 220ms cubic-bezier(0.16, 1, 0.3, 1);
-  --ds-transition-slow:   320ms cubic-bezier(0.16, 1, 0.3, 1);
+  /* Subtle color glows for ambient elements */
+  --ds-color-primary-glow: rgba(96, 165, 250, 0.10);
+  --ds-color-success-glow: rgba(52, 211, 153, 0.10);
+
+  /* ── Transitions — all cubic-bezier for smoothness (no ease) ── */
+  --ds-transition-fast:    150ms cubic-bezier(0.16, 1, 0.3, 1);
+  --ds-transition-normal:  220ms cubic-bezier(0.16, 1, 0.3, 1);
+  --ds-transition-slow:    350ms cubic-bezier(0.16, 1, 0.3, 1);
+  --ds-transition-tap:     80ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ─── Base ───────────────────────────────────────────────────── */
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   html, body {
     background-color: var(--ds-bg-deep);
     color: var(--ds-text-primary);
@@ -196,10 +210,16 @@
       transition-duration: 0.01ms !important;
     }
   }
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: transparent; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(98,196,176,0.32); }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(148, 168, 255, 0.10);
+    border-radius: 3px;
+    transition: background 200ms ease;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 168, 255, 0.22);
+  }
 
   select { color-scheme: dark; }
   select option {
@@ -256,14 +276,17 @@
     background: linear-gradient(160deg,
       rgba(147, 197, 253, 0.40) 0%,
       rgba(37, 99, 235, 0.78) 100%);
-    transform: translateY(-2px);
+    transform: translateY(-1px);
     box-shadow:
       0 0 0 1px rgba(96, 165, 250, 0.50),
       0 14px 40px rgba(59, 130, 246, 0.42),
       0 0 80px rgba(59, 130, 246, 0.22),
       0 1px 0 rgba(255, 255, 255, 0.22) inset;
   }
-  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:active {
+    transform: translateY(0) scale(0.98);
+    transition: all var(--ds-transition-tap);
+  }
   .btn-primary:focus-visible {
     outline: 2px solid var(--ds-color-primary);
     outline-offset: 2px;
@@ -305,7 +328,10 @@
     box-shadow: 0 0 20px rgba(98,196,176,0.10), 0 0 8px rgba(98,196,176,0.06);
     transform: translateY(-1px);
   }
-  .btn-ghost:active { transform: translateY(0); background: rgba(98,196,176,0.10); }
+  .btn-ghost:active {
+    transform: translateY(0) scale(0.98);
+    transition: all var(--ds-transition-tap);
+  }
   .btn-ghost:focus-visible {
     outline: 2px solid var(--ds-color-primary);
     outline-offset: 2px;
@@ -342,14 +368,17 @@
     background: linear-gradient(160deg,
       rgba(167, 243, 208, 0.40) 0%,
       rgba(6, 95, 70, 0.85) 100%);
-    transform: translateY(-2px);
+    transform: translateY(-1px);
     box-shadow:
       0 0 0 1px rgba(52, 211, 153, 0.50),
       0 14px 40px rgba(16, 185, 129, 0.42),
       0 0 80px rgba(16, 185, 129, 0.22),
       0 1px 0 rgba(255, 255, 255, 0.22) inset;
   }
-  .btn-success:active { transform: translateY(0); }
+  .btn-success:active {
+    transform: translateY(0) scale(0.98);
+    transition: all var(--ds-transition-tap);
+  }
 
   /* ── Danger button — red glass with glow ── */
   .btn-danger {
@@ -382,14 +411,17 @@
     background: linear-gradient(160deg,
       rgba(252, 165, 165, 0.38) 0%,
       rgba(127, 29, 29, 0.80) 100%);
-    transform: translateY(-2px);
+    transform: translateY(-1px);
     box-shadow:
       0 0 0 1px rgba(248, 113, 113, 0.55),
       0 14px 40px rgba(239, 68, 68, 0.42),
       0 0 80px rgba(239, 68, 68, 0.22),
       0 1px 0 rgba(255, 255, 255, 0.20) inset;
   }
-  .btn-danger:active { transform: translateY(0); }
+  .btn-danger:active {
+    transform: translateY(0) scale(0.98);
+    transition: all var(--ds-transition-tap);
+  }
 
   /* ─────────────────────────────────────────────────────────────
      CARDS — premium glass bubbles with depth and glow
@@ -421,8 +453,12 @@
   .card-hover:hover {
     background: var(--ds-card-bg-hover);
     border-color: var(--ds-card-border-hover);
-    transform: translateY(-2px);
-    box-shadow: var(--ds-shadow-lg);
+    transform: translateY(-1px);
+    box-shadow: var(--ds-shadow-hover);
+  }
+  .card-hover:active {
+    transform: translateY(0) scale(0.995);
+    transition: all var(--ds-transition-tap);
   }
 
   /* ── Selected state (the same premium recipe as the active sidebar item) ── */
@@ -948,11 +984,12 @@
     background: transparent;
     font-weight: 500;
   }
-  /* HOVER — soft blue glass tint (the "you can click me" signal) */
+  /* HOVER — soft blue glass tint + subtle right shift */
   .nav-item-inactive:hover {
     color: var(--ds-text-primary);
     background: var(--ds-color-primary-soft);
     border-color: var(--ds-color-primary-border);
+    transform: translateX(2px);
   }
   .nav-item-inactive:focus-visible {
     outline: 2px solid var(--ds-color-primary);
@@ -969,6 +1006,7 @@
       0 0 0 1px rgba(52, 211, 153, 0.20),
       0 4px 16px rgba(16, 185, 129, 0.18),
       0 0 32px rgba(16, 185, 129, 0.10),
+      0 0 48px var(--ds-color-success-glow),
       inset 3px 0 0 var(--ds-color-success);
   }
   /* Subtle highlight on the top edge so the active row "lifts" */
@@ -1298,6 +1336,32 @@
   }
 
   .ds-section-action:hover { text-decoration: underline; }
+
+  /* ─────────────────────────────────────────────────────────────
+     PROGRESS BARS — smooth width animation
+  ───────────────────────────────────────────────────────────── */
+  .progress-bar-fill,
+  [class*="progress"] > div:first-child {
+    transition: width 600ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes progressGrow {
+    from { width: 0; }
+  }
+  .progress-bar-animated {
+    animation: progressGrow 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     ELEVATION SYSTEM — 4 tiers for consistent depth across the UI
+       0 → flat (page bg)
+       1 → resting cards
+       2 → hovered / active cards
+       3 → modals, dropdowns, popovers
+  ───────────────────────────────────────────────────────────── */
+  .elevation-0 { box-shadow: none; }
+  .elevation-1 { box-shadow: var(--ds-shadow-sm); }
+  .elevation-2 { box-shadow: var(--ds-shadow-md); }
+  .elevation-3 { box-shadow: var(--ds-shadow-lg); }
 
   /* ─────────────────────────────────────────────────────────────
      GLOW EFFECTS

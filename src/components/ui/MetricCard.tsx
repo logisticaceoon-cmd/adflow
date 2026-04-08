@@ -31,7 +31,11 @@ export default function MetricCard({
   const valueColor = STATUS_COLOR[status]
 
   return (
-    <Card padding="md" className={className}>
+    <Card
+      padding="md"
+      className={className}
+      style={{ padding: 20, boxShadow: 'var(--ds-shadow-sm)' }}
+    >
       <div style={{ position: 'relative' }}>
         {icon && (
           <span style={{
@@ -46,11 +50,11 @@ export default function MetricCard({
         <p
           title={tooltip}
           style={{
-            fontSize: 10, fontWeight: 700,
+            fontSize: 10, fontWeight: 600,
             textTransform: 'uppercase',
-            letterSpacing: '0.08em',
+            letterSpacing: '0.10em',
             color: 'var(--ds-text-label)',
-            marginBottom: 8,
+            marginBottom: 10,
             cursor: tooltip ? 'help' : 'default',
           }}
         >
@@ -59,7 +63,7 @@ export default function MetricCard({
 
         <p style={{
           fontFamily: 'Syne, sans-serif',
-          fontSize: 28, fontWeight: 800,
+          fontSize: 28, fontWeight: 600,
           color: valueColor,
           letterSpacing: '-0.02em',
           lineHeight: 1.1,
