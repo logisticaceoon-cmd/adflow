@@ -26,11 +26,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <SidebarProvider>
           <div className="flex min-h-screen" style={{ position: 'relative' }}>
             <Sidebar user={user} profile={profile} />
-            <div className="flex-1 ml-0 md:ml-60 flex flex-col min-h-screen" style={{ scrollBehavior: 'smooth' }}>
+            <div className="flex-1 ml-0 md:ml-64 flex flex-col min-h-screen" style={{ scrollBehavior: 'smooth' }}>
               <TopBar />
               <main className="flex-1">
                 <div className="dashboard-content">
-                  {children}
+                  <div className="dashboard-panel">
+                    {children}
+                  </div>
                 </div>
               </main>
             </div>

@@ -188,12 +188,13 @@ export default function Sidebar({ user, profile }: Props) {
         />
       )}
       <aside
-        className={`fixed left-0 top-0 h-screen w-60 flex flex-col transition-transform duration-300 ease-out md:translate-x-0 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed left-0 top-0 h-screen w-64 flex flex-col transition-transform duration-300 ease-out md:translate-x-0 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}
         style={{
-          background: 'rgba(11, 15, 36, 0.65)',
+          background: 'linear-gradient(180deg, rgba(11, 15, 36, 0.78) 0%, rgba(8, 11, 28, 0.85) 100%)',
           borderRight: '1px solid var(--ds-border-soft)',
-          backdropFilter: 'blur(24px) saturate(1.4)',
-          WebkitBackdropFilter: 'blur(24px) saturate(1.4)',
+          backdropFilter: 'blur(28px) saturate(1.5)',
+          WebkitBackdropFilter: 'blur(28px) saturate(1.5)',
+          boxShadow: '12px 0 48px rgba(2, 6, 23, 0.55), 1px 0 0 rgba(148, 168, 255, 0.06) inset',
           zIndex: 50,
         }}
       >
@@ -334,8 +335,8 @@ export default function Sidebar({ user, profile }: Props) {
               >
                 <Icon size={16} strokeWidth={active ? 2.2 : 1.75}
                   style={{
-                    color: active ? 'var(--ds-color-primary)' : 'var(--ds-text-secondary)',
-                    filter: 'none',
+                    color: active ? 'var(--ds-color-success)' : 'var(--ds-text-secondary)',
+                    filter: active ? 'drop-shadow(0 0 8px rgba(52,211,153,0.45))' : 'none',
                     flexShrink: 0,
                   }}
                 />
@@ -382,8 +383,8 @@ export default function Sidebar({ user, profile }: Props) {
               >
                 <Icon size={16} strokeWidth={active ? 2.2 : 1.75}
                   style={{
-                    color: active ? 'var(--ds-color-primary)' : 'var(--ds-text-secondary)',
-                    filter: 'none',
+                    color: active ? 'var(--ds-color-success)' : 'var(--ds-text-secondary)',
+                    filter: active ? 'drop-shadow(0 0 8px rgba(52,211,153,0.45))' : 'none',
                     flexShrink: 0,
                   }} />
                 <span style={{
