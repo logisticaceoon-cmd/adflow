@@ -427,7 +427,7 @@ export default function CreateCampaignPage() {
   // ── Render ────────────────────────────────────────────────────────────────
   return (
     <div className="max-w-3xl mx-auto">
-      <style>{`.drop-zone-active { border-color: rgba(233,30,140,0.60) !important; background: var(--ds-color-primary-soft) !important; }`}</style>
+      <style>{`.drop-zone-active { border-color: transparent !important; background: var(--ds-color-primary-soft) !important; }`}</style>
 
       {/* Header */}
       <div className="mb-8">
@@ -437,7 +437,7 @@ export default function CreateCampaignPage() {
         <h1 style={{ fontFamily: 'Syne, sans-serif', fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.03em', lineHeight: 1.1 }}>
           Diseñá tu próxima campaña ✨
         </h1>
-        <p style={{ fontSize: 14, color: 'var(--muted)', maxWidth: 540, lineHeight: 1.55 }}>
+        <p style={{ fontSize: 14, color: 'var(--ds-text-secondary)', maxWidth: 540, lineHeight: 1.55 }}>
           Te guiamos paso a paso para que termines con una estrategia completa lista para publicar en Meta. Sin formularios eternos, sin jerga técnica.
         </p>
         {pixelAnalysis && !noPixelConfigured && (
@@ -453,7 +453,7 @@ export default function CreateCampaignPage() {
             <span style={{ fontSize: 12, fontWeight: 600, color: pixelLevel >= 5 ? 'var(--ds-color-success)' : pixelLevel >= 3 ? 'var(--ds-color-warning)' : '#f87171' }}>
               Nivel {pixelLevel}: {pixelLevelName}
             </span>
-            <span style={{ fontSize: 11, color: 'var(--muted)' }}>
+            <span style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>
               · {availableStrategies.join(' · ')} disponibles
             </span>
           </div>
@@ -598,7 +598,7 @@ export default function CreateCampaignPage() {
           <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>
             {publishedOk ? '¡Campaña publicada en Meta!' : '¡Campaña guardada!'}
           </h2>
-          <p style={{ fontSize: 14, color: 'var(--muted)', marginBottom: 28, lineHeight: 1.6, maxWidth: 380, margin: '0 auto 28px' }}>
+          <p style={{ fontSize: 14, color: 'var(--ds-text-secondary)', marginBottom: 28, lineHeight: 1.6, maxWidth: 380, margin: '0 auto 28px' }}>
             {publishedOk
               ? 'Tu campaña fue creada en Meta Ads en estado PAUSADA. Activala desde Ads Manager cuando estés listo para invertir.'
               : 'Tu campaña fue guardada como borrador. Podés publicarla en Meta Ads desde el detalle de campaña.'
@@ -622,11 +622,11 @@ export default function CreateCampaignPage() {
               </button>
             )}
             <button onClick={() => router.push('/dashboard/campaigns')}
-              className="text-sm transition-opacity hover:opacity-70" style={{ color: 'var(--muted)' }}>
+              className="text-sm transition-opacity hover:opacity-70" style={{ color: 'var(--ds-text-secondary)' }}>
               Ver todas mis campañas
             </button>
             <button onClick={resetWizard}
-              className="text-sm transition-opacity hover:opacity-70" style={{ color: 'var(--muted)' }}>
+              className="text-sm transition-opacity hover:opacity-70" style={{ color: 'var(--ds-text-secondary)' }}>
               + Crear otra campaña
             </button>
           </div>
@@ -655,7 +655,7 @@ export default function CreateCampaignPage() {
             <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8, color: '#ffffff' }}>
               Sin créditos disponibles
             </h3>
-            <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 28, lineHeight: 1.65, maxWidth: 300, margin: '0 auto 28px' }}>
+            <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', marginBottom: 28, lineHeight: 1.65, maxWidth: 300, margin: '0 auto 28px' }}>
               Usaste todos tus créditos de IA este mes. Mejorá tu plan para seguir generando estrategias.
             </p>
             <button
@@ -664,7 +664,7 @@ export default function CreateCampaignPage() {
                 width: '100%', padding: '12px 0', borderRadius: 12, cursor: 'pointer',
                 background: 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))',
                 color: '#ffffff', fontSize: 14, fontWeight: 700, border: 'none',
-                boxShadow: '0 4px 20px rgba(234,27,126,0.32)',
+                boxShadow: '0 4px 20px transparent',
                 marginBottom: 12, display: 'block',
               }}
             >
@@ -672,7 +672,7 @@ export default function CreateCampaignPage() {
             </button>
             <button
               onClick={() => setNoCreditsModal(false)}
-              style={{ background: 'none', border: 'none', color: 'var(--muted)', fontSize: 13, cursor: 'pointer', padding: 8 }}
+              style={{ background: 'none', border: 'none', color: 'var(--ds-text-secondary)', fontSize: 13, cursor: 'pointer', padding: 8 }}
             >
               Cerrar
             </button>

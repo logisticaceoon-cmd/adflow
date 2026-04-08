@@ -45,7 +45,7 @@ export default function StepContent({
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 6, letterSpacing: '-0.02em' }}>
           Subí tus creativos
         </h2>
-        <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+        <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)' }}>
           Las imágenes y videos que va a usar la IA para diseñar tus anuncios. Cuanto mejor el material, mejor el resultado.
         </p>
       </div>
@@ -59,7 +59,7 @@ export default function StepContent({
         <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
           🎨 Materiales creativos
         </h3>
-        <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 16 }}>
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 16 }}>
           Arrastrá los archivos o hacé click para seleccionarlos
         </p>
 
@@ -71,7 +71,7 @@ export default function StepContent({
           onClick={() => fileRef.current?.click()}
           className={`relative rounded-2xl cursor-pointer transition-all ${isDragging ? 'drop-zone-active' : ''}`}
           style={{
-            border: `1.5px dashed ${isDragging ? 'rgba(233,30,140,0.60)' : 'rgba(255,255,255,0.15)'}`,
+            border: `1.5px dashed ${isDragging ? 'transparent' : 'rgba(255,255,255,0.15)'}`,
             padding: '32px 20px', textAlign: 'center',
             background: isDragging ? 'var(--ds-color-primary-soft)' : 'rgba(255,255,255,0.02)',
           }}
@@ -84,7 +84,7 @@ export default function StepContent({
           />
           <Upload size={28} style={{ margin: '0 auto 12px', opacity: 0.5 }} />
           <p style={{ fontSize: 14, fontWeight: 600, marginBottom: 4 }}>Subí tus imágenes y videos</p>
-          <p style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.6 }}>
+          <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', lineHeight: 1.6 }}>
             Imágenes: JPG, PNG, WebP, GIF (se comprimen automáticamente)<br />
             Videos: hasta 200MB (solo para storage, no se analizan por IA)<br />
             Formatos: JPG, PNG, WebP, GIF, MP4, MOV
@@ -101,11 +101,11 @@ export default function StepContent({
           <div className="mt-4 grid grid-cols-3 sm:grid-cols-4 gap-3">
             {mediaFiles.map((file, idx) => (
               <div key={idx} className="relative rounded-xl overflow-hidden group"
-                   style={{ aspectRatio: '1', background: 'var(--surface2)' }}>
+                   style={{ aspectRatio: '1', background: 'var(--ds-bg-elevated)' }}>
                 {file.type.startsWith('video/') ? (
                   <div className="w-full h-full flex flex-col items-center justify-center gap-1 p-2">
-                    <Play size={22} style={{ color: 'var(--muted)' }} />
-                    <span className="text-[10px] text-center w-full overflow-hidden text-ellipsis" style={{ color: 'var(--muted)', whiteSpace: 'nowrap' }}>
+                    <Play size={22} style={{ color: 'var(--ds-text-secondary)' }} />
+                    <span className="text-[10px] text-center w-full overflow-hidden text-ellipsis" style={{ color: 'var(--ds-text-secondary)', whiteSpace: 'nowrap' }}>
                       {file.name}
                     </span>
                   </div>
@@ -113,7 +113,7 @@ export default function StepContent({
                   <img src={mediaPreviews[idx]!} alt="" className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <Upload size={16} style={{ color: 'var(--muted)' }} />
+                    <Upload size={16} style={{ color: 'var(--ds-text-secondary)' }} />
                   </div>
                 )}
 
@@ -160,9 +160,9 @@ export default function StepContent({
       }}>
         <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
           ✏️ Información adicional
-          <span style={{ fontWeight: 400, color: 'var(--muted)', fontSize: 11, marginLeft: 4 }}>(opcional)</span>
+          <span style={{ fontWeight: 400, color: 'var(--ds-text-secondary)', fontSize: 11, marginLeft: 4 }}>(opcional)</span>
         </h3>
-        <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 16 }}>
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 16 }}>
           Si tenés contexto extra que pueda ayudar a la IA, sumalo acá
         </p>
         <div className="space-y-4">

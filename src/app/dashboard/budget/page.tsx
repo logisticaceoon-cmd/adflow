@@ -68,12 +68,12 @@ function InputCard({ icon, label, helper, value, onChange, prefix, suffix, requi
           {label} {required && <span style={{ color: 'var(--ds-color-primary)' }}>*</span>}
         </p>
       </div>
-      <p style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 12, lineHeight: 1.5 }}>{helper}</p>
+      <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', marginBottom: 12, lineHeight: 1.5 }}>{helper}</p>
       <div style={{ position: 'relative' }}>
         {prefix && (
           <span style={{
             position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',
-            fontSize: big ? 18 : 13, color: 'var(--muted)', fontWeight: 600, pointerEvents: 'none',
+            fontSize: big ? 18 : 13, color: 'var(--ds-text-secondary)', fontWeight: 600, pointerEvents: 'none',
           }}>{prefix}</span>
         )}
         <input
@@ -97,7 +97,7 @@ function InputCard({ icon, label, helper, value, onChange, prefix, suffix, requi
         {suffix && (
           <span style={{
             position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)',
-            fontSize: 13, color: 'var(--muted)', fontWeight: 600, pointerEvents: 'none',
+            fontSize: 13, color: 'var(--ds-text-secondary)', fontWeight: 600, pointerEvents: 'none',
           }}>{suffix}</span>
         )}
       </div>
@@ -251,7 +251,7 @@ export default function BudgetPage() {
       }}>
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-          background: 'linear-gradient(90deg, transparent, rgba(234,27,126,0.55), var(--ds-card-border), transparent)',
+          background: 'linear-gradient(90deg, transparent, transparent, var(--ds-card-border), transparent)',
         }} />
 
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 8 }}>
@@ -305,7 +305,7 @@ export default function BudgetPage() {
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Datos de tu negocio este mes
         </h2>
-        <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 18 }}>
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 18 }}>
           Con esta información calculamos la mejor distribución y proyecciones realistas
         </p>
 
@@ -356,7 +356,7 @@ export default function BudgetPage() {
             <span style={{ fontSize: 18 }}>📝</span>
             <p style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>Objetivo del mes (opcional)</p>
           </div>
-          <p style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 12 }}>
+          <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', marginBottom: 12 }}>
             ¿Qué querés lograr este mes? Ej: aumentar ventas, lanzar producto nuevo
           </p>
           <textarea
@@ -387,7 +387,7 @@ export default function BudgetPage() {
             <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
               Distribución de presupuesto por fases
             </h2>
-            <p style={{ fontSize: 12, color: 'var(--muted)' }}>
+            <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
               El sistema recomienda basándose en tu nivel de pixel. Podés ajustar los montos.
             </p>
           </div>
@@ -425,7 +425,7 @@ export default function BudgetPage() {
                         <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: p.color }}>
                           {p.fullName}
                         </p>
-                        <p style={{ fontSize: 11, color: 'var(--muted)' }}>{p.objective}</p>
+                        <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>{p.objective}</p>
                       </div>
                     </div>
                     {isLocked ? (
@@ -450,7 +450,7 @@ export default function BudgetPage() {
                   {/* Recommended vs assigned row */}
                   <div className="grid grid-cols-2 gap-4 mb-3">
                     <div>
-                      <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 4 }}>
+                      <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 4 }}>
                         Recomendado
                       </p>
                       <p style={{ fontSize: 16, fontWeight: 700, color: '#a0a8c0' }}>
@@ -497,7 +497,7 @@ export default function BudgetPage() {
                     <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)', lineHeight: 1.5 }}>
                       <b style={{ color: p.color }}>¿Por qué?</b> {isLocked ? 'Tu pixel aún no tiene datos suficientes para esta fase. Invertí en F1 para llegar más rápido.' : detail.why}
                     </p>
-                    <p style={{ fontSize: 11, color: 'var(--muted)', lineHeight: 1.5, fontStyle: 'italic' }}>
+                    <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', lineHeight: 1.5, fontStyle: 'italic' }}>
                       💡 {detail.growth}
                     </p>
                   </div>
@@ -520,12 +520,12 @@ export default function BudgetPage() {
           {/* Total bar */}
           <div style={{ marginTop: 22, padding: '16px 20px', borderRadius: 14, background: 'var(--ds-card-bg)', border: '1px solid rgba(255,255,255,0.08)' }}>
             <div className="flex items-center justify-between mb-2">
-              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.10em' }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.10em' }}>
                 Total asignado
               </span>
               <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff' }}>
                 {currency} {totalAssigned.toLocaleString()}{' '}
-                <span style={{ fontSize: 12, color: 'var(--muted)', fontWeight: 500 }}>
+                <span style={{ fontSize: 12, color: 'var(--ds-text-secondary)', fontWeight: 500 }}>
                   / {currency} {totalNum.toLocaleString()} disponible
                 </span>
               </span>
@@ -559,7 +559,7 @@ export default function BudgetPage() {
           <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
             Proyecciones estimadas
           </h2>
-          <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 18 }}>
+          <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 18 }}>
             Basadas en tu presupuesto, nivel y datos históricos. Después del primer mes ajustamos con datos reales.
           </p>
 
@@ -578,21 +578,21 @@ export default function BudgetPage() {
               }}>
                 <div className="flex items-center gap-2 mb-3">
                   <span style={{ fontSize: 18 }}>{p.icon}</span>
-                  <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.10em' }}>
+                  <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.10em' }}>
                     {p.label}
                   </p>
                 </div>
                 <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 20, fontWeight: 800, color: p.color, lineHeight: 1.2 }}>
                   {p.value}
                 </p>
-                <p style={{ fontSize: 10, color: 'var(--muted)', marginTop: 4 }}>
+                <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', marginTop: 4 }}>
                   {p.tooltip}
                 </p>
               </div>
             ))}
           </div>
 
-          <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 14, fontStyle: 'italic' }}>
+          <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', marginTop: 14, fontStyle: 'italic' }}>
             💡 Estimaciones generales basadas en tu nivel de pixel ({pixelLevel}). A más datos históricos, más precisas las proyecciones.
           </p>
         </div>
@@ -603,7 +603,7 @@ export default function BudgetPage() {
         <div className="mb-6">
           <div className="flex items-center gap-4 mb-6">
             <button onClick={handleSave} disabled={saving} className="btn-primary"
-              style={{ fontSize: 14, padding: '14px 32px', boxShadow: '0 0 32px rgba(234,27,126,0.45), 0 6px 24px var(--ds-color-primary-border)' }}>
+              style={{ fontSize: 14, padding: '14px 32px', boxShadow: '0 0 32px transparent, 0 6px 24px var(--ds-color-primary-border)' }}>
               {saving ? 'Guardando...' : '💾 Guardar presupuesto del mes'}
             </button>
             {savedMsg && <span style={{ fontSize: 13, color: 'var(--ds-color-success)', fontWeight: 600 }}>{savedMsg}</span>}
@@ -621,11 +621,11 @@ export default function BudgetPage() {
             <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff' }}>
               📅 Historial de meses anteriores
             </h2>
-            <p style={{ fontSize: 11, color: 'var(--muted)' }}>
+            <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>
               {history.length === 0 ? 'Este es tu primer mes planificando. ¡Gran paso!' : `${history.length} mes${history.length !== 1 ? 'es' : ''} con presupuesto guardado`}
             </p>
           </div>
-          {historyOpen ? <ChevronUp size={18} style={{ color: 'var(--muted)' }} /> : <ChevronDown size={18} style={{ color: 'var(--muted)' }} />}
+          {historyOpen ? <ChevronUp size={18} style={{ color: 'var(--ds-text-secondary)' }} /> : <ChevronDown size={18} style={{ color: 'var(--ds-text-secondary)' }} />}
         </button>
 
         {historyOpen && history.length > 0 && (
@@ -634,7 +634,7 @@ export default function BudgetPage() {
               <div key={h.month_year} className="p-3 rounded-lg flex items-center justify-between" style={{ background: 'var(--ds-card-bg)', border: '1px solid rgba(255,255,255,0.06)' }}>
                 <div>
                   <p style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{h.month_year}</p>
-                  <p style={{ fontSize: 11, color: 'var(--muted)' }}>
+                  <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>
                     F1 {(h.phase_budgets?.F1 ?? 0).toLocaleString()} · F2 {(h.phase_budgets?.F2 ?? 0).toLocaleString()} · F3 {(h.phase_budgets?.F3 ?? 0).toLocaleString()} · F4 {(h.phase_budgets?.F4 ?? 0).toLocaleString()}
                   </p>
                 </div>
@@ -649,7 +649,7 @@ export default function BudgetPage() {
 
       {/* ── SECTION F: EDUCATION ──────────────────────────────────────── */}
       <div className="card p-6 mb-6" style={{
-        background: 'linear-gradient(135deg, transparent, rgba(98,196,176,0.04))',
+        background: 'linear-gradient(135deg, transparent, transparent)',
         border: '1px solid var(--ds-color-primary-soft)',
       }}>
         <div className="flex items-start gap-4">
@@ -677,7 +677,7 @@ export default function BudgetPage() {
                 </li>
               ))}
             </ul>
-            <p style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.7, marginTop: 12, fontStyle: 'italic' }}>
+            <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', lineHeight: 1.7, marginTop: 12, fontStyle: 'italic' }}>
               La distribución ideal cambia según tu nivel. Al inicio, la mayor inversión va a F1 para generar datos. A medida que crecés, F3 se vuelve tu motor de ventas más rentable.
             </p>
           </div>

@@ -84,13 +84,13 @@ export default function CreativesPage() {
     <div>
       <div className="flex justify-between items-start mb-6">
         <div>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#f9a8d4', marginBottom: 8 }}>
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 8 }}>
             Biblioteca de creativos · AdFlow
           </p>
           <h1 style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.03em' }}>
             Tus creativos 🖼
           </h1>
-          <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+          <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)' }}>
             {files.length} archivo{files.length !== 1 ? 's' : ''} · Imágenes y videos listos para usar en tus campañas
           </p>
         </div>
@@ -104,15 +104,15 @@ export default function CreativesPage() {
 
       {/* Educational card */}
       <div className="mb-6 p-5 rounded-2xl" style={{
-        background: 'linear-gradient(135deg, rgba(234,27,126,0.08) 0%, rgba(98,196,176,0.05) 100%)',
-        border: '1px solid rgba(234,27,126,0.20)',
+        background: 'linear-gradient(135deg, var(--ds-color-primary-soft) 0%, transparent 100%)',
+        border: '1px solid var(--ds-color-primary-soft)',
         display: 'flex', gap: 14, alignItems: 'flex-start',
       }}>
         <div style={{
           width: 42, height: 42, borderRadius: 12, flexShrink: 0,
-          background: 'rgba(234,27,126,0.15)',
-          border: '1px solid rgba(234,27,126,0.30)',
-          boxShadow: '0 0 16px rgba(234,27,126,0.25)',
+          background: 'var(--ds-color-primary-soft)',
+          border: '1px solid var(--ds-color-primary-border)',
+          boxShadow: '0 0 16px transparent',
           display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
         }}>🎨</div>
         <div style={{ flex: 1 }}>
@@ -122,7 +122,7 @@ export default function CreativesPage() {
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.72)', lineHeight: 1.6, marginBottom: 6 }}>
             Subí imágenes y videos de alta calidad para que la IA tenga material real con el que trabajar. Mejor material = mejores anuncios = mejor rendimiento.
           </p>
-          <p style={{ fontSize: 11, color: '#f9a8d4', fontWeight: 600 }}>
+          <p style={{ fontSize: 11, color: 'var(--ds-color-primary)', fontWeight: 600 }}>
             💡 Recomendamos tener al menos 3-5 variaciones de imagen por campaña para que Meta pueda optimizar
           </p>
         </div>
@@ -130,7 +130,7 @@ export default function CreativesPage() {
 
       {uploadError && (
         <div className="mb-5 p-3 rounded-xl text-sm"
-             style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: 'var(--danger)' }}>
+             style={{ background: 'var(--ds-color-danger-soft)', border: '1px solid rgba(239,68,68,0.2)', color: 'var(--ds-color-danger)' }}>
           ⚠ {uploadError}
         </div>
       )}
@@ -139,8 +139,8 @@ export default function CreativesPage() {
       <div
         className="border-2 border-dashed rounded-2xl p-10 text-center mb-8 transition-all cursor-pointer"
         style={{
-          borderColor: dragging ? 'var(--accent)' : 'var(--border)',
-          background: dragging ? 'rgba(233,30,140,0.06)' : 'transparent',
+          borderColor: dragging ? 'var(--ds-color-primary)' : 'var(--ds-card-border)',
+          background: dragging ? 'var(--ds-color-primary-soft)' : 'transparent',
         }}
         onDragOver={e => { e.preventDefault(); setDragging(true) }}
         onDragLeave={() => setDragging(false)}
@@ -148,13 +148,13 @@ export default function CreativesPage() {
         onClick={() => fileRef.current?.click()}
       >
         <div className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3"
-             style={{ background: 'rgba(233,30,140,0.1)' }}>
-          <Upload size={22} style={{ color: 'var(--accent)' }} strokeWidth={1.75} />
+             style={{ background: 'transparent' }}>
+          <Upload size={22} style={{ color: 'var(--ds-color-primary)' }} strokeWidth={1.75} />
         </div>
         <p className="text-sm font-medium mb-1">
-          <span style={{ color: 'var(--accent)' }}>Hacé clic</span> o arrastrá archivos aquí
+          <span style={{ color: 'var(--ds-color-primary)' }}>Hacé clic</span> o arrastrá archivos aquí
         </p>
-        <p className="text-xs" style={{ color: 'var(--muted)' }}>PNG, JPG, MP4, MOV · Máx. 50MB por archivo</p>
+        <p className="text-xs" style={{ color: 'var(--ds-text-secondary)' }}>PNG, JPG, MP4, MOV · Máx. 50MB por archivo</p>
       </div>
 
       {/* Galería */}
@@ -162,7 +162,7 @@ export default function CreativesPage() {
         <div className="card p-16 text-center">
           <div className="text-5xl mb-4">🖼</div>
           <h2 className="font-display text-lg font-bold mb-2">Sin creativos todavía</h2>
-          <p className="text-sm" style={{ color: 'var(--muted)' }}>
+          <p className="text-sm" style={{ color: 'var(--ds-text-secondary)' }}>
             Subí tus imágenes y videos para usarlos en tus campañas.
           </p>
         </div>
@@ -170,15 +170,15 @@ export default function CreativesPage() {
         <div className="grid grid-cols-4 gap-4">
           {files.map(f => (
             <div key={f.path} className="group relative rounded-2xl overflow-hidden"
-                 style={{ background: 'var(--surface)', border: '1px solid var(--border)', aspectRatio: '1' }}>
+                 style={{ background: 'var(--ds-card-bg)', border: '1px solid var(--ds-card-border)', aspectRatio: '1' }}>
               {f.type === 'image' ? (
                 <img src={f.url} alt={f.name}
                      className="w-full h-full object-cover" />
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center gap-2"
-                     style={{ background: 'var(--surface2)' }}>
-                  <Film size={32} style={{ color: 'var(--muted)' }} strokeWidth={1.5} />
-                  <p className="text-xs" style={{ color: 'var(--muted)' }}>Video</p>
+                     style={{ background: 'var(--ds-bg-elevated)' }}>
+                  <Film size={32} style={{ color: 'var(--ds-text-secondary)' }} strokeWidth={1.5} />
+                  <p className="text-xs" style={{ color: 'var(--ds-text-secondary)' }}>Video</p>
                 </div>
               )}
 
@@ -188,7 +188,7 @@ export default function CreativesPage() {
                 <button
                   onClick={() => deleteFile(f.path)}
                   className="self-end w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
-                  style={{ background: 'rgba(239,68,68,0.2)', color: 'var(--danger)' }}>
+                  style={{ background: 'rgba(239,68,68,0.2)', color: 'var(--ds-color-danger)' }}>
                   <Trash2 size={13} />
                 </button>
                 <div>

@@ -12,7 +12,7 @@ interface SpinnerProps {
 const SIZES: Record<'sm' | 'md' | 'lg', number> = { sm: 16, md: 24, lg: 40 }
 
 export default function Spinner({
-  size = 'md', color = '#e91e8c', label, inline = false,
+  size = 'md', color = 'var(--ds-color-primary)', label, inline = false,
 }: SpinnerProps) {
   const px = SIZES[size]
   const stroke = size === 'lg' ? 3 : 2.5
@@ -46,7 +46,7 @@ export default function Spinner({
       {label && (
         <span style={{
           fontSize: size === 'sm' ? 11 : 12,
-          color: 'var(--muted)',
+          color: 'var(--ds-text-secondary)',
           fontWeight: 600,
         }}>
           {label}

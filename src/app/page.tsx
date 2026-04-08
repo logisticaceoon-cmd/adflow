@@ -30,7 +30,7 @@ const fi = (v: boolean) =>
   `transition-all duration-700 ease-out ${v ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`
 
 const gradientText: React.CSSProperties = {
-  background: 'linear-gradient(135deg, #e91e8c, #c5006a)',
+  background: 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))',
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
   backgroundClip: 'text',
@@ -65,7 +65,7 @@ function Orb({ color, size = 500, top, left, right, bottom, opacity = 0.2, blur 
 // ─── Separador entre sección clara y oscura ───────────────────────────────────
 function Divider() {
   return (
-    <div style={{ height: 1, background: 'linear-gradient(90deg, transparent 0%, #e91e8c 30%, #62c4b0 70%, transparent 100%)', flexShrink: 0 }} />
+    <div style={{ height: 1, background: 'linear-gradient(90deg, transparent 0%, var(--ds-color-primary) 30%, #62c4b0 70%, transparent 100%)', flexShrink: 0 }} />
   )
 }
 
@@ -74,7 +74,7 @@ function LightOrbs({ variant }: { variant: number }) {
   if (variant === 1) return null // Trust bar: fondo blanco puro, sin orbs
   if (variant === 2) return ( // Problema: fucsia izquierda + púrpura derecha
     <>
-      <Orb color="#e91e8c" size={520} top="5%" left="-10%" opacity={0.22} blur={65} />
+      <Orb color="var(--ds-color-primary)" size={520} top="5%" left="-10%" opacity={0.22} blur={65} />
       <Orb color="#62c4b0" size={460} top="5%" right="-10%" opacity={0.18} blur={75} />
     </>
   )
@@ -86,7 +86,7 @@ function LightOrbs({ variant }: { variant: number }) {
 }
 
 // ─── Badge ────────────────────────────────────────────────────────────────────
-function Badge({ children, color = '#e91e8c', light = false }: { children: React.ReactNode; color?: string; light?: boolean }) {
+function Badge({ children, color = 'var(--ds-color-primary)', light = false }: { children: React.ReactNode; color?: string; light?: boolean }) {
   return (
     <div
       className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold mb-5"
@@ -118,11 +118,11 @@ const glassHover = {
 const lightCard: React.CSSProperties = {
   background: '#ffffff',
   border: '1px solid rgba(233,30,140,0.15)',
-  boxShadow: '0 4px 24px rgba(233,30,140,0.07)',
+  boxShadow: '0 4px 24px transparent',
 }
 const lightCardHover = {
-  enter: (el: HTMLElement) => { el.style.boxShadow = '0 12px 40px rgba(233,30,140,0.13)'; el.style.borderColor = 'rgba(233,30,140,0.28)'; el.style.transform = 'translateY(-4px)' },
-  leave: (el: HTMLElement) => { el.style.boxShadow = '0 4px 24px rgba(233,30,140,0.07)'; el.style.borderColor = 'rgba(233,30,140,0.15)'; el.style.transform = 'translateY(0)' },
+  enter: (el: HTMLElement) => { el.style.boxShadow = '0 12px 40px rgba(233,30,140,0.13)'; el.style.borderColor = 'transparent'; el.style.transform = 'translateY(-4px)' },
+  leave: (el: HTMLElement) => { el.style.boxShadow = '0 4px 24px transparent'; el.style.borderColor = 'rgba(233,30,140,0.15)'; el.style.transform = 'translateY(0)' },
 }
 
 // ─── Navbar ───────────────────────────────────────────────────────────────────
@@ -148,7 +148,7 @@ function Navbar() {
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-3.5 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: 'linear-gradient(135deg, #e91e8c, #c5006a)' }}>
+            style={{ background: 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))' }}>
             <Zap className="w-4 h-4 text-white fill-white" />
           </div>
           <span className="font-display text-xl font-bold text-white">AdFlow</span>
@@ -175,7 +175,7 @@ function Navbar() {
           </Link>
           <Link href="/login"
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold text-white transition-all duration-150"
-            style={{ background: 'linear-gradient(135deg, #e91e8c, #c5006a)', boxShadow: '0 0 16px rgba(233,30,140,0.4)', minHeight: 44 }}
+            style={{ background: 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))', boxShadow: '0 0 16px rgba(233,30,140,0.4)', minHeight: 44 }}
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.filter = 'brightness(1.12)' }}
             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.filter = 'none' }}>
             Probar gratis
@@ -202,7 +202,7 @@ function Navbar() {
               style={{ color: '#94a3b8', borderColor: 'rgba(255,255,255,0.1)', minHeight: 44 }}>Iniciar sesión</Link>
             <Link href="/login" onClick={() => setOpen(false)}
               className="flex-1 text-center py-2.5 rounded-xl text-sm font-semibold text-white"
-              style={{ background: 'linear-gradient(135deg, #e91e8c, #c5006a)', minHeight: 44 }}>Probar gratis</Link>
+              style={{ background: 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))', minHeight: 44 }}>Probar gratis</Link>
           </div>
         </div>
       </div>
@@ -218,7 +218,7 @@ function HeroSection() {
       style={{ background: 'linear-gradient(155deg, #0a0a0f 0%, #110228 45%, #0d0117 70%, #0a0a0f 100%)' }}
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <Orb color="#e91e8c" size={700} top="-15%" right="-8%" opacity={0.18} blur={45} />
+        <Orb color="var(--ds-color-primary)" size={700} top="-15%" right="-8%" opacity={0.18} blur={45} />
         <Orb color="#62c4b0" size={550} bottom="-5%" left="-8%" opacity={0.14} blur={60} />
         <Orb color="#06d6a0" size={300} top="40%" left="42%" opacity={0.07} blur={50} />
         <div className="absolute inset-0" style={{
@@ -252,7 +252,7 @@ function HeroSection() {
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-16 px-4">
           <Link href="/login"
             className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-bold text-base text-white transition-all duration-150"
-            style={{ background: 'linear-gradient(135deg,#e91e8c,#c5006a)', boxShadow: '0 0 28px rgba(233,30,140,0.4)' }}
+            style={{ background: 'linear-gradient(135deg,var(--ds-color-primary),var(--ds-color-primary))', boxShadow: '0 0 28px rgba(233,30,140,0.4)' }}
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 42px rgba(233,30,140,0.65)' }}
             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 28px rgba(233,30,140,0.4)' }}>
             <Rocket className="w-4 h-4" /> Empezar gratis
@@ -268,7 +268,7 @@ function HeroSection() {
 
         {/* Dashboard mockup */}
         <div className="relative mx-auto max-w-4xl hidden sm:block float-anim">
-          <div className="absolute inset-x-16 -bottom-10 h-28 rounded-full blur-3xl" style={{ background: 'linear-gradient(90deg,#e91e8c,#c5006a)', opacity: 0.38 }} />
+          <div className="absolute inset-x-16 -bottom-10 h-28 rounded-full blur-3xl" style={{ background: 'linear-gradient(90deg,var(--ds-color-primary),var(--ds-color-primary))', opacity: 0.38 }} />
           <div className="absolute -inset-px rounded-2xl" style={{ background: 'linear-gradient(135deg, rgba(233,30,140,0.50), rgba(98,196,176,0.30), rgba(233,30,140,0.20))', borderRadius: 18, zIndex: -1 }} />
           <div className="relative rounded-2xl overflow-hidden"
             style={{ background: 'linear-gradient(160deg, #0e0c1c, #0a0a16)', border: '1px solid rgba(255,255,255,0.10)', boxShadow: '0 60px 120px rgba(0,0,0,0.90), 0 0 100px rgba(233,30,140,0.12), 0 0 60px rgba(98,196,176,0.06)' }}>
@@ -283,14 +283,14 @@ function HeroSection() {
             <div className="p-5 grid grid-cols-4 gap-4">
               <div className="flex flex-col gap-1.5">
                 {[{ label: 'Dashboard', active: true }, { label: 'Campañas', active: false }, { label: 'Creatividades', active: false }, { label: 'Reportes', active: false }].map(({ label, active }) => (
-                  <div key={label} className="px-3 py-2 rounded-lg text-xs" style={{ background: active ? 'rgba(233,30,140,0.15)' : 'transparent', color: active ? '#f9a8d4' : '#8892b0', borderLeft: active ? '3px solid #e91e8c' : '3px solid transparent', boxShadow: active ? '0 0 12px rgba(233,30,140,0.12)' : 'none' }}>
+                  <div key={label} className="px-3 py-2 rounded-lg text-xs" style={{ background: active ? 'rgba(233,30,140,0.15)' : 'transparent', color: active ? '#f9a8d4' : '#8892b0', borderLeft: active ? '3px solid var(--ds-color-primary)' : '3px solid transparent', boxShadow: active ? '0 0 12px rgba(233,30,140,0.12)' : 'none' }}>
                     {label}
                   </div>
                 ))}
               </div>
               <div className="col-span-3 space-y-3">
                 <div className="grid grid-cols-3 gap-3">
-                  {[{ label: 'ROAS', value: '4.2x', color: '#06d6a0' }, { label: 'Alcance', value: '48.2K', color: '#62c4b0' }, { label: 'Conversiones', value: '328', color: '#e91e8c' }].map(({ label, value, color }) => (
+                  {[{ label: 'ROAS', value: '4.2x', color: '#06d6a0' }, { label: 'Alcance', value: '48.2K', color: '#62c4b0' }, { label: 'Conversiones', value: '328', color: 'var(--ds-color-primary)' }].map(({ label, value, color }) => (
                     <div key={label} className="p-3 rounded-xl" style={{ background: 'linear-gradient(160deg, rgba(18,14,28,0.90), rgba(10,10,20,0.96))', border: `1px solid ${color}22`, boxShadow: `0 0 20px ${color}12` }}>
                       <div className="text-xs mb-1" style={{ color: '#8892b0' }}>{label}</div>
                       <div className="text-xl font-bold" style={{ color, textShadow: `0 0 12px ${color}80` }}>{value}</div>
@@ -300,7 +300,7 @@ function HeroSection() {
                 <div className="p-4 rounded-xl" style={{ background: 'linear-gradient(160deg, rgba(18,14,28,0.90), rgba(10,10,20,0.96))', border: '1px solid rgba(233,30,140,0.12)', height: 88 }}>
                   <div className="flex items-end gap-1.5 h-full pb-1">
                     {[35, 52, 41, 68, 58, 80, 92, 72, 85, 91, 75, 98].map((h, i) => (
-                      <div key={i} className="flex-1 rounded-sm" style={{ height: `${h}%`, background: 'linear-gradient(to top,#e91e8c,#c5006a)', opacity: 0.50 + (i / 12) * 0.50, boxShadow: i >= 10 ? '0 0 6px rgba(233,30,140,0.40)' : 'none' }} />
+                      <div key={i} className="flex-1 rounded-sm" style={{ height: `${h}%`, background: 'linear-gradient(to top,var(--ds-color-primary),var(--ds-color-primary))', opacity: 0.50 + (i / 12) * 0.50, boxShadow: i >= 10 ? '0 0 6px rgba(233,30,140,0.40)' : 'none' }} />
                     ))}
                   </div>
                 </div>
@@ -321,7 +321,7 @@ function HeroSection() {
 
         {/* Mobile stats */}
         <div className="sm:hidden flex justify-center gap-8 mt-4">
-          {[{ num: '4.2x', label: 'ROAS', color: '#06d6a0' }, { num: '8 min', label: 'Primera campaña', color: '#e91e8c' }, { num: '+500', label: 'Empresas', color: '#62c4b0' }].map(({ num, label, color }) => (
+          {[{ num: '4.2x', label: 'ROAS', color: '#06d6a0' }, { num: '8 min', label: 'Primera campaña', color: 'var(--ds-color-primary)' }, { num: '+500', label: 'Empresas', color: '#62c4b0' }].map(({ num, label, color }) => (
             <div key={label} className="text-center">
               <div className="font-display font-extrabold text-2xl" style={{ color }}>{num}</div>
               <div className="text-xs mt-1" style={{ color: '#94a3b8' }}>{label}</div>
@@ -345,7 +345,7 @@ function TrustSection() {
   return (
     <section className="relative overflow-hidden" style={{ background: '#0f0f1f' }}>
       <div className="absolute inset-0 pointer-events-none">
-        <Orb color="#e91e8c" size={400} top="-30%" left="-5%" opacity={0.18} blur={80} />
+        <Orb color="var(--ds-color-primary)" size={400} top="-30%" left="-5%" opacity={0.18} blur={80} />
         <Orb color="#62c4b0" size={350} top="-20%" right="-5%" opacity={0.15} blur={80} />
       </div>
       <div ref={ref} className={`relative z-10 max-w-5xl mx-auto px-5 sm:px-8 py-14 text-center ${fi(visible)}`}>
@@ -376,7 +376,7 @@ function TrustSection() {
             <span className="font-semibold text-lg text-white">WhatsApp</span>
           </div>
 
-          <div className="hidden md:block w-px h-8" style={{ background: 'rgba(233,30,140,0.3)' }} />
+          <div className="hidden md:block w-px h-8" style={{ background: 'transparent' }} />
 
           {[{ num: '+340%', label: 'ROI promedio' }, { num: '8 min', label: 'Primera campaña' }, { num: '+500', label: 'Empresas activas' }].map(({ num, label }) => (
             <div key={label} className="text-center">
@@ -396,14 +396,14 @@ function ProblemSection() {
   return (
     <section className="relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #0f0f1f 0%, #1a0a2e 50%, #0f0f1f 100%)' }}>
       <div className="absolute inset-0 pointer-events-none">
-        <Orb color="#e91e8c" size={650} top="-5%" left="-10%" opacity={0.35} blur={70} />
+        <Orb color="var(--ds-color-primary)" size={650} top="-5%" left="-10%" opacity={0.35} blur={70} />
         <Orb color="#62c4b0" size={600} bottom="-5%" right="-10%" opacity={0.30} blur={80} />
-        <Orb color="#f472b6" size={300} top="50%" left="40%" opacity={0.15} blur={60} />
+        <Orb color="var(--ds-color-primary)" size={300} top="50%" left="40%" opacity={0.15} blur={60} />
       </div>
 
       <div ref={ref} className={`relative z-10 max-w-5xl mx-auto px-5 sm:px-8 pt-24 pb-16 sm:pt-28 sm:pb-20 ${fi(visible)}`}>
         <div className="text-center mb-14">
-          <Badge color="#e91e8c">El problema</Badge>
+          <Badge color="var(--ds-color-primary)">El problema</Badge>
           <h2 className="font-display font-extrabold text-fluid-3xl mb-5 text-white" style={{ letterSpacing: '-1.5px' }}>
             ¿Cuánto tiempo perdés creando{' '}
             <span style={gradientText}>ads manualmente?</span>
@@ -415,7 +415,7 @@ function ProblemSection() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
           {[
-            { icon: Clock, title: 'Demasiado tiempo', desc: 'Escribís copies durante horas que terminan sin convertir, sin saber por qué.', color: '#e91e8c' },
+            { icon: Clock, title: 'Demasiado tiempo', desc: 'Escribís copies durante horas que terminan sin convertir, sin saber por qué.', color: 'var(--ds-color-primary)' },
             { icon: DollarSign, title: 'Costos de agencia', desc: 'Pagás fortunas a agencias que no conocen tu negocio y no rinden cuentas.', color: '#f59e0b' },
             { icon: BarChart3, title: 'Sin visibilidad', desc: 'No sabés qué campañas fallan hasta que ya gastaste todo tu presupuesto.', color: '#62c4b0' },
           ].map(({ icon: Icon, title, desc, color }) => (
@@ -440,20 +440,20 @@ function SolutionSection() {
   return (
     <section className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0f0f1f 0%, #0d1535 50%, #0f0f1f 100%)' }}>
       <div className="absolute inset-0 pointer-events-none">
-        <Orb color="#e91e8c" size={650} top="10%" left="calc(50% - 325px)" opacity={0.30} blur={90} />
+        <Orb color="var(--ds-color-primary)" size={650} top="10%" left="calc(50% - 325px)" opacity={0.30} blur={90} />
         <Orb color="#62c4b0" size={400} bottom="-5%" left="-8%" opacity={0.25} blur={75} />
-        <Orb color="#e91e8c" size={350} top="-5%" right="-8%" opacity={0.20} blur={75} />
+        <Orb color="var(--ds-color-primary)" size={350} top="-5%" right="-8%" opacity={0.20} blur={75} />
       </div>
 
       <div ref={ref} className={`relative z-10 max-w-5xl mx-auto px-5 sm:px-8 pt-16 pb-24 sm:pt-20 sm:pb-28 ${fi(visible)}`}>
         {/* Bridge */}
         <div className="flex flex-col items-center gap-3 mb-14">
-          <div className="w-px h-12" style={{ background: 'linear-gradient(to bottom,transparent,#e91e8c)' }} />
+          <div className="w-px h-12" style={{ background: 'linear-gradient(to bottom,transparent,var(--ds-color-primary))' }} />
           <div className="px-6 py-3 rounded-full font-semibold text-sm"
             style={{ background: 'linear-gradient(135deg,rgba(233,30,140,0.18),rgba(98,196,176,0.12))', border: '1px solid rgba(233,30,140,0.35)', color: '#f9a8d4' }}>
             ✨ AdFlow lo hace por vos
           </div>
-          <div className="w-px h-10" style={{ background: 'linear-gradient(to bottom,#e91e8c,transparent)' }} />
+          <div className="w-px h-10" style={{ background: 'linear-gradient(to bottom,var(--ds-color-primary),transparent)' }} />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
@@ -464,7 +464,7 @@ function SolutionSection() {
           ].map(({ icon: Icon, title, desc }) => (
             <div key={title} className="feature-card p-6">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform duration-200 hover:scale-110"
-                style={{ background: 'linear-gradient(135deg,#e91e8c,#c5006a)', boxShadow: '0 0 24px rgba(233,30,140,0.40)' }}>
+                style={{ background: 'linear-gradient(135deg,var(--ds-color-primary),var(--ds-color-primary))', boxShadow: '0 0 24px rgba(233,30,140,0.40)' }}>
                 <Icon className="w-6 h-6 text-white" />
               </div>
               <h3 className="font-bold text-lg text-white mb-2">{title}</h3>
@@ -481,7 +481,7 @@ function SolutionSection() {
 function FeaturesSection() {
   const { ref, visible } = useFadeIn()
   const features = [
-    { icon: Bot, title: 'IA genera copies profesionales', desc: 'Copies persuasivos adaptados a tu tono de marca en segundos, optimizados para cada formato de Meta.', color: '#e91e8c' },
+    { icon: Bot, title: 'IA genera copies profesionales', desc: 'Copies persuasivos adaptados a tu tono de marca en segundos, optimizados para cada formato de Meta.', color: 'var(--ds-color-primary)' },
     { icon: Facebook, title: 'Conecta Facebook Ads directo', desc: 'Integración oficial con Meta Business Manager. Publicá y gestioná campañas sin salir de AdFlow.', color: '#60a5fa' },
     { icon: BarChart3, title: 'Reportes diarios automáticos', desc: 'Recibí cada mañana un resumen con métricas clave y recomendaciones de IA para optimizar tu inversión.', color: '#06d6a0' },
     { icon: Target, title: 'Públicos sugeridos por IA', desc: 'Describí tu producto y la IA crea audiencias precisas: intereses, comportamientos y lookalikes.', color: '#62c4b0' },
@@ -492,9 +492,9 @@ function FeaturesSection() {
   return (
     <section id="features" className="relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #0f0f1f 0%, #160f2a 50%, #0f0f1f 100%)' }}>
       <div className="absolute inset-0 pointer-events-none">
-        <Orb color="#e91e8c" size={700} top="-5%" right="-10%" opacity={0.25} blur={90} />
-        <Orb color="#e91e8c" size={500} bottom="0%" left="-8%" opacity={0.20} blur={90} />
-        <Orb color="#f472b6" size={300} top="50%" left="40%" opacity={0.15} blur={70} />
+        <Orb color="var(--ds-color-primary)" size={700} top="-5%" right="-10%" opacity={0.25} blur={90} />
+        <Orb color="var(--ds-color-primary)" size={500} bottom="0%" left="-8%" opacity={0.20} blur={90} />
+        <Orb color="var(--ds-color-primary)" size={300} top="50%" left="40%" opacity={0.15} blur={70} />
       </div>
       <div ref={ref} className={`relative z-10 max-w-6xl mx-auto px-5 sm:px-8 py-24 sm:py-28 ${fi(visible)}`}>
         <div className="text-center mb-14">
@@ -537,27 +537,27 @@ function HowItWorksSection() {
     <section className="relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #0f0f1f 0%, #1a0830 50%, #0f0f1f 100%)' }}>
       <div className="absolute inset-0 pointer-events-none">
         <Orb color="#62c4b0" size={700} top="5%" left="calc(50% - 350px)" opacity={0.35} blur={90} />
-        <Orb color="#e91e8c" size={400} top="0%" left="-8%" opacity={0.22} blur={80} />
-        <Orb color="#e91e8c" size={400} bottom="-10%" right="-5%" opacity={0.20} blur={80} />
+        <Orb color="var(--ds-color-primary)" size={400} top="0%" left="-8%" opacity={0.22} blur={80} />
+        <Orb color="var(--ds-color-primary)" size={400} bottom="-10%" right="-5%" opacity={0.20} blur={80} />
       </div>
       <div ref={ref} className={`relative z-10 max-w-5xl mx-auto px-5 sm:px-8 py-24 sm:py-28 ${fi(visible)}`}>
         <div className="text-center mb-16 sm:mb-20">
           <Badge color="#06d6a0">Cómo funciona</Badge>
           <h2 className="font-display font-extrabold text-fluid-3xl text-white" style={{ letterSpacing: '-1.5px' }}>
             De cero a campaña activa{' '}
-            <span style={{ background: 'linear-gradient(135deg,#62c4b0,#e91e8c)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+            <span style={{ background: 'linear-gradient(135deg,#62c4b0,var(--ds-color-primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
               en 3 pasos
             </span>
           </h2>
         </div>
         <div className="relative">
           <div className="absolute hidden md:block h-px top-8"
-            style={{ left: '18%', right: '18%', background: 'linear-gradient(90deg,transparent 0%,#e91e8c 30%,#62c4b0 70%,transparent 100%)', opacity: 0.35 }} />
+            style={{ left: '18%', right: '18%', background: 'linear-gradient(90deg,transparent 0%,var(--ds-color-primary) 30%,#62c4b0 70%,transparent 100%)', opacity: 0.35 }} />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-8">
             {steps.map(({ num, title, desc, icon: Icon }, i) => (
               <div key={num} className="flex flex-col items-center text-center">
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5 z-10 flex-shrink-0"
-                  style={{ background: 'linear-gradient(135deg,#e91e8c,#c5006a)', boxShadow: `0 0 ${24 + i * 8}px rgba(233,30,140,${0.35 + i * 0.05})` }}>
+                  style={{ background: 'linear-gradient(135deg,var(--ds-color-primary),var(--ds-color-primary))', boxShadow: `0 0 ${24 + i * 8}px rgba(233,30,140,${0.35 + i * 0.05})` }}>
                   <span className="font-display font-extrabold text-2xl text-white">{num}</span>
                 </div>
                 <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-4" style={{ ...glass }}>
@@ -574,8 +574,8 @@ function HowItWorksSection() {
       {/* Franja persuasiva full-width */}
       <div className="relative w-full py-4 text-center overflow-hidden"
         style={{
-          background: 'linear-gradient(90deg, #c2185b 0%, #e91e8c 35%, #62c4b0 65%, #3a9a8a 100%)',
-          boxShadow: '0 0 50px rgba(233,30,140,0.45), 0 0 100px rgba(98,196,176,0.15)',
+          background: 'linear-gradient(90deg, #c2185b 0%, var(--ds-color-primary) 35%, #62c4b0 65%, #3a9a8a 100%)',
+          boxShadow: '0 0 50px transparent, 0 0 100px rgba(98,196,176,0.15)',
         }}>
         <div className="absolute inset-0 pointer-events-none" style={{
           backgroundImage: 'linear-gradient(rgba(255,255,255,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.07) 1px,transparent 1px)',
@@ -619,7 +619,7 @@ function DemoSection() {
       desc: 'En segundos, la IA genera copies persuasivos, elige audiencias precisas y configura toda la campaña.',
       mock: (
         <div className="space-y-3">
-          <div className="p-3 rounded-lg border-l-2" style={{ background: 'rgba(233,30,140,0.12)', borderColor: '#e91e8c' }}>
+          <div className="p-3 rounded-lg border-l-2" style={{ background: 'rgba(233,30,140,0.12)', borderColor: 'var(--ds-color-primary)' }}>
             <div className="text-xs mb-1.5 font-semibold" style={{ color: '#f9a8d4' }}>Copy generado por IA</div>
             <p className="text-sm" style={{ color: '#e2e8f0' }}>¿Siempre quisiste tomar fotos profesionales? Aprendé desde casa y sorprendé a todos. +500 alumnos ya lo lograron.</p>
           </div>
@@ -648,7 +648,7 @@ function DemoSection() {
             <span className="text-xs" style={{ color: '#94a3b8' }}>~800 alcance/día</span>
           </div>
           <button className="w-full py-3 rounded-xl font-semibold text-sm text-white flex items-center justify-center gap-2"
-            style={{ background: 'linear-gradient(135deg,#e91e8c,#c5006a)', boxShadow: '0 0 20px rgba(233,30,140,0.3)', minHeight: 44 }}>
+            style={{ background: 'linear-gradient(135deg,var(--ds-color-primary),var(--ds-color-primary))', boxShadow: '0 0 20px transparent', minHeight: 44 }}>
             <Rocket className="w-4 h-4" /> Publicar campaña ahora
           </button>
         </div>
@@ -659,9 +659,9 @@ function DemoSection() {
   return (
     <section id="demo" className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0f0f1f 0%, #150d28 50%, #0f0f1f 100%)' }}>
       <div className="absolute inset-0 pointer-events-none">
-        <Orb color="#f472b6" size={600} top="0%" left="-8%" opacity={0.30} blur={85} />
+        <Orb color="var(--ds-color-primary)" size={600} top="0%" left="-8%" opacity={0.30} blur={85} />
         <Orb color="#62c4b0" size={550} bottom="-5%" right="-8%" opacity={0.25} blur={85} />
-        <Orb color="#e91e8c" size={300} top="50%" left="45%" opacity={0.18} blur={65} />
+        <Orb color="var(--ds-color-primary)" size={300} top="50%" left="45%" opacity={0.18} blur={65} />
       </div>
 
       <div ref={ref} className={`relative z-10 max-w-5xl mx-auto px-5 sm:px-8 py-24 sm:py-28 ${fi(visible)}`}>
@@ -683,7 +683,7 @@ function DemoSection() {
             <button key={tab} onClick={() => setActiveTab(i)}
               className="flex-1 py-2 rounded-xl text-xs font-semibold transition-all duration-200"
               style={{
-                background: activeTab === i ? 'linear-gradient(135deg,#e91e8c,#c5006a)' : 'transparent',
+                background: activeTab === i ? 'linear-gradient(135deg,var(--ds-color-primary),var(--ds-color-primary))' : 'transparent',
                 color: activeTab === i ? '#fff' : '#94a3b8',
               }}>
               {tab}
@@ -719,13 +719,13 @@ function DemoSection() {
                 {activeTab < 2 ? (
                   <button onClick={() => setActiveTab(activeTab + 1)}
                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all duration-150"
-                    style={{ background: 'linear-gradient(135deg,#e91e8c,#c5006a)', minHeight: 44 }}>
+                    style={{ background: 'linear-gradient(135deg,var(--ds-color-primary),var(--ds-color-primary))', minHeight: 44 }}>
                     Siguiente →
                   </button>
                 ) : (
                   <Link href="/login"
                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white"
-                    style={{ background: 'linear-gradient(135deg,#e91e8c,#c5006a)', minHeight: 44 }}>
+                    style={{ background: 'linear-gradient(135deg,var(--ds-color-primary),var(--ds-color-primary))', minHeight: 44 }}>
                     Probalo gratis →
                   </Link>
                 )}
@@ -745,7 +745,7 @@ function DemoSection() {
 function TestimonialsSection() {
   const { ref, visible } = useFadeIn()
   const testimonials = [
-    { name: 'Valentina R.', role: 'Directora de Marketing · Agencia Nube', text: 'Pasamos de gastar 12 horas semanales en ads a menos de 2. Los copies de la IA superan los nuestros. Nuestro ROAS mejoró un 280% en el primer mes.', result: 'ROAS 4.2x', avatar: 'VR', color: '#e91e8c' },
+    { name: 'Valentina R.', role: 'Directora de Marketing · Agencia Nube', text: 'Pasamos de gastar 12 horas semanales en ads a menos de 2. Los copies de la IA superan los nuestros. Nuestro ROAS mejoró un 280% en el primer mes.', result: 'ROAS 4.2x', avatar: 'VR', color: 'var(--ds-color-primary)' },
     { name: 'Carlos M.', role: 'Emprendedor · E-commerce de ropa', text: 'Probé muchas herramientas pero ninguna tan completa. En mi primera semana ya tenía campaña activa con resultados reales. Lo recomiendo al 100%.', result: '+180% ventas', avatar: 'CM', color: '#62c4b0' },
     { name: 'Lucía F.', role: 'CEO · Academia Online', text: 'El A/B testing automático es increíble. AdFlow descubrió copies que yo jamás hubiera probado y triplicó mis conversiones sin aumentar el presupuesto.', result: '3x conversiones', avatar: 'LF', color: '#059669' },
   ]
@@ -753,8 +753,8 @@ function TestimonialsSection() {
   return (
     <section className="relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #0f0f1f 0%, #0a1025 50%, #0f0f1f 100%)' }}>
       <div className="absolute inset-0 pointer-events-none">
-        <Orb color="#e91e8c" size={650} top="-5%" left="-10%" opacity={0.35} blur={90} />
-        <Orb color="#e91e8c" size={500} bottom="0%" right="-8%" opacity={0.20} blur={80} />
+        <Orb color="var(--ds-color-primary)" size={650} top="-5%" left="-10%" opacity={0.35} blur={90} />
+        <Orb color="var(--ds-color-primary)" size={500} bottom="0%" right="-8%" opacity={0.20} blur={80} />
         <Orb color="#06b6d4" size={350} top="50%" left="40%" opacity={0.18} blur={70} />
       </div>
 
@@ -826,7 +826,7 @@ function PricingSection() {
         'Reportes diarios con IA',
         'Soporte prioritario',
       ],
-      cta: 'Empezar con Starter', popular: false, accentColor: '#f472b6',
+      cta: 'Empezar con Starter', popular: false, accentColor: 'var(--ds-color-primary)',
     },
     {
       name: 'Pro', price: 49, credits: 400,
@@ -839,7 +839,7 @@ function PricingSection() {
         'Reportes diarios + análisis avanzado',
         'Soporte prioritario',
       ],
-      cta: 'Empezar con Pro', popular: true, accentColor: '#e91e8c',
+      cta: 'Empezar con Pro', popular: true, accentColor: 'var(--ds-color-primary)',
     },
     {
       name: 'Agencia', price: 99, credits: 1000,
@@ -859,9 +859,9 @@ function PricingSection() {
   return (
     <section id="pricing" className="relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #0f0f1f 0%, #1a0a28 50%, #0f0f1f 100%)' }}>
       <div className="absolute inset-0 pointer-events-none">
-        <Orb color="#e91e8c" size={650} top="-5%" left="-5%" opacity={0.30} blur={90} />
+        <Orb color="var(--ds-color-primary)" size={650} top="-5%" left="-5%" opacity={0.30} blur={90} />
         <Orb color="#62c4b0" size={700} top="20%" left="calc(50% - 350px)" opacity={0.30} blur={100} />
-        <Orb color="#e91e8c" size={550} bottom="-10%" right="-5%" opacity={0.25} blur={90} />
+        <Orb color="var(--ds-color-primary)" size={550} bottom="-10%" right="-5%" opacity={0.25} blur={90} />
       </div>
       <div ref={ref} className={`relative z-10 max-w-6xl mx-auto px-5 sm:px-8 py-24 sm:py-28 ${fi(visible)}`}>
         <div className="text-center mb-14">
@@ -893,7 +893,7 @@ function PricingSection() {
               onMouseLeave={e => { if (!popular) glassHover.leave(e.currentTarget as HTMLElement) }}>
               {popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap"
-                  style={{ background: 'linear-gradient(135deg,#e91e8c,#c5006a)', color: '#fff', boxShadow: '0 4px 20px rgba(233,30,140,0.50)' }}>
+                  style={{ background: 'linear-gradient(135deg,var(--ds-color-primary),var(--ds-color-primary))', color: '#fff', boxShadow: '0 4px 20px rgba(233,30,140,0.50)' }}>
                   ⭐ Más popular
                 </div>
               )}
@@ -947,7 +947,7 @@ function PricingSection() {
               <Link href="/login"
                 className="w-full flex items-center justify-center gap-2 py-3 px-5 rounded-xl font-semibold text-sm transition-all duration-150"
                 style={popular
-                  ? { background: 'linear-gradient(135deg,#e91e8c,#c5006a)', color: '#fff', boxShadow: '0 0 24px rgba(233,30,140,0.40)', minHeight: 44 }
+                  ? { background: 'linear-gradient(135deg,var(--ds-color-primary),var(--ds-color-primary))', color: '#fff', boxShadow: '0 0 24px rgba(233,30,140,0.40)', minHeight: 44 }
                   : { background: 'rgba(255,255,255,0.07)', border: `1px solid ${accentColor}33`, color: accentColor, minHeight: 44 }}>
                 {cta} <ArrowRight className="w-4 h-4" />
               </Link>
@@ -981,7 +981,7 @@ function FAQSection() {
     <section id="faq" className="relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #0f0f1f 0%, #130f22 50%, #0f0f1f 100%)' }}>
       <div className="absolute inset-0 pointer-events-none">
         <Orb color="#62c4b0" size={600} top="10%" left="calc(50% - 300px)" opacity={0.25} blur={90} />
-        <Orb color="#e91e8c" size={350} bottom="5%" right="-5%" opacity={0.18} blur={75} />
+        <Orb color="var(--ds-color-primary)" size={350} bottom="5%" right="-5%" opacity={0.18} blur={75} />
       </div>
       <div ref={ref} className={`relative z-10 max-w-3xl mx-auto px-5 sm:px-8 py-24 sm:py-28 ${fi(visible)}`}>
         <div className="text-center mb-12">
@@ -993,7 +993,7 @@ function FAQSection() {
         <div className="space-y-3">
           {faqs.map(({ q, a }, i) => (
             <div key={i} className="rounded-2xl overflow-hidden transition-all duration-150"
-              style={{ ...glass, borderColor: open === i ? 'rgba(233,30,140,0.3)' : 'rgba(255,255,255,0.1)' }}>
+              style={{ ...glass, borderColor: open === i ? 'transparent' : 'rgba(255,255,255,0.1)' }}>
               <button className="w-full flex items-center justify-between px-5 sm:px-6 py-4 sm:py-5 text-left"
                 onClick={() => setOpen(open === i ? null : i)}>
                 <span className="font-semibold text-sm text-white pr-5">{q}</span>
@@ -1018,7 +1018,7 @@ function FinalCTASection() {
   const { ref, visible } = useFadeIn()
   return (
     <section className="relative py-28 sm:py-36 px-5 overflow-hidden"
-      style={{ background: 'linear-gradient(135deg,#6b0f3c 0%,#c2185b 25%,#e91e8c 50%,#62c4b0 75%,#3a9a8a 100%)' }}>
+      style={{ background: 'linear-gradient(135deg,#6b0f3c 0%,#c2185b 25%,var(--ds-color-primary) 50%,#62c4b0 75%,#3a9a8a 100%)' }}>
       <div className="absolute inset-0 pointer-events-none">
         <Orb color="#ffffff" size={700} top="-30%" right="-15%" opacity={0.18} blur={70} />
         <Orb color="#ffffff" size={500} bottom="-25%" left="-10%" opacity={0.15} blur={60} />
@@ -1044,7 +1044,7 @@ function FinalCTASection() {
         </p>
         <Link href="/login"
           className="inline-flex items-center gap-3 px-8 sm:px-10 py-4 sm:py-5 rounded-2xl font-bold text-base sm:text-lg transition-all duration-150"
-          style={{ background: 'white', color: '#e91e8c', boxShadow: '0 20px 50px rgba(0,0,0,0.3),0 0 0 1px rgba(255,255,255,0.2)' }}
+          style={{ background: 'white', color: 'var(--ds-color-primary)', boxShadow: '0 20px 50px rgba(0,0,0,0.3),0 0 0 1px rgba(255,255,255,0.2)' }}
           onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px) scale(1.02)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 30px 60px rgba(0,0,0,0.35),0 0 0 1px rgba(255,255,255,0.25)' }}
           onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0) scale(1)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 20px 50px rgba(0,0,0,0.3),0 0 0 1px rgba(255,255,255,0.2)' }}>
           <Rocket className="w-5 h-5" />
@@ -1072,13 +1072,13 @@ function Footer() {
     <footer className="relative overflow-hidden" style={{ background: '#0a0a18', borderTop: '1px solid rgba(233,30,140,0.20)' }}>
       <div className="absolute inset-0 pointer-events-none">
         <Orb color="#62c4b0" size={500} bottom="-20%" left="-5%" opacity={0.20} blur={80} />
-        <Orb color="#e91e8c" size={350} top="-10%" right="5%" opacity={0.15} blur={70} />
+        <Orb color="var(--ds-color-primary)" size={350} top="-10%" right="5%" opacity={0.15} blur={70} />
       </div>
       <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 lg:px-10 py-14 sm:py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-10 mb-12">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#e91e8c,#c5006a)' }}>
+              <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg,var(--ds-color-primary),var(--ds-color-primary))' }}>
                 <Zap className="w-4 h-4 text-white fill-white" />
               </div>
               <span className="font-display text-xl font-bold text-white">AdFlow</span>

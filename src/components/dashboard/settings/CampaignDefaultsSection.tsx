@@ -41,7 +41,7 @@ export default function CampaignDefaultsSection({ initialData }: Props) {
   return (
     <div className="card p-6 mb-5">
       <h2 className="section-title mb-1">⚙️ Configuración de campañas</h2>
-      <p className="text-xs mb-5" style={{ color: 'var(--muted)' }}>
+      <p className="text-xs mb-5" style={{ color: 'var(--ds-text-secondary)' }}>
         Estos valores se usan como punto de partida al crear nuevas campañas
       </p>
       <form onSubmit={save} className="space-y-4">
@@ -64,7 +64,7 @@ export default function CampaignDefaultsSection({ initialData }: Props) {
             <input className="input-field" placeholder="https://wa.me/5491155551234"
               value={form.default_whatsapp_cta}
               onChange={e => setForm(p => ({ ...p, default_whatsapp_cta: e.target.value }))} />
-            <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>
+            <p className="text-xs mt-1" style={{ color: 'var(--ds-text-secondary)' }}>
               Formato: https://wa.me/[código_país][número]. Ej: https://wa.me/5491155551234
             </p>
           </div>

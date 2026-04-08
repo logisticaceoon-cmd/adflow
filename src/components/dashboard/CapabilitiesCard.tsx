@@ -47,7 +47,7 @@ export default function CapabilitiesCard({ level }: Props) {
             {unlocked.length} desbloqueadas
           </span>
         </div>
-        <p style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 14 }}>
+        <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', marginBottom: 14 }}>
           Herramientas activas para tu nivel actual
         </p>
         <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -63,7 +63,7 @@ export default function CapabilitiesCard({ level }: Props) {
                 <p style={{ fontSize: 12, fontWeight: 700, color: '#fff', marginBottom: 2 }}>
                   {cap.title}
                 </p>
-                <p style={{ fontSize: 11, color: 'var(--muted)', lineHeight: 1.4 }}>
+                <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', lineHeight: 1.4 }}>
                   {cap.description}
                 </p>
               </div>
@@ -88,7 +88,7 @@ export default function CapabilitiesCard({ level }: Props) {
             {upcoming.length + futureLocked.length} bloqueadas
           </span>
         </div>
-        <p style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 14 }}>
+        <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', marginBottom: 14 }}>
           Lo que vas a desbloquear conforme subas de nivel
         </p>
 
@@ -111,7 +111,7 @@ export default function CapabilitiesCard({ level }: Props) {
                     <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ds-color-warning)', marginBottom: 2 }}>
                       {cap.title}
                     </p>
-                    <p style={{ fontSize: 11, color: 'var(--muted)', lineHeight: 1.4 }}>
+                    <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', lineHeight: 1.4 }}>
                       {cap.description}
                     </p>
                   </div>
@@ -123,7 +123,7 @@ export default function CapabilitiesCard({ level }: Props) {
 
         {futureLocked.length > 0 && (
           <>
-            <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 6 }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 6 }}>
               Más adelante
             </p>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -131,7 +131,7 @@ export default function CapabilitiesCard({ level }: Props) {
                 <li key={i} style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', display: 'flex', alignItems: 'center', gap: 8 }}>
                   <span style={{ fontSize: 13, opacity: 0.5 }}>{cap.icon}</span>
                   <span>{cap.title}</span>
-                  <span style={{ marginLeft: 'auto', fontSize: 9, color: 'var(--muted)' }}>Nv {cap.level}</span>
+                  <span style={{ marginLeft: 'auto', fontSize: 9, color: 'var(--ds-text-secondary)' }}>Nv {cap.level}</span>
                 </li>
               ))}
             </ul>

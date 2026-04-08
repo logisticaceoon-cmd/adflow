@@ -5,8 +5,8 @@ import Link from 'next/link'
 import type { Recommendation } from '@/lib/recommendation-engine'
 
 const PRIORITY_STYLES: Record<Recommendation['priority'], { border: string; bg: string; color: string }> = {
-  high:   { border: 'rgba(233,30,140,0.40)', bg: 'rgba(233,30,140,0.06)', color: '#f9a8d4' },
-  medium: { border: 'rgba(245,158,11,0.40)', bg: 'rgba(245,158,11,0.06)', color: '#fbbf24' },
+  high:   { border: 'var(--ds-color-primary-border)', bg: 'var(--ds-color-primary-soft)', color: 'var(--ds-color-primary)' },
+  medium: { border: 'var(--ds-color-warning-border)', bg: 'rgba(245,158,11,0.06)', color: 'var(--ds-color-warning)' },
   low:    { border: 'rgba(255,255,255,0.10)', bg: 'rgba(255,255,255,0.03)', color: '#8892b0' },
 }
 
@@ -31,7 +31,7 @@ export default function RecommendationsList({ limit, emptyMessage }: Props) {
 
   if (loading) {
     return (
-      <div className="p-4 text-center" style={{ fontSize: 12, color: 'var(--muted)' }}>
+      <div className="p-4 text-center" style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
         Cargando recomendaciones...
       </div>
     )
@@ -41,7 +41,7 @@ export default function RecommendationsList({ limit, emptyMessage }: Props) {
 
   if (visible.length === 0) {
     return (
-      <div className="p-4 text-center" style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.6 }}>
+      <div className="p-4 text-center" style={{ fontSize: 12, color: 'var(--ds-text-secondary)', lineHeight: 1.6 }}>
         {emptyMessage || 'No hay recomendaciones por ahora. Volvé más tarde.'}
       </div>
     )
@@ -57,7 +57,7 @@ export default function RecommendationsList({ limit, emptyMessage }: Props) {
             <p style={{ fontSize: 11, fontWeight: 700, color: style.color, marginBottom: 4 }}>
               {r.icon} {r.title}
             </p>
-            <p style={{ fontSize: 11, color: 'var(--muted)', lineHeight: 1.5, marginBottom: r.action ? 6 : 0 }}>
+            <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', lineHeight: 1.5, marginBottom: r.action ? 6 : 0 }}>
               {r.description}
             </p>
             {r.action?.href && (

@@ -115,7 +115,7 @@ export default function StepReview({
                     : i === genStep ? 'linear-gradient(135deg, var(--ds-color-success), var(--ds-color-primary))'
                       : 'var(--ds-card-border)',
                   border: i > genStep ? '1px solid var(--ds-card-border)' : 'none',
-                  boxShadow: i === genStep ? '0 0 12px rgba(233,30,140,0.45)' : 'none',
+                  boxShadow: i === genStep ? '0 0 12px transparent' : 'none',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 9, color: '#fff', fontWeight: 900,
                 }}>
@@ -168,7 +168,7 @@ export default function StepReview({
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div>
               <h2 className="section-title" style={{ marginBottom: 3 }}>✨ Vista previa de anuncios</h2>
-              <p className="text-xs" style={{ color: 'var(--muted)' }}>
+              <p className="text-xs" style={{ color: 'var(--ds-text-secondary)' }}>
                 Revisá cada imagen con sus 3 variantes · click en el mockup para editar texto
               </p>
             </div>
@@ -190,7 +190,7 @@ export default function StepReview({
           {/* Image navigation tabs — only when there are multiple images */}
           {numImages > 1 && (
             <div style={{ marginTop: 14 }}>
-              <p className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--muted)' }}>
+              <p className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--ds-text-secondary)' }}>
                 Imagen seleccionada para previsualizar
               </p>
               <div className="flex gap-2 flex-wrap">
@@ -238,7 +238,7 @@ export default function StepReview({
                     background: activeVariant === i
                       ? 'linear-gradient(135deg, var(--ds-color-success-soft), var(--ds-color-primary-soft))'
                       : 'var(--ds-bg-elevated)',
-                    border: `1px solid ${activeVariant === i ? 'rgba(233,30,140,0.45)' : 'var(--ds-card-border)'}`,
+                    border: `1px solid ${activeVariant === i ? 'transparent' : 'var(--ds-card-border)'}`,
                     color: activeVariant === i ? '#fff' : '#8892b0',
                     boxShadow: activeVariant === i ? '0 0 14px var(--ds-color-primary-soft)' : 'none',
                   }}>
@@ -316,7 +316,7 @@ export default function StepReview({
 
           {/* Headline */}
           <div style={{ padding: '12px 14px', borderBottom: '1px solid var(--ds-card-border)' }}>
-            <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--muted)' }}>
+            <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--ds-text-secondary)' }}>
               Headline
             </p>
             <p className="text-sm font-semibold leading-snug" style={{ color: '#fff' }}>
@@ -326,7 +326,7 @@ export default function StepReview({
 
           {/* Primary text */}
           <div style={{ padding: '12px 14px', borderBottom: '1px solid var(--ds-card-border)' }}>
-            <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--muted)' }}>
+            <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--ds-text-secondary)' }}>
               Texto principal
             </p>
             <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.88)', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
@@ -338,14 +338,14 @@ export default function StepReview({
           <div style={{ padding: '12px 14px', display: 'flex', gap: 20, flexWrap: 'wrap', alignItems: 'flex-start' }}>
             {activeAd.description && (
               <div style={{ flex: 1, minWidth: 120 }}>
-                <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--muted)' }}>
+                <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--ds-text-secondary)' }}>
                   Descripción
                 </p>
                 <p className="text-xs" style={{ color: 'rgba(255,255,255,0.75)' }}>{activeAd.description}</p>
               </div>
             )}
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--muted)' }}>
+              <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--ds-text-secondary)' }}>
                 Botón CTA
               </p>
               {/* CTA selector — filtered by campaign objective, applied to all ad sets */}
@@ -384,7 +384,7 @@ export default function StepReview({
 
           {/* All-variants summary strip */}
           <div style={{ padding: '10px 14px', background: 'rgba(255,255,255,0.02)', borderTop: '1px solid var(--ds-card-border)' }}>
-            <p className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--muted)' }}>
+            <p className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--ds-text-secondary)' }}>
               Las {numVariants} variantes en resumen
             </p>
             <div className="space-y-1.5">
@@ -454,14 +454,14 @@ export default function StepReview({
             </span>
             <div className="text-left">
               <p className="text-sm font-semibold">Resumen de estrategia — {form.strategy_type}</p>
-              <p className="text-xs" style={{ color: 'var(--muted)' }}>
+              <p className="text-xs" style={{ color: 'var(--ds-text-secondary)' }}>
                 {adSets.length} conjuntos · {adSets.reduce((a, s) => a + (s.ads?.length || 0), 0)} anuncios
               </p>
             </div>
           </div>
           {strategyExpanded
-            ? <ChevronUp size={16} style={{ color: 'var(--muted)', flexShrink: 0 }} />
-            : <ChevronDown size={16} style={{ color: 'var(--muted)', flexShrink: 0 }} />
+            ? <ChevronUp size={16} style={{ color: 'var(--ds-text-secondary)', flexShrink: 0 }} />
+            : <ChevronDown size={16} style={{ color: 'var(--ds-text-secondary)', flexShrink: 0 }} />
           }
         </button>
 
@@ -472,7 +472,7 @@ export default function StepReview({
                 <div key={si} className="p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
                   <div className="flex items-center justify-between mb-2 flex-wrap gap-1">
                     <p className="text-xs font-semibold">{s.name}</p>
-                    <span className="text-xs" style={{ color: 'var(--muted)' }}>
+                    <span className="text-xs" style={{ color: 'var(--ds-text-secondary)' }}>
                       {currSymbol}{(s.daily_budget / 100).toFixed(0)}/{currency}/día
                     </span>
                   </div>
@@ -481,7 +481,7 @@ export default function StepReview({
                       <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'var(--ds-card-border)', color: 'var(--ds-color-primary)' }}>⚡ Advantage+</span>
                     )}
                     {(s.targeting?.interests || []).slice(0, 3).map((interest: any, ii: number) => (
-                      <span key={ii} className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'var(--ds-card-border)', color: 'var(--muted)' }}>
+                      <span key={ii} className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'var(--ds-card-border)', color: 'var(--ds-text-secondary)' }}>
                         🎯 {interest.name}
                       </span>
                     ))}
@@ -502,14 +502,14 @@ export default function StepReview({
             </div>
 
             {aiStrategy.estimated_results && (
-              <div className="mt-4 p-3 rounded-xl" style={{ background: 'transparent', border: '1px solid rgba(98,196,176,0.18)' }}>
+              <div className="mt-4 p-3 rounded-xl" style={{ background: 'transparent', border: '1px solid transparent' }}>
                 <p className="text-xs font-semibold mb-3" style={{ color: 'var(--ds-color-primary)' }}>📊 Resultados estimados</p>
                 <div className="grid grid-cols-2 gap-y-2 gap-x-4">
                   {Object.entries(aiStrategy.estimated_results)
                     .filter(([, v]) => v && v !== 'N/A')
                     .map(([k, v]) => (
                       <div key={k}>
-                        <p className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>{k.replace(/_/g, ' ')}</p>
+                        <p className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--ds-text-secondary)' }}>{k.replace(/_/g, ' ')}</p>
                         <p className="text-xs font-semibold">{String(v)}</p>
                       </div>
                     ))}
@@ -527,7 +527,7 @@ export default function StepReview({
       </div>
 
       {/* Budget display */}
-      <div className="px-1 text-sm flex items-center gap-2" style={{ color: 'var(--muted)' }}>
+      <div className="px-1 text-sm flex items-center gap-2" style={{ color: 'var(--ds-text-secondary)' }}>
         <span>💰</span>
         <span>
           Presupuesto: <strong style={{ color: '#fff' }}>{currSymbol}{form.daily_budget} {currency}/día</strong>
@@ -561,7 +561,7 @@ export default function StepReview({
           disabled={savingDraft || isPublishing}
           className="flex-1 min-w-[160px] flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:scale-100"
           style={{
-            background: isPublishing ? 'rgba(233,30,140,0.45)' : 'linear-gradient(135deg, var(--ds-color-success), var(--ds-color-primary))',
+            background: isPublishing ? 'transparent' : 'linear-gradient(135deg, var(--ds-color-success), var(--ds-color-primary))',
             color: '#fff',
             boxShadow: isPublishing ? 'none' : '0 4px 20px var(--ds-color-success-border)',
           }}

@@ -90,7 +90,7 @@ export default function CampaignPublishFlow({ campaignId, isAlreadyPublished, me
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80"
-            style={{ background: 'rgba(98,196,176,0.12)', border: '1px solid rgba(98,196,176,0.35)', color: '#62c4b0' }}
+            style={{ background: 'var(--ds-card-border)', border: '1px solid var(--ds-card-border)', color: 'var(--ds-color-primary)' }}
           >
             <ExternalLink size={14} /> Ver en Ads Manager
           </a>
@@ -98,7 +98,7 @@ export default function CampaignPublishFlow({ campaignId, isAlreadyPublished, me
         <button
           onClick={handlePublish}
           className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all hover:opacity-90"
-          style={{ background: 'rgba(233,30,140,0.12)', border: '1px solid rgba(233,30,140,0.30)', color: '#e91e8c' }}
+          style={{ background: 'var(--ds-color-primary-soft)', border: '1px solid var(--ds-color-primary-border)', color: 'var(--ds-color-primary)' }}
         >
           <Rocket size={14} /> Re-publicar
         </button>
@@ -113,9 +113,9 @@ export default function CampaignPublishFlow({ campaignId, isAlreadyPublished, me
         onClick={handlePublish}
         className="flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:scale-105 active:scale-95"
         style={{
-          background: 'linear-gradient(135deg, #ea1b7e, #c5006a)',
+          background: 'var(--ds-color-primary)',
           color: '#fff',
-          boxShadow: '0 4px 20px rgba(233,30,140,0.40)',
+          boxShadow: '0 4px 20px var(--ds-color-primary-border)',
         }}
       >
         <Rocket size={15} />
@@ -129,7 +129,7 @@ export default function CampaignPublishFlow({ campaignId, isAlreadyPublished, me
     return (
       <div
         className="p-5 rounded-2xl"
-        style={{ background: 'rgba(233,30,140,0.05)', border: '1px solid rgba(233,30,140,0.20)' }}
+        style={{ background: 'var(--ds-color-primary-soft)', border: '1px solid var(--ds-color-primary-soft)' }}
       >
         <div className="space-y-3">
           {PROGRESS_STEPS.filter(s => s.key !== 'done').map((s, idx) => {
@@ -140,9 +140,9 @@ export default function CampaignPublishFlow({ campaignId, isAlreadyPublished, me
               <div key={s.key} className="flex items-center gap-3">
                 <div className="w-5 h-5 flex-shrink-0 flex items-center justify-center">
                   {done
-                    ? <CheckCircle2 size={16} style={{ color: '#62c4b0' }} />
+                    ? <CheckCircle2 size={16} style={{ color: 'var(--ds-color-primary)' }} />
                     : active
-                      ? <Loader2 size={16} className="animate-spin" style={{ color: '#e91e8c' }} />
+                      ? <Loader2 size={16} className="animate-spin" style={{ color: 'var(--ds-color-primary)' }} />
                       : <div className="w-4 h-4 rounded-full" style={{ border: '1.5px solid rgba(255,255,255,0.15)' }} />
                   }
                 </div>
@@ -170,7 +170,7 @@ export default function CampaignPublishFlow({ campaignId, isAlreadyPublished, me
       <div className="space-y-3">
         <div
           className="p-4 rounded-xl flex items-start gap-3"
-          style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.30)' }}
+          style={{ background: 'var(--ds-color-danger-soft)', border: '1px solid var(--ds-color-danger-border)' }}
         >
           <AlertCircle size={16} className="flex-shrink-0 mt-0.5" style={{ color: '#f87171' }} />
           <div>
@@ -181,7 +181,7 @@ export default function CampaignPublishFlow({ campaignId, isAlreadyPublished, me
         <button
           onClick={() => { setState('idle'); setError('') }}
           className="text-sm font-semibold transition-opacity hover:opacity-75"
-          style={{ color: 'var(--muted)' }}
+          style={{ color: 'var(--ds-text-secondary)' }}
         >
           Reintentar
         </button>
@@ -195,12 +195,12 @@ export default function CampaignPublishFlow({ campaignId, isAlreadyPublished, me
       {/* Success header */}
       <div
         className="p-4 rounded-xl flex items-start gap-3"
-        style={{ background: 'rgba(98,196,176,0.08)', border: '1px solid rgba(98,196,176,0.30)' }}
+        style={{ background: 'transparent', border: '1px solid var(--ds-card-border)' }}
       >
-        <CheckCircle2 size={16} className="flex-shrink-0 mt-0.5" style={{ color: '#62c4b0' }} />
+        <CheckCircle2 size={16} className="flex-shrink-0 mt-0.5" style={{ color: 'var(--ds-color-primary)' }} />
         <div>
-          <p className="text-sm font-semibold" style={{ color: '#62c4b0' }}>¡Campaña publicada en Meta!</p>
-          <p className="text-xs mt-1" style={{ color: 'rgba(98,196,176,0.80)' }}>
+          <p className="text-sm font-semibold" style={{ color: 'var(--ds-color-primary)' }}>¡Campaña publicada en Meta!</p>
+          <p className="text-xs mt-1" style={{ color: 'transparent' }}>
             Creada en estado PAUSADA. Activala desde Ads Manager cuando estés listo para invertir.
           </p>
         </div>
@@ -236,9 +236,9 @@ export default function CampaignPublishFlow({ campaignId, isAlreadyPublished, me
       {partialErrors.length > 0 && (
         <div
           className="p-3 rounded-xl"
-          style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)' }}
+          style={{ background: 'var(--ds-color-warning-soft)', border: '1px solid var(--ds-color-warning-border)' }}
         >
-          <p className="text-xs font-semibold mb-1.5" style={{ color: '#f59e0b' }}>
+          <p className="text-xs font-semibold mb-1.5" style={{ color: 'var(--ds-color-warning)' }}>
             ⚠ Algunos elementos no se crearon:
           </p>
           {partialErrors.map((e, i) => (

@@ -32,7 +32,7 @@ export default function PrivacyPage() {
       }}>
         <div style={{ maxWidth: 800, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 56 }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
-            <div style={{ width: 30, height: 30, borderRadius: 8, background: 'linear-gradient(135deg, #ea1b7e, #c5006a)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: 30, height: 30, borderRadius: 8, background: 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Zap size={14} color="#fff" />
             </div>
             <span style={{ fontSize: 17, fontWeight: 700, color: '#fff' }}>AdFlow</span>
@@ -76,7 +76,7 @@ export default function PrivacyPage() {
         }}>
 
           {section('1. Quiénes somos', (
-            <p>AdFlow es una plataforma de publicidad digital con inteligencia artificial, operada por <strong style={{ color: '#e0e0f8' }}>Logisticaceoon</strong>. Nos especializamos en la creación y optimización de campañas de Facebook/Instagram Ads. Podés contactarnos en: <a href="mailto:logisticaceoon@gmail.com" style={{ color: '#e91e8c' }}>logisticaceoon@gmail.com</a></p>
+            <p>AdFlow es una plataforma de publicidad digital con inteligencia artificial, operada por <strong style={{ color: '#e0e0f8' }}>Logisticaceoon</strong>. Nos especializamos en la creación y optimización de campañas de Facebook/Instagram Ads. Podés contactarnos en: <a href="mailto:logisticaceoon@gmail.com" style={{ color: 'var(--ds-color-primary)' }}>logisticaceoon@gmail.com</a></p>
           ))}
 
           {section('2. Qué datos recolectamos', (
@@ -142,7 +142,7 @@ export default function PrivacyPage() {
               <ul style={{ paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <li><strong style={{ color: '#e0e0f8' }}>Acceder</strong> a los datos que tenemos sobre vos.</li>
                 <li><strong style={{ color: '#e0e0f8' }}>Rectificar</strong> datos incorrectos desde tu perfil o contactándonos.</li>
-                <li><strong style={{ color: '#e0e0f8' }}>Eliminar</strong> tu cuenta y todos tus datos enviando una solicitud a <a href="mailto:logisticaceoon@gmail.com" style={{ color: '#e91e8c' }}>logisticaceoon@gmail.com</a>.</li>
+                <li><strong style={{ color: '#e0e0f8' }}>Eliminar</strong> tu cuenta y todos tus datos enviando una solicitud a <a href="mailto:logisticaceoon@gmail.com" style={{ color: 'var(--ds-color-primary)' }}>logisticaceoon@gmail.com</a>.</li>
                 <li><strong style={{ color: '#e0e0f8' }}>Desconectar Facebook</strong> en cualquier momento desde la configuración de tu cuenta, lo que revoca nuestro acceso a tu cuenta publicitaria.</li>
                 <li><strong style={{ color: '#e0e0f8' }}>Revocar permisos de Meta</strong> directamente desde Configuración de Facebook → Aplicaciones y sitios web.</li>
               </ul>
@@ -164,7 +164,7 @@ export default function PrivacyPage() {
           {section('11. Contacto', (
             <p>
               Para cualquier consulta sobre privacidad o para ejercer tus derechos, escribinos a{' '}
-              <a href="mailto:logisticaceoon@gmail.com" style={{ color: '#e91e8c', fontWeight: 600 }}>logisticaceoon@gmail.com</a>.
+              <a href="mailto:logisticaceoon@gmail.com" style={{ color: 'var(--ds-color-primary)', fontWeight: 600 }}>logisticaceoon@gmail.com</a>.
               Nos comprometemos a responder en un plazo de 72 horas hábiles.
             </p>
           ))}

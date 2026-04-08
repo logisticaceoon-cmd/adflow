@@ -88,7 +88,7 @@ export default function StepEssential({ form, setField, currency, currSymbol, bu
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 6, letterSpacing: '-0.02em' }}>
           ¿Qué necesitás de esta campaña?
         </h2>
-        <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 22 }}>
+        <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', marginBottom: 22 }}>
           Elegí el resultado que más te urge. Vamos a diseñar todo en función de eso.
         </p>
 
@@ -131,7 +131,7 @@ export default function StepEssential({ form, setField, currency, currSymbol, bu
                   }}>
                     {it.title}
                   </p>
-                  <p style={{ fontSize: 11.5, color: 'var(--muted)', lineHeight: 1.5 }}>
+                  <p style={{ fontSize: 11.5, color: 'var(--ds-text-secondary)', lineHeight: 1.5 }}>
                     {it.subtitle}
                   </p>
                 </div>
@@ -169,7 +169,7 @@ export default function StepEssential({ form, setField, currency, currSymbol, bu
             <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
               Contanos sobre tu negocio
             </h3>
-            <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 16 }}>
+            <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 16 }}>
               Cuanta más info, mejor va a ser la estrategia que diseñe la IA
             </p>
           </div>
@@ -188,7 +188,7 @@ export default function StepEssential({ form, setField, currency, currSymbol, bu
                   value={form.product_description}
                   onChange={e => setField('product_description', e.target.value)}
                 />
-                <p className="mt-1 text-xs" style={{ color: 'var(--muted)' }}>
+                <p className="mt-1 text-xs" style={{ color: 'var(--ds-text-secondary)' }}>
                   Cuanto más detallés, mejor será la estrategia
                 </p>
               </div>
@@ -207,7 +207,7 @@ export default function StepEssential({ form, setField, currency, currSymbol, bu
                     value={form.destination_url}
                     onChange={e => setField('destination_url', e.target.value)}
                   />
-                  <p className="mt-1 text-xs" style={{ color: 'var(--muted)' }}>
+                  <p className="mt-1 text-xs" style={{ color: 'var(--ds-text-secondary)' }}>
                     La página a la que llevarán tus anuncios. La IA usa este dominio para escribir CTAs claros.
                   </p>
                 </div>
@@ -224,7 +224,7 @@ export default function StepEssential({ form, setField, currency, currSymbol, bu
                     value={form.whatsapp_number}
                     onChange={e => setField('whatsapp_number', e.target.value)}
                   />
-                  <p className="mt-1 text-xs" style={{ color: 'var(--muted)' }}>
+                  <p className="mt-1 text-xs" style={{ color: 'var(--ds-text-secondary)' }}>
                     Con código de país. Tus anuncios van a llevar directo a una conversación.
                   </p>
                 </div>
@@ -237,7 +237,7 @@ export default function StepEssential({ form, setField, currency, currSymbol, bu
                   <div style={{ position: 'relative' }}>
                     <span style={{
                       position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
-                      fontSize: 13, fontWeight: 600, color: 'var(--muted)', pointerEvents: 'none',
+                      fontSize: 13, fontWeight: 600, color: 'var(--ds-text-secondary)', pointerEvents: 'none',
                     }}>
                       {currSymbol}
                     </span>
@@ -249,7 +249,7 @@ export default function StepEssential({ form, setField, currency, currSymbol, bu
                     />
                   </div>
                   {budgetUSD && (
-                    <p className="mt-1 text-xs" style={{ color: 'var(--muted)' }}>
+                    <p className="mt-1 text-xs" style={{ color: 'var(--ds-text-secondary)' }}>
                       {currSymbol}{form.daily_budget} {currency}/día · {budgetUSD}
                     </p>
                   )}

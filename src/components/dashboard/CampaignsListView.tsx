@@ -31,9 +31,9 @@ const OBJ_LABELS: Record<string, string> = {
 
 const PHASES: Array<{ key: PhaseKey; label: string; icon: string; color: string }> = [
   { key: 'all', label: 'Todas',      icon: '🎯', color: '#8892b0' },
-  { key: 'F1',  label: 'F1 Reconocim.', icon: '📢', color: '#62c4b0' },
-  { key: 'F2',  label: 'F2 Ventas',     icon: '💰', color: '#e91e8c' },
-  { key: 'F3',  label: 'F3 Remarketing', icon: '🎯', color: '#f59e0b' },
+  { key: 'F1',  label: 'F1 Reconocim.', icon: '📢', color: 'var(--ds-color-primary)' },
+  { key: 'F2',  label: 'F2 Ventas',     icon: '💰', color: 'var(--ds-color-primary)' },
+  { key: 'F3',  label: 'F3 Remarketing', icon: '🎯', color: 'var(--ds-color-warning)' },
   { key: 'F4',  label: 'F4 WhatsApp',   icon: '💬', color: '#25D366' },
 ]
 
@@ -65,9 +65,9 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 function RoasCell({ roas }: { roas?: number }) {
-  if (!roas) return <span style={{ color: 'var(--muted)' }}>—</span>
-  const color = roas >= 4 ? 'var(--accent3)' : roas >= 2 ? 'var(--warn)' : 'var(--danger)'
-  const glow  = roas >= 4 ? 'rgba(6,214,160,0.35)' : roas >= 2 ? 'rgba(245,158,11,0.35)' : 'rgba(239,68,68,0.35)'
+  if (!roas) return <span style={{ color: 'var(--ds-text-secondary)' }}>—</span>
+  const color = roas >= 4 ? 'var(--ds-color-success)' : roas >= 2 ? 'var(--ds-color-warning)' : 'var(--ds-color-danger)'
+  const glow  = roas >= 4 ? 'rgba(6,214,160,0.35)' : roas >= 2 ? 'rgba(245,158,11,0.35)' : 'var(--ds-color-danger-border)'
   return (
     <span style={{ color, fontWeight: 700, fontSize: 14, textShadow: `0 0 12px ${glow}` }}>
       {roas.toFixed(1)}x
@@ -121,7 +121,7 @@ export default function CampaignsListView({ campaigns }: Props) {
       <div className="card p-4 mb-4 dash-anim-2">
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-2 flex-wrap">
-            <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.10em', marginRight: 2 }}>
+            <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.10em', marginRight: 2 }}>
               Fase:
             </span>
             {PHASES.map(p => {
@@ -133,7 +133,7 @@ export default function CampaignsListView({ campaigns }: Props) {
                     padding: '5px 11px', borderRadius: 99,
                     background: active ? `${p.color}20` : 'rgba(255,255,255,0.03)',
                     border: `1px solid ${active ? p.color + '50' : 'rgba(255,255,255,0.08)'}`,
-                    color: active ? p.color : 'var(--muted)',
+                    color: active ? p.color : 'var(--ds-text-secondary)',
                     cursor: 'pointer',
                     transition: 'all 0.15s',
                   }}>
@@ -143,7 +143,7 @@ export default function CampaignsListView({ campaigns }: Props) {
             })}
           </div>
           <div className="flex items-center gap-2">
-            <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.10em', marginRight: 2 }}>
+            <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.10em', marginRight: 2 }}>
               Estado:
             </span>
             {STATUSES.map(s => {
@@ -153,9 +153,9 @@ export default function CampaignsListView({ campaigns }: Props) {
                   style={{
                     fontSize: 11, fontWeight: 700,
                     padding: '5px 11px', borderRadius: 99,
-                    background: active ? 'rgba(234,27,126,0.18)' : 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${active ? 'rgba(234,27,126,0.40)' : 'rgba(255,255,255,0.08)'}`,
-                    color: active ? '#f9a8d4' : 'var(--muted)',
+                    background: active ? 'var(--ds-color-primary-soft)' : 'rgba(255,255,255,0.03)',
+                    border: `1px solid ${active ? 'var(--ds-color-primary-border)' : 'rgba(255,255,255,0.08)'}`,
+                    color: active ? 'var(--ds-color-primary)' : 'var(--ds-text-secondary)',
                     cursor: 'pointer',
                   }}>
                   {s.label}
@@ -207,7 +207,7 @@ export default function CampaignsListView({ campaigns }: Props) {
                     <tr key={c.id} className="table-row">
                       <td className="px-5 py-4">
                         <p style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.88)' }}>{c.name}</p>
-                        <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>
+                        <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', marginTop: 2 }}>
                           {new Date(c.created_at).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' })}
                         </p>
                       </td>
@@ -223,21 +223,21 @@ export default function CampaignsListView({ campaigns }: Props) {
                           {phaseInfo.icon} {phase}
                         </span>
                       </td>
-                      <td className="px-5 py-4" style={{ fontSize: 12, color: 'var(--muted)' }}>
+                      <td className="px-5 py-4" style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
                         {OBJ_LABELS[c.objective] || c.objective}
                       </td>
                       <td className="px-5 py-4"><StatusBadge status={c.status} /></td>
-                      <td className="px-5 py-4" style={{ fontSize: 13, color: 'rgba(255,255,255,0.78)', fontWeight: 600 }}>
+                      <td className="px-5 py-4" style={{ fontSize: 13, color: 'var(--ds-text-secondary)', fontWeight: 600 }}>
                         ${c.daily_budget}<span style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', fontWeight: 400 }}>/día</span>
                       </td>
-                      <td className="px-5 py-4" style={{ fontSize: 13, color: 'rgba(255,255,255,0.78)' }}>
+                      <td className="px-5 py-4" style={{ fontSize: 13, color: 'var(--ds-text-secondary)' }}>
                         ${(c.metrics?.spend || 0).toFixed(0)}
                       </td>
                       <td className="px-5 py-4"><RoasCell roas={c.metrics?.roas} /></td>
-                      <td className="px-5 py-4" style={{ fontSize: 13, color: 'rgba(255,255,255,0.78)' }}>
+                      <td className="px-5 py-4" style={{ fontSize: 13, color: 'var(--ds-text-secondary)' }}>
                         {c.metrics?.conversions || <span style={{ color: 'rgba(255,255,255,0.28)' }}>—</span>}
                       </td>
-                      <td className="px-5 py-4" style={{ fontSize: 11, color: 'var(--muted)' }}>
+                      <td className="px-5 py-4" style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>
                         {formatRelative(lastSync)}
                       </td>
                       <td className="px-5 py-4">
@@ -250,13 +250,13 @@ export default function CampaignsListView({ campaigns }: Props) {
                               title="Pausar"
                               style={{
                                 width: 26, height: 26, borderRadius: 7,
-                                background: 'rgba(245,158,11,0.10)',
-                                border: '1px solid rgba(245,158,11,0.30)',
+                                background: 'var(--ds-color-warning-soft)',
+                                border: '1px solid var(--ds-color-warning-border)',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 cursor: quickBusy ? 'wait' : 'pointer',
                                 opacity: quickBusy ? 0.5 : 1,
                               }}>
-                              <Pause size={11} style={{ color: '#fbbf24' }} />
+                              <Pause size={11} style={{ color: 'var(--ds-color-warning)' }} />
                             </button>
                           )}
                           {c.meta_campaign_id && (c.status === 'paused' || c.status === 'draft') && (
@@ -266,20 +266,20 @@ export default function CampaignsListView({ campaigns }: Props) {
                               title="Activar"
                               style={{
                                 width: 26, height: 26, borderRadius: 7,
-                                background: 'rgba(6,214,160,0.10)',
-                                border: '1px solid rgba(6,214,160,0.30)',
+                                background: 'var(--ds-color-success-soft)',
+                                border: '1px solid var(--ds-color-success-border)',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 cursor: quickBusy ? 'wait' : 'pointer',
                                 opacity: quickBusy ? 0.5 : 1,
                               }}>
-                              <Play size={11} style={{ color: '#06d6a0', fill: '#06d6a0' }} />
+                              <Play size={11} style={{ color: 'var(--ds-color-success)', fill: 'var(--ds-color-success)' }} />
                             </button>
                           )}
                           <Link href={`/dashboard/campaigns/${c.id}`}
                             style={{
                               fontSize: 11, padding: '5px 10px', borderRadius: 8,
-                              background: 'rgba(233,30,140,0.08)', color: '#f9a8d4',
-                              border: '1px solid rgba(233,30,140,0.18)',
+                              background: 'var(--ds-color-primary-soft)', color: 'var(--ds-color-primary)',
+                              border: '1px solid var(--ds-color-primary-soft)',
                               display: 'inline-block',
                             }}>
                             Ver →

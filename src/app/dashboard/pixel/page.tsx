@@ -103,7 +103,7 @@ export default function PixelDashboardPage() {
   }
 
   if (loading) {
-    return <div className="p-12 text-center" style={{ color: 'var(--muted)' }}>Cargando análisis del pixel...</div>
+    return <div className="p-12 text-center" style={{ color: 'var(--ds-text-secondary)' }}>Cargando análisis del pixel...</div>
   }
 
   if (!hasPixel) {
@@ -114,7 +114,7 @@ export default function PixelDashboardPage() {
           <h1 style={{ fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 10 }}>
             No tenés pixel configurado
           </h1>
-          <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 24, maxWidth: 380, margin: '0 auto 24px' }}>
+          <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', marginBottom: 24, maxWidth: 380, margin: '0 auto 24px' }}>
             Sin pixel no podemos medir conversiones, crear audiencias inteligentes ni recomendarte estrategias.
           </p>
           <Link href="/dashboard/settings" className="btn-primary">Configurar pixel →</Link>
@@ -204,7 +204,7 @@ export default function PixelDashboardPage() {
             <LevelBadge level={level} levelName="" size="lg" showName={false} />
           </div>
 
-          <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 6 }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 6 }}>
             Nivel {level} de 8
           </p>
           <h1 style={{
@@ -254,7 +254,7 @@ export default function PixelDashboardPage() {
             {motivation}
           </p>
 
-          <p style={{ fontSize: 10, color: 'var(--muted)', marginTop: 22 }}>
+          <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', marginTop: 22 }}>
             Pixel ID: <code style={{ color: '#a0a8c0' }}>{pa?.pixel_id}</code>
             {' · '}
             Última actualización: {pa?.analyzed_at ? new Date(pa.analyzed_at).toLocaleString('es') : 'nunca'}
@@ -291,7 +291,7 @@ export default function PixelDashboardPage() {
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Tu viaje de crecimiento
         </h2>
-        <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 18 }}>
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 18 }}>
           Cada vez que subiste de nivel queda registrado acá
         </p>
         <GrowthTimeline />

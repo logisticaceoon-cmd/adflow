@@ -220,7 +220,7 @@ export default async function PhasesPage() {
       }}>
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-          background: 'linear-gradient(90deg, transparent, rgba(98,196,176,0.55), rgba(245,158,11,0.40), transparent)',
+          background: 'linear-gradient(90deg, transparent, transparent, rgba(245,158,11,0.40), transparent)',
         }} />
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 8 }}>
           Phase Performance · AdFlow
@@ -254,7 +254,7 @@ export default async function PhasesPage() {
           <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: 8 }}>
             Aún no tenés datos por fases este mes
           </h2>
-          <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 22, maxWidth: 420, margin: '0 auto 22px' }}>
+          <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', marginBottom: 22, maxWidth: 420, margin: '0 auto 22px' }}>
             Configurá tu presupuesto del mes y publicá campañas para ver cómo está rindiendo cada fase del funnel.
           </p>
           <Link href="/dashboard/budget" className="btn-primary">
@@ -268,7 +268,7 @@ export default async function PhasesPage() {
             <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
               Resumen ejecutivo por fase
             </h2>
-            <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 18 }}>
+            <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 18 }}>
               Cada fase con su estado, presupuesto y rendimiento del mes
             </p>
 
@@ -308,7 +308,7 @@ export default async function PhasesPage() {
                           <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 700, color: p.color }}>
                             {p.fullName}
                           </p>
-                          <p style={{ fontSize: 10.5, color: 'var(--muted)' }}>{p.objective}</p>
+                          <p style={{ fontSize: 10.5, color: 'var(--ds-text-secondary)' }}>{p.objective}</p>
                         </div>
                       </div>
                       <span style={{
@@ -324,7 +324,7 @@ export default async function PhasesPage() {
                     {/* Budget bar */}
                     <div className="mb-4">
                       <div className="flex items-center justify-between mb-1">
-                        <span style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.10em', fontWeight: 700 }}>
+                        <span style={{ fontSize: 10, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.10em', fontWeight: 700 }}>
                           Inversión
                         </span>
                         <span style={{ fontSize: 11, color: '#a0a8c0' }}>
@@ -339,7 +339,7 @@ export default async function PhasesPage() {
                           transition: 'width 0.6s ease',
                         }} />
                       </div>
-                      <p style={{ fontSize: 10, color: 'var(--muted)', marginTop: 4, textAlign: 'right' }}>
+                      <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', marginTop: 4, textAlign: 'right' }}>
                         {budgetPct.toFixed(0)}% gastado
                       </p>
                     </div>
@@ -347,13 +347,13 @@ export default async function PhasesPage() {
                     {/* Metrics grid */}
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       <div>
-                        <p style={{ fontSize: 10, color: 'var(--muted)' }} title="Ingresos generados">Ventas</p>
+                        <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)' }} title="Ingresos generados">Ventas</p>
                         <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 800, color: '#fff' }}>
                           {currency}{acc.revenue.toFixed(0)}
                         </p>
                       </div>
                       <div>
-                        <p style={{ fontSize: 10, color: 'var(--muted)' }} title="Retorno por cada peso invertido">ROAS</p>
+                        <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)' }} title="Retorno por cada peso invertido">ROAS</p>
                         <p style={{
                           fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 800,
                           color: phaseRoas >= 3 ? 'var(--ds-color-success)' : phaseRoas >= 1.5 ? 'var(--ds-color-warning)' : phaseRoas > 0 ? 'var(--ds-color-danger)' : '#8892b0',
@@ -362,13 +362,13 @@ export default async function PhasesPage() {
                         </p>
                       </div>
                       <div>
-                        <p style={{ fontSize: 10, color: 'var(--muted)' }}>Conversiones</p>
+                        <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)' }}>Conversiones</p>
                         <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 800, color: '#fff' }}>
                           {acc.conversions || 0}
                         </p>
                       </div>
                       <div>
-                        <p style={{ fontSize: 10, color: 'var(--muted)' }} title="Costo por adquisición">CPA</p>
+                        <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)' }} title="Costo por adquisición">CPA</p>
                         <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 800, color: '#fff' }}>
                           {cpa > 0 ? `${currency}${cpa.toFixed(0)}` : '—'}
                         </p>
@@ -396,7 +396,7 @@ export default async function PhasesPage() {
               <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
                 Comparativa detallada
               </h2>
-              <p style={{ fontSize: 12, color: 'var(--muted)' }}>
+              <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
                 Recomendado vs asignado vs gastado real, con métricas finales del mes
               </p>
             </div>
@@ -410,7 +410,7 @@ export default async function PhasesPage() {
             }}>
               {['Fase', 'Recomendado', 'Asignado', 'Gastado', 'Ventas', 'ROAS', 'CPA', 'Estado'].map(h => (
                 <span key={h} style={{
-                  fontSize: 10, fontWeight: 700, color: 'var(--muted)',
+                  fontSize: 10, fontWeight: 700, color: 'var(--ds-text-secondary)',
                   textTransform: 'uppercase', letterSpacing: '0.10em',
                 }}>{h}</span>
               ))}
@@ -439,13 +439,13 @@ export default async function PhasesPage() {
                     <span style={{ fontSize: 16 }}>{p.icon}</span>
                     <span style={{ fontSize: 12, fontWeight: 700, color: p.color }}>{p.fullName}</span>
                   </div>
-                  <span style={{ fontSize: 12, color: 'var(--muted)' }}>{currency}{acc.recommended.toLocaleString()}</span>
+                  <span style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>{currency}{acc.recommended.toLocaleString()}</span>
                   <span style={{ fontSize: 12, color: '#a0a8c0' }}>{currency}{acc.assigned.toLocaleString()}</span>
                   <span style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>{currency}{acc.spend.toFixed(0)}</span>
                   <span style={{ fontSize: 12, color: 'var(--ds-color-success)' }}>{currency}{acc.revenue.toFixed(0)}</span>
                   <span style={{
                     fontSize: 12, fontWeight: 700,
-                    color: phaseRoas >= 3 ? 'var(--ds-color-success)' : phaseRoas >= 1.5 ? 'var(--ds-color-warning)' : phaseRoas > 0 ? 'var(--ds-color-danger)' : 'var(--muted)',
+                    color: phaseRoas >= 3 ? 'var(--ds-color-success)' : phaseRoas >= 1.5 ? 'var(--ds-color-warning)' : phaseRoas > 0 ? 'var(--ds-color-danger)' : 'var(--ds-text-secondary)',
                   }}>{phaseRoas > 0 ? `${phaseRoas.toFixed(1)}x` : '—'}</span>
                   <span style={{ fontSize: 12 }}>{cpa > 0 ? `${currency}${cpa.toFixed(0)}` : '—'}</span>
                   <span style={{
@@ -467,18 +467,18 @@ export default async function PhasesPage() {
               gap: 12, padding: '14px',
               marginTop: 8,
               borderTop: '1px solid rgba(255,255,255,0.10)',
-              background: 'rgba(234,27,126,0.04)',
+              background: 'transparent',
               borderRadius: 8,
               alignItems: 'center',
             }}>
               <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 13, fontWeight: 800, color: '#fff' }}>TOTAL</span>
-              <span style={{ fontSize: 12, color: 'var(--muted)' }}>{currency}{totals.recommended.toLocaleString()}</span>
+              <span style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>{currency}{totals.recommended.toLocaleString()}</span>
               <span style={{ fontSize: 12, color: '#a0a8c0' }}>{currency}{totals.assigned.toLocaleString()}</span>
               <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 800, color: '#fff' }}>{currency}{totals.spend.toFixed(0)}</span>
               <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 800, color: 'var(--ds-color-success)' }}>{currency}{totals.revenue.toFixed(0)}</span>
               <span style={{
                 fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 800,
-                color: totalRoas >= 3 ? 'var(--ds-color-success)' : totalRoas >= 1.5 ? 'var(--ds-color-warning)' : totalRoas > 0 ? 'var(--ds-color-danger)' : 'var(--muted)',
+                color: totalRoas >= 3 ? 'var(--ds-color-success)' : totalRoas >= 1.5 ? 'var(--ds-color-warning)' : totalRoas > 0 ? 'var(--ds-color-danger)' : 'var(--ds-text-secondary)',
               }}>{totalRoas > 0 ? `${totalRoas.toFixed(1)}x` : '—'}</span>
               <span style={{ fontSize: 12 }}>—</span>
               <span></span>
@@ -492,7 +492,7 @@ export default async function PhasesPage() {
                 <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
                   💡 Insights del sistema
                 </h2>
-                <p style={{ fontSize: 12, color: 'var(--muted)' }}>
+                <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
                   Oportunidades detectadas automáticamente al analizar tus fases
                 </p>
               </div>
@@ -523,7 +523,7 @@ export default async function PhasesPage() {
               <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
                 Comparativa visual por fase
               </h2>
-              <p style={{ fontSize: 12, color: 'var(--muted)' }}>
+              <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
                 Recomendado vs asignado vs gasto real (en {currency})
               </p>
             </div>
@@ -543,7 +543,7 @@ export default async function PhasesPage() {
       {/* ── SECTION F: EDUCATION ──────────────────────────────────────── */}
       <div className="card p-6 mb-6" style={{
         background: 'linear-gradient(135deg, transparent, rgba(245,158,11,0.04))',
-        border: '1px solid rgba(98,196,176,0.18)',
+        border: '1px solid transparent',
       }}>
         <div className="flex items-start gap-4">
           <div style={{
@@ -568,7 +568,7 @@ export default async function PhasesPage() {
                   <div className="flex items-center gap-3" style={{ fontSize: 13 }}>
                     <span style={{ fontSize: 18 }}>{s.icon}</span>
                     <span style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, color: '#fff' }}>{s.p} {s.name}</span>
-                    <span style={{ color: 'var(--muted)' }}>—</span>
+                    <span style={{ color: 'var(--ds-text-secondary)' }}>—</span>
                     <span style={{ color: 'var(--ds-text-secondary)' }}>{s.text}</span>
                   </div>
                   {s.arrow === '↓' && (
@@ -577,7 +577,7 @@ export default async function PhasesPage() {
                 </div>
               ))}
             </div>
-            <p style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.7, fontStyle: 'italic' }}>
+            <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', lineHeight: 1.7, fontStyle: 'italic' }}>
               F1 alimenta F2, F2 genera datos para F3, y F3 es donde se genera el mayor retorno. Por eso al subir de nivel, F3 va creciendo en importancia.
             </p>
           </div>

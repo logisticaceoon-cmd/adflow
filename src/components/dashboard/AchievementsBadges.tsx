@@ -56,7 +56,7 @@ export default function AchievementsBadges() {
   if (loading) {
     return (
       <div className="dash-anim-6 mb-6 card p-6">
-        <p style={{ fontSize: 12, color: 'var(--muted)' }}>Cargando logros…</p>
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>Cargando logros…</p>
       </div>
     )
   }
@@ -80,7 +80,7 @@ export default function AchievementsBadges() {
             {unlockedCount} / {achievements.length} desbloqueados
           </span>
         </div>
-        <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 18 }}>
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 18 }}>
           Cada hito que vas alcanzando mientras crece tu negocio
         </p>
 

@@ -21,10 +21,10 @@ interface Props {
 type MetricKey = 'spend' | 'roas' | 'clicks' | 'purchases'
 
 const METRICS: Array<{ key: MetricKey; label: string; color: string; format: (v: number) => string }> = [
-  { key: 'spend',     label: 'Inversión', color: '#e91e8c', format: v => `$${Math.round(v).toLocaleString('es')}` },
-  { key: 'roas',      label: 'ROAS',      color: '#62c4b0', format: v => `${v.toFixed(2)}x` },
+  { key: 'spend',     label: 'Inversión', color: 'var(--ds-color-primary)', format: v => `$${Math.round(v).toLocaleString('es')}` },
+  { key: 'roas',      label: 'ROAS',      color: 'var(--ds-color-primary)', format: v => `${v.toFixed(2)}x` },
   { key: 'clicks',    label: 'Clicks',    color: '#3b82f6', format: v => Math.round(v).toLocaleString('es') },
-  { key: 'purchases', label: 'Ventas',    color: '#f59e0b', format: v => Math.round(v).toLocaleString('es') },
+  { key: 'purchases', label: 'Ventas',    color: 'var(--ds-color-warning)', format: v => Math.round(v).toLocaleString('es') },
 ]
 
 function formatDate(d: string): string {
@@ -72,7 +72,7 @@ export default function CampaignDailyChart({ data }: Props) {
         textAlign: 'center',
       }}>
         <p style={{ fontSize: 32, marginBottom: 8 }}>📊</p>
-        <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+        <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)' }}>
           Sincronizá métricas para ver la evolución diaria
         </p>
       </div>
@@ -90,7 +90,7 @@ export default function CampaignDailyChart({ data }: Props) {
                 fontSize: 11, fontWeight: 700,
                 padding: '7px 14px', borderRadius: 99,
                 background: isActive ? `${m.color}20` : 'rgba(255,255,255,0.03)',
-                color: isActive ? m.color : 'var(--muted)',
+                color: isActive ? m.color : 'var(--ds-text-secondary)',
                 border: isActive ? `1px solid ${m.color}55` : '1px solid rgba(255,255,255,0.08)',
                 cursor: 'pointer', transition: 'all 0.18s',
               }}>

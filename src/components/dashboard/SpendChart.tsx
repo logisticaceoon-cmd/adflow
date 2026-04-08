@@ -17,9 +17,9 @@ function CustomTooltip({ active, payload, label }: any) {
     <div style={{
       padding: '10px 14px', borderRadius: 12,
       background: 'rgba(10,10,26,0.92)',
-      border: '1px solid rgba(233,30,140,0.25)',
+      border: '1px solid var(--ds-color-primary-border)',
       backdropFilter: 'blur(16px)',
-      boxShadow: '0 8px 24px rgba(0,0,0,0.5), 0 0 16px rgba(233,30,140,0.08)',
+      boxShadow: '0 8px 24px rgba(0,0,0,0.5), 0 0 16px var(--ds-color-primary-soft)',
     }}>
       <p style={{ fontSize: 11, color: '#8892b0', marginBottom: 4 }}>{label}</p>
       <p style={{ fontSize: 18, fontWeight: 800, color: '#ffffff', letterSpacing: '-0.03em' }}>
@@ -41,13 +41,13 @@ export default function SpendChart({ totalSpend }: Props) {
       <AreaChart data={data} margin={{ top: 8, right: 4, left: -28, bottom: 0 }}>
         <defs>
           <linearGradient id="spendGradPink" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stopColor="#e91e8c" stopOpacity={0.45} />
-            <stop offset="60%"  stopColor="#62c4b0" stopOpacity={0.15} />
-            <stop offset="100%" stopColor="#62c4b0" stopOpacity={0} />
+            <stop offset="0%"   stopColor="var(--ds-color-primary)" stopOpacity={0.45} />
+            <stop offset="60%"  stopColor="var(--ds-color-primary)" stopOpacity={0.15} />
+            <stop offset="100%" stopColor="var(--ds-color-primary)" stopOpacity={0} />
           </linearGradient>
           <linearGradient id="strokeGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%"   stopColor="#e91e8c" />
-            <stop offset="100%" stopColor="#62c4b0" />
+            <stop offset="0%"   stopColor="var(--ds-color-primary)" />
+            <stop offset="100%" stopColor="var(--ds-color-primary)" />
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
@@ -61,7 +61,7 @@ export default function SpendChart({ totalSpend }: Props) {
           axisLine={false} tickLine={false}
           tickFormatter={v => `$${v}`}
         />
-        <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(233,30,140,0.20)', strokeWidth: 1, strokeDasharray: '4 4' }} />
+        <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'var(--ds-color-primary-soft)', strokeWidth: 1, strokeDasharray: '4 4' }} />
         <Area
           type="monotone"
           dataKey="gasto"
@@ -69,7 +69,7 @@ export default function SpendChart({ totalSpend }: Props) {
           strokeWidth={2.5}
           fill="url(#spendGradPink)"
           dot={false}
-          activeDot={{ r: 5, fill: '#e91e8c', strokeWidth: 2, stroke: 'rgba(233,30,140,0.3)', filter: 'drop-shadow(0 0 6px rgba(233,30,140,0.6))' }}
+          activeDot={{ r: 5, fill: 'var(--ds-color-primary)', strokeWidth: 2, stroke: 'transparent', filter: 'drop-shadow(0 0 6px transparent)' }}
         />
       </AreaChart>
     </ResponsiveContainer>

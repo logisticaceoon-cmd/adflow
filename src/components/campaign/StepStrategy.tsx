@@ -44,13 +44,13 @@ export default function StepStrategy({
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 6, letterSpacing: '-0.02em' }}>
           Tu estrategia recomendada
         </h2>
-        <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+        <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)' }}>
           Basada en tu diagnóstico y el nivel actual de tu pixel
         </p>
       </div>
 
       {/* Diagnosis result banner */}
-      <div style={{ borderRadius: 16, padding: '16px 20px', background: 'linear-gradient(135deg, var(--ds-color-primary-soft), rgba(98,196,176,0.07))', border: '1px solid var(--ds-color-primary-border)' }}>
+      <div style={{ borderRadius: 16, padding: '16px 20px', background: 'linear-gradient(135deg, var(--ds-color-primary-soft), transparent)', border: '1px solid var(--ds-color-primary-border)' }}>
         <div className="flex items-start gap-3">
           <span style={{ fontSize: 20, flexShrink: 0 }}>🤖</span>
           <div>

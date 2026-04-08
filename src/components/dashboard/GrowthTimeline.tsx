@@ -40,13 +40,13 @@ export default function GrowthTimeline() {
   }, [])
 
   if (history === null) {
-    return <p style={{ fontSize: 12, color: 'var(--muted)' }}>Cargando timeline...</p>
+    return <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>Cargando timeline...</p>
   }
 
   if (history.length === 0) {
     return (
       <div className="p-5 text-center" style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 12 }}>
-        <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6 }}>
+        <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', lineHeight: 1.6 }}>
           🌱 Tu viaje de crecimiento empieza aquí.
           <br />
           Cuando subas de nivel vas a ver la historia completa.
@@ -75,11 +75,11 @@ export default function GrowthTimeline() {
             }} />
             <div className="p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
               <p style={{ fontSize: 12, fontWeight: 700, color, marginBottom: 2 }}>
-                {h.old_level !== null && <span style={{ color: 'var(--muted)' }}>Nivel {h.old_level} → </span>}
+                {h.old_level !== null && <span style={{ color: 'var(--ds-text-secondary)' }}>Nivel {h.old_level} → </span>}
                 Nivel {h.new_level}: {h.level_name}
               </p>
-              {h.reason && <p style={{ fontSize: 11, color: 'var(--muted)' }}>{h.reason}</p>}
-              <p style={{ fontSize: 10, color: 'var(--muted)', marginTop: 4 }}>
+              {h.reason && <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>{h.reason}</p>}
+              <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', marginTop: 4 }}>
                 {new Date(h.created_at).toLocaleDateString('es', { day: 'numeric', month: 'short', year: 'numeric' })}
               </p>
             </div>

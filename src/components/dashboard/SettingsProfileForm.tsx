@@ -59,7 +59,7 @@ export default function SettingsProfileForm({ profile, userEmail }: Props) {
       {/* Reports config */}
       <div className="card p-6">
         <h2 className="section-title mb-1">📩 Reportes automáticos diarios</h2>
-        <p className="text-xs mb-5" style={{ color: 'var(--muted)' }}>
+        <p className="text-xs mb-5" style={{ color: 'var(--ds-text-secondary)' }}>
           Recibirás un análisis de IA de todas tus campañas cada mañana
         </p>
         <div className="grid grid-cols-2 gap-4 mb-4">

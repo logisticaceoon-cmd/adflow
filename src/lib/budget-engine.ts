@@ -14,7 +14,7 @@ export interface PhaseConfig {
 
 export const PHASES: PhaseConfig[] = [
   { key: 'F1', name: 'Reconocimiento', fullName: 'F1 — Reconocimiento', objective: 'Branding + tráfico frío',         icon: '📢', color: '#62c4b0' },
-  { key: 'F2', name: 'Ventas',         fullName: 'F2 — Ventas',         objective: 'Conversiones público frío/tibio', icon: '💰', color: '#e91e8c' },
+  { key: 'F2', name: 'Ventas',         fullName: 'F2 — Ventas',         objective: 'Conversiones público frío/tibio', icon: '💰', color: 'var(--ds-color-primary)' },
   { key: 'F3', name: 'Remarketing',    fullName: 'F3 — Remarketing',    objective: 'Retargeting visitantes/carritos', icon: '🎯', color: '#f59e0b' },
   { key: 'F4', name: 'WhatsApp',       fullName: 'F4 — WhatsApp',       objective: 'Mensajes directos',               icon: '💬', color: '#25D366' },
 ]

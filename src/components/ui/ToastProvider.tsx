@@ -40,7 +40,7 @@ const TYPE_META: Record<ToastType, { color: string; bg: string; border: string; 
   success:     { color: '#22c55e', bg: 'rgba(34,197,94,0.10)',  border: 'rgba(34,197,94,0.55)',  Icon: CheckCircle2,  defaultDuration: 5000 },
   error:       { color: '#ef4444', bg: 'rgba(239,68,68,0.10)',  border: 'rgba(239,68,68,0.55)',  Icon: AlertCircle,   defaultDuration: 6000 },
   warning:     { color: '#f59e0b', bg: 'rgba(245,158,11,0.10)', border: 'rgba(245,158,11,0.55)', Icon: AlertTriangle, defaultDuration: 5000 },
-  info:        { color: '#62c4b0', bg: 'rgba(98,196,176,0.10)', border: 'rgba(98,196,176,0.55)', Icon: Info,          defaultDuration: 5000 },
+  info:        { color: 'var(--ds-color-primary)', bg: 'transparent', border: 'transparent', Icon: Info,          defaultDuration: 5000 },
   achievement: { color: '#fbbf24', bg: 'rgba(245,158,11,0.10)', border: 'rgba(245,158,11,0.70)', Icon: Trophy,        defaultDuration: 8000 },
 }
 
@@ -141,7 +141,7 @@ function ToastCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: () => vo
           {toast.title}
         </p>
         {toast.description && (
-          <p style={{ fontSize: 11, color: 'var(--muted)', lineHeight: 1.4 }}>
+          <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', lineHeight: 1.4 }}>
             {toast.description}
           </p>
         )}
@@ -164,7 +164,7 @@ function ToastCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: () => vo
         aria-label="Cerrar"
         style={{
           background: 'none', border: 'none', cursor: 'pointer',
-          color: 'var(--muted)', padding: 2, flexShrink: 0,
+          color: 'var(--ds-text-secondary)', padding: 2, flexShrink: 0,
         }}
       >
         <X size={14} />

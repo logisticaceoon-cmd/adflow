@@ -104,15 +104,15 @@ export default function CampaignDetailActions({ campaign }: Props) {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
              style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(6px)' }}>
           <div className="w-full max-w-md rounded-2xl overflow-hidden shadow-2xl"
-               style={{ background: 'rgba(18,4,10,0.97)', border: '1px solid rgba(98,196,176,0.18)' }}>
+               style={{ background: 'rgba(18,4,10,0.97)', border: '1px solid transparent' }}>
 
             {/* Header */}
             <div className="flex items-center justify-between px-6 pt-5 pb-4"
-                 style={{ borderBottom: '1px solid rgba(98,196,176,0.10)' }}>
+                 style={{ borderBottom: '1px solid var(--ds-card-border)' }}>
               <h3 className="font-semibold text-[15px]">Publicar en Meta Ads</h3>
               <button onClick={() => setShowPublishModal(false)}
                 className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-white/5"
-                style={{ color: 'var(--muted)' }}>
+                style={{ color: 'var(--ds-text-secondary)' }}>
                 <X size={14} />
               </button>
             </div>
@@ -123,7 +123,7 @@ export default function CampaignDetailActions({ campaign }: Props) {
                 <>
                   {alreadyPublished && (
                     <div className="mb-4 p-3 rounded-xl text-xs"
-                         style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)', color: '#fbbf24' }}>
+                         style={{ background: 'var(--ds-color-warning-soft)', border: '1px solid var(--ds-color-warning-border)', color: 'var(--ds-color-warning)' }}>
                       ⚠ Esta campaña ya fue publicada (ID: {campaign.meta_campaign_id}).
                       Publicarla de nuevo creará una nueva campaña en Meta Ads.
                     </div>
@@ -159,11 +159,11 @@ export default function CampaignDetailActions({ campaign }: Props) {
               {publishState === 'loading' && (
                 <div className="text-center py-8">
                   <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                       style={{ background: 'rgba(233,30,140,0.10)', border: '1px solid rgba(233,30,140,0.22)' }}>
-                    <Loader2 size={26} className="animate-spin" style={{ color: '#e91e8c' }} />
+                       style={{ background: 'var(--ds-color-primary-soft)', border: '1px solid transparent' }}>
+                    <Loader2 size={26} className="animate-spin" style={{ color: 'var(--ds-color-primary)' }} />
                   </div>
                   <p className="font-semibold mb-1">Publicando en Meta Ads...</p>
-                  <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                  <p className="text-sm" style={{ color: 'var(--ds-text-secondary)' }}>
                     Creando campaña, conjuntos y anuncios. Esto puede tardar unos segundos.
                   </p>
                 </div>
@@ -173,26 +173,26 @@ export default function CampaignDetailActions({ campaign }: Props) {
               {publishState === 'success' && (
                 <div className="text-center py-4">
                   <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                       style={{ background: 'rgba(6,214,160,0.10)', border: '1px solid rgba(6,214,160,0.25)' }}>
-                    <CheckCircle2 size={26} style={{ color: '#06d6a0' }} />
+                       style={{ background: 'var(--ds-color-success-soft)', border: '1px solid rgba(6,214,160,0.25)' }}>
+                    <CheckCircle2 size={26} style={{ color: 'var(--ds-color-success)' }} />
                   </div>
-                  <p className="font-semibold mb-1" style={{ color: '#06d6a0' }}>¡Publicada en Meta Ads!</p>
-                  <p className="text-sm mb-4" style={{ color: 'var(--muted)' }}>
+                  <p className="font-semibold mb-1" style={{ color: 'var(--ds-color-success)' }}>¡Publicada en Meta Ads!</p>
+                  <p className="text-sm mb-4" style={{ color: 'var(--ds-text-secondary)' }}>
                     Tu campaña fue creada exitosamente. Está en pausa — activala desde Meta Ads Manager cuando estés listo.
                   </p>
 
                   {metaCampaignId && (
                     <div className="p-3 rounded-xl text-xs mb-4"
-                         style={{ background: 'rgba(6,214,160,0.06)', border: '1px solid rgba(6,214,160,0.15)' }}>
+                         style={{ background: 'var(--ds-color-success-soft)', border: '1px solid rgba(6,214,160,0.15)' }}>
                       <p style={{ color: '#8892b0' }}>Meta Campaign ID</p>
-                      <p className="font-mono font-semibold mt-0.5" style={{ color: '#06d6a0' }}>{metaCampaignId}</p>
+                      <p className="font-mono font-semibold mt-0.5" style={{ color: 'var(--ds-color-success)' }}>{metaCampaignId}</p>
                     </div>
                   )}
 
                   {partialErrors.length > 0 && (
                     <div className="p-3 rounded-xl text-xs mb-4 text-left"
-                         style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.20)' }}>
-                      <p className="font-semibold mb-1.5" style={{ color: '#f59e0b' }}>
+                         style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid var(--ds-color-warning-border)' }}>
+                      <p className="font-semibold mb-1.5" style={{ color: 'var(--ds-color-warning)' }}>
                         ⚠ Algunos anuncios no se pudieron crear:
                       </p>
                       {partialErrors.map((e, i) => (
@@ -211,11 +211,11 @@ export default function CampaignDetailActions({ campaign }: Props) {
               {publishState === 'error' && (
                 <div className="text-center py-4">
                   <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                       style={{ background: 'rgba(239,68,68,0.10)', border: '1px solid rgba(239,68,68,0.25)' }}>
-                    <AlertCircle size={26} style={{ color: '#ef4444' }} />
+                       style={{ background: 'var(--ds-color-danger-soft)', border: '1px solid var(--ds-color-danger-border)' }}>
+                    <AlertCircle size={26} style={{ color: 'var(--ds-color-danger)' }} />
                   </div>
                   <p className="font-semibold mb-2" style={{ color: '#f87171' }}>Error al publicar</p>
-                  <p className="text-sm mb-5 leading-relaxed" style={{ color: 'var(--muted)' }}>
+                  <p className="text-sm mb-5 leading-relaxed" style={{ color: 'var(--ds-text-secondary)' }}>
                     {publishError}
                   </p>
 

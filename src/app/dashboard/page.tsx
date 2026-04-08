@@ -283,35 +283,35 @@ export default async function DashboardPage() {
               </h2>
               <span style={{
                 fontSize: 11, padding: '4px 12px', borderRadius: 20,
-                background: 'rgba(233,30,140,0.08)', color: '#f9a8d4',
-                border: '1px solid rgba(233,30,140,0.18)',
+                background: 'var(--ds-color-primary-soft)', color: 'var(--ds-color-primary)',
+                border: '1px solid var(--ds-color-primary-soft)',
               }}>
                 Últimos 7 días
               </span>
             </div>
-            <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 16 }}>
+            <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 16 }}>
               Cuánto invertiste cada día de la semana
             </p>
             <SpendChart totalSpend={totalSpend} />
           </div>
 
           <div className="card p-5" style={{
-            background: 'linear-gradient(135deg, rgba(234,27,126,0.08) 0%, rgba(98,196,176,0.05) 100%)',
-            border: '1px solid rgba(234,27,126,0.20)',
+            background: 'linear-gradient(135deg, var(--ds-color-primary-soft) 0%, transparent 100%)',
+            border: '1px solid var(--ds-color-primary-soft)',
           }}>
             <div style={{
               width: 40, height: 40, borderRadius: 12, marginBottom: 14,
-              background: 'rgba(234,27,126,0.15)',
-              border: '1px solid rgba(234,27,126,0.30)',
+              background: 'var(--ds-color-primary-soft)',
+              border: '1px solid var(--ds-color-primary-border)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18,
-              boxShadow: '0 0 16px rgba(234,27,126,0.30)',
+              boxShadow: '0 0 16px var(--ds-color-primary-border)',
             }}>
               💡
             </div>
-            <p style={{ fontSize: 11, fontWeight: 700, color: '#f9a8d4', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 6 }}>
+            <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ds-color-primary)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 6 }}>
               Tip del día
             </p>
-            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)', lineHeight: 1.65 }}>
+            <p style={{ fontSize: 13, color: 'var(--ds-text-primary)', lineHeight: 1.65 }}>
               {todayTip}
             </p>
           </div>

@@ -25,14 +25,14 @@ export default function ScoreCard({ totalScore, breakdown, monthStars }: Props) 
 
   return (
     <div className="card p-6 mb-6" style={{
-      background: 'linear-gradient(135deg, rgba(245,158,11,0.06) 0%, rgba(234,27,126,0.04) 100%)',
+      background: 'linear-gradient(135deg, rgba(245,158,11,0.06) 0%, transparent 100%)',
       border: '1px solid rgba(245,158,11,0.18)',
     }}>
       <div className="mb-5">
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           ⭐ Tu Growth Score
         </h2>
-        <p style={{ fontSize: 12, color: 'var(--muted)' }}>
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
           Puntos que ganás por crecer, vender, y subir de nivel
         </p>
       </div>
@@ -54,8 +54,8 @@ export default function ScoreCard({ totalScore, breakdown, monthStars }: Props) 
           }}>
             {totalScore.toLocaleString()}
           </p>
-          <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>puntos</p>
-          <p style={{ fontSize: 10, color: 'var(--muted)', marginTop: 8, lineHeight: 1.4, maxWidth: 200, margin: '8px auto 0' }}>
+          <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', marginTop: 4 }}>puntos</p>
+          <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', marginTop: 8, lineHeight: 1.4, maxWidth: 200, margin: '8px auto 0' }}>
             Tu score crece con cada logro, venta, y nivel alcanzado.
           </p>
         </div>

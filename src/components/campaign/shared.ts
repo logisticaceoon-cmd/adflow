@@ -24,8 +24,8 @@ export interface StrategyConfig {
 export const STRATEGY_CONFIG: Record<StrategyType, StrategyConfig> = {
   TOFU: {
     label: 'Top of Funnel', subtitle: 'Reconocimiento', icon: '📢',
-    color: '#62c4b0', borderColor: 'rgba(98,196,176,0.45)',
-    bg: 'linear-gradient(145deg, rgba(98,196,176,0.14) 0%, rgba(98,196,176,0.04) 100%)',
+    color: 'var(--ds-color-primary)', borderColor: 'transparent',
+    bg: 'linear-gradient(145deg, transparent 0%, transparent 100%)',
     metaObjectives: 'OUTCOME_AWARENESS · OUTCOME_TRAFFIC',
     message: 'Presentarte al mundo, generar alcance masivo',
     forWho: 'Negocios nuevos, productos desconocidos, nueva audiencia fría',
@@ -34,8 +34,8 @@ export const STRATEGY_CONFIG: Record<StrategyType, StrategyConfig> = {
   },
   MOFU: {
     label: 'Middle of Funnel', subtitle: 'Consideración', icon: '🎯',
-    color: '#62c4b0', borderColor: 'rgba(98,196,176,0.45)',
-    bg: 'linear-gradient(145deg, rgba(98,196,176,0.14) 0%, rgba(98,196,176,0.04) 100%)',
+    color: 'var(--ds-color-primary)', borderColor: 'transparent',
+    bg: 'linear-gradient(145deg, transparent 0%, transparent 100%)',
     metaObjectives: 'OUTCOME_ENGAGEMENT · OUTCOME_LEADS',
     message: 'Convertir interesados en prospectos calificados',
     forWho: 'Audiencias que ya te conocen, remarketing, engagement previo',

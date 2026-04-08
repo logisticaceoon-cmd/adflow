@@ -111,17 +111,17 @@ export default function SyncButton({ variant = 'full' }: Props) {
           padding: '10px 18px', borderRadius: 12,
           background: syncing
             ? 'rgba(255,255,255,0.05)'
-            : 'linear-gradient(135deg, rgba(234,27,126,0.15), rgba(98,196,176,0.10))',
-          border: `1px solid ${syncing ? 'rgba(255,255,255,0.10)' : 'rgba(234,27,126,0.35)'}`,
-          boxShadow: syncing ? 'none' : '0 0 20px rgba(234,27,126,0.20)',
+            : 'linear-gradient(135deg, var(--ds-color-primary-soft), var(--ds-card-border))',
+          border: `1px solid ${syncing ? 'rgba(255,255,255,0.10)' : 'transparent'}`,
+          boxShadow: syncing ? 'none' : '0 0 20px var(--ds-color-primary-soft)',
           color: '#fff', fontSize: 13, fontWeight: 600,
           cursor: syncing ? 'wait' : 'pointer',
           transition: 'all 0.2s',
         }}>
-        <RefreshCw size={14} className={syncing ? 'animate-spin' : ''} style={{ color: '#f9a8d4' }} />
+        <RefreshCw size={14} className={syncing ? 'animate-spin' : ''} style={{ color: 'var(--ds-color-primary)' }} />
         {syncing ? 'Sincronizando métricas...' : 'Sincronizar ahora'}
       </button>
-      <p style={{ fontSize: 10, color: 'var(--muted)' }}>
+      <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)' }}>
         Última sync: {formatRelative(lastSync)}
       </p>
       {toast && (
@@ -129,7 +129,7 @@ export default function SyncButton({ variant = 'full' }: Props) {
           position: 'fixed', bottom: 24, right: 24, zIndex: 100,
           padding: '12px 18px', borderRadius: 12,
           background: 'linear-gradient(160deg, rgba(14,4,9,0.96), rgba(8,2,5,0.98))',
-          border: `1px solid ${toast.type === 'success' ? 'rgba(6,214,160,0.40)' : toast.type === 'partial' ? 'rgba(245,158,11,0.40)' : 'rgba(239,68,68,0.40)'}`,
+          border: `1px solid ${toast.type === 'success' ? 'var(--ds-color-success-border)' : toast.type === 'partial' ? 'var(--ds-color-warning-border)' : 'var(--ds-color-danger-border)'}`,
           boxShadow: '0 12px 48px rgba(0,0,0,0.60)',
           color: '#fff', fontSize: 13, fontWeight: 600,
           maxWidth: 360,

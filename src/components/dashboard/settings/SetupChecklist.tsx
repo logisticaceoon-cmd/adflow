@@ -15,30 +15,30 @@ export default function SetupChecklist({ score, items }: Props) {
 
   return (
     <div className="card p-6 mb-6"
-         style={{ border: '1px solid rgba(233,30,140,0.25)', background: 'rgba(233,30,140,0.04)' }}>
+         style={{ border: '1px solid transparent', background: 'transparent' }}>
       <div className="flex items-center justify-between mb-3">
         <h2 className="section-title">🚀 Completá tu configuración</h2>
-        <span className="text-sm font-bold" style={{ color: 'var(--accent)' }}>{score}%</span>
+        <span className="text-sm font-bold" style={{ color: 'var(--ds-color-primary)' }}>{score}%</span>
       </div>
-      <div className="h-2 rounded-full mb-5 overflow-hidden" style={{ background: 'var(--surface2)' }}>
+      <div className="h-2 rounded-full mb-5 overflow-hidden" style={{ background: 'var(--ds-bg-elevated)' }}>
         <div className="h-2 rounded-full transition-all duration-500"
-             style={{ width: `${score}%`, background: 'linear-gradient(90deg, #ea1b7e, #62c4b0)' }} />
+             style={{ width: `${score}%`, background: 'linear-gradient(90deg, var(--ds-color-primary), var(--ds-color-primary))' }} />
       </div>
       <div className="grid grid-cols-2 gap-y-2 gap-x-6">
         {items.map((item, i) => (
           <div key={i} className="flex items-center gap-2 text-xs">
             <span className="flex-shrink-0 font-bold"
-                  style={{ color: item.completed ? 'var(--accent3)' : 'var(--border2)' }}>
+                  style={{ color: item.completed ? 'var(--ds-color-success)' : 'var(--ds-card-border)' }}>
               {item.completed ? '✓' : '○'}
             </span>
-            <span style={{ color: item.completed ? 'var(--text)' : 'var(--muted)' }}>
+            <span style={{ color: item.completed ? 'var(--ds-text-primary)' : 'var(--ds-text-secondary)' }}>
               {item.label}
             </span>
           </div>
         ))}
       </div>
       {score === 0 && (
-        <p className="text-xs mt-4" style={{ color: 'var(--muted)' }}>
+        <p className="text-xs mt-4" style={{ color: 'var(--ds-text-secondary)' }}>
           Completar tu perfil permite a la IA generar mejores campañas y usar tus activos de marca automáticamente.
         </p>
       )}

@@ -36,7 +36,7 @@ const TYPE_ICONS: Record<string, string> = {
 }
 
 const SEVERITY_COLOR: Record<string, string> = {
-  info:    '#62c4b0',
+  info:    'var(--ds-color-primary)',
   success: '#22c55e',
   warning: '#f59e0b',
   error:   '#ef4444',
@@ -181,7 +181,7 @@ export default function TopBar() {
           }}
           aria-label="Abrir menú"
         >
-          <Menu size={18} style={{ color: 'var(--muted)' }} strokeWidth={1.75} />
+          <Menu size={18} style={{ color: 'var(--ds-text-secondary)' }} strokeWidth={1.75} />
         </button>
 
         {/* Breadcrumb (hidden on small mobile) */}
@@ -200,7 +200,7 @@ export default function TopBar() {
                     textDecoration: 'none',
                     transition: 'color 0.15s',
                   }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#f9a8d4' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = 'var(--ds-color-primary)' }}
                     onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.55)' }}
                   >
                     {item.label}
@@ -227,28 +227,28 @@ export default function TopBar() {
           onClick={() => setOpen(o => !o)}
           className="relative w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200"
           style={{
-            background: open ? 'rgba(234,27,126,0.15)' : 'rgba(255,255,255,0.04)',
-            border: `1px solid ${open ? 'rgba(234,27,126,0.40)' : 'rgba(255,255,255,0.09)'}`,
+            background: open ? 'transparent' : 'rgba(255,255,255,0.04)',
+            border: `1px solid ${open ? 'transparent' : 'rgba(255,255,255,0.09)'}`,
             boxShadow: unreadCount > 0
-              ? '0 0 16px rgba(234,27,126,0.35), 0 0 28px rgba(234,27,126,0.15)'
-              : (open ? '0 0 16px rgba(234,27,126,0.20)' : 'none'),
+              ? '0 0 16px transparent, 0 0 28px transparent'
+              : (open ? '0 0 16px transparent' : 'none'),
           }}
           onMouseEnter={e => { if (!open) { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.07)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.16)' } }}
           onMouseLeave={e => { if (!open) { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.09)' } }}
           aria-label="Notificaciones"
         >
           <Bell size={16} style={{
-            color: unreadCount > 0 || open ? '#f9a8d4' : 'var(--muted)',
-            filter: unreadCount > 0 ? 'drop-shadow(0 0 4px rgba(234,27,126,0.60))' : 'none',
+            color: unreadCount > 0 || open ? 'var(--ds-color-primary)' : 'var(--ds-text-secondary)',
+            filter: unreadCount > 0 ? 'drop-shadow(0 0 4px transparent)' : 'none',
           }} strokeWidth={1.75} />
           {unreadCount > 0 && (
             <span
               className="absolute -top-1 -right-1 rounded-full text-[10px] font-bold flex items-center justify-center"
               style={{
                 minWidth: 16, height: 16, padding: unreadCount > 9 ? '0 4px' : 0,
-                background: 'linear-gradient(135deg,#e91e8c,#c5006a)',
+                background: 'linear-gradient(135deg,var(--ds-color-primary),var(--ds-color-primary))',
                 color: '#fff',
-                boxShadow: '0 0 10px rgba(233,30,140,0.80), 0 0 16px rgba(233,30,140,0.40)',
+                boxShadow: '0 0 10px transparent, 0 0 16px transparent',
                 animation: 'glowPulse 2.4s ease-in-out infinite',
               }}>
               {badgeLabel}
@@ -261,21 +261,21 @@ export default function TopBar() {
                style={{
                  background: 'linear-gradient(160deg, rgba(14,8,22,0.98), rgba(8,8,16,0.99))',
                  border: '1px solid rgba(255,255,255,0.08)',
-                 boxShadow: '0 24px 72px rgba(0,0,0,0.80), 0 0 40px rgba(234,27,126,0.08)',
+                 boxShadow: '0 24px 72px rgba(0,0,0,0.80), 0 0 40px var(--ds-color-primary-soft)',
                  backdropFilter: 'blur(24px)',
                  maxHeight: 520,
                  display: 'flex',
                  flexDirection: 'column',
                }}>
-            <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: 'var(--border)' }}>
+            <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: 'var(--ds-card-border)' }}>
               <div className="flex items-center gap-2">
                 <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 700 }}>🔔 Notificaciones</h3>
                 {unreadCount > 0 && (
                   <span style={{
                     fontSize: 10, fontWeight: 800,
                     padding: '2px 8px', borderRadius: 99,
-                    background: 'rgba(233,30,140,0.15)', color: '#f9a8d4',
-                    border: '1px solid rgba(233,30,140,0.35)',
+                    background: 'var(--ds-color-primary-soft)', color: 'var(--ds-color-primary)',
+                    border: '1px solid transparent',
                   }}>
                     {unreadCount} nuevas
                   </span>
@@ -284,7 +284,7 @@ export default function TopBar() {
               {unreadCount > 0 && (
                 <button onClick={markAllRead}
                   className="flex items-center gap-1 text-xs transition-opacity hover:opacity-80"
-                  style={{ color: 'var(--accent3)', background: 'none', border: 'none', cursor: 'pointer' }}>
+                  style={{ color: 'var(--ds-color-success)', background: 'none', border: 'none', cursor: 'pointer' }}>
                   <Check size={12} /> Marcar todas
                 </button>
               )}
@@ -293,7 +293,7 @@ export default function TopBar() {
             <div style={{ overflowY: 'auto', flex: 1 }}>
               {loading ? (
                 <div style={{ padding: '32px 20px', textAlign: 'center' }}>
-                  <p style={{ fontSize: 12, color: 'var(--muted)' }}>Cargando…</p>
+                  <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>Cargando…</p>
                 </div>
               ) : notifications.length === 0 ? (
                 <div style={{ padding: '40px 20px', textAlign: 'center' }}>
@@ -301,12 +301,12 @@ export default function TopBar() {
                   <p style={{ fontSize: 13, color: '#fff', fontWeight: 700, marginBottom: 4 }}>
                     Todo tranquilo por acá
                   </p>
-                  <p style={{ fontSize: 11, color: 'var(--muted)' }}>
+                  <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>
                     Las novedades de tus campañas van a aparecer acá
                   </p>
                 </div>
               ) : (
-                <div className="divide-y" style={{ borderColor: 'var(--border)' }}>
+                <div className="divide-y" style={{ borderColor: 'var(--ds-card-border)' }}>
                   {notifications.map(n => {
                     const sevColor = SEVERITY_COLOR[n.severity] || SEVERITY_COLOR.info
                     const icon = iconFor(n.type, n.severity)
@@ -347,14 +347,14 @@ export default function TopBar() {
                             }}>
                               {n.title}
                             </p>
-                            <span style={{ fontSize: 10, color: 'var(--muted)', flexShrink: 0 }}>
+                            <span style={{ fontSize: 10, color: 'var(--ds-text-secondary)', flexShrink: 0 }}>
                               {formatRelative(n.created_at)}
                             </span>
                           </div>
                           {n.body && (
                             <p style={{
                               fontSize: 11,
-                              color: 'var(--muted)',
+                              color: 'var(--ds-text-secondary)',
                               lineHeight: 1.4,
                               marginTop: 3,
                               display: '-webkit-box',
@@ -376,10 +376,10 @@ export default function TopBar() {
             {notifications.length > 0 && (
               <div style={{
                 padding: '10px 16px',
-                borderTop: '1px solid var(--border)',
+                borderTop: '1px solid var(--ds-card-border)',
                 textAlign: 'center',
               }}>
-                <p style={{ fontSize: 10, color: 'var(--muted)' }}>
+                <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)' }}>
                   Mostrando las últimas {notifications.length}
                 </p>
               </div>

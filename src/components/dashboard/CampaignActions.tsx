@@ -141,7 +141,7 @@ export default function CampaignActions({
         padding: '10px 18px', borderRadius: 12,
         background: enabled ? `${color.base}15` : 'rgba(255,255,255,0.02)',
         border: `1px solid ${enabled ? color.base + '45' : 'rgba(255,255,255,0.06)'}`,
-        boxShadow: enabled ? `0 0 18px ${color.glow}25` : 'none',
+        boxShadow: 'none',
         color: enabled ? color.text : '#5a6478',
         fontSize: 12.5, fontWeight: 700,
         cursor: enabled ? 'pointer' : 'not-allowed',
@@ -167,10 +167,10 @@ export default function CampaignActions({
       {!isPublished && (
         <div style={{
           padding: '10px 14px', borderRadius: 10, marginBottom: 14,
-          background: 'rgba(245,158,11,0.08)',
-          border: '1px solid rgba(245,158,11,0.30)',
+          background: 'var(--ds-color-warning-soft)',
+          border: '1px solid var(--ds-color-warning-border)',
           display: 'flex', alignItems: 'center', gap: 8,
-          fontSize: 12, color: '#fbbf24',
+          fontSize: 12, color: 'var(--ds-color-warning)',
         }}>
           <AlertCircle size={14} />
           <span>Publicá esta campaña en Meta primero para habilitar las acciones.</span>
@@ -183,7 +183,7 @@ export default function CampaignActions({
           icon={Play}
           enabled={canActivate}
           onClick={() => setPending('activate')}
-          color={{ base: '#06d6a0', glow: 'rgba(6,214,160,', text: '#6ee7b7' }}
+          color={{ base: 'var(--ds-color-success)', glow: 'transparent', text: 'var(--ds-color-success)' }}
           tooltipDisabled={
             !isPublished ? 'Publicá primero en Meta'
             : status === 'active' ? 'La campaña ya está activa'
@@ -195,7 +195,7 @@ export default function CampaignActions({
           icon={Pause}
           enabled={canPause}
           onClick={() => setPending('pause')}
-          color={{ base: '#f59e0b', glow: 'rgba(245,158,11,', text: '#fbbf24' }}
+          color={{ base: 'var(--ds-color-warning)', glow: 'transparent', text: 'var(--ds-color-warning)' }}
           tooltipDisabled={
             !isPublished ? 'Publicá primero en Meta'
             : status !== 'active' ? 'Solo se pueden pausar campañas activas'
@@ -207,7 +207,7 @@ export default function CampaignActions({
           icon={TrendingUp}
           enabled={canScale}
           onClick={() => setScaleOpen(true)}
-          color={{ base: '#e91e8c', glow: 'rgba(234,27,126,', text: '#f9a8d4' }}
+          color={{ base: 'var(--ds-color-primary)', glow: 'transparent', text: 'var(--ds-color-primary)' }}
           tooltipDisabled={!isPublished ? 'Publicá primero en Meta' : 'Solo campañas publicadas'}
         />
         <ActionButton
@@ -215,20 +215,20 @@ export default function CampaignActions({
           icon={Copy}
           enabled={true}
           onClick={() => setPending('duplicate')}
-          color={{ base: '#62c4b0', glow: 'rgba(98,196,176,', text: '#62c4b0' }}
+          color={{ base: 'var(--ds-color-primary)', glow: 'transparent', text: 'var(--ds-color-primary)' }}
         />
       </div>
 
-      <div className="flex items-center gap-3 mt-4" style={{ fontSize: 11, color: 'var(--muted)' }}>
+      <div className="flex items-center gap-3 mt-4" style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>
         <span>Estado:</span>
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 4,
-          color: status === 'active' ? '#06d6a0' : status === 'paused' ? '#fbbf24' : status === 'error' ? '#fca5a5' : '#a0a8c0',
+          color: status === 'active' ? 'var(--ds-color-success)' : status === 'paused' ? 'var(--ds-color-warning)' : status === 'error' ? 'var(--ds-color-danger)' : '#a0a8c0',
           fontWeight: 600,
         }}>
           <span style={{
             width: 6, height: 6, borderRadius: '50%',
-            background: status === 'active' ? '#06d6a0' : status === 'paused' ? '#fbbf24' : status === 'error' ? '#ef4444' : '#8892b0',
+            background: status === 'active' ? 'var(--ds-color-success)' : status === 'paused' ? 'var(--ds-color-warning)' : status === 'error' ? 'var(--ds-color-danger)' : '#8892b0',
             boxShadow: status === 'active' ? '0 0 8px rgba(6,214,160,0.60)' : undefined,
           }} />
           {status === 'active' ? 'Activa' : status === 'paused' ? 'Pausada' : status === 'draft' ? 'Borrador' : status}
@@ -287,7 +287,7 @@ export default function CampaignActions({
           position: 'fixed', bottom: 24, right: 24, zIndex: 2000,
           padding: '13px 18px', borderRadius: 12,
           background: 'linear-gradient(160deg, rgba(14,4,9,0.98), rgba(8,2,5,0.99))',
-          border: `1px solid ${toast.type === 'success' ? 'rgba(6,214,160,0.40)' : toast.type === 'error' ? 'rgba(239,68,68,0.40)' : 'rgba(245,158,11,0.40)'}`,
+          border: `1px solid ${toast.type === 'success' ? 'var(--ds-color-success-border)' : toast.type === 'error' ? 'var(--ds-color-danger-border)' : 'var(--ds-color-warning-border)'}`,
           boxShadow: '0 12px 48px rgba(0,0,0,0.65)',
           maxWidth: 380,
           animation: 'slideUp 0.3s ease',
@@ -296,7 +296,7 @@ export default function CampaignActions({
             {toast.message}
           </p>
           {toast.link && (
-            <Link href={toast.link.href} style={{ fontSize: 11, color: '#f9a8d4', fontWeight: 600 }}>
+            <Link href={toast.link.href} style={{ fontSize: 11, color: 'var(--ds-color-primary)', fontWeight: 600 }}>
               {toast.link.label}
             </Link>
           )}

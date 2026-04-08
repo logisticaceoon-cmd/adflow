@@ -116,7 +116,7 @@ export default function RegisterPage() {
             <h2 style={{ fontSize: 20, fontWeight: 700, color: '#fff', marginBottom: 10 }}>Revisá tu email</h2>
             <p style={{ color: '#7a7a9a', fontSize: 14, lineHeight: 1.6, marginBottom: 24 }}>
               Te enviamos un link de confirmación a{' '}
-              <strong style={{ color: '#e91e8c' }}>{form.email}</strong>.
+              <strong style={{ color: 'var(--ds-color-primary)' }}>{form.email}</strong>.
               Hacé clic en el link para activar tu cuenta.
             </p>
             <Link href="/login" style={{ display: 'inline-block', padding: '11px 28px', borderRadius: 10, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
@@ -145,7 +145,7 @@ export default function RegisterPage() {
       <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 400 }}>
         {/* Logo — matching login */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 32 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 13, background: 'linear-gradient(135deg, #e91e8c, #c5006a)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, boxShadow: '0 0 32px rgba(233,30,140,0.55), 0 0 64px rgba(233,30,140,0.20)' }}>⚡</div>
+          <div style={{ width: 44, height: 44, borderRadius: 13, background: 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, boxShadow: '0 0 32px rgba(233,30,140,0.55), 0 0 64px rgba(233,30,140,0.20)' }}>⚡</div>
           <span style={{ fontSize: 26, fontWeight: 800, color: '#f0f0ff', letterSpacing: '-0.5px', textShadow: '0 0 20px rgba(255,255,255,0.12)' }}>AdFlow</span>
         </div>
 
@@ -168,7 +168,7 @@ export default function RegisterPage() {
           </h1>
           <p style={{ color: '#7a7a9a', fontSize: 13, textAlign: 'center', marginBottom: 24 }}>
             ¿Ya tenés cuenta?{' '}
-            <Link href="/login" style={{ color: '#e91e8c', fontWeight: 600, textDecoration: 'none' }}>
+            <Link href="/login" style={{ color: 'var(--ds-color-primary)', fontWeight: 600, textDecoration: 'none' }}>
               Iniciá sesión
             </Link>
           </p>
@@ -215,7 +215,7 @@ export default function RegisterPage() {
               type="submit" disabled={loading}
               style={{
                 width: '100%', padding: '13px', borderRadius: 12, border: 'none', minHeight: 44,
-                background: loading ? 'rgba(233,30,140,0.6)' : 'linear-gradient(135deg, #e91e8c, #c5006a)',
+                background: loading ? 'rgba(233,30,140,0.6)' : 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))',
                 color: '#fff', fontSize: 14, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                 boxShadow: loading ? 'none' : '0 0 32px rgba(233,30,140,0.50), 0 0 64px rgba(233,30,140,0.18)',

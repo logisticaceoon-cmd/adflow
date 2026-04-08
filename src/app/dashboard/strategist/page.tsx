@@ -13,8 +13,8 @@ const CAPABILITIES: Array<{ icon: string; text: string }> = [
 ]
 
 const UPCOMING: Array<{ Icon: any; title: string; desc: string; color: string }> = [
-  { Icon: Zap,         title: 'Auto-scaling con reglas',  desc: 'Reglas automáticas que escalan o pausan campañas según ROAS, CPA, frecuencia', color: '#f59e0b' },
-  { Icon: TrendingUp,  title: 'Forecast mensual',         desc: 'Proyección de spend, revenue y conversiones para el próximo mes',           color: '#22c55e' },
+  { Icon: Zap,         title: 'Auto-scaling con reglas',  desc: 'Reglas automáticas que escalan o pausan campañas según ROAS, CPA, frecuencia', color: 'var(--ds-color-warning)' },
+  { Icon: TrendingUp,  title: 'Forecast mensual',         desc: 'Proyección de spend, revenue y conversiones para el próximo mes',           color: 'var(--ds-color-success)' },
   { Icon: ImageIcon,   title: 'Análisis de creativos IA', desc: 'Scoring de atención, claridad, emoción y fuerza del CTA en cada creativo',   color: '#a855f7' },
   { Icon: BarChart3,   title: 'Benchmarks de tu nicho',   desc: 'Comparación de tus métricas contra el promedio de tu industria y país',     color: '#3b82f6' },
 ]
@@ -38,7 +38,7 @@ export default function StrategistPage() {
         }}>
           🧠 Tu consultor de growth
         </h1>
-        <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.55, maxWidth: 620 }}>
+        <p style={{ fontSize: 14, color: 'var(--ds-text-secondary)', lineHeight: 1.55, maxWidth: 620 }}>
           Un estratega digital con IA, disponible 24/7, que conoce cada métrica, cada campaña y cada decisión que tomaste. Listo para ayudarte a crecer.
         </p>
       </div>
@@ -48,15 +48,15 @@ export default function StrategistPage() {
         position: 'relative',
         padding: '36px 34px',
         borderRadius: 24,
-        background: 'linear-gradient(135deg, rgba(168,85,247,0.14) 0%, rgba(233,30,140,0.10) 50%, rgba(98,196,176,0.06) 100%)',
+        background: 'linear-gradient(135deg, rgba(168,85,247,0.14) 0%, var(--ds-color-primary-soft) 50%, transparent 100%)',
         border: '1.5px solid rgba(168,85,247,0.40)',
         backdropFilter: 'blur(20px)',
-        boxShadow: '0 30px 80px rgba(0,0,0,0.50), 0 0 60px rgba(168,85,247,0.18), 0 0 100px rgba(233,30,140,0.10)',
+        boxShadow: '0 30px 80px rgba(0,0,0,0.50), 0 0 60px rgba(168,85,247,0.18), 0 0 100px var(--ds-color-primary-soft)',
         overflow: 'hidden',
       }}>
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-          background: 'linear-gradient(90deg, transparent, rgba(168,85,247,0.90), rgba(233,30,140,0.80), rgba(98,196,176,0.70), transparent)',
+          background: 'linear-gradient(90deg, transparent, rgba(168,85,247,0.90), transparent, transparent, transparent)',
         }} />
 
         {/* Floating orbs */}
@@ -69,7 +69,7 @@ export default function StrategistPage() {
         <div style={{
           position: 'absolute', bottom: -40, left: -20, width: 150, height: 150,
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(233,30,140,0.20), transparent 70%)',
+          background: 'radial-gradient(circle, var(--ds-color-primary-soft), transparent 70%)',
           filter: 'blur(36px)', pointerEvents: 'none',
         }} />
 
@@ -127,7 +127,7 @@ export default function StrategistPage() {
             </div>
           </div>
 
-          <p style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.5, marginBottom: 20 }}>
+          <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', lineHeight: 1.5, marginBottom: 20 }}>
             Estamos trabajando en esto. Mientras tanto, usá las recomendaciones del dashboard y los reportes mensuales con análisis IA — ya tenés bastante inteligencia a mano.
           </p>
 
@@ -165,7 +165,7 @@ export default function StrategistPage() {
         }}>
           También próximamente
         </h3>
-        <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 18 }}>
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 18 }}>
           La arquitectura ya está preparada — las tablas, los tipos y los stubs de los motores están en el repo esperando implementación.
         </p>
 
@@ -199,7 +199,7 @@ export default function StrategistPage() {
               }}>
                 {title}
               </p>
-              <p style={{ fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
+              <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', lineHeight: 1.5 }}>
                 {desc}
               </p>
             </div>

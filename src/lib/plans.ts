@@ -25,6 +25,6 @@ export const PLAN_LABEL: Record<string, string> = {
 export const PLAN_COLOR: Record<string, string> = {
   free:    '#62c4b0',
   starter: '#a78bfa',
-  pro:     '#e91e8c',
+  pro:     'var(--ds-color-primary)',
   agency:  '#f59e0b',
 }

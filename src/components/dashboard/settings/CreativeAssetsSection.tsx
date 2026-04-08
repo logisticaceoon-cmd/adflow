@@ -24,8 +24,8 @@ export default function CreativeAssetsSection({ initialData }: Props) {
 
   const [form, setForm] = useState({
     logo_url:              initialData?.logo_url              || '',
-    brand_color_primary:   initialData?.brand_color_primary   || '#e91e8c',
-    brand_color_secondary: initialData?.brand_color_secondary || '#62c4b0',
+    brand_color_primary:   initialData?.brand_color_primary   || 'var(--ds-color-primary)',
+    brand_color_secondary: initialData?.brand_color_secondary || 'var(--ds-color-primary)',
     communication_tone:    initialData?.communication_tone    || 'profesional',
   })
 
@@ -80,10 +80,10 @@ export default function CreativeAssetsSection({ initialData }: Props) {
           <div className="flex items-center gap-4">
             {form.logo_url ? (
               <img src={form.logo_url} alt="Logo" className="w-16 h-16 rounded-xl object-contain"
-                   style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }} />
+                   style={{ background: 'var(--ds-bg-elevated)', border: '1px solid var(--ds-card-border)' }} />
             ) : (
               <div className="w-16 h-16 rounded-xl flex items-center justify-center text-2xl"
-                   style={{ background: 'var(--surface2)', border: '1px dashed var(--border)' }}>
+                   style={{ background: 'var(--ds-bg-elevated)', border: '1px dashed var(--ds-card-border)' }}>
                 🖼
               </div>
             )}
@@ -92,8 +92,8 @@ export default function CreativeAssetsSection({ initialData }: Props) {
                 className="btn-ghost text-sm py-1.5 px-3" disabled={uploading}>
                 {uploading ? '⏳ Subiendo...' : form.logo_url ? 'Cambiar logo' : 'Subir logo'}
               </button>
-              <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>PNG o SVG, fondo transparente recomendado</p>
-              {uploadError && <p className="text-xs mt-1" style={{ color: 'var(--danger)' }}>{uploadError}</p>}
+              <p className="text-xs mt-1" style={{ color: 'var(--ds-text-secondary)' }}>PNG o SVG, fondo transparente recomendado</p>
+              {uploadError && <p className="text-xs mt-1" style={{ color: 'var(--ds-color-danger)' }}>{uploadError}</p>}
             </div>
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
           </div>
@@ -107,7 +107,7 @@ export default function CreativeAssetsSection({ initialData }: Props) {
               <input type="color" value={form.brand_color_primary}
                 onChange={e => setForm(p => ({ ...p, brand_color_primary: e.target.value }))}
                 className="w-10 h-10 rounded-lg cursor-pointer border-0 bg-transparent" />
-              <span className="text-sm font-mono" style={{ color: 'var(--muted)' }}>{form.brand_color_primary}</span>
+              <span className="text-sm font-mono" style={{ color: 'var(--ds-text-secondary)' }}>{form.brand_color_primary}</span>
             </div>
           </div>
           <div>
@@ -116,7 +116,7 @@ export default function CreativeAssetsSection({ initialData }: Props) {
               <input type="color" value={form.brand_color_secondary}
                 onChange={e => setForm(p => ({ ...p, brand_color_secondary: e.target.value }))}
                 className="w-10 h-10 rounded-lg cursor-pointer border-0 bg-transparent" />
-              <span className="text-sm font-mono" style={{ color: 'var(--muted)' }}>{form.brand_color_secondary}</span>
+              <span className="text-sm font-mono" style={{ color: 'var(--ds-text-secondary)' }}>{form.brand_color_secondary}</span>
             </div>
           </div>
         </div>
@@ -129,11 +129,11 @@ export default function CreativeAssetsSection({ initialData }: Props) {
               <button key={t.value} type="button" onClick={() => setForm(p => ({ ...p, communication_tone: t.value }))}
                 className="p-3 rounded-xl text-left transition-all"
                 style={{
-                  background: form.communication_tone === t.value ? 'rgba(233,30,140,0.12)' : 'var(--surface2)',
-                  border: `1px solid ${form.communication_tone === t.value ? 'rgba(233,30,140,0.5)' : 'var(--border)'}`,
+                  background: form.communication_tone === t.value ? 'var(--ds-color-primary-soft)' : 'var(--ds-bg-elevated)',
+                  border: `1px solid ${form.communication_tone === t.value ? 'transparent' : 'var(--ds-card-border)'}`,
                 }}>
                 <p className="text-sm font-semibold mb-0.5">{t.label}</p>
-                <p className="text-xs" style={{ color: 'var(--muted)' }}>{t.desc}</p>
+                <p className="text-xs" style={{ color: 'var(--ds-text-secondary)' }}>{t.desc}</p>
               </button>
             ))}
           </div>

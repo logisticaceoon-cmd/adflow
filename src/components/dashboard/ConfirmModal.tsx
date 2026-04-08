@@ -19,11 +19,11 @@ interface ConfirmModalProps {
 }
 
 const COLORS: Record<ConfirmColor, { bg: string; border: string; glow: string; text: string }> = {
-  fucsia: { bg: 'linear-gradient(135deg, #ea1b7e, #c5006a)',  border: 'rgba(234,27,126,0.40)', glow: 'rgba(234,27,126,0.45)', text: '#fff' },
-  green:  { bg: 'linear-gradient(135deg, #06d6a0, #059669)',  border: 'rgba(6,214,160,0.40)',  glow: 'rgba(6,214,160,0.45)',  text: '#fff' },
-  red:    { bg: 'linear-gradient(135deg, #ef4444, #dc2626)',  border: 'rgba(239,68,68,0.40)',  glow: 'rgba(239,68,68,0.45)',  text: '#fff' },
-  amber:  { bg: 'linear-gradient(135deg, #f59e0b, #d97706)',  border: 'rgba(245,158,11,0.40)', glow: 'rgba(245,158,11,0.45)', text: '#fff' },
-  teal:   { bg: 'linear-gradient(135deg, #62c4b0, #3a9a8a)',  border: 'rgba(98,196,176,0.40)', glow: 'rgba(98,196,176,0.45)', text: '#fff' },
+  fucsia: { bg: 'var(--ds-color-primary)',  border: 'var(--ds-color-primary-border)', glow: 'transparent', text: '#fff' },
+  green:  { bg: 'linear-gradient(135deg, var(--ds-color-success), #059669)',  border: 'var(--ds-color-success-border)',  glow: 'var(--ds-color-success-border)',  text: '#fff' },
+  red:    { bg: 'linear-gradient(135deg, var(--ds-color-danger), var(--ds-color-danger))',  border: 'var(--ds-color-danger-border)',  glow: 'var(--ds-color-danger-border)',  text: '#fff' },
+  amber:  { bg: 'linear-gradient(135deg, var(--ds-color-warning), var(--ds-color-warning))',  border: 'var(--ds-color-warning-border)', glow: 'var(--ds-color-warning-border)', text: '#fff' },
+  teal:   { bg: 'linear-gradient(135deg, var(--ds-color-primary), #3a9a8a)',  border: 'var(--ds-card-border)', glow: 'var(--ds-card-border)', text: '#fff' },
 }
 
 export default function ConfirmModal({

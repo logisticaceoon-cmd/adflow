@@ -36,7 +36,7 @@ export default function LevelMap({ currentLevel }: Props) {
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Tu camino de crecimiento
         </h2>
-        <p style={{ fontSize: 12, color: 'var(--muted)' }}>
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
           Cada nivel desbloquea nuevas herramientas y estrategias para tu negocio
         </p>
       </div>
@@ -161,7 +161,7 @@ export default function LevelMap({ currentLevel }: Props) {
               <p style={{ fontSize: 12, color: 'var(--ds-text-primary)', marginBottom: 8 }}>
                 Requisito: {lv.requirement}
               </p>
-              <p style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 4 }}>
+              <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 4 }}>
                 Desbloquea
               </p>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>

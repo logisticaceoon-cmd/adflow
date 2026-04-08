@@ -236,7 +236,7 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
     return (
       <div className="card p-6 mb-5">
         <h2 className="section-title mb-3">📘 Cuenta publicitaria de Facebook</h2>
-        <p className="text-sm" style={{ color: 'var(--muted)' }}>
+        <p className="text-sm" style={{ color: 'var(--ds-text-secondary)' }}>
           Primero conectá tu cuenta de Facebook Ads para seleccionar los activos publicitarios.
         </p>
       </div>
@@ -246,14 +246,14 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
   return (
     <div className="card p-6 mb-5">
       <h2 className="section-title mb-1">📘 Cuenta publicitaria de Facebook</h2>
-      <p className="text-xs mb-5" style={{ color: 'var(--muted)' }}>
+      <p className="text-xs mb-5" style={{ color: 'var(--ds-text-secondary)' }}>
         Seleccioná los activos que se usarán por defecto en tus campañas
       </p>
 
       {/* Error de carga base */}
       {baseError && (
         <div className="mb-4 p-3 rounded-lg text-xs flex items-center gap-2"
-             style={{ background: 'rgba(239,68,68,0.1)', color: 'var(--danger)' }}>
+             style={{ background: 'rgba(239,68,68,0.1)', color: 'var(--ds-color-danger)' }}>
           <span>⚠</span> {baseError}
           <button type="button" className="ml-auto underline" onClick={() => loadInitialAssets('')}>
             Reintentar
@@ -264,7 +264,7 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
       {loadingBase ? (
         <div className="flex items-center gap-2 py-6">
           <Spinner />
-          <span className="text-sm" style={{ color: 'var(--muted)' }}>Cargando activos de Meta...</span>
+          <span className="text-sm" style={{ color: 'var(--ds-text-secondary)' }}>Cargando activos de Meta...</span>
         </div>
       ) : (
         <form onSubmit={save} className="space-y-4">
@@ -285,7 +285,7 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
                   <option key={b.id} value={b.id}>{b.name}</option>
                 ))}
               </select>
-              <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>
+              <p className="text-xs mt-1" style={{ color: 'var(--ds-text-secondary)' }}>
                 Opcional. Si tus cuentas están bajo un Business Manager, seleccionalo para filtrar.
               </p>
             </div>
@@ -324,10 +324,10 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
                 ))}
               </select>
               {pixelError && (
-                <p className="text-xs mt-1" style={{ color: 'var(--danger)' }}>⚠ {pixelError}</p>
+                <p className="text-xs mt-1" style={{ color: 'var(--ds-color-danger)' }}>⚠ {pixelError}</p>
               )}
               {!form.selected_ad_account_id && !pixelError && (
-                <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>Seleccioná una Ad Account primero</p>
+                <p className="text-xs mt-1" style={{ color: 'var(--ds-text-secondary)' }}>Seleccioná una Ad Account primero</p>
               )}
             </div>
 
@@ -362,20 +362,20 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
                 ))}
               </select>
               {igError && (
-                <p className="text-xs mt-1" style={{ color: 'var(--danger)' }}>⚠ {igError}</p>
+                <p className="text-xs mt-1" style={{ color: 'var(--ds-color-danger)' }}>⚠ {igError}</p>
               )}
               {!form.fb_page_id && !igError && (
-                <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>Seleccioná una Página primero</p>
+                <p className="text-xs mt-1" style={{ color: 'var(--ds-text-secondary)' }}>Seleccioná una Página primero</p>
               )}
             </div>
           </div>
 
           {/* Errores de validación y guardado */}
           {validationError && (
-            <p className="text-xs" style={{ color: 'var(--danger)' }}>⚠ {validationError}</p>
+            <p className="text-xs" style={{ color: 'var(--ds-color-danger)' }}>⚠ {validationError}</p>
           )}
           {saveError && (
-            <p className="text-xs" style={{ color: 'var(--danger)' }}>⚠ {saveError}</p>
+            <p className="text-xs" style={{ color: 'var(--ds-color-danger)' }}>⚠ {saveError}</p>
           )}
 
           <div className="flex justify-end">

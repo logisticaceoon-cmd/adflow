@@ -48,7 +48,7 @@ export default function ErrorState({
         {title}
       </h2>
       <p style={{
-        fontSize: 13, color: 'var(--muted)',
+        fontSize: 13, color: 'var(--ds-text-secondary)',
         lineHeight: 1.55, maxWidth: 420,
         margin: '0 auto 22px',
       }}>
@@ -59,10 +59,10 @@ export default function ErrorState({
         {retry && (
           <button onClick={retry} style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: 'linear-gradient(135deg, #e91e8c, #c5006a)',
+            background: 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))',
             color: '#fff', fontSize: 12, fontWeight: 800,
             padding: '10px 20px', borderRadius: 99, border: 'none',
-            boxShadow: '0 8px 20px rgba(233,30,140,0.35)',
+            boxShadow: '0 8px 20px transparent',
             cursor: 'pointer',
           }}>
             <RefreshCw size={13} /> Reintentar
@@ -82,13 +82,13 @@ export default function ErrorState({
         )}
       </div>
 
-      <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 22 }}>
+      <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', marginTop: 22 }}>
         Si el problema persiste,{' '}
         <a
           href="https://wa.me/5491100000000"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ color: '#62c4b0', textDecoration: 'underline' }}
+          style={{ color: 'var(--ds-color-primary)', textDecoration: 'underline' }}
         >
           contactanos por WhatsApp
         </a>

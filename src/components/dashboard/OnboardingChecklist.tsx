@@ -20,15 +20,15 @@ export default function OnboardingChecklist({ status }: Props) {
       position: 'relative',
       borderRadius: 20,
       padding: '24px 26px',
-      background: 'linear-gradient(135deg, rgba(233,30,140,0.12) 0%, rgba(98,196,176,0.06) 100%)',
-      border: '1px solid rgba(233,30,140,0.30)',
+      background: 'linear-gradient(135deg, var(--ds-color-primary-soft) 0%, transparent 100%)',
+      border: '1px solid var(--ds-color-primary-border)',
       backdropFilter: 'blur(20px)',
-      boxShadow: '0 20px 50px rgba(0,0,0,0.35), 0 0 40px rgba(233,30,140,0.10)',
+      boxShadow: '0 20px 50px rgba(0,0,0,0.35), 0 0 40px var(--ds-color-primary-soft)',
       overflow: 'hidden',
     }}>
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-        background: 'linear-gradient(90deg, transparent, rgba(233,30,140,0.80), rgba(98,196,176,0.60), transparent)',
+        background: 'linear-gradient(90deg, transparent, transparent, transparent, transparent)',
       }} />
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
@@ -47,18 +47,18 @@ export default function OnboardingChecklist({ status }: Props) {
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           marginBottom: 6,
         }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted)' }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ds-text-secondary)' }}>
             {status.completedSteps} de {status.totalSteps} completados
           </span>
-          <span style={{ fontSize: 11, fontWeight: 800, color: '#fbbf24' }}>
+          <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--ds-color-warning)' }}>
             {status.completionScore}%
           </span>
         </div>
         <div style={{ height: 10, borderRadius: 99, background: 'rgba(255,255,255,0.05)', overflow: 'hidden' }}>
           <div style={{
             height: '100%', width: `${status.completionScore}%`,
-            background: 'linear-gradient(90deg, #e91e8c, #62c4b0)',
-            boxShadow: '0 0 12px rgba(233,30,140,0.45)',
+            background: 'var(--ds-color-primary)',
+            boxShadow: '0 0 12px var(--ds-color-primary-border)',
             borderRadius: 99,
             transition: 'width 0.6s ease',
           }} />
@@ -70,15 +70,15 @@ export default function OnboardingChecklist({ status }: Props) {
         <div style={{
           padding: '14px 16px',
           borderRadius: 12,
-          background: 'rgba(233,30,140,0.08)',
-          border: '1px solid rgba(233,30,140,0.30)',
+          background: 'var(--ds-color-primary-soft)',
+          border: '1px solid var(--ds-color-primary-border)',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           gap: 12, flexWrap: 'wrap',
           marginBottom: 16,
         }}>
           <div style={{ flex: 1, minWidth: 0 }}>
             <p style={{
-              fontSize: 9, fontWeight: 700, color: '#f9a8d4',
+              fontSize: 9, fontWeight: 700, color: 'var(--ds-color-primary)',
               textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 2,
             }}>
               Siguiente paso
@@ -87,10 +87,10 @@ export default function OnboardingChecklist({ status }: Props) {
           </div>
           <Link href={next.href} style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
-            background: 'linear-gradient(135deg, #e91e8c, #c5006a)',
+            background: 'var(--ds-color-primary)',
             color: '#fff', fontSize: 11, fontWeight: 800,
             padding: '9px 16px', borderRadius: 99,
-            boxShadow: '0 6px 20px rgba(233,30,140,0.35)',
+            boxShadow: '0 6px 20px var(--ds-color-primary-border)',
             textDecoration: 'none', whiteSpace: 'nowrap',
           }}>
             Completar paso <ArrowRight size={12} />
@@ -106,18 +106,18 @@ export default function OnboardingChecklist({ status }: Props) {
             <div key={key} style={{
               display: 'flex', alignItems: 'center', gap: 8,
               fontSize: 11,
-              color: step.done ? '#fff' : 'var(--muted)',
+              color: step.done ? '#fff' : 'var(--ds-text-secondary)',
               opacity: step.done ? 1 : 0.75,
             }}>
               <span style={{
                 width: 16, height: 16, borderRadius: '50%',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: step.done ? 'rgba(34,197,94,0.18)' : 'rgba(255,255,255,0.04)',
+                background: step.done ? 'var(--ds-color-success-soft)' : 'rgba(255,255,255,0.04)',
                 border: step.done ? '1px solid rgba(34,197,94,0.55)' : '1px solid rgba(255,255,255,0.12)',
                 flexShrink: 0,
               }}>
                 {step.done
-                  ? <Check size={10} color="#22c55e" strokeWidth={3} />
+                  ? <Check size={10} color="var(--ds-color-success)" strokeWidth={3} />
                   : <Clock size={9} color="#8892b0" />}
               </span>
               {step.label}
@@ -128,7 +128,7 @@ export default function OnboardingChecklist({ status }: Props) {
 
       <div style={{ textAlign: 'right' }}>
         <Link href="/dashboard/onboarding" style={{
-          fontSize: 11, fontWeight: 700, color: '#fbbf24', textDecoration: 'none',
+          fontSize: 11, fontWeight: 700, color: 'var(--ds-color-warning)', textDecoration: 'none',
           display: 'inline-flex', alignItems: 'center', gap: 4,
         }}>
           Ver todos los pasos <ArrowRight size={11} />

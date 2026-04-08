@@ -78,7 +78,7 @@ export default function PixelLevelCard() {
         <div className="flex items-center gap-5">
           <LevelBadge level={level} levelName={pa.level_name} size="sm" />
           <div style={{ flex: 1 }}>
-            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 4 }}>
+            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ds-text-secondary)', marginBottom: 4 }}>
               Tu pixel · Nivel {level} de 8
             </p>
             {m && level < 8 ? (
@@ -96,7 +96,7 @@ export default function PixelLevelCard() {
               </p>
             )}
           </div>
-          <span style={{ fontSize: 12, color: 'var(--muted)', flexShrink: 0 }}>
+          <span style={{ fontSize: 12, color: 'var(--ds-text-secondary)', flexShrink: 0 }}>
             Ver detalle →
           </span>
         </div>

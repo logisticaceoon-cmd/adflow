@@ -29,17 +29,17 @@ function nextMonth(my: string): string {
 
 function ChangeIndicator({ value, suffix = '%' }: { value: number; suffix?: string }) {
   if (value > 0) return (
-    <span style={{ color: '#06d6a0', display: 'inline-flex', alignItems: 'center', gap: 4, fontWeight: 700, fontSize: 11 }}>
+    <span style={{ color: 'var(--ds-color-success)', display: 'inline-flex', alignItems: 'center', gap: 4, fontWeight: 700, fontSize: 11 }}>
       <TrendingUp size={12} /> +{value.toFixed(0)}{suffix}
     </span>
   )
   if (value < 0) return (
-    <span style={{ color: '#fca5a5', display: 'inline-flex', alignItems: 'center', gap: 4, fontWeight: 700, fontSize: 11 }}>
+    <span style={{ color: 'var(--ds-color-danger)', display: 'inline-flex', alignItems: 'center', gap: 4, fontWeight: 700, fontSize: 11 }}>
       <TrendingDown size={12} /> {value.toFixed(0)}{suffix}
     </span>
   )
   return (
-    <span style={{ color: 'var(--muted)', display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11 }}>
+    <span style={{ color: 'var(--ds-text-secondary)', display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11 }}>
       <Minus size={12} /> Sin cambios
     </span>
   )
@@ -103,14 +103,14 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
       <div className="dash-anim-1 mb-6" style={{
         position: 'relative',
         borderRadius: 22, padding: '28px 32px',
-        background: 'linear-gradient(135deg, rgba(139,92,246,0.10) 0%, rgba(233,30,140,0.06) 50%, rgba(98,196,176,0.04) 100%)',
+        background: 'linear-gradient(135deg, rgba(139,92,246,0.10) 0%, var(--ds-color-primary-soft) 50%, transparent 100%)',
         border: '1px solid rgba(255,255,255,0.08)',
         backdropFilter: 'blur(20px)',
         overflow: 'hidden',
       }}>
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-          background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.55), rgba(234,27,126,0.40), transparent)',
+          background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.55), var(--ds-color-primary-border), transparent)',
         }} />
 
         <div className="flex items-center justify-between mb-4">
@@ -152,7 +152,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
           </div>
         </div>
 
-        <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.78)', maxWidth: 620, lineHeight: 1.55 }}>
+        <p style={{ fontSize: 13.5, color: 'var(--ds-text-secondary)', maxWidth: 620, lineHeight: 1.55 }}>
           Tu consultor IA analizó el mes. Acá está el resumen ejecutivo, las métricas clave, y las acciones recomendadas para el próximo mes.
         </p>
       </div>
@@ -164,7 +164,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
           <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: 8 }}>
             No hay datos para {fmtMonthYear(targetMonth)}
           </h2>
-          <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 22, maxWidth: 420, margin: '0 auto 22px' }}>
+          <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', marginBottom: 22, maxWidth: 420, margin: '0 auto 22px' }}>
             Todavía no tenés campañas activas en este mes o no hay métricas registradas. El reporte se genera automáticamente cuando empezás a acumular datos.
           </p>
           <Link href="/dashboard/create" className="btn-primary">Crear una campaña →</Link>
@@ -174,16 +174,16 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
           {/* ── SECTION B: TOP METRICS WITH TRENDS ─────────────────── */}
           <div className="grid grid-cols-4 gap-4 mb-6 dash-anim-2">
             {[
-              { label: 'Inversión total',  value: `$${(report.total_spend ?? 0).toFixed(0)}`,     trend: trendSpend,   color: '#e91e8c', inverse: true },
-              { label: 'Ventas generadas', value: `$${(report.total_revenue ?? 0).toFixed(0)}`,   trend: trendRevenue, color: '#06d6a0', inverse: false },
-              { label: 'ROAS promedio',    value: `${(report.avg_roas ?? 0).toFixed(2)}x`,        trend: trendRoas,    color: '#f59e0b', inverse: false },
-              { label: 'Conversiones',     value: String(report.total_conversions ?? 0),         trend: trendConv,    color: '#62c4b0', inverse: false },
+              { label: 'Inversión total',  value: `$${(report.total_spend ?? 0).toFixed(0)}`,     trend: trendSpend,   color: 'var(--ds-color-primary)', inverse: true },
+              { label: 'Ventas generadas', value: `$${(report.total_revenue ?? 0).toFixed(0)}`,   trend: trendRevenue, color: 'var(--ds-color-success)', inverse: false },
+              { label: 'ROAS promedio',    value: `${(report.avg_roas ?? 0).toFixed(2)}x`,        trend: trendRoas,    color: 'var(--ds-color-warning)', inverse: false },
+              { label: 'Conversiones',     value: String(report.total_conversions ?? 0),         trend: trendConv,    color: 'var(--ds-color-primary)', inverse: false },
             ].map(m => (
               <div key={m.label} className="card p-5" style={{
                 borderTop: `2px solid ${m.color}`,
                 boxShadow: `0 10px 32px rgba(0,0,0,0.35), 0 0 28px ${m.color}12`,
               }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8 }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8 }}>
                   {m.label}
                 </p>
                 <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff', lineHeight: 1, letterSpacing: '-0.02em', marginBottom: 8 }}>
@@ -197,20 +197,20 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
           {/* ── SECTION C: EXECUTIVE AI ANALYSIS ───────────────────── */}
           {report.ai_analysis && (
             <div className="card p-6 mb-6 dash-anim-3" style={{
-              background: 'linear-gradient(135deg, rgba(234,27,126,0.08) 0%, rgba(98,196,176,0.05) 50%, rgba(139,92,246,0.04) 100%)',
-              border: '1px solid rgba(234,27,126,0.22)',
-              boxShadow: '0 12px 48px rgba(234,27,126,0.10)',
+              background: 'linear-gradient(135deg, var(--ds-color-primary-soft) 0%, transparent 50%, rgba(139,92,246,0.04) 100%)',
+              border: '1px solid transparent',
+              boxShadow: '0 12px 48px var(--ds-color-primary-soft)',
             }}>
               <div className="flex items-start gap-4">
                 <div style={{
                   width: 52, height: 52, borderRadius: 14, flexShrink: 0,
-                  background: 'rgba(234,27,126,0.18)',
-                  border: '1px solid rgba(234,27,126,0.35)',
-                  boxShadow: '0 0 24px rgba(234,27,126,0.35)',
+                  background: 'var(--ds-color-primary-soft)',
+                  border: '1px solid transparent',
+                  boxShadow: '0 0 24px transparent',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26,
                 }}>🤖</div>
                 <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: '#f9a8d4', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6 }}>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ds-color-primary)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6 }}>
                     Análisis ejecutivo · Tu consultor IA
                   </p>
                   <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 14 }}>
@@ -231,20 +231,20 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
           <div className="grid grid-cols-3 gap-4 mb-6 dash-anim-4">
             {/* Level evolution */}
             <div className="card p-5">
-              <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 14 }}>
+              <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 14 }}>
                 Evolución de nivel
               </p>
               <div className="flex items-center justify-center gap-4" style={{ minHeight: 80 }}>
                 <LevelBadge level={report.pixel_level_start ?? 0} size="sm" showName={false} />
-                <ArrowRight size={18} style={{ color: 'var(--muted)' }} />
+                <ArrowRight size={18} style={{ color: 'var(--ds-text-secondary)' }} />
                 <LevelBadge level={report.pixel_level_end ?? 0} size="sm" showName={false} />
               </div>
               {(report.pixel_level_end ?? 0) > (report.pixel_level_start ?? 0) ? (
-                <p style={{ fontSize: 11, color: '#06d6a0', textAlign: 'center', marginTop: 10, fontWeight: 600 }}>
+                <p style={{ fontSize: 11, color: 'var(--ds-color-success)', textAlign: 'center', marginTop: 10, fontWeight: 600 }}>
                   🎉 Subiste {(report.pixel_level_end ?? 0) - (report.pixel_level_start ?? 0)} nivel{(report.pixel_level_end ?? 0) - (report.pixel_level_start ?? 0) !== 1 ? 'es' : ''} este mes
                 </p>
               ) : (
-                <p style={{ fontSize: 11, color: 'var(--muted)', textAlign: 'center', marginTop: 10 }}>
+                <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', textAlign: 'center', marginTop: 10 }}>
                   Mismo nivel que el inicio del mes
                 </p>
               )}
@@ -252,7 +252,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
 
             {/* Budget efficiency */}
             <div className="card p-5">
-              <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8 }}>
+              <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8 }}>
                 Eficiencia de presupuesto
               </p>
               <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', lineHeight: 1, marginBottom: 10 }}>
@@ -263,35 +263,35 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
                   height: '100%',
                   width: `${Math.min(100, budgetEffic)}%`,
                   background: budgetEffic > 100
-                    ? 'linear-gradient(90deg, #ef4444, #f87171)'
+                    ? 'linear-gradient(90deg, var(--ds-color-danger), #f87171)'
                     : budgetEffic > 90
-                      ? 'linear-gradient(90deg, #06d6a0, #62c4b0)'
-                      : 'linear-gradient(90deg, #f59e0b, #fbbf24)',
-                  boxShadow: '0 0 12px rgba(98,196,176,0.40)',
+                      ? 'linear-gradient(90deg, var(--ds-color-success), var(--ds-color-primary))'
+                      : 'var(--ds-color-warning)',
+                  boxShadow: '0 0 12px var(--ds-card-border)',
                 }} />
               </div>
-              <p style={{ fontSize: 10, color: 'var(--muted)', lineHeight: 1.5 }}>
+              <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', lineHeight: 1.5 }}>
                 ${(report.total_spend ?? 0).toFixed(0)} gastado de ${budgetPlanned.toFixed(0)} planeado
               </p>
             </div>
 
             {/* Growth rate */}
             <div className="card p-5">
-              <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8 }}>
+              <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8 }}>
                 Crecimiento vs mes anterior
               </p>
               <p style={{
                 fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800,
-                color: (report.growth_rate ?? 0) > 0 ? '#06d6a0' : (report.growth_rate ?? 0) < 0 ? '#fca5a5' : '#a0a8c0',
+                color: (report.growth_rate ?? 0) > 0 ? 'var(--ds-color-success)' : (report.growth_rate ?? 0) < 0 ? 'var(--ds-color-danger)' : '#a0a8c0',
                 lineHeight: 1, marginBottom: 10,
               }}>
                 {(report.growth_rate ?? 0) > 0 ? '+' : ''}{(report.growth_rate ?? 0).toFixed(0)}%
               </p>
-              <p style={{ fontSize: 10, color: 'var(--muted)', lineHeight: 1.5 }}>
+              <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', lineHeight: 1.5 }}>
                 en conversiones totales del mes
               </p>
               {(report.growth_rate ?? 0) > 0 && (
-                <p style={{ fontSize: 10, color: '#06d6a0', marginTop: 6, fontWeight: 600 }}>
+                <p style={{ fontSize: 10, color: 'var(--ds-color-success)', marginTop: 6, fontWeight: 600 }}>
                   📈 Mejoraste vs el mes anterior
                 </p>
               )}
@@ -304,7 +304,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
               <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
                 Rendimiento por fase
               </h2>
-              <p style={{ fontSize: 12, color: 'var(--muted)' }}>
+              <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
                 Cuánto aportó cada fase del funnel al resultado del mes
               </p>
             </div>
@@ -325,10 +325,10 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
                       <span style={{ fontSize: 22 }}>{p.icon}</span>
                       <div>
                         <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 13, fontWeight: 700, color: p.color }}>{p.fullName}</p>
-                        <p style={{ fontSize: 10, color: 'var(--muted)' }}>{p.objective}</p>
+                        <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)' }}>{p.objective}</p>
                       </div>
                     </div>
-                    <p style={{ fontSize: 11, color: 'var(--muted)', fontStyle: 'italic' }}>
+                    <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', fontStyle: 'italic' }}>
                       Sin actividad en esta fase durante el mes
                     </p>
                   </div>
@@ -350,30 +350,30 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
                       }}>{p.icon}</div>
                       <div>
                         <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 13, fontWeight: 700, color: p.color }}>{p.fullName}</p>
-                        <p style={{ fontSize: 10, color: 'var(--muted)' }}>{p.objective}</p>
+                        <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)' }}>{p.objective}</p>
                       </div>
                     </div>
                     <div>
-                      <p style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>Inversión</p>
+                      <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', marginBottom: 2 }}>Inversión</p>
                       <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 800, color: '#fff' }}>
                         ${m.spend.toFixed(0)}
                       </p>
                     </div>
                     <div>
-                      <p style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>Ventas</p>
-                      <p style={{ fontSize: 13, fontWeight: 700, color: '#06d6a0' }}>${m.revenue.toFixed(0)}</p>
+                      <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', marginBottom: 2 }}>Ventas</p>
+                      <p style={{ fontSize: 13, fontWeight: 700, color: 'var(--ds-color-success)' }}>${m.revenue.toFixed(0)}</p>
                     </div>
                     <div>
-                      <p style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>ROAS</p>
+                      <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', marginBottom: 2 }}>ROAS</p>
                       <p style={{
                         fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 800,
-                        color: m.roas >= 3 ? '#06d6a0' : m.roas >= 1.5 ? '#fbbf24' : m.roas > 0 ? '#fca5a5' : 'var(--muted)',
+                        color: m.roas >= 3 ? 'var(--ds-color-success)' : m.roas >= 1.5 ? 'var(--ds-color-warning)' : m.roas > 0 ? 'var(--ds-color-danger)' : 'var(--ds-text-secondary)',
                       }}>
                         {m.roas > 0 ? `${m.roas.toFixed(1)}x` : '—'}
                       </p>
                     </div>
                     <div>
-                      <p style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>Conv.</p>
+                      <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', marginBottom: 2 }}>Conv.</p>
                       <p style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{m.conversions || 0}</p>
                     </div>
                   </div>
@@ -389,15 +389,15 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
                 <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
                   🎯 Próximas acciones recomendadas
                 </h2>
-                <p style={{ fontSize: 12, color: 'var(--muted)' }}>
+                <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
                   Qué hacer el próximo mes basado en este análisis
                 </p>
               </div>
               <div className="space-y-3">
                 {(report.recommendations as any[]).slice(0, 6).map((r, i) => {
-                  const color  = r.priority === 'high' ? '#f9a8d4' : r.priority === 'medium' ? '#fbbf24' : '#8892b0'
-                  const bg     = r.priority === 'high' ? 'rgba(233,30,140,0.06)' : r.priority === 'medium' ? 'rgba(245,158,11,0.06)' : 'rgba(255,255,255,0.025)'
-                  const border = r.priority === 'high' ? 'rgba(233,30,140,0.30)' : r.priority === 'medium' ? 'rgba(245,158,11,0.30)' : 'rgba(255,255,255,0.08)'
+                  const color  = r.priority === 'high' ? 'var(--ds-color-primary)' : r.priority === 'medium' ? 'var(--ds-color-warning)' : '#8892b0'
+                  const bg     = r.priority === 'high' ? 'var(--ds-color-primary-soft)' : r.priority === 'medium' ? 'rgba(245,158,11,0.06)' : 'var(--ds-card-bg)'
+                  const border = r.priority === 'high' ? 'var(--ds-color-primary-border)' : r.priority === 'medium' ? 'var(--ds-color-warning-border)' : 'rgba(255,255,255,0.08)'
                   return (
                     <div key={i} className="p-4 rounded-xl flex items-start gap-3" style={{ background: bg, border: `1px solid ${border}` }}>
                       <span style={{ fontSize: 18, flexShrink: 0 }}>{r.icon}</span>
@@ -405,7 +405,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
                         <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 13, fontWeight: 700, color, marginBottom: 4 }}>
                           {r.title}
                         </p>
-                        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.78)', lineHeight: 1.55, marginBottom: r.action?.href ? 8 : 0 }}>
+                        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', lineHeight: 1.55, marginBottom: r.action?.href ? 8 : 0 }}>
                           {r.description}
                         </p>
                         {r.action?.href && (
@@ -423,29 +423,29 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
 
           {/* ── SECTION G: CAMPAIGN STATS ───────────────────────────── */}
           <div className="card p-5 mb-6 dash-anim-6" style={{
-            background: 'linear-gradient(135deg, rgba(98,196,176,0.06), rgba(233,30,140,0.03))',
-            border: '1px solid rgba(98,196,176,0.18)',
+            background: 'linear-gradient(135deg, transparent, transparent)',
+            border: '1px solid transparent',
           }}>
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <p style={{ fontSize: 11, fontWeight: 700, color: '#62c4b0', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 6 }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ds-color-primary)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 6 }}>
                   🎬 Campañas creadas este mes
                 </p>
                 <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', lineHeight: 1 }}>
                   {report.campaigns_created ?? 0}
                 </p>
-                <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 6 }}>
+                <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', marginTop: 6 }}>
                   {report.campaigns_active ?? 0} activa{(report.campaigns_active ?? 0) !== 1 ? 's' : ''} al cierre del mes
                 </p>
               </div>
               <div>
-                <p style={{ fontSize: 11, fontWeight: 700, color: '#62c4b0', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 6 }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ds-color-primary)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 6 }}>
                   📊 CPA promedio
                 </p>
                 <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', lineHeight: 1 }}>
                   ${(report.avg_cpa ?? 0).toFixed(0)}
                 </p>
-                <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 6 }}>
+                <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', marginTop: 6 }}>
                   Costo promedio por cada conversión generada
                 </p>
               </div>

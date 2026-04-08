@@ -16,14 +16,14 @@ const STEPS = [
     title: 'Completá tu perfil de negocio',
     desc: 'Agregá la info de tu negocio: nombre, industria, colores y tono. La IA usa estos datos para generar mejores copies.',
     action: { label: 'Completar perfil →', href: '/dashboard/settings', external: false },
-    color: '#e91e8c',
+    color: 'var(--ds-color-primary)',
   },
   {
     icon: Sparkles,
     title: 'Creá tu primera campaña con IA',
     desc: 'Describí tu producto y en 20 segundos la IA genera headlines, textos y audiencias optimizadas.',
     action: { label: 'Crear campaña →', href: '/dashboard/create', external: false },
-    color: '#06d6a0',
+    color: 'var(--ds-color-success)',
   },
 ]
 
@@ -53,19 +53,19 @@ export default function OnboardingWizard({ show }: Props) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
          style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(6px)' }}>
       <div className="w-full max-w-md rounded-2xl overflow-hidden shadow-2xl"
-           style={{ background: 'rgba(18,4,10,0.97)', border: '1px solid rgba(98,196,176,0.18)' }}>
+           style={{ background: 'rgba(18,4,10,0.97)', border: '1px solid transparent' }}>
 
         {/* Header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-4">
           <div>
-            <p className="text-xs font-bold tracking-widest uppercase" style={{ color: 'var(--muted)' }}>
+            <p className="text-xs font-bold tracking-widest uppercase" style={{ color: 'var(--ds-text-secondary)' }}>
               Primeros pasos · {step + 1} / {STEPS.length}
             </p>
             <h2 className="text-lg font-bold mt-0.5">Bienvenido a AdFlow 🚀</h2>
           </div>
           <button onClick={dismiss}
             className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors hover:bg-white/5"
-            style={{ color: 'var(--muted)' }}>
+            style={{ color: 'var(--ds-text-secondary)' }}>
             <X size={16} />
           </button>
         </div>
@@ -74,21 +74,21 @@ export default function OnboardingWizard({ show }: Props) {
         <div className="flex items-center gap-2 px-6 pb-5">
           {STEPS.map((_, i) => (
             <div key={i} className="h-1 rounded-full flex-1 transition-all"
-                 style={{ background: i <= step ? 'var(--accent)' : 'rgba(98,196,176,0.20)' }} />
+                 style={{ background: i <= step ? 'var(--ds-color-primary)' : 'var(--ds-card-border)' }} />
           ))}
         </div>
 
         {/* Step content */}
         <div className="px-6 pb-6">
           <div className="flex items-start gap-4 p-5 rounded-2xl mb-6"
-               style={{ background: 'rgba(18,4,10,0.92)', border: '1px solid rgba(98,196,176,0.18)' }}>
+               style={{ background: 'rgba(18,4,10,0.92)', border: '1px solid transparent' }}>
             <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
                  style={{ background: `${current.color}18`, border: `1px solid ${current.color}30` }}>
               <Icon size={22} style={{ color: current.color }} strokeWidth={1.75} />
             </div>
             <div>
               <h3 className="font-semibold text-[15px] mb-1">{current.title}</h3>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>{current.desc}</p>
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--ds-text-secondary)' }}>{current.desc}</p>
             </div>
           </div>
 
@@ -96,7 +96,7 @@ export default function OnboardingWizard({ show }: Props) {
           {step > 0 && (
             <div className="space-y-2 mb-5">
               {STEPS.slice(0, step).map((s, i) => (
-                <div key={i} className="flex items-center gap-2 text-xs" style={{ color: 'var(--accent3)' }}>
+                <div key={i} className="flex items-center gap-2 text-xs" style={{ color: 'var(--ds-color-success)' }}>
                   <CheckCircle2 size={14} /> {s.title}
                 </div>
               ))}

@@ -93,7 +93,7 @@ function QuestionBlock({ number, title, helper, children }: QuestionBlockProps) 
           <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff', lineHeight: 1.3 }}>
             {title}
           </p>
-          <p style={{ fontSize: 11.5, color: 'var(--muted)', marginTop: 2 }}>
+          <p style={{ fontSize: 11.5, color: 'var(--ds-text-secondary)', marginTop: 2 }}>
             {helper}
           </p>
         </div>
@@ -114,7 +114,7 @@ export default function StepDiagnosis({ diagnosis, setDiagField, form, setField,
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 6, letterSpacing: '-0.02em' }}>
           Tu negocio en 30 segundos
         </h2>
-        <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+        <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)' }}>
           Tres preguntas rápidas para que la IA entienda tu situación y diseñe la estrategia perfecta.
         </p>
       </div>
@@ -173,7 +173,7 @@ export default function StepDiagnosis({ diagnosis, setDiagField, form, setField,
           <p className="text-sm font-semibold mb-1" style={{ fontFamily: 'Syne, sans-serif', color: '#fff' }}>
             💬 Tu número de WhatsApp *
           </p>
-          <p className="text-xs mb-3" style={{ color: 'var(--muted)' }}>
+          <p className="text-xs mb-3" style={{ color: 'var(--ds-text-secondary)' }}>
             Con código de país. Los anuncios van a abrir el chat directo con tu negocio.
           </p>
           <input className="input-field" type="tel" placeholder="+549 11 1234-5678"
@@ -220,7 +220,7 @@ export default function StepDiagnosis({ diagnosis, setDiagField, form, setField,
               value={diagnosis.currentRoas}
               onChange={e => setDiagField('currentRoas', e.target.value)}
             />
-            <p className="mt-2 text-xs" style={{ color: 'var(--muted)' }}>
+            <p className="mt-2 text-xs" style={{ color: 'var(--ds-text-secondary)' }}>
               ROAS = retorno por cada peso invertido. CPL = costo por lead conseguido.
             </p>
           </QuestionBlock>

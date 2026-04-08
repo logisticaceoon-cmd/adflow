@@ -23,7 +23,7 @@ const PLANS: Array<{
     key: 'free',
     name: 'Free',
     emoji: '🌱',
-    color: '#62c4b0',
+    color: 'var(--ds-color-primary)',
     priceNum: '0',
     pricePeriod: 'siempre gratis',
     tagline: 'Punto de entrada sin costo',
@@ -41,7 +41,7 @@ const PLANS: Array<{
     key: 'starter',
     name: 'Starter',
     emoji: '⚡',
-    color: '#f472b6',
+    color: 'var(--ds-color-primary)',
     priceNum: '19',
     pricePeriod: '/ mes',
     tagline: 'Para emprendedores con actividad recurrente',
@@ -60,7 +60,7 @@ const PLANS: Array<{
     key: 'pro',
     name: 'Pro',
     emoji: '🚀',
-    color: '#e91e8c',
+    color: 'var(--ds-color-primary)',
     priceNum: '49',
     pricePeriod: '/ mes',
     tagline: 'Para negocios en crecimiento',
@@ -79,7 +79,7 @@ const PLANS: Array<{
     key: 'agency',
     name: 'Agencia',
     emoji: '🏢',
-    color: '#f59e0b',
+    color: 'var(--ds-color-warning)',
     priceNum: '99',
     pricePeriod: '/ mes',
     tagline: 'Para agencias y operaciones multi-cuenta',
@@ -117,7 +117,7 @@ export default async function BillingPage() {
     ? new Date(profile.credits_reset_date).toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })
     : null
 
-  const barColor = remaining === 0 ? '#ef4444' : pct >= 80 ? '#f59e0b' : '#06d6a0'
+  const barColor = remaining === 0 ? 'var(--ds-color-danger)' : pct >= 80 ? 'var(--ds-color-warning)' : 'var(--ds-color-success)'
   const currentPlanData = PLANS.find(p => p.key === currentPlan)!
 
   return (
@@ -125,11 +125,11 @@ export default async function BillingPage() {
 
       {/* ── Header ── */}
       <div className="mb-8 dash-anim-1">
-        <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#e91e8c', marginBottom: 6 }}>
+        <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 6 }}>
           Facturación y plan
         </p>
         <h1 className="page-title mb-1.5">Tu plan AdFlow</h1>
-        <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+        <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)' }}>
           Cada plan incluye créditos mensuales para generación IA. Elegí según tu volumen de producción.
         </p>
       </div>
@@ -137,8 +137,8 @@ export default async function BillingPage() {
       {/* ── Credits summary card ── */}
       <div className="mb-8 dash-anim-2" style={{
         borderRadius: 20, padding: '24px 28px',
-        background: 'linear-gradient(135deg, rgba(234,27,126,0.10) 0%, rgba(98,196,176,0.06) 60%, rgba(234,27,126,0.04) 100%)',
-        border: '1px solid rgba(233,30,140,0.28)',
+        background: 'linear-gradient(135deg, var(--ds-color-primary-soft) 0%, transparent 60%, transparent 100%)',
+        border: '1px solid transparent',
         backdropFilter: 'blur(20px)',
         boxShadow: '0 8px 32px rgba(0,0,0,0.40), 0 0 0 1px rgba(255,255,255,0.04) inset',
         position: 'relative', overflow: 'hidden',
@@ -147,7 +147,7 @@ export default async function BillingPage() {
         <div style={{
           position: 'absolute', top: -60, right: -40,
           width: 240, height: 180, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(233,30,140,0.20) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, var(--ds-color-primary-soft) 0%, transparent 70%)',
           filter: 'blur(30px)', pointerEvents: 'none',
         }} />
 
@@ -156,12 +156,12 @@ export default async function BillingPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
               <div style={{
                 width: 28, height: 28, borderRadius: 8,
-                background: 'rgba(233,30,140,0.18)', border: '1px solid rgba(233,30,140,0.30)',
+                background: 'var(--ds-color-primary-soft)', border: '1px solid var(--ds-color-primary-border)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <CreditCard size={14} style={{ color: '#e91e8c' }} />
+                <CreditCard size={14} style={{ color: 'var(--ds-color-primary)' }} />
               </div>
-              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#f9a8d4' }}>
+              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ds-color-primary)' }}>
                 Créditos este mes
               </span>
             </div>
@@ -169,9 +169,9 @@ export default async function BillingPage() {
               <span style={{ fontSize: 52, fontWeight: 900, letterSpacing: '-0.06em', color: '#ffffff', lineHeight: 1 }}>
                 {remaining}
               </span>
-              <span style={{ fontSize: 18, fontWeight: 400, color: 'var(--muted)' }}>/ {creditsTotal}</span>
+              <span style={{ fontSize: 18, fontWeight: 400, color: 'var(--ds-text-secondary)' }}>/ {creditsTotal}</span>
             </div>
-            <p style={{ fontSize: 12, color: 'var(--muted)' }}>créditos disponibles para generación IA · se renuevan mensualmente</p>
+            <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>créditos disponibles para generación IA · se renuevan mensualmente</p>
           </div>
 
           <div style={{ textAlign: 'right', flexShrink: 0 }}>
@@ -188,7 +188,7 @@ export default async function BillingPage() {
               </span>
             </div>
             {resetDate && (
-              <p style={{ fontSize: 11, color: 'var(--muted)', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 4 }}>
+              <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 4 }}>
                 <RefreshCw size={10} />
                 Resetea el {resetDate}
               </p>
@@ -204,14 +204,14 @@ export default async function BillingPage() {
               width: `${Math.min(100, pct)}%`,
               borderRadius: 99,
               background: remaining === 0
-                ? '#ef4444'
-                : `linear-gradient(90deg, #e91e8c, ${barColor})`,
+                ? 'var(--ds-color-danger)'
+                : `linear-gradient(90deg, var(--ds-color-primary), ${barColor})`,
               boxShadow: `0 0 10px ${barColor}90`,
               transition: 'width 0.7s cubic-bezier(0.16,1,0.3,1)',
             }} />
           </div>
           <div className="flex justify-between mt-2">
-            <span style={{ fontSize: 11, color: 'var(--muted)' }}>{pct}% usado este mes</span>
+            <span style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>{pct}% usado este mes</span>
             <span style={{ fontSize: 11, fontWeight: 700, color: barColor }}>
               {remaining === 0 ? '⚠ Sin créditos · mejorá tu plan' : remaining <= creditsTotal * 0.2 ? `⚠ Quedan ${remaining} créditos` : `${remaining} disponibles`}
             </span>
@@ -223,7 +223,7 @@ export default async function BillingPage() {
       <div className="dash-anim-3">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
           <h2 className="section-title">Elegí tu plan</h2>
-          <p style={{ fontSize: 12, color: 'var(--muted)' }}>Todos los planes incluyen acceso completo al generador de IA</p>
+          <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>Todos los planes incluyen acceso completo al generador de IA</p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
@@ -244,17 +244,17 @@ export default async function BillingPage() {
                   transition: 'transform 0.25s ease, box-shadow 0.25s ease',
                   // Featured card is the Pro plan — always stands out
                   background: plan.featured
-                    ? 'linear-gradient(145deg, rgba(234,27,126,0.13) 0%, rgba(98,196,176,0.07) 60%, rgba(14,4,8,0.95) 100%)'
+                    ? 'linear-gradient(145deg, transparent 0%, transparent 60%, rgba(14,4,8,0.95) 100%)'
                     : isCurrent
                       ? `linear-gradient(145deg, ${plan.color}0e 0%, rgba(14,4,8,0.92) 100%)`
                       : 'linear-gradient(145deg, rgba(18,4,10,0.92) 0%, rgba(12,3,7,0.96) 100%)',
                   border: plan.featured
-                    ? '1.5px solid rgba(233,30,140,0.55)'
+                    ? '1.5px solid var(--ds-color-primary-border)'
                     : isCurrent
                       ? `1.5px solid ${plan.color}45`
                       : '1px solid rgba(255,255,255,0.09)',
                   boxShadow: plan.featured
-                    ? '0 0 48px rgba(233,30,140,0.22), 0 20px 60px rgba(0,0,0,0.60), 0 1px 0 rgba(255,255,255,0.07) inset'
+                    ? '0 0 48px transparent, 0 20px 60px rgba(0,0,0,0.60), 0 1px 0 rgba(255,255,255,0.07) inset'
                     : isCurrent
                       ? `0 0 28px ${plan.color}18, 0 12px 40px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.05) inset`
                       : '0 8px 32px rgba(0,0,0,0.40), 0 1px 0 rgba(255,255,255,0.04) inset',
@@ -275,7 +275,7 @@ export default async function BillingPage() {
                 <div style={{
                   position: 'absolute', top: 0, left: 0, right: 0, height: 1,
                   background: plan.featured
-                    ? 'linear-gradient(90deg, transparent, rgba(234,27,126,0.60), rgba(98,196,176,0.40), transparent)'
+                    ? 'linear-gradient(90deg, transparent, transparent, var(--ds-card-border), transparent)'
                     : `linear-gradient(90deg, transparent, ${plan.color}30, transparent)`,
                   pointerEvents: 'none',
                 }} />
@@ -287,10 +287,10 @@ export default async function BillingPage() {
                       display: 'inline-flex', alignItems: 'center', gap: 4,
                       fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
                       padding: '4px 10px', borderRadius: 99,
-                      background: 'linear-gradient(135deg, rgba(234,27,126,0.28), rgba(98,196,176,0.18))',
-                      color: '#f9a8d4',
-                      border: '1px solid rgba(233,30,140,0.45)',
-                      boxShadow: '0 0 12px rgba(233,30,140,0.25)',
+                      background: 'linear-gradient(135deg, transparent, transparent)',
+                      color: 'var(--ds-color-primary)',
+                      border: '1px solid var(--ds-color-primary-border)',
+                      boxShadow: '0 0 12px var(--ds-color-primary-border)',
                     }}>
                       <Star size={9} fill="currentColor" /> Más popular
                     </div>
@@ -322,11 +322,11 @@ export default async function BillingPage() {
                   <div>
                     <p style={{
                       fontSize: 18, fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em', lineHeight: 1.2,
-                      textShadow: plan.featured ? '0 0 20px rgba(233,30,140,0.30)' : 'none',
+                      textShadow: plan.featured ? '0 0 20px var(--ds-color-primary-border)' : 'none',
                     }}>
                       {plan.name}
                     </p>
-                    <p style={{ fontSize: 12, color: 'var(--muted)', marginTop: 3 }}>{plan.tagline}</p>
+                    <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginTop: 3 }}>{plan.tagline}</p>
                   </div>
                 </div>
 
@@ -340,7 +340,7 @@ export default async function BillingPage() {
                     </div>
                   ) : (
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-                      <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--muted)', alignSelf: 'flex-start', marginTop: 8 }}>USD</span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ds-text-secondary)', alignSelf: 'flex-start', marginTop: 8 }}>USD</span>
                       <span style={{
                         fontSize: 46, fontWeight: 900, letterSpacing: '-0.06em', lineHeight: 1,
                         color: plan.featured ? '#ffffff' : plan.color,
@@ -348,7 +348,7 @@ export default async function BillingPage() {
                       }}>
                         {plan.priceNum}
                       </span>
-                      <span style={{ fontSize: 14, color: 'var(--muted)', marginBottom: 4, alignSelf: 'flex-end' }}>
+                      <span style={{ fontSize: 14, color: 'var(--ds-text-secondary)', marginBottom: 4, alignSelf: 'flex-end' }}>
                         {plan.pricePeriod}
                       </span>
                     </div>
@@ -359,30 +359,30 @@ export default async function BillingPage() {
                 <div style={{
                   padding: '14px 16px', borderRadius: 14, marginBottom: 18,
                   background: plan.featured
-                    ? 'rgba(233,30,140,0.12)'
+                    ? 'var(--ds-color-primary-soft)'
                     : `${plan.color}0d`,
                   border: plan.featured
-                    ? '1px solid rgba(233,30,140,0.30)'
+                    ? '1px solid var(--ds-color-primary-border)'
                     : `1px solid ${plan.color}22`,
                   position: 'relative', zIndex: 1,
                 }}>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 6 }}>
                     <span style={{
                       fontSize: 28, fontWeight: 900, letterSpacing: '-0.04em',
-                      color: plan.featured ? '#f9a8d4' : plan.color,
-                      textShadow: plan.featured ? '0 0 16px rgba(233,30,140,0.50)' : 'none',
+                      color: plan.featured ? 'var(--ds-color-primary)' : plan.color,
+                      textShadow: plan.featured ? '0 0 16px var(--ds-color-primary-border)' : 'none',
                     }}>
                       {PLAN_CREDITS[plan.key]}
                     </span>
-                    <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--muted)' }}>créditos / mes</span>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ds-text-secondary)' }}>créditos / mes</span>
                   </div>
-                  <p style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.55 }}>
+                  <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', lineHeight: 1.55 }}>
                     {plan.creditExplain}
                   </p>
                 </div>
 
                 {/* Ideal for */}
-                <p style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 16, fontStyle: 'italic', position: 'relative', zIndex: 1 }}>
+                <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', marginBottom: 16, fontStyle: 'italic', position: 'relative', zIndex: 1 }}>
                   {plan.ideal}
                 </p>
 
@@ -402,7 +402,7 @@ export default async function BillingPage() {
                       }}>
                         <Check size={9} style={{ color: plan.color }} />
                       </div>
-                      <span style={{ color: 'var(--muted)', lineHeight: 1.5 }}>{f}</span>
+                      <span style={{ color: 'var(--ds-text-secondary)', lineHeight: 1.5 }}>{f}</span>
                     </li>
                   ))}
                 </ul>
@@ -420,7 +420,7 @@ export default async function BillingPage() {
                     </div>
                   ) : isDowngrade ? (
                     <div style={{
-                      textAlign: 'center', fontSize: 12, color: 'var(--muted)',
+                      textAlign: 'center', fontSize: 12, color: 'var(--ds-text-secondary)',
                       padding: '12px', borderRadius: 12,
                       background: 'rgba(255,255,255,0.03)',
                       border: '1px solid rgba(255,255,255,0.08)',
@@ -436,12 +436,12 @@ export default async function BillingPage() {
                         display: 'block', textAlign: 'center',
                         padding: '13px 20px', borderRadius: 13,
                         background: plan.featured
-                          ? 'linear-gradient(135deg, #e91e8c, #c5006a)'
+                          ? 'var(--ds-color-primary)'
                           : `linear-gradient(135deg, ${plan.color}dd, ${plan.color})`,
                         color: '#fff', fontSize: 14, fontWeight: 700,
                         textDecoration: 'none',
                         boxShadow: plan.featured
-                          ? '0 0 28px rgba(233,30,140,0.50), 0 4px 16px rgba(0,0,0,0.40)'
+                          ? '0 0 28px var(--ds-color-primary-border), 0 4px 16px rgba(0,0,0,0.40)'
                           : `0 4px 16px ${plan.color}38`,
                         letterSpacing: '-0.01em',
                         position: 'relative', overflow: 'hidden',
@@ -465,10 +465,10 @@ export default async function BillingPage() {
 
       {/* ── Footer note ── */}
       <div className="dash-anim-4" style={{ textAlign: 'center', marginTop: 36 }}>
-        <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 6 }}>
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 6 }}>
           Los pagos se procesan de forma manual vía WhatsApp. Te contactamos en menos de 24hs.
         </p>
-        <p style={{ fontSize: 11, color: 'var(--muted)' }}>
+        <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>
           Los créditos se renuevan el primer día de cada mes · Sin contrato de permanencia · Cambiás de plan cuando quieras
         </p>
       </div>

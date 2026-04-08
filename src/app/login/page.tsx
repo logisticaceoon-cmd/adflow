@@ -100,7 +100,7 @@ export default function LoginPage() {
       <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 400 }}>
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 32 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 13, background: 'linear-gradient(135deg, #e91e8c, #c5006a)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, boxShadow: '0 0 32px rgba(233,30,140,0.55), 0 0 64px rgba(233,30,140,0.20)' }}>⚡</div>
+          <div style={{ width: 44, height: 44, borderRadius: 13, background: 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, boxShadow: '0 0 32px rgba(233,30,140,0.55), 0 0 64px rgba(233,30,140,0.20)' }}>⚡</div>
           <span style={{ fontSize: 26, fontWeight: 800, color: '#f0f0ff', letterSpacing: '-0.5px', textShadow: '0 0 20px rgba(255,255,255,0.12)' }}>AdFlow</span>
         </div>
 
@@ -122,7 +122,7 @@ export default function LoginPage() {
           </h1>
           <p style={{ color: '#7a7a9a', fontSize: 13, textAlign: 'center', marginBottom: 24 }}>
             ¿No tenés cuenta?{' '}
-            <Link href="/register" style={{ color: '#e91e8c', fontWeight: 600, textDecoration: 'none' }}>
+            <Link href="/register" style={{ color: 'var(--ds-color-primary)', fontWeight: 600, textDecoration: 'none' }}>
               Registrate gratis
             </Link>
           </p>
@@ -159,7 +159,7 @@ export default function LoginPage() {
               type="submit" disabled={loading}
               style={{
                 width: '100%', padding: '13px', borderRadius: 12, border: 'none', minHeight: 44,
-                background: loading ? 'rgba(233,30,140,0.6)' : 'linear-gradient(135deg, #e91e8c, #c5006a)',
+                background: loading ? 'rgba(233,30,140,0.6)' : 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))',
                 color: '#fff', fontSize: 14, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                 boxShadow: loading ? 'none' : '0 0 32px rgba(233,30,140,0.50), 0 0 64px rgba(233,30,140,0.18)',

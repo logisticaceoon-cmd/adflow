@@ -130,7 +130,7 @@ export default function Sidebar({ user, profile }: Props) {
   const creditsPlenty    = !creditsLow && creditsPct < 50
 
   const planLabel = resolvedPlan === 'pro' ? 'Pro' : resolvedPlan === 'agency' ? 'Agencia' : resolvedPlan === 'starter' ? 'Starter' : 'Free'
-  const planColor = resolvedPlan === 'pro' ? '#e91e8c' : resolvedPlan === 'agency' ? '#f59e0b' : resolvedPlan === 'starter' ? '#f472b6' : '#62c4b0'
+  const planColor = resolvedPlan === 'pro' ? 'var(--ds-color-primary)' : resolvedPlan === 'agency' ? '#f59e0b' : resolvedPlan === 'starter' ? 'var(--ds-color-primary)' : 'var(--ds-color-primary)'
 
   // Growth score
   const growthScore = hasPixel
@@ -175,7 +175,7 @@ export default function Sidebar({ user, profile }: Props) {
 
   const barGrad = creditsRemaining === 0 ? '#ef4444, #ef4444'
     : creditsPct >= 80 ? '#f59e0b, #ef8c22'
-    : '#e91e8c, #62c4b0'
+    : 'var(--ds-color-primary), var(--ds-color-primary)'
 
   return (
     <>
@@ -404,21 +404,21 @@ export default function Sidebar({ user, profile }: Props) {
                 background: creditsLow
                   ? 'linear-gradient(135deg, rgba(239,68,68,0.14) 0%, rgba(220,38,38,0.07) 100%)'
                   : creditsPlenty
-                    ? 'linear-gradient(135deg, rgba(234,27,126,0.14) 0%, rgba(98,196,176,0.08) 100%)'
-                    : 'linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(234,27,126,0.04) 100%)',
+                    ? 'linear-gradient(135deg, var(--ds-color-primary-soft) 0%, transparent 100%)'
+                    : 'linear-gradient(135deg, rgba(245,158,11,0.10) 0%, transparent 100%)',
                 border: creditsLow
                   ? '1px solid rgba(239,68,68,0.40)'
                   : creditsPlenty
                     ? '1.5px solid transparent'
                     : '1px solid rgba(245,158,11,0.30)',
                 backgroundImage: creditsPlenty
-                  ? 'linear-gradient(rgba(10,3,6,0.8), rgba(6,8,6,0.8)), linear-gradient(135deg, #e91e8c, #62c4b0)'
+                  ? 'linear-gradient(rgba(10,3,6,0.8), rgba(6,8,6,0.8)), linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))'
                   : undefined,
                 backgroundOrigin: creditsPlenty ? 'border-box' : undefined,
                 backgroundClip: creditsPlenty ? 'padding-box, border-box' : undefined,
                 boxShadow: creditsLow
                   ? '0 4px 16px rgba(239,68,68,0.14), 0 1px 0 rgba(255,255,255,0.05) inset'
-                  : '0 4px 20px rgba(234,27,126,0.18), 0 1px 0 rgba(255,255,255,0.06) inset',
+                  : '0 4px 20px var(--ds-color-primary-soft), 0 1px 0 rgba(255,255,255,0.06) inset',
                 cursor: 'pointer',
                 position: 'relative', overflow: 'hidden',
                 transition: 'all 0.2s ease',
@@ -427,13 +427,13 @@ export default function Sidebar({ user, profile }: Props) {
                   position: 'absolute', top: 0, left: 0, right: 0, height: 1,
                   background: creditsLow
                     ? 'linear-gradient(90deg, transparent, rgba(239,68,68,0.55), transparent)'
-                    : 'linear-gradient(90deg, transparent, rgba(234,27,126,0.60), rgba(98,196,176,0.35), transparent)',
+                    : 'linear-gradient(90deg, transparent, transparent, transparent, transparent)',
                   pointerEvents: 'none',
                 }} />
 
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-1.5">
-                    <Zap size={10} style={{ color: creditsLow ? '#fca5a5' : '#f9a8d4' }} strokeWidth={2.2} />
+                    <Zap size={10} style={{ color: creditsLow ? '#fca5a5' : 'var(--ds-color-primary)' }} strokeWidth={2.2} />
                     <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.10em', textTransform: 'uppercase', color: creditsLow ? '#fca5a5' : '#d0d0f0' }}>
                       Créditos IA
                     </span>
@@ -460,7 +460,7 @@ export default function Sidebar({ user, profile }: Props) {
                     width: `${Math.min(100, creditsPct)}%`,
                     borderRadius: 99,
                     background: `linear-gradient(90deg, ${barGrad})`,
-                    boxShadow: creditsLow ? '0 0 8px #ef444490' : '0 0 10px rgba(234,27,126,0.70)',
+                    boxShadow: creditsLow ? '0 0 8px #ef444490' : '0 0 10px transparent',
                     transition: 'width 0.6s cubic-bezier(0.16,1,0.3,1)',
                   }} />
                 </div>
@@ -481,7 +481,7 @@ export default function Sidebar({ user, profile }: Props) {
 
           {/* ── SECTION: CUENTA ── */}
           <div className="mt-auto pt-4 flex flex-col gap-0.5">
-            <div style={{ height: 1, background: 'rgba(98,196,176,0.08)', marginBottom: 10 }} />
+            <div style={{ height: 1, background: 'transparent', marginBottom: 10 }} />
             <p className="section-label px-2 pb-2">Cuenta</p>
 
             {accountItems.map(({ href, icon: Icon, label }) => {
@@ -492,8 +492,8 @@ export default function Sidebar({ user, profile }: Props) {
                 >
                   <Icon size={16} strokeWidth={active ? 2.2 : 1.75}
                     style={{
-                      color: active ? '#e91e8c' : '#8892b0',
-                      filter: active ? 'drop-shadow(0 0 5px rgba(233,30,140,0.55))' : 'none',
+                      color: active ? 'var(--ds-color-primary)' : '#8892b0',
+                      filter: active ? 'drop-shadow(0 0 5px transparent)' : 'none',
                       flexShrink: 0,
                     }} />
                   <span style={{ fontSize: 13, color: active ? '#ffffff' : '#a0a8c0' }}>{label}</span>
@@ -503,8 +503,8 @@ export default function Sidebar({ user, profile }: Props) {
 
             {(profile?.role === 'admin' || profile?.role === 'super_admin') && (
               <Link href="/admin" onClick={close} className="nav-item nav-item-inactive">
-                <Shield size={16} strokeWidth={1.75} style={{ color: '#62c4b0', flexShrink: 0 }} />
-                <span style={{ fontSize: 13, color: '#62c4b0' }}>Panel Admin</span>
+                <Shield size={16} strokeWidth={1.75} style={{ color: 'var(--ds-color-primary)', flexShrink: 0 }} />
+                <span style={{ fontSize: 13, color: 'var(--ds-color-primary)' }}>Panel Admin</span>
               </Link>
             )}
 
@@ -519,7 +519,7 @@ export default function Sidebar({ user, profile }: Props) {
         <div
           className="px-3 py-3 flex items-center gap-2.5"
           style={{
-            borderTop: '1px solid rgba(98,196,176,0.10)',
+            borderTop: '1px solid transparent',
             position: 'relative', zIndex: 1,
             background: 'rgba(0,0,0,0.35)',
           }}
@@ -527,8 +527,8 @@ export default function Sidebar({ user, profile }: Props) {
           <div
             className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
             style={{
-              background: 'linear-gradient(135deg, #e91e8c, #c5006a)',
-              boxShadow: '0 0 16px rgba(233,30,140,0.50), 0 0 32px rgba(233,30,140,0.18)',
+              background: 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))',
+              boxShadow: '0 0 16px transparent, 0 0 32px var(--ds-color-primary-soft)',
               fontSize: 11, fontWeight: 700, color: '#fff',
             }}
           >

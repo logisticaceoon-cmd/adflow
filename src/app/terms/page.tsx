@@ -32,7 +32,7 @@ export default function TermsPage() {
       }}>
         <div style={{ maxWidth: 800, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 56 }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
-            <div style={{ width: 30, height: 30, borderRadius: 8, background: 'linear-gradient(135deg, #ea1b7e, #c5006a)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: 30, height: 30, borderRadius: 8, background: 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Zap size={14} color="#fff" />
             </div>
             <span style={{ fontSize: 17, fontWeight: 700, color: '#fff' }}>AdFlow</span>
@@ -86,7 +86,7 @@ export default function TermsPage() {
               <ul style={{ paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <li>Proveer información veraz durante el registro y uso del servicio.</li>
                 <li>Usar la plataforma únicamente con cuentas publicitarias de Meta de las que sos titular o tenés autorización expresa para administrar.</li>
-                <li>No publicar anuncios que violen las <a href="https://www.facebook.com/policies/ads/" target="_blank" rel="noopener noreferrer" style={{ color: '#e91e8c' }}>Políticas de publicidad de Meta</a>.</li>
+                <li>No publicar anuncios que violen las <a href="https://www.facebook.com/policies/ads/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--ds-color-primary)' }}>Políticas de publicidad de Meta</a>.</li>
                 <li>No intentar revertir, copiar o extraer el código fuente de AdFlow.</li>
                 <li>No usar la plataforma para fines ilegales, fraudulentos o que dañen a terceros.</li>
                 <li>No compartir tus credenciales de acceso con otros usuarios.</li>
@@ -163,7 +163,7 @@ export default function TermsPage() {
           {section('11. Contacto', (
             <p>
               Para consultas sobre estos Términos, contactanos en{' '}
-              <a href="mailto:logisticaceoon@gmail.com" style={{ color: '#e91e8c', fontWeight: 600 }}>logisticaceoon@gmail.com</a>.
+              <a href="mailto:logisticaceoon@gmail.com" style={{ color: 'var(--ds-color-primary)', fontWeight: 600 }}>logisticaceoon@gmail.com</a>.
             </p>
           ))}
         </div>

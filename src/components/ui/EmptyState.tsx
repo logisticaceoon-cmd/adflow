@@ -31,14 +31,14 @@ export default function EmptyState({
     const baseStyle = primary
       ? {
           display: 'inline-flex', alignItems: 'center', gap: 8,
-          background: 'linear-gradient(135deg, #e91e8c, #c5006a)',
+          background: 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))',
           color: '#fff', fontSize: 13, fontWeight: 800,
           padding: '11px 22px', borderRadius: 99,
-          boxShadow: '0 8px 24px rgba(233,30,140,0.40), 0 0 24px rgba(233,30,140,0.18)',
+          boxShadow: '0 8px 24px transparent, 0 0 24px var(--ds-color-primary-soft)',
           textDecoration: 'none', cursor: 'pointer', border: 'none',
         }
       : {
-          fontSize: 12, fontWeight: 600, color: 'var(--muted)',
+          fontSize: 12, fontWeight: 600, color: 'var(--ds-text-secondary)',
           textDecoration: 'underline', textDecorationColor: 'rgba(255,255,255,0.15)',
           cursor: 'pointer', background: 'none', border: 'none',
         }
@@ -53,14 +53,14 @@ export default function EmptyState({
     <div style={{
       padding,
       borderRadius: 18,
-      background: 'radial-gradient(ellipse at 50% 0%, rgba(233,30,140,0.06), rgba(255,255,255,0.01) 60%)',
+      background: 'radial-gradient(ellipse at 50% 0%, var(--ds-color-primary-soft), rgba(255,255,255,0.01) 60%)',
       border: '1px dashed rgba(255,255,255,0.10)',
       textAlign: 'center',
     }}>
       <div style={{
         fontSize: iconSize,
         marginBottom: isCompact ? 8 : 14,
-        filter: 'drop-shadow(0 0 16px rgba(233,30,140,0.25))',
+        filter: 'drop-shadow(0 0 16px transparent)',
         lineHeight: 1,
       }}>
         {icon}
@@ -75,7 +75,7 @@ export default function EmptyState({
       </h3>
       <p style={{
         fontSize: isCompact ? 12 : 13,
-        color: 'var(--muted)',
+        color: 'var(--ds-text-secondary)',
         lineHeight: 1.5,
         maxWidth: 420,
         margin: '0 auto',

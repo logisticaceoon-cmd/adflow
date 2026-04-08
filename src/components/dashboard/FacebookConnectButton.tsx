@@ -31,10 +31,10 @@ export default function FacebookConnectButton({ initialConnected, accountName }:
             📣
           </div>
           <div>
-            <p className="text-xs font-semibold tracking-wider uppercase" style={{ color: 'var(--muted)' }}>
+            <p className="text-xs font-semibold tracking-wider uppercase" style={{ color: 'var(--ds-text-secondary)' }}>
               Facebook Ads conectado
             </p>
-            <p className="text-sm font-medium" style={{ color: 'var(--accent3)' }}>
+            <p className="text-sm font-medium" style={{ color: 'var(--ds-color-success)' }}>
               ● {currentName || 'Cuenta conectada'}
             </p>
           </div>
@@ -45,8 +45,8 @@ export default function FacebookConnectButton({ initialConnected, accountName }:
           className="text-xs px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50"
           style={{
             background: 'rgba(239,68,68,0.1)',
-            border: '1px solid rgba(239,68,68,0.25)',
-            color: 'var(--danger)',
+            border: '1px solid var(--ds-color-danger-border)',
+            color: 'var(--ds-color-danger)',
           }}
         >
           {disconnecting ? 'Desconectando...' : 'Desconectar'}
@@ -59,14 +59,14 @@ export default function FacebookConnectButton({ initialConnected, accountName }:
     <div className="card p-4 flex items-center justify-between gap-4">
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0"
-             style={{ background: 'rgba(233,30,140,0.1)', border: '1px solid rgba(233,30,140,0.2)' }}>
+             style={{ background: 'transparent', border: '1px solid transparent' }}>
           📣
         </div>
         <div>
-          <p className="text-xs font-semibold tracking-wider uppercase" style={{ color: 'var(--muted)' }}>
+          <p className="text-xs font-semibold tracking-wider uppercase" style={{ color: 'var(--ds-text-secondary)' }}>
             Facebook Ads
           </p>
-          <p className="text-xs" style={{ color: 'var(--muted)' }}>
+          <p className="text-xs" style={{ color: 'var(--ds-text-secondary)' }}>
             Conectá tu cuenta para publicar campañas
           </p>
         </div>

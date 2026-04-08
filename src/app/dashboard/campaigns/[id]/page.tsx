@@ -13,22 +13,22 @@ import { ChevronRight } from 'lucide-react'
 
 // ── Status palette ────────────────────────────────────────────────────────
 const STATUS_GRADIENTS: Record<string, { from: string; to: string; main: string; label: string; emoji: string }> = {
-  active:    { from: 'rgba(34,197,94,0.18)',  to: 'rgba(34,197,94,0.04)',  main: '#22c55e', label: 'Activa',    emoji: '●' },
-  paused:    { from: 'rgba(245,158,11,0.18)', to: 'rgba(245,158,11,0.04)', main: '#f59e0b', label: 'Pausada',   emoji: '⏸' },
+  active:    { from: 'var(--ds-color-success-soft)',  to: 'var(--ds-color-success-soft)',  main: 'var(--ds-color-success)', label: 'Activa',    emoji: '●' },
+  paused:    { from: 'var(--ds-color-warning-soft)', to: 'rgba(245,158,11,0.04)', main: 'var(--ds-color-warning)', label: 'Pausada',   emoji: '⏸' },
   draft:     { from: 'rgba(148,163,184,0.18)',to: 'rgba(148,163,184,0.04)',main: '#94a3b8', label: 'Borrador',  emoji: '📝' },
-  error:     { from: 'rgba(239,68,68,0.18)',  to: 'rgba(239,68,68,0.04)',  main: '#ef4444', label: 'Error',     emoji: '⚠' },
+  error:     { from: 'var(--ds-color-danger-border)',  to: 'rgba(239,68,68,0.04)',  main: 'var(--ds-color-danger)', label: 'Error',     emoji: '⚠' },
   completed: { from: 'rgba(148,163,184,0.18)',to: 'rgba(148,163,184,0.04)',main: '#94a3b8', label: 'Completada',emoji: '✓' },
 }
 
 const PHASE_COLORS: Record<string, { color: string; label: string }> = {
   F1: { color: '#3b82f6', label: 'F1 · Reconocimiento' },
-  F2: { color: '#22c55e', label: 'F2 · Conversión' },
+  F2: { color: 'var(--ds-color-success)', label: 'F2 · Conversión' },
   F3: { color: '#a855f7', label: 'F3 · Remarketing' },
   F4: { color: '#06b6d4', label: 'F4 · WhatsApp' },
 }
 
 const STRATEGY_COLORS: Record<string, string> = {
-  TOFU: '#3b82f6', MOFU: '#a855f7', BOFU: '#22c55e',
+  TOFU: '#3b82f6', MOFU: '#a855f7', BOFU: 'var(--ds-color-success)',
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -64,34 +64,34 @@ function generateCampaignInsight(metrics: CampaignMetrics | null | undefined): {
     }
   }
   const roas = metrics.roas || 0
-  if (roas >= 3) return { msg: `Esta campaña está funcionando excelente con un ROAS de ${roas.toFixed(1)}x. Considerá escalar el presupuesto un 15-20% para maximizar resultados.`, color: '#22c55e', icon: '🔥' }
-  if (roas >= 2) return { msg: `Buen rendimiento con ROAS de ${roas.toFixed(1)}x. Los números son saludables. Monitoreá los próximos días antes de escalar.`, color: '#22c55e', icon: '✅' }
-  if (roas >= 1) return { msg: `La campaña está en punto de equilibrio (ROAS ${roas.toFixed(1)}x). Probá cambiar creativos o ajustar la audiencia para mejorar.`, color: '#f59e0b', icon: '⚠️' }
-  if (roas > 0)  return { msg: `ROAS por debajo del equilibrio (${roas.toFixed(1)}x). Evaluá pausar esta campaña y redistribuir el presupuesto a las que mejor funcionan.`, color: '#ef4444', icon: '🔴' }
+  if (roas >= 3) return { msg: `Esta campaña está funcionando excelente con un ROAS de ${roas.toFixed(1)}x. Considerá escalar el presupuesto un 15-20% para maximizar resultados.`, color: 'var(--ds-color-success)', icon: '🔥' }
+  if (roas >= 2) return { msg: `Buen rendimiento con ROAS de ${roas.toFixed(1)}x. Los números son saludables. Monitoreá los próximos días antes de escalar.`, color: 'var(--ds-color-success)', icon: '✅' }
+  if (roas >= 1) return { msg: `La campaña está en punto de equilibrio (ROAS ${roas.toFixed(1)}x). Probá cambiar creativos o ajustar la audiencia para mejorar.`, color: 'var(--ds-color-warning)', icon: '⚠️' }
+  if (roas > 0)  return { msg: `ROAS por debajo del equilibrio (${roas.toFixed(1)}x). Evaluá pausar esta campaña y redistribuir el presupuesto a las que mejor funcionan.`, color: 'var(--ds-color-danger)', icon: '🔴' }
   return { msg: 'Sin datos de ROAS todavía. Dale tiempo al algoritmo de Meta para optimizar.', color: '#94a3b8', icon: '⏳' }
 }
 
 function getCampaignRecommendations(metrics: CampaignMetrics | null | undefined): Array<{ icon: string; title: string; desc: string; color: string }> {
   const recs: Array<{ icon: string; title: string; desc: string; color: string }> = []
   if (!metrics?.spend) {
-    recs.push({ icon: '▶', title: 'Activá la campaña', desc: 'Todavía no tiene datos. Activala para empezar a recopilar resultados.', color: '#22c55e' })
+    recs.push({ icon: '▶', title: 'Activá la campaña', desc: 'Todavía no tiene datos. Activala para empezar a recopilar resultados.', color: 'var(--ds-color-success)' })
     return recs
   }
   const roas = metrics.roas || 0
   const ctr = metrics.ctr || 0
-  if (roas >= 3) recs.push({ icon: '📈', title: 'Escalá el presupuesto', desc: `Con ROAS de ${roas.toFixed(1)}x, podés invertir más y obtener más ventas. Subí entre 15% y 20%.`, color: '#22c55e' })
-  if (ctr > 0 && ctr < 1) recs.push({ icon: '🖼', title: 'Mejorá los creativos', desc: `Tu CTR es de ${ctr.toFixed(2)}%, por debajo del promedio. Probá imágenes o copies diferentes.`, color: '#f59e0b' })
-  if (roas > 0 && roas < 1.5) recs.push({ icon: '⏸', title: 'Considerá pausar', desc: `El ROAS (${roas.toFixed(1)}x) está por debajo del equilibrio. Redistribuí el presupuesto a campañas más rentables.`, color: '#ef4444' })
-  if ((metrics.frequency || 0) > 3.5) recs.push({ icon: '🔄', title: 'Frecuencia alta — saturación', desc: `La frecuencia es ${(metrics.frequency || 0).toFixed(1)}. Tu audiencia está viendo mucho los mismos anuncios. Refrescá creativos.`, color: '#f59e0b' })
-  if (recs.length === 0) recs.push({ icon: '✅', title: 'Todo en orden', desc: 'No detectamos acciones urgentes. Seguí monitoreando las métricas diariamente.', color: '#22c55e' })
+  if (roas >= 3) recs.push({ icon: '📈', title: 'Escalá el presupuesto', desc: `Con ROAS de ${roas.toFixed(1)}x, podés invertir más y obtener más ventas. Subí entre 15% y 20%.`, color: 'var(--ds-color-success)' })
+  if (ctr > 0 && ctr < 1) recs.push({ icon: '🖼', title: 'Mejorá los creativos', desc: `Tu CTR es de ${ctr.toFixed(2)}%, por debajo del promedio. Probá imágenes o copies diferentes.`, color: 'var(--ds-color-warning)' })
+  if (roas > 0 && roas < 1.5) recs.push({ icon: '⏸', title: 'Considerá pausar', desc: `El ROAS (${roas.toFixed(1)}x) está por debajo del equilibrio. Redistribuí el presupuesto a campañas más rentables.`, color: 'var(--ds-color-danger)' })
+  if ((metrics.frequency || 0) > 3.5) recs.push({ icon: '🔄', title: 'Frecuencia alta — saturación', desc: `La frecuencia es ${(metrics.frequency || 0).toFixed(1)}. Tu audiencia está viendo mucho los mismos anuncios. Refrescá creativos.`, color: 'var(--ds-color-warning)' })
+  if (recs.length === 0) recs.push({ icon: '✅', title: 'Todo en orden', desc: 'No detectamos acciones urgentes. Seguí monitoreando las métricas diariamente.', color: 'var(--ds-color-success)' })
   return recs
 }
 
 // ── Metric color rules ────────────────────────────────────────────────────
 function colorForMetric(key: string, value: number): string {
-  if (key === 'roas') return value >= 3 ? '#22c55e' : value >= 1.5 ? '#f59e0b' : value > 0 ? '#ef4444' : '#94a3b8'
-  if (key === 'ctr')  return value >= 2 ? '#22c55e' : value >= 1 ? '#f59e0b' : value > 0 ? '#ef4444' : '#94a3b8'
-  if (key === 'frequency') return value > 0 && value <= 3 ? '#22c55e' : value <= 3.5 ? '#f59e0b' : value > 0 ? '#ef4444' : '#94a3b8'
+  if (key === 'roas') return value >= 3 ? 'var(--ds-color-success)' : value >= 1.5 ? 'var(--ds-color-warning)' : value > 0 ? 'var(--ds-color-danger)' : '#94a3b8'
+  if (key === 'ctr')  return value >= 2 ? 'var(--ds-color-success)' : value >= 1 ? 'var(--ds-color-warning)' : value > 0 ? 'var(--ds-color-danger)' : '#94a3b8'
+  if (key === 'frequency') return value > 0 && value <= 3 ? 'var(--ds-color-success)' : value <= 3.5 ? 'var(--ds-color-warning)' : value > 0 ? 'var(--ds-color-danger)' : '#94a3b8'
   return '#fff'
 }
 
@@ -226,11 +226,11 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
       <div className="dash-anim-1 flex items-center gap-2 mb-5">
         <Link href="/dashboard/campaigns"
           className="text-sm transition-opacity hover:opacity-80"
-          style={{ color: 'var(--muted)' }}>
+          style={{ color: 'var(--ds-text-secondary)' }}>
           Campañas
         </Link>
-        <ChevronRight size={14} style={{ color: 'var(--border)' }} />
-        <span className="text-sm truncate max-w-md" style={{ color: 'var(--text)' }}>{campaign.name}</span>
+        <ChevronRight size={14} style={{ color: 'var(--ds-card-border)' }} />
+        <span className="text-sm truncate max-w-md" style={{ color: 'var(--ds-text-primary)' }}>{campaign.name}</span>
       </div>
 
       {/* ─── SECCIÓN A: HERO ─────────────────────────────────────────── */}
@@ -288,7 +288,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
             <span style={{
               fontSize: 11, fontWeight: 700,
               padding: '5px 12px', borderRadius: 99,
-              background: 'rgba(255,255,255,0.05)', color: 'var(--muted)',
+              background: 'rgba(255,255,255,0.05)', color: 'var(--ds-text-secondary)',
               border: '1px solid rgba(255,255,255,0.10)',
             }}>
               Nivel {pixelAnalysis.level} · {pixelAnalysis.level_name}
@@ -300,7 +300,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
         <div style={{ display: 'flex', gap: 22, flexWrap: 'wrap', marginBottom: 22 }}>
           {kpiPills.map(k => (
             <div key={k.label}>
-              <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 2 }}>{k.label}</p>
+              <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 2 }}>{k.label}</p>
               <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 800, color: '#fff' }}>{k.value}</p>
             </div>
           ))}
@@ -331,7 +331,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           flexWrap: 'wrap', gap: 12, paddingTop: 14,
           borderTop: '1px solid rgba(255,255,255,0.06)',
-          fontSize: 11, color: 'var(--muted)',
+          fontSize: 11, color: 'var(--ds-text-secondary)',
         }}>
           <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap' }}>
             <span>📅 Creada el {createdAt}</span>
@@ -367,7 +367,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Rendimiento detallado
         </h2>
-        <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 20 }}>
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 20 }}>
           Métricas agregadas {hasDaily ? `de los últimos ${dailyMetrics.length} días` : 'de la campaña'}
         </p>
 
@@ -386,7 +386,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
                   cursor: 'help',
                 }}>
                 <p style={{
-                  fontSize: 9, fontWeight: 700, color: 'var(--muted)',
+                  fontSize: 9, fontWeight: 700, color: 'var(--ds-text-secondary)',
                   textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6,
                 }}>
                   {m.label}
@@ -423,7 +423,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Estructura de la campaña
         </h2>
-        <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 20 }}>
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 20 }}>
           Cómo está organizada tu campaña en Meta
         </p>
 
@@ -444,13 +444,13 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
                       Conjunto {i + 1}: {s.name}
                     </p>
                   </div>
-                  <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 12, fontSize: 11, color: 'var(--muted)' }}>
+                  <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 12, fontSize: 11, color: 'var(--ds-text-secondary)' }}>
                     {adsetMetaId && <span>Meta ID: <span style={{ color: '#fff', fontFamily: 'monospace' }}>{adsetMetaId}</span></span>}
                     <span>Estado: {statusMeta.label}</span>
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 10, marginBottom: 14 }}>
                     <div style={{ fontSize: 11 }}>
-                      <p style={{ color: 'var(--muted)', marginBottom: 2 }}>Público</p>
+                      <p style={{ color: 'var(--ds-text-secondary)', marginBottom: 2 }}>Público</p>
                       <p style={{ color: '#fff' }}>
                         {s.targeting?.advantage_plus
                           ? '⚡ Advantage+ Audience'
@@ -458,27 +458,27 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
                             ? `Intereses (${s.targeting.interests.length})`
                             : 'Audiencia amplia'}
                       </p>
-                      <p style={{ color: 'var(--muted)', fontSize: 10, marginTop: 2 }}>
+                      <p style={{ color: 'var(--ds-text-secondary)', fontSize: 10, marginTop: 2 }}>
                         {s.targeting?.age_min}–{s.targeting?.age_max} años · {s.targeting?.geo_locations?.countries?.join(', ')}
                       </p>
                     </div>
                     <div style={{ fontSize: 11 }}>
-                      <p style={{ color: 'var(--muted)', marginBottom: 2 }}>Presupuesto</p>
+                      <p style={{ color: 'var(--ds-text-secondary)', marginBottom: 2 }}>Presupuesto</p>
                       <p style={{ color: '#fff' }}>{currencySym}{(s.daily_budget / 100).toLocaleString('es', { maximumFractionDigits: 0 })}/día</p>
                     </div>
                     <div style={{ fontSize: 11 }}>
-                      <p style={{ color: 'var(--muted)', marginBottom: 2 }}>Optimización</p>
+                      <p style={{ color: 'var(--ds-text-secondary)', marginBottom: 2 }}>Optimización</p>
                       <p style={{ color: '#fff' }}>{s.optimization_goal}</p>
-                      <p style={{ color: 'var(--muted)', fontSize: 10, marginTop: 2 }}>Billing: {s.billing_event}</p>
+                      <p style={{ color: 'var(--ds-text-secondary)', fontSize: 10, marginTop: 2 }}>Billing: {s.billing_event}</p>
                     </div>
                   </div>
                   {s.ads?.length > 0 && (
                     <div>
-                      <p style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 6 }}>Anuncios ({s.ads.length}):</p>
+                      <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', marginBottom: 6 }}>Anuncios ({s.ads.length}):</p>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                         {s.ads.map((ad, k) => (
                           <p key={k} style={{ fontSize: 11, color: '#fff' }}>
-                            📄 Ad {k + 1}: <span style={{ color: 'var(--muted)' }}>{ad.headline || ad.copy_angle}</span>
+                            📄 Ad {k + 1}: <span style={{ color: 'var(--ds-text-secondary)' }}>{ad.headline || ad.copy_angle}</span>
                           </p>
                         ))}
                       </div>
@@ -500,14 +500,14 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                   {audienceLog.map((line, i) => (
-                    <p key={i} style={{ fontSize: 11, color: 'var(--muted)' }}>• {line}</p>
+                    <p key={i} style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>• {line}</p>
                   ))}
                 </div>
               </div>
             )}
           </div>
         ) : (
-          <p style={{ fontSize: 13, color: 'var(--muted)' }}>Esta campaña todavía no tiene estructura definida.</p>
+          <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)' }}>Esta campaña todavía no tiene estructura definida.</p>
         )}
       </div>
 
@@ -517,7 +517,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
           <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
             Creativos de la campaña
           </h2>
-          <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 20 }}>
+          <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 20 }}>
             {allAds.length} anuncio{allAds.length !== 1 ? 's' : ''} generado{allAds.length !== 1 ? 's' : ''} con IA
           </p>
 
@@ -546,13 +546,13 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
                     {!img && <span style={{ fontSize: 36, opacity: 0.5 }}>🖼</span>}
                   </div>
                   <div style={{ padding: 14 }}>
-                    <p style={{ fontSize: 9, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>
+                    <p style={{ fontSize: 9, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>
                       📝 Copy principal
                     </p>
                     <p style={{ fontSize: 12, color: '#fff', lineHeight: 1.4, marginBottom: 10 }}>
                       {ad.primary_text}
                     </p>
-                    <p style={{ fontSize: 9, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>
+                    <p style={{ fontSize: 9, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>
                       📌 Headline
                     </p>
                     <p style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 12 }}>
@@ -568,7 +568,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
                         🔗 {ad.call_to_action}
                       </span>
                       {campaign.destination_url && (
-                        <span style={{ fontSize: 10, color: 'var(--muted)', fontFamily: 'monospace' }}>
+                        <span style={{ fontSize: 10, color: 'var(--ds-text-secondary)', fontFamily: 'monospace' }}>
                           🌐 {campaign.destination_url.replace(/^https?:\/\//, '').slice(0, 22)}
                         </span>
                       )}
@@ -579,7 +579,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
             })}
           </div>
           {allAds.length > 6 && (
-            <p style={{ fontSize: 11, color: 'var(--muted)', textAlign: 'center', marginTop: 14 }}>
+            <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', textAlign: 'center', marginTop: 14 }}>
               Mostrando 6 de {allAds.length} creativos
             </p>
           )}
@@ -591,7 +591,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Historial de la campaña
         </h2>
-        <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 20 }}>
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 20 }}>
           Todas las acciones realizadas
         </p>
 
@@ -610,27 +610,27 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
                   <div style={{
                     width: 36, height: 36, flexShrink: 0,
                     borderRadius: '50%',
-                    background: isError ? 'rgba(239,68,68,0.12)' : 'rgba(98,196,176,0.12)',
-                    border: isError ? '1px solid rgba(239,68,68,0.40)' : '1px solid rgba(98,196,176,0.40)',
+                    background: isError ? 'var(--ds-color-danger-soft)' : 'var(--ds-card-border)',
+                    border: isError ? '1px solid var(--ds-color-danger-border)' : '1px solid var(--ds-card-border)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     fontSize: 16,
                   }}>
                     {desc.icon}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>📅 {date}</p>
-                    <p style={{ fontSize: 13, fontWeight: 700, color: isError ? '#fca5a5' : '#fff' }}>
+                    <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', marginBottom: 2 }}>📅 {date}</p>
+                    <p style={{ fontSize: 13, fontWeight: 700, color: isError ? 'var(--ds-color-danger)' : '#fff' }}>
                       {desc.title}{isError ? ' — falló' : ''}
                     </p>
-                    {desc.sub && <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>{desc.sub}</p>}
-                    {a.error_message && <p style={{ fontSize: 11, color: '#fca5a5', marginTop: 2 }}>{a.error_message}</p>}
+                    {desc.sub && <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', marginTop: 2 }}>{desc.sub}</p>}
+                    {a.error_message && <p style={{ fontSize: 11, color: 'var(--ds-color-danger)', marginTop: 2 }}>{a.error_message}</p>}
                   </div>
                 </div>
               )
             })}
           </div>
         ) : (
-          <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+          <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)' }}>
             El historial se irá llenando a medida que operes esta campaña.
           </p>
         )}
@@ -641,7 +641,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Recomendaciones para esta campaña
         </h2>
-        <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 20 }}>
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 20 }}>
           Acciones sugeridas en base al rendimiento actual
         </p>
 
@@ -668,7 +668,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
                 <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>
                   {r.title}
                 </p>
-                <p style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.4 }}>{r.desc}</p>
+                <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', lineHeight: 1.4 }}>{r.desc}</p>
               </div>
             </div>
           ))}

@@ -103,7 +103,7 @@ export default function AchievementToast({ achievements, onAllDismissed }: Props
           <span style={{ fontSize: 16 }}>🏆</span>
           <p style={{
             fontFamily: 'Syne, sans-serif',
-            fontSize: 12, fontWeight: 700, color: '#fbbf24',
+            fontSize: 12, fontWeight: 700, color: 'var(--ds-color-warning)',
             textTransform: 'uppercase', letterSpacing: '0.08em',
             margin: 0,
           }}>
@@ -134,7 +134,7 @@ export default function AchievementToast({ achievements, onAllDismissed }: Props
               {current.name}
             </p>
             <p style={{
-              fontSize: 11, color: 'var(--muted)', margin: 0, lineHeight: 1.4,
+              fontSize: 11, color: 'var(--ds-text-secondary)', margin: 0, lineHeight: 1.4,
             }}>
               {current.description}
             </p>
@@ -146,15 +146,15 @@ export default function AchievementToast({ achievements, onAllDismissed }: Props
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.06)',
         }}>
-          <span style={{ fontSize: 11, color: 'var(--muted)' }}>
+          <span style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>
             Rareza: <span style={{ color: '#fff', fontWeight: 700 }}>{rarity.stars} {rarity.label}</span>
           </span>
           <button
             onClick={handleDismiss}
             style={{
-              background: 'rgba(245,158,11,0.15)',
-              border: '1px solid rgba(245,158,11,0.45)',
-              color: '#fbbf24',
+              background: 'var(--ds-color-warning-soft)',
+              border: '1px solid var(--ds-color-warning-border)',
+              color: 'var(--ds-color-warning)',
               fontSize: 11, fontWeight: 700,
               padding: '6px 14px',
               borderRadius: 99,

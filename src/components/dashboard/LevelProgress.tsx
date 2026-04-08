@@ -40,7 +40,7 @@ export default function LevelProgress({
         }} />
       </div>
       {pct < 20 && timeMsg && (
-        <p style={{ fontSize: 10, color: 'var(--muted)', marginTop: 6 }}>
+        <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', marginTop: 6 }}>
           A tu ritmo actual: {timeMsg} para llegar al próximo nivel
         </p>
       )}

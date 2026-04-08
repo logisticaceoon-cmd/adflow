@@ -80,7 +80,7 @@ export default function FunnelExplained({ events }: Props) {
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Tu embudo de conversión
         </h2>
-        <p style={{ fontSize: 12, color: 'var(--muted)' }}>
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
           Cuando el pixel empiece a recolectar datos, vas a ver acá cómo fluyen tus visitantes.
         </p>
       </div>
@@ -102,7 +102,7 @@ export default function FunnelExplained({ events }: Props) {
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Tu embudo de conversión
         </h2>
-        <p style={{ fontSize: 12, color: 'var(--muted)' }}>
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
           Así fluyen tus visitantes desde que llegan hasta que compran (últimos 30 días)
         </p>
       </div>

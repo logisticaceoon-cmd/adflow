@@ -50,13 +50,13 @@ export default function HelpPage() {
   return (
     <div className="max-w-3xl">
       <div className="mb-6">
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#f9a8d4', marginBottom: 8 }}>
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 8 }}>
           Centro de ayuda · AdFlow
         </p>
         <h1 style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.03em' }}>
           Cómo sacarle el máximo a AdFlow 📚
         </h1>
-        <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+        <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)' }}>
           Guías, FAQ y conceptos clave del Growth OS para que domines cada módulo
         </p>
       </div>
@@ -78,16 +78,16 @@ export default function HelpPage() {
           }}>
             <div style={{
               width: 40, height: 40, borderRadius: 11,
-              background: 'rgba(234,27,126,0.12)',
-              border: '1px solid rgba(234,27,126,0.25)',
-              boxShadow: '0 0 14px rgba(234,27,126,0.15)',
+              background: 'var(--ds-color-primary-soft)',
+              border: '1px solid transparent',
+              boxShadow: '0 0 14px var(--ds-color-primary-soft)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 18, marginBottom: 12,
             }}>{card.icon}</div>
             <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 6, lineHeight: 1.3 }}>
               {card.title}
             </h3>
-            <p style={{ fontSize: 11.5, color: 'var(--muted)', lineHeight: 1.55 }}>
+            <p style={{ fontSize: 11.5, color: 'var(--ds-text-secondary)', lineHeight: 1.55 }}>
               {card.desc}
             </p>
           </div>
@@ -97,14 +97,14 @@ export default function HelpPage() {
       {/* Video tutorial placeholder */}
       <div className="card mb-6 overflow-hidden">
         <div className="relative flex items-center justify-center cursor-pointer group"
-             style={{ background: 'linear-gradient(135deg, rgba(233,30,140,0.15), rgba(79,70,229,0.1))', height: 200 }}>
+             style={{ background: 'linear-gradient(135deg, var(--ds-color-primary-soft), rgba(79,70,229,0.1))', height: 200 }}>
           <div className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
-               style={{ background: 'rgba(233,30,140,0.3)', border: '2px solid rgba(233,30,140,0.5)' }}>
-            <Play size={24} style={{ color: '#f9a8d4' }} fill="#f9a8d4" />
+               style={{ background: 'transparent', border: '2px solid transparent' }}>
+            <Play size={24} style={{ color: 'var(--ds-color-primary)' }} fill="var(--ds-color-primary)" />
           </div>
           <div className="absolute bottom-4 left-4">
             <p className="text-sm font-semibold">Tutorial: Cómo crear tu primera campaña con IA</p>
-            <p className="text-xs" style={{ color: 'var(--muted)' }}>3 minutos · Próximamente</p>
+            <p className="text-xs" style={{ color: 'var(--ds-text-secondary)' }}>3 minutos · Próximamente</p>
           </div>
         </div>
       </div>
@@ -117,16 +117,16 @@ export default function HelpPage() {
             <div key={i} className="flex items-start gap-4">
               <div className="flex flex-col items-center gap-1">
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-                     style={{ background: 'rgba(233,30,140,0.12)', border: '1px solid rgba(233,30,140,0.2)' }}>
-                  <Icon size={16} style={{ color: '#f9a8d4' }} strokeWidth={1.75} />
+                     style={{ background: 'var(--ds-color-primary-soft)', border: '1px solid transparent' }}>
+                  <Icon size={16} style={{ color: 'var(--ds-color-primary)' }} strokeWidth={1.75} />
                 </div>
                 {i < GUIDE_STEPS.length - 1 && (
-                  <div className="w-px flex-1 mt-1" style={{ background: 'var(--border)', minHeight: 20 }} />
+                  <div className="w-px flex-1 mt-1" style={{ background: 'var(--ds-card-border)', minHeight: 20 }} />
                 )}
               </div>
               <div className="pb-4">
                 <p className="text-sm font-semibold mb-0.5">{title}</p>
-                <p className="text-xs leading-relaxed" style={{ color: 'var(--muted)' }}>{desc}</p>
+                <p className="text-xs leading-relaxed" style={{ color: 'var(--ds-text-secondary)' }}>{desc}</p>
               </div>
             </div>
           ))}
@@ -135,10 +135,10 @@ export default function HelpPage() {
 
       {/* FAQ */}
       <div className="card mb-6">
-        <div className="px-6 py-4 border-b" style={{ borderColor: 'var(--border)' }}>
+        <div className="px-6 py-4 border-b" style={{ borderColor: 'var(--ds-card-border)' }}>
           <h2 className="section-title">Preguntas frecuentes</h2>
         </div>
-        <div className="divide-y" style={{ borderColor: 'var(--border)' }}>
+        <div className="divide-y" style={{ borderColor: 'var(--ds-card-border)' }}>
           {FAQS.map((faq, i) => (
             <div key={i}>
               <button
@@ -148,11 +148,11 @@ export default function HelpPage() {
                 <span className="text-sm font-medium pr-4">{faq.q}</span>
                 <ChevronDown size={16} strokeWidth={1.75}
                   className="flex-shrink-0 transition-transform"
-                  style={{ color: 'var(--muted)', transform: openFaq === i ? 'rotate(180deg)' : 'none' }} />
+                  style={{ color: 'var(--ds-text-secondary)', transform: openFaq === i ? 'rotate(180deg)' : 'none' }} />
               </button>
               {openFaq === i && (
                 <div className="px-6 pb-4">
-                  <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>{faq.a}</p>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--ds-text-secondary)' }}>{faq.a}</p>
                 </div>
               )}
             </div>
@@ -162,20 +162,20 @@ export default function HelpPage() {
 
       {/* Soporte por WhatsApp */}
       <div className="p-5 rounded-2xl flex items-center justify-between gap-4"
-           style={{ background: 'rgba(6,214,160,0.06)', border: '1px solid rgba(6,214,160,0.2)' }}>
+           style={{ background: 'var(--ds-color-success-soft)', border: '1px solid rgba(6,214,160,0.2)' }}>
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0"
                style={{ background: 'rgba(6,214,160,0.12)' }}>
-            <MessageCircle size={22} style={{ color: 'var(--accent3)' }} strokeWidth={1.75} />
+            <MessageCircle size={22} style={{ color: 'var(--ds-color-success)' }} strokeWidth={1.75} />
           </div>
           <div>
             <p className="text-sm font-semibold">¿Necesitás ayuda personalizada?</p>
-            <p className="text-xs" style={{ color: 'var(--muted)' }}>Escribinos por WhatsApp y te respondemos en menos de 24hs.</p>
+            <p className="text-xs" style={{ color: 'var(--ds-text-secondary)' }}>Escribinos por WhatsApp y te respondemos en menos de 24hs.</p>
           </div>
         </div>
         <a href="https://wa.me/5491155551234" target="_blank" rel="noopener noreferrer"
            className="flex-shrink-0 text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
-           style={{ background: 'rgba(6,214,160,0.15)', color: 'var(--accent3)', border: '1px solid rgba(6,214,160,0.3)' }}>
+           style={{ background: 'var(--ds-color-success-soft)', color: 'var(--ds-color-success)', border: '1px solid var(--ds-color-success-border)' }}>
           Abrir WhatsApp →
         </a>
       </div>

@@ -73,7 +73,7 @@ export default function BusinessProfileSection({ initialData }: Props) {
             <label className="label">WhatsApp de contacto</label>
             <input className="input-field" placeholder="+54911XXXXXXXX"
               value={form.whatsapp_number} onChange={e => setForm(p => ({ ...p, whatsapp_number: e.target.value }))} />
-            <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>Con código de país. Ej: +549115551234</p>
+            <p className="text-xs mt-1" style={{ color: 'var(--ds-text-secondary)' }}>Con código de país. Ej: +549115551234</p>
           </div>
           <div>
             <label className="label">Industria / Rubro</label>
