@@ -6,6 +6,7 @@ import SectionHeader from '@/components/ui/SectionHeader'
 import Badge from '@/components/ui/Badge'
 import { RuleToggle, ApproveRejectBtns } from '@/components/dashboard/AutomationControls'
 import { createDefaultRules } from '@/lib/automation-engine'
+import { DIAGNOSTIC_RULES, type DiagnosticType } from '@/lib/diagnostic-rules'
 
 // Helpers to pretty-print rule conditions
 function formatConditionValue(metric: string, value: number): string {
@@ -328,6 +329,93 @@ export default async function AutomationPage() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* ─── EXPERT RULES — the 17 rules from the V1.0 workbook ─── */}
+      <div className="dash-anim-5" style={{ marginTop: 40 }}>
+        <SectionHeader
+          title="Reglas expertas del sistema"
+          subtitle="17 reglas basadas en el workbook de evaluación. El sistema las usa automáticamente para diagnosticar tus campañas."
+        />
+
+        <div className="ds-grid-2">
+          {DIAGNOSTIC_RULES.map(r => {
+            const typeConfig: Record<DiagnosticType, { badge: 'success' | 'warning' | 'danger' | 'info'; icon: string; label: string }> = {
+              Escalar:   { badge: 'success', icon: '📈', label: 'Escalar' },
+              Optimizar: { badge: 'warning', icon: '🔧', label: 'Optimizar' },
+              Pausar:    { badge: 'danger',  icon: '⏸',  label: 'Pausar' },
+              Observar:  { badge: 'info',    icon: '👁', label: 'Observar' },
+            }
+            const cfg = typeConfig[r.type]
+            return (
+              <div key={r.id} style={{
+                padding: 'var(--ds-space-lg)',
+                borderRadius: 'var(--ds-card-radius)',
+                background: 'var(--ds-card-bg)',
+                border: '1px solid var(--ds-card-border)',
+                backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
+                WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
+                boxShadow: 'var(--ds-shadow-sm)',
+              }}>
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  marginBottom: 10, gap: 10, flexWrap: 'wrap',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <code style={{
+                      fontSize: 11, fontWeight: 700,
+                      padding: '3px 10px', borderRadius: 'var(--ds-card-radius-sm)',
+                      background: 'var(--ds-bg-elevated)',
+                      color: 'var(--ds-color-primary)',
+                      border: '1px solid var(--ds-card-border)',
+                    }}>
+                      {r.id}
+                    </code>
+                    <span style={{
+                      fontSize: 10, fontWeight: 600, color: 'var(--ds-text-muted)',
+                      textTransform: 'uppercase', letterSpacing: '0.08em',
+                    }}>
+                      Prioridad {r.priority}
+                    </span>
+                  </div>
+                  <Badge variant={cfg.badge} size="sm">
+                    {cfg.icon} {cfg.label}
+                  </Badge>
+                </div>
+
+                <p style={{
+                  fontFamily: 'Syne, sans-serif',
+                  fontSize: 13, fontWeight: 600,
+                  color: 'var(--ds-text-primary)',
+                  marginBottom: 8, lineHeight: 1.4,
+                }}>
+                  {r.label}
+                </p>
+
+                <div style={{
+                  padding: 10,
+                  background: 'var(--ds-bg-elevated)',
+                  border: '1px solid var(--ds-card-border)',
+                  borderRadius: 'var(--ds-card-radius-sm)',
+                  fontSize: 10,
+                  color: 'var(--ds-text-muted)',
+                  display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap',
+                }}>
+                  <span style={{ fontWeight: 600, color: 'var(--ds-text-secondary)' }}>Template:</span>
+                  <code style={{ color: 'var(--ds-color-primary)' }}>{r.templateId}</code>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+        <p style={{
+          fontSize: 11, color: 'var(--ds-text-muted)',
+          marginTop: 14, fontStyle: 'italic', textAlign: 'center',
+        }}>
+          Estas reglas son read-only — el sistema las ejecuta automáticamente en cada análisis de campaña.
+          Las reglas configurables (con toggles de ejecución) están arriba.
+        </p>
       </div>
     </div>
   )

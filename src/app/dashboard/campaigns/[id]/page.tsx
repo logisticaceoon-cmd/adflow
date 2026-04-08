@@ -9,6 +9,15 @@ import CampaignActions from '@/components/dashboard/CampaignActions'
 import CampaignPublishFlow from '@/components/dashboard/CampaignPublishFlow'
 import CampaignDailyChart from '@/components/dashboard/CampaignDailyChart'
 import SyncButton from '@/components/dashboard/SyncButton'
+import SectionHeader from '@/components/ui/SectionHeader'
+import DiagnosticBadge from '@/components/intelligence/DiagnosticBadge'
+import ScalingBlocksChecklist from '@/components/intelligence/ScalingBlocksChecklist'
+import RiskIndicator from '@/components/intelligence/RiskIndicator'
+import ClientInsightCard from '@/components/intelligence/ClientInsightCard'
+import FunnelHealthCard from '@/components/intelligence/FunnelHealthCard'
+import { analyzeCampaign } from '@/lib/campaign-intelligence'
+import { DEFAULT_SETTINGS } from '@/lib/strategy-settings'
+import type { CampaignMetrics as IntelMetrics } from '@/lib/diagnostic-rules'
 import { ChevronRight } from 'lucide-react'
 
 // ── Status palette ────────────────────────────────────────────────────────
@@ -160,7 +169,6 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
   )
 
   const isPublished = !!campaign.meta_campaign_id
-  const insight = generateCampaignInsight(metrics)
   const recommendations = getCampaignRecommendations(metrics)
   const createdAt = new Date(campaign.created_at).toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })
   const lastSync = (metrics as any)?.last_sync || metrics.updated_at || null
@@ -229,6 +237,25 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
   ]
 
   const audienceLog = (metrics as any)?.audience_log as Array<string> | undefined
+
+  // ── STRATEGIC INTELLIGENCE — feed the expert engine with real metrics ──
+  const intelligenceMetrics: IntelMetrics = {
+    spend,
+    purchases,
+    revenue: purchaseValue,
+    roas,
+    cpa,
+    addToCart: totalsFromDaily.add_to_cart,
+    initiateCheckout: totalsFromDaily.initiate_checkout,
+    ctr,
+    frequency,
+    cpm,
+    viewContent: totalsFromDaily.view_content,
+    impressions,
+    clicks,
+    reach,
+  }
+  const intelligence = analyzeCampaign(intelligenceMetrics, DEFAULT_SETTINGS)
 
   return (
     <div style={{ maxWidth: 1100, margin: '0 auto' }}>
@@ -352,22 +379,99 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
         </div>
       </div>
 
-      {/* ─── SECCIÓN B: RESUMEN EJECUTIVO ─────────────────────────────── */}
-      <div className="dash-anim-2 card p-5 mb-6" style={{
-        borderLeft: `4px solid ${insight.color}`,
-        boxShadow: `0 0 24px ${insight.color}10`,
-      }}>
-        <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-          <div style={{ fontSize: 32, lineHeight: 1, flexShrink: 0 }}>{insight.icon}</div>
+      {/* ─── SECCIÓN B: INTELIGENCIA ESTRATÉGICA ─────────────────────── */}
+      <div className="dash-anim-2" style={{ marginBottom: 'var(--ds-space-2xl)' }}>
+        <SectionHeader
+          title="Inteligencia estratégica"
+          subtitle="Diagnóstico experto basado en la evaluación por bloques del workbook V1.0"
+        />
+
+        {/* Row 1 — diagnostic badge + risk indicator */}
+        <div className="ds-grid-2" style={{ marginBottom: 'var(--ds-space-lg)' }}>
+          <DiagnosticBadge
+            diagnosticType={intelligence.diagnosticType}
+            ruleId={intelligence.ruleId}
+            ruleLabel={intelligence.ruleLabel}
+            roasLevel={intelligence.roasLevel}
+            frequencyLevel={intelligence.frequencyLevel}
+          />
+          <RiskIndicator
+            riskLevel={intelligence.riskLevel}
+            motivo={intelligence.motivo}
+          />
+        </div>
+
+        {/* Row 2 — scaling blocks + funnel health */}
+        <div className="ds-grid-2" style={{ marginBottom: 'var(--ds-space-lg)' }}>
+          <ScalingBlocksChecklist
+            bloqueA={intelligence.scalingEvaluation.bloqueA}
+            bloqueB={intelligence.scalingEvaluation.bloqueB}
+            bloqueC={intelligence.scalingEvaluation.bloqueC}
+            bloqueCplus={intelligence.scalingEvaluation.bloqueCplus}
+            bloqueCfinal={intelligence.scalingEvaluation.bloqueCfinal}
+            canScale={intelligence.canScale}
+            scalePctSuggested={intelligence.scalePctSuggested}
+            riskLevel={intelligence.riskLevel}
+            motivo={intelligence.motivo}
+          />
+          <FunnelHealthCard
+            addToCart={totalsFromDaily.add_to_cart}
+            initiateCheckout={totalsFromDaily.initiate_checkout}
+            purchases={purchases}
+            ratioPayMin={DEFAULT_SETTINGS.ratio_pago_min}
+            ratioCompraMin={DEFAULT_SETTINGS.ratio_compra_min}
+          />
+        </div>
+
+        {/* Client message — expert template */}
+        {intelligence.clientMessage && (
+          <div style={{ marginBottom: 'var(--ds-space-lg)' }}>
+            <ClientInsightCard
+              subject={intelligence.clientMessage.subject}
+              body={intelligence.clientMessage.body}
+              tone={intelligence.clientMessage.tone}
+            />
+          </div>
+        )}
+
+        {/* Next best action card */}
+        <div style={{
+          padding: 'var(--ds-space-lg)',
+          borderRadius: 'var(--ds-card-radius)',
+          background: 'var(--ds-card-bg)',
+          border: '1px solid var(--ds-card-border)',
+          borderLeft: '3px solid var(--ds-color-primary)',
+          backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
+          WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
+          boxShadow: 'var(--ds-shadow-sm)',
+          display: 'flex', alignItems: 'flex-start', gap: 14,
+        }}>
+          <span style={{ fontSize: 26, lineHeight: 1, flexShrink: 0, marginTop: 2 }}>
+            {intelligence.nextBestAction.type === 'scale'    ? '📈'
+             : intelligence.nextBestAction.type === 'pause'  ? '⏸'
+             : intelligence.nextBestAction.type === 'optimize' ? '🔧'
+             : intelligence.nextBestAction.type === 'observe' ? '👁'
+             : '📊'}
+          </span>
           <div style={{ flex: 1, minWidth: 0 }}>
             <p style={{
-              fontFamily: 'Syne, sans-serif', fontSize: 11, fontWeight: 700,
-              color: insight.color, textTransform: 'uppercase', letterSpacing: '0.08em',
-              marginBottom: 4,
+              fontSize: 10, fontWeight: 600, color: 'var(--ds-color-primary)',
+              textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 4,
             }}>
-              Resumen ejecutivo
+              Acción recomendada ·{' '}
+              {intelligence.nextBestAction.urgency === 'high' ? 'Urgente'
+                : intelligence.nextBestAction.urgency === 'medium' ? 'Importante' : 'Baja'}
             </p>
-            <p style={{ fontSize: 15, color: '#fff', lineHeight: 1.5 }}>{insight.msg}</p>
+            <p style={{
+              fontFamily: 'Syne, sans-serif',
+              fontSize: 15, fontWeight: 600,
+              color: 'var(--ds-text-primary)', marginBottom: 4, lineHeight: 1.3,
+            }}>
+              {intelligence.nextBestAction.label}
+            </p>
+            <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', lineHeight: 1.5 }}>
+              {intelligence.nextBestAction.description}
+            </p>
           </div>
         </div>
       </div>

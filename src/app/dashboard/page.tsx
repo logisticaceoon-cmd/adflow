@@ -15,6 +15,8 @@ import { calculateOnboardingStatus } from '@/lib/onboarding-engine'
 import { generateStrategicDecisions, type DecisionInput } from '@/lib/decision-engine'
 import { getDecisionMemory, saveDecision, detectCompletedActions } from '@/lib/memory-engine'
 import { countPendingExecutions } from '@/lib/automation-engine'
+import { generateForecast } from '@/lib/forecast-engine'
+import ForecastWidget from '@/components/intelligence/ForecastWidget'
 import type { Phase } from '@/lib/budget-engine'
 
 const AI_TIPS = [
@@ -240,6 +242,16 @@ export default async function DashboardPage() {
   let pendingAutomationCount = 0
   try { pendingAutomationCount = await countPendingExecutions(user.id) } catch { /* ignore */ }
 
+  // Forecast for next month — powered by the intelligence engine. Safe to
+  // no-op if the user has < 30 days of history (returns an "empty" scenario).
+  let forecastData: Awaited<ReturnType<typeof generateForecast>> | null = null
+  try {
+    const nm = new Date()
+    nm.setMonth(nm.getMonth() + 1)
+    const targetMonthFc = `${nm.getFullYear()}-${String(nm.getMonth() + 1).padStart(2, '0')}`
+    forecastData = await generateForecast(user.id, targetMonthFc)
+  } catch { forecastData = null }
+
   const decisionInput: DecisionInput = {
     onboardingComplete:       onboardingStatus.isComplete,
     onboardingNextStep:       onboardingStatus.nextStep
@@ -350,6 +362,25 @@ export default async function DashboardPage() {
       />
 
       {/* ─────────────── LEVEL 2 — QUICK CONTEXT ─────────────── */}
+
+      {/* 3a. Forecast del próximo mes — solo si hay datos con confianza > 0 */}
+      {forecastData &&
+        forecastData.scenarios.length > 0 &&
+        forecastData.scenarios.some(s => s.confidence > 0) && (
+          <div style={{ marginBottom: 40 }}>
+            <ForecastWidget
+              scenarios={forecastData.scenarios}
+              recommendation={forecastData.recommendation}
+              currentMetrics={{
+                spend: forecastData.currentMetrics.spend,
+                revenue: forecastData.currentMetrics.revenue,
+                roas: forecastData.currentMetrics.roas,
+                purchases: forecastData.currentMetrics.purchases,
+              }}
+              currencySymbol={currency}
+            />
+          </div>
+        )}
 
       {/* 3. Resumen del mes — métricas compactas */}
       <MonthSummary
