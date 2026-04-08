@@ -107,6 +107,9 @@ export interface DecisionInput {
   // Last sync
   lastSyncAt?: string
 
+  // Automation
+  pendingAutomationCount?: number
+
   // Memory (optional — when absent, engine runs stateless like before)
   memory?: DecisionMemoryInput
 }
@@ -307,6 +310,21 @@ export function generateStrategicDecisions(input: DecisionInput): StrategicDecis
       priority: 'important',
       cta: { label: 'Ver campaña →', href: `/dashboard/campaigns/${input.worstRoasCampaign.id}` },
       icon: '⚠️',
+    })
+  }
+
+  // R16: Pending automation executions awaiting approval
+  if (input.pendingAutomationCount && input.pendingAutomationCount > 0) {
+    const n = input.pendingAutomationCount
+    actions.push({
+      id: 'pending_automations',
+      title: `Tenés ${n} automatización${n === 1 ? '' : 'es'} pendiente${n === 1 ? '' : 's'} de aprobación`,
+      description: 'El sistema detectó oportunidades en tus campañas. Revisá y aprobá o rechazá las acciones sugeridas.',
+      reason: 'Las automatizaciones esperan tu decisión para ejecutarse.',
+      priority: 'important',
+      impact: 'medium',
+      cta: { label: 'Ver automatizaciones →', href: '/dashboard/automation' },
+      icon: '⚡',
     })
   }
 

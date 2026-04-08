@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import {
   LayoutDashboard, Megaphone, Sparkles, Images,
   BarChart2, Settings, HelpCircle, LogOut, Zap, Shield, CreditCard,
-  Activity, DollarSign, Brain,
+  Activity, DollarSign, Brain, Cpu,
 } from 'lucide-react'
 import type { User } from '@supabase/supabase-js'
 import type { Profile } from '@/types'
@@ -55,6 +55,7 @@ export default function Sidebar({ user, profile }: Props) {
   const [campaignCount,  setCampaignCount]  = useState<number>(0)
   const [hasPixel,       setHasPixel]       = useState<boolean>(false)
   const [onboarding,     setOnboarding]     = useState<{ isComplete: boolean; completedSteps: number; totalSteps: number; completionScore: number } | null>(null)
+  const [pendingAutomations, setPendingAutomations] = useState<number>(0)
 
   useEffect(() => {
     let active = true
@@ -100,6 +101,16 @@ export default function Sidebar({ user, profile }: Props) {
             totalSteps: data.totalSteps,
             completionScore: data.completionScore,
           })
+        }
+      })
+      .catch(() => { /* ignore */ })
+
+    // Pending automation executions count
+    fetch('/api/automation/executions?status=pending')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (active && data?.executions) {
+          setPendingAutomations(data.executions.length)
         }
       })
       .catch(() => { /* ignore */ })
@@ -162,9 +173,10 @@ export default function Sidebar({ user, profile }: Props) {
   ]
 
   const managementItems: NavItem[] = [
-    { href: '/dashboard/budget',  icon: DollarSign, label: 'Presupuesto' },
-    { href: '/dashboard/phases',  icon: BarChart2,  label: 'Fases' },
-    { href: '/dashboard/reports', icon: BarChart2,  label: 'Reportes' },
+    { href: '/dashboard/budget',     icon: DollarSign, label: 'Presupuesto' },
+    { href: '/dashboard/phases',     icon: BarChart2,  label: 'Fases' },
+    { href: '/dashboard/automation', icon: Cpu,        label: 'Automatización', badge: pendingAutomations > 0 ? String(pendingAutomations) : undefined, badgeColor: 'var(--ds-color-primary)' },
+    { href: '/dashboard/reports',    icon: BarChart2,  label: 'Reportes' },
   ]
 
   const accountItems: NavItem[] = [
@@ -375,7 +387,7 @@ export default function Sidebar({ user, profile }: Props) {
 
           {/* ── SECTION: GESTIÓN ── */}
           <p className="section-label px-2 pt-4 pb-2">Gestión</p>
-          {managementItems.map(({ href, icon: Icon, label }) => {
+          {managementItems.map(({ href, icon: Icon, label, badge, badgeColor }) => {
             const active = isActive(href)
             return (
               <Link key={href} href={href} onClick={close}
@@ -394,6 +406,22 @@ export default function Sidebar({ user, profile }: Props) {
                 }}>
                   {label}
                 </span>
+                {badge && (
+                  <span
+                    className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full font-bold"
+                    style={badgeColor ? {
+                      background: `${badgeColor}1f`,
+                      color: badgeColor,
+                      border: `1px solid ${badgeColor}66`,
+                    } : {
+                      background: 'var(--ds-color-primary-soft)',
+                      color: 'var(--ds-color-primary)',
+                      border: '1px solid var(--ds-color-primary-border)',
+                    }}
+                  >
+                    {badge}
+                  </span>
+                )}
               </Link>
             )
           })}

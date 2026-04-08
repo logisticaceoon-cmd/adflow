@@ -10,6 +10,7 @@ import { analyzePixel, savePixelAnalysis } from '@/lib/pixel-analyzer'
 import { generateMonthlyReport } from '@/lib/monthly-report-engine'
 import { syncUserMetrics } from '@/lib/meta-sync-engine'
 import { evaluateAchievements } from '@/lib/achievement-engine'
+import { evaluateAutomationRules, createDefaultRules } from '@/lib/automation-engine'
 import type { Campaign, CampaignMetrics, Recommendation } from '@/types'
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
@@ -96,6 +97,20 @@ async function processUserReport(supabase: any, userId: string) {
     }
   } catch (err) {
     console.warn(`[cron] achievement evaluation failed for ${userId}:`, err)
+  }
+
+  // 3.2 Crear reglas default la primera vez + evaluar automation rules
+  try {
+    const createdRules = await createDefaultRules(userId)
+    if (createdRules > 0) {
+      console.log(`[cron] User ${userId}: seeded ${createdRules} default automation rules`)
+    }
+    const autoResult = await evaluateAutomationRules(userId)
+    if (autoResult.triggered > 0) {
+      console.log(`[cron] Automation for ${userId}: ${autoResult.rulesEvaluated} evaluated, ${autoResult.triggered} triggered, ${autoResult.executed} executed, ${autoResult.pending} pending, ${autoResult.failed} failed`)
+    }
+  } catch (err) {
+    console.warn(`[cron] automation evaluation failed for ${userId}:`, err)
   }
 
   // 3.5 Refrescar pixel analysis (siempre, así las recomendaciones están al día)

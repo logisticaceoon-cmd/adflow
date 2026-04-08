@@ -71,6 +71,7 @@ const BREADCRUMBS: Array<{ match: (p: string) => boolean; trail: Array<{ label: 
   { match: p => p === '/dashboard/strategist',                  trail: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Estratega IA' }] },
   { match: p => p === '/dashboard/budget',                      trail: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Presupuesto' }] },
   { match: p => p === '/dashboard/phases',                      trail: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Fases' }] },
+  { match: p => p === '/dashboard/automation',                  trail: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Automatización' }] },
   { match: p => p === '/dashboard/reports',                     trail: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Reportes' }] },
   { match: p => p.startsWith('/dashboard/reports/monthly'),     trail: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Reportes', href: '/dashboard/reports' }, { label: 'Mensual' }] },
   { match: p => p === '/dashboard/billing',                     trail: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Plan y créditos' }] },

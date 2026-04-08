@@ -121,12 +121,14 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const [campaignRes, dailyRes, actionsRes, pixelRes, businessRes] = await Promise.all([
+  const [campaignRes, dailyRes, actionsRes, pixelRes, businessRes, automationRulesRes, automationExecRes] = await Promise.all([
     supabase.from('campaigns').select('*').eq('id', params.id).eq('user_id', user.id).maybeSingle(),
     supabase.from('campaign_metrics_daily').select('*').eq('campaign_id', params.id).order('date', { ascending: true }).limit(30),
     supabase.from('campaign_actions').select('*').eq('campaign_id', params.id).order('created_at', { ascending: false }).limit(20),
     supabase.from('pixel_analysis').select('level, level_name').eq('user_id', user.id).maybeSingle(),
     supabase.from('business_profiles').select('currency').eq('user_id', user.id).maybeSingle(),
+    supabase.from('automation_rules').select('id, name, description, rule_type, is_enabled, conditions, actions').eq('user_id', user.id).or(`entity_id.eq.${params.id},entity_id.is.null`),
+    supabase.from('automation_executions').select('id, status, triggered_at, result_message, decision_snapshot, automation_rules(name, rule_type)').eq('user_id', user.id).eq('entity_id', params.id).order('triggered_at', { ascending: false }).limit(5),
   ])
 
   const campaign = campaignRes.data as Campaign | null
@@ -136,6 +138,14 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
   const campaignActions = actionsRes.data || []
   const pixelAnalysis = pixelRes.data
   const currencySym = businessRes.data?.currency === 'USD' ? '$' : (businessRes.data?.currency || '$')
+  const automationRules = (automationRulesRes.data || []) as unknown as Array<{
+    id: string; name: string; description: string | null; rule_type: string; is_enabled: boolean;
+    conditions: any; actions: any
+  }>
+  const automationExecutions = (automationExecRes.data || []) as unknown as Array<{
+    id: string; status: string; triggered_at: string; result_message: string | null; decision_snapshot: any;
+    automation_rules: { name: string; rule_type: string } | null
+  }>
 
   const metrics = campaign.metrics || {}
   const status = campaign.status || 'draft'
@@ -633,6 +643,110 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
           <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)' }}>
             El historial se irá llenando a medida que operes esta campaña.
           </p>
+        )}
+      </div>
+
+      {/* ─── SECCIÓN H: AUTOMATIZACIONES ACTIVAS ─────────────────────── */}
+      <div className="dash-anim-7 card p-6 mb-6">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+          <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff' }}>
+            ⚡ Automatizaciones
+          </h2>
+          <Link href="/dashboard/automation" style={{
+            fontSize: 12, fontWeight: 600, color: 'var(--ds-color-primary)',
+            textDecoration: 'none',
+          }}>
+            Gestionar →
+          </Link>
+        </div>
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 20 }}>
+          Reglas que aplican a esta campaña y ejecuciones recientes
+        </p>
+
+        {automationRules.length === 0 ? (
+          <p style={{ fontSize: 13, color: 'var(--ds-text-muted)' }}>
+            No hay automatizaciones configuradas para esta campaña. Creá una desde la página de automatización.
+          </p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: automationExecutions.length > 0 ? 18 : 0 }}>
+            {automationRules.map(r => (
+              <div key={r.id} style={{
+                padding: '12px 16px',
+                borderRadius: 'var(--ds-card-radius-sm)',
+                background: 'var(--ds-bg-elevated)',
+                border: '1px solid var(--ds-card-border)',
+                display: 'flex', alignItems: 'center', gap: 14, justifyContent: 'space-between',
+              }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ds-text-primary)' }}>{r.name}</span>
+                    <span style={{
+                      fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 99,
+                      background: r.is_enabled ? 'var(--ds-color-success-soft)' : 'rgba(255,255,255,0.04)',
+                      color: r.is_enabled ? 'var(--ds-color-success)' : 'var(--ds-text-muted)',
+                      border: r.is_enabled ? '1px solid var(--ds-color-success-border)' : '1px solid var(--ds-card-border)',
+                      textTransform: 'uppercase', letterSpacing: '0.08em',
+                    }}>
+                      {r.is_enabled ? 'Activa' : 'Inactiva'}
+                    </span>
+                  </div>
+                  {r.description && (
+                    <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', lineHeight: 1.4 }}>{r.description}</p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {automationExecutions.length > 0 && (
+          <div>
+            <p style={{
+              fontSize: 10, fontWeight: 600, color: 'var(--ds-text-label)',
+              textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8,
+            }}>
+              Ejecuciones recientes
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {automationExecutions.map(e => (
+                <div key={e.id} style={{
+                  padding: '8px 12px',
+                  borderRadius: 'var(--ds-card-radius-sm)',
+                  background: 'rgba(255,255,255,0.02)',
+                  border: '1px solid var(--ds-card-border)',
+                  display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'space-between',
+                  fontSize: 11,
+                }}>
+                  <span style={{ color: 'var(--ds-text-secondary)' }}>
+                    {new Date(e.triggered_at).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                  <span style={{ color: 'var(--ds-text-primary)', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {e.automation_rules?.name || e.result_message || 'Ejecución'}
+                  </span>
+                  <span style={{
+                    fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 99,
+                    background: e.status === 'executed' ? 'var(--ds-color-success-soft)'
+                      : e.status === 'failed' ? 'var(--ds-color-danger-soft)'
+                      : e.status === 'rejected' ? 'rgba(255,255,255,0.04)'
+                      : 'var(--ds-color-primary-soft)',
+                    color: e.status === 'executed' ? 'var(--ds-color-success)'
+                      : e.status === 'failed' ? 'var(--ds-color-danger)'
+                      : e.status === 'rejected' ? 'var(--ds-text-muted)'
+                      : 'var(--ds-color-primary)',
+                    border: `1px solid ${
+                      e.status === 'executed' ? 'var(--ds-color-success-border)'
+                      : e.status === 'failed' ? 'var(--ds-color-danger-border)'
+                      : e.status === 'rejected' ? 'var(--ds-card-border)'
+                      : 'var(--ds-color-primary-border)'
+                    }`,
+                    textTransform: 'uppercase', letterSpacing: '0.06em',
+                  }}>
+                    {e.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </div>
 

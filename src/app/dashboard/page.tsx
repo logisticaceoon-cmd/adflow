@@ -14,6 +14,7 @@ import OnboardingChecklist from '@/components/dashboard/OnboardingChecklist'
 import { calculateOnboardingStatus } from '@/lib/onboarding-engine'
 import { generateStrategicDecisions, type DecisionInput } from '@/lib/decision-engine'
 import { getDecisionMemory, saveDecision, detectCompletedActions } from '@/lib/memory-engine'
+import { countPendingExecutions } from '@/lib/automation-engine'
 import type { Phase } from '@/lib/budget-engine'
 
 const AI_TIPS = [
@@ -235,6 +236,10 @@ export default async function DashboardPage() {
     memorySnapshot = null
   }
 
+  // Pending automation executions — surfaces in the decision engine as R16
+  let pendingAutomationCount = 0
+  try { pendingAutomationCount = await countPendingExecutions(user.id) } catch { /* ignore */ }
+
   const decisionInput: DecisionInput = {
     onboardingComplete:       onboardingStatus.isComplete,
     onboardingNextStep:       onboardingStatus.nextStep
@@ -272,6 +277,8 @@ export default async function DashboardPage() {
     metaConnected: !!fbConnection?.access_token,
     tokenExpiresAt: undefined, // token_expires_at column not currently tracked
     lastSyncAt,
+
+    pendingAutomationCount,
 
     memory: memorySnapshot ? {
       ignoredActions:        memorySnapshot.ignoredActions,
