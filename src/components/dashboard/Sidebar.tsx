@@ -190,8 +190,10 @@ export default function Sidebar({ user, profile }: Props) {
       <aside
         className={`fixed left-0 top-0 h-screen w-60 flex flex-col transition-transform duration-300 ease-out md:translate-x-0 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}
         style={{
-          background: 'var(--ds-bg-surface)',
-          borderRight: '1px solid var(--ds-card-border)',
+          background: 'rgba(11, 15, 36, 0.65)',
+          borderRight: '1px solid var(--ds-border-soft)',
+          backdropFilter: 'blur(24px) saturate(1.4)',
+          WebkitBackdropFilter: 'blur(24px) saturate(1.4)',
           zIndex: 50,
         }}
       >
