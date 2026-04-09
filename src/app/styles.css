@@ -1077,6 +1077,67 @@
   .dash-anim-7 { animation: dashFadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.52s both; }
   .dash-anim-8 { animation: dashFadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.60s both; }
 
+  /* ─────────────────────────────────────────────────────────────
+     MODULE ENTRANCE (premium staggered, Linear/Stripe feel)
+     Use `.module-enter .module-enter-{1..10}` on dashboard blocks.
+  ───────────────────────────────────────────────────────────── */
+  @keyframes moduleEntrance {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .module-enter {
+    opacity: 0;
+    animation: moduleEntrance 500ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .module-enter-1  { animation-delay:   0ms; }
+  .module-enter-2  { animation-delay:  60ms; }
+  .module-enter-3  { animation-delay: 120ms; }
+  .module-enter-4  { animation-delay: 180ms; }
+  .module-enter-5  { animation-delay: 240ms; }
+  .module-enter-6  { animation-delay: 300ms; }
+  .module-enter-7  { animation-delay: 360ms; }
+  .module-enter-8  { animation-delay: 420ms; }
+  .module-enter-9  { animation-delay: 480ms; }
+  .module-enter-10 { animation-delay: 540ms; }
+
+  /* Progress bar grow-in (used by HeroLevel, OnboardingChecklist, etc.) */
+  @keyframes progressFill {
+    from { width: 0%; }
+  }
+  .progress-animated {
+    animation: progressFill 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 200ms;
+  }
+
+  /* Glow hover (subtle ambient ring) for level badges, achievements, etc. */
+  .glow-hover {
+    transition: box-shadow 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .glow-hover:hover {
+    box-shadow: 0 0 20px var(--ds-color-primary-glow);
+  }
+  .achievement-glow {
+    box-shadow: 0 0 12px rgba(245, 197, 66, 0.15);
+    transition: box-shadow 250ms ease;
+  }
+  .achievement-glow:hover {
+    box-shadow: 0 0 24px rgba(245, 197, 66, 0.25);
+  }
+
+  /* ─── LABS CARDS — subtle parallax lift on hover ─── */
+  .labs-card {
+    transition:
+      transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 300ms cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+  }
+  .labs-card:hover {
+    transform: translateY(-4px) perspective(800px) rotateX(1deg);
+    box-shadow: var(--ds-shadow-lg);
+    border-color: var(--ds-card-border-hover);
+  }
+
   @keyframes fadeInScale {
     from { opacity: 0; transform: translateY(16px) scale(0.97); }
     to   { opacity: 1; transform: translateY(0) scale(1); }

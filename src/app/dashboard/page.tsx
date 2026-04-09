@@ -338,28 +338,32 @@ export default async function DashboardPage() {
       {/* ─────────────── LEVEL 1 — PRIMARY FOCUS ─────────────── */}
 
       {/* 1. HERO — el centro de mando, el primer latido visual */}
-      <HeroLevel
-        fullName={fullName}
-        level={level}
-        levelName={levelName}
-        metricCurrent={nextMetric.current}
-        metricRequired={nextMetric.required}
-        metricLabel={nextMetric.label}
-        nextLevel={nextLevel}
-        nextLevelName={LEVEL_NAMES[nextLevel]}
-        unlockTeaser={UNLOCK_TEASERS[level] || 'nuevas estrategias y audiencias'}
-        monthSpend={totalSpend}
-        monthSales={totalConversions}
-        monthRoas={avgRoas}
-        daysRemaining={daysRemaining}
-        hasPixel={!!pixelAnalysis}
-      />
+      <div className="module-enter module-enter-1">
+        <HeroLevel
+          fullName={fullName}
+          level={level}
+          levelName={levelName}
+          metricCurrent={nextMetric.current}
+          metricRequired={nextMetric.required}
+          metricLabel={nextMetric.label}
+          nextLevel={nextLevel}
+          nextLevelName={LEVEL_NAMES[nextLevel]}
+          unlockTeaser={UNLOCK_TEASERS[level] || 'nuevas estrategias y audiencias'}
+          monthSpend={totalSpend}
+          monthSales={totalConversions}
+          monthRoas={avgRoas}
+          daysRemaining={daysRemaining}
+          hasPixel={!!pixelAnalysis}
+        />
+      </div>
 
       {/* 2. GPS — "tu siguiente mejor acción", pegado al hero */}
+      <div className="module-enter module-enter-2">
       <NextBestAction
         primaryAction={decisions.primaryAction}
         secondaryActions={decisions.secondaryActions}
       />
+      </div>
 
       {/* ─────────────── LEVEL 2 — QUICK CONTEXT ─────────────── */}
 
@@ -367,7 +371,7 @@ export default async function DashboardPage() {
       {forecastData &&
         forecastData.scenarios.length > 0 &&
         forecastData.scenarios.some(s => s.confidence > 0) && (
-          <div style={{ marginBottom: 40 }}>
+          <div className="module-enter module-enter-3" style={{ marginBottom: 40 }}>
             <ForecastWidget
               scenarios={forecastData.scenarios}
               recommendation={forecastData.recommendation}
@@ -383,6 +387,7 @@ export default async function DashboardPage() {
         )}
 
       {/* 3. Resumen del mes — métricas compactas */}
+      <div className="module-enter module-enter-4">
       <MonthSummary
         totalSpend={totalSpend}
         totalRevenue={totalRevenue}
@@ -396,19 +401,26 @@ export default async function DashboardPage() {
         events={events}
         currency={currency}
       />
+      </div>
 
       {/* ─────────────── LEVEL 3 — SUPPORT ─────────────── */}
 
       {/* 4. Onboarding (solo si incompleto, compacto) */}
-      {!onboardingStatus.isComplete && <OnboardingChecklist status={onboardingStatus} />}
+      {!onboardingStatus.isComplete && (
+        <div className="module-enter module-enter-5">
+          <OnboardingChecklist status={onboardingStatus} />
+        </div>
+      )}
 
       {/* 5. Fases del funnel — uniformes y compactas */}
-      <PhaseSummary currency={currency} phaseData={phaseData} />
+      <div className="module-enter module-enter-6">
+        <PhaseSummary currency={currency} phaseData={phaseData} />
+      </div>
 
       {/* ─────────────── LEVEL 4 — SECONDARY ─────────────── */}
 
       {/* 6. Growth profile + achievements lado a lado */}
-      <div className="ds-grid-2">
+      <div className="module-enter module-enter-7 ds-grid-2">
         <GrowthProfile
           level={level}
           levelName={levelName}
@@ -427,10 +439,12 @@ export default async function DashboardPage() {
       </div>
 
       {/* 7. Alertas + oportunidades */}
-      <AlertsOpportunities alerts={decisions.alerts} />
+      <div className="module-enter module-enter-8">
+        <AlertsOpportunities alerts={decisions.alerts} />
+      </div>
 
       {/* 8. Spend chart + Tip del día */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 dash-anim-6">
+      <div className="module-enter module-enter-9 grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2" style={{
           padding: 'var(--ds-space-lg)',
           background: 'var(--ds-card-bg)',

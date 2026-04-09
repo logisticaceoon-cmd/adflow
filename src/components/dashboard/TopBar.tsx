@@ -68,7 +68,7 @@ const BREADCRUMBS: Array<{ match: (p: string) => boolean; trail: Array<{ label: 
   { match: p => p === '/dashboard/campaigns',                   trail: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Mis campañas' }] },
   { match: p => p.startsWith('/dashboard/campaigns/'),          trail: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Mis campañas', href: '/dashboard/campaigns' }, { label: 'Detalle' }] },
   { match: p => p === '/dashboard/creatives',                   trail: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Creativos' }] },
-  { match: p => p === '/dashboard/strategist',                  trail: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Estratega IA' }] },
+  { match: p => p === '/dashboard/labs',                        trail: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Labs' }] },
   { match: p => p === '/dashboard/budget',                      trail: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Presupuesto' }] },
   { match: p => p === '/dashboard/phases',                      trail: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Fases' }] },
   { match: p => p === '/dashboard/automation',                  trail: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Automatización' }] },

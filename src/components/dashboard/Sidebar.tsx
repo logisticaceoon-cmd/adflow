@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import {
   LayoutDashboard, Megaphone, Sparkles, Images,
   BarChart2, Settings, HelpCircle, LogOut, Zap, Shield, CreditCard,
-  Activity, DollarSign, Brain, Cpu,
+  Activity, DollarSign, Brain, Cpu, FlaskConical,
 } from 'lucide-react'
 import type { User } from '@supabase/supabase-js'
 import type { Profile } from '@/types'
@@ -169,7 +169,7 @@ export default function Sidebar({ user, profile }: Props) {
     { href: '/dashboard/create',    icon: Sparkles,        label: 'Crear campaña', badge: 'IA' },
     { href: '/dashboard/campaigns', icon: Megaphone,       label: 'Mis campañas', badge: campaignCount > 0 ? String(campaignCount) : undefined },
     { href: '/dashboard/creatives', icon: Images,          label: 'Creativos' },
-    { href: '/dashboard/strategist', icon: Brain,          label: 'Estratega IA', badge: 'Pronto', badgeColor: '#a855f7' },
+    { href: '/dashboard/labs',       icon: FlaskConical,   label: 'Labs', badge: 'Nuevo', badgeColor: 'var(--ds-color-primary)' },
   ]
 
   const managementItems: NavItem[] = [
