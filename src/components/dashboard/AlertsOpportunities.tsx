@@ -8,14 +8,16 @@ interface Props {
   alerts: DecisionAlert[]
 }
 
-const PANEL_BASE: React.CSSProperties = {
-  padding: 'var(--ds-space-lg)',
-  borderRadius: 'var(--ds-card-radius)',
-  background: 'var(--ds-card-bg)',
-  border: '1px solid var(--ds-card-border)',
-  backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-  WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-  boxShadow: 'var(--ds-shadow-sm)',
+const DANGER_PANEL: React.CSSProperties = {
+  borderLeft: '3px solid var(--ds-color-danger)',
+  boxShadow:
+    'var(--ds-shadow-md), -3px 0 15px rgba(248, 113, 113, 0.10), var(--ds-card-inner-glow)',
+}
+
+const SUCCESS_PANEL: React.CSSProperties = {
+  borderLeft: '3px solid var(--ds-color-success)',
+  boxShadow:
+    'var(--ds-shadow-md), -3px 0 15px rgba(52, 211, 153, 0.10), var(--ds-card-inner-glow)',
 }
 
 export default function AlertsOpportunities({ alerts }: Props) {
@@ -23,9 +25,9 @@ export default function AlertsOpportunities({ alerts }: Props) {
   const opportunityItems  = alerts.filter(a => a.type === 'opportunity').slice(0, 4)
 
   return (
-    <div className="dash-anim-5 ds-grid-2" style={{ marginBottom: 'var(--ds-space-lg)' }}>
+    <div className="module-enter module-enter-5 ds-grid-2" style={{ marginBottom: 'var(--ds-space-lg)' }}>
       {/* ALERTS — things to worry about */}
-      <div style={{ ...PANEL_BASE, borderLeft: '3px solid var(--ds-color-danger)' }}>
+      <div className="card" style={{ padding: 'var(--ds-space-lg)', ...DANGER_PANEL }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
           <span style={{ fontSize: 16 }}>⚠️</span>
           <h2 style={{
@@ -77,7 +79,7 @@ export default function AlertsOpportunities({ alerts }: Props) {
       </div>
 
       {/* OPPORTUNITIES — things to capitalize on */}
-      <div style={{ ...PANEL_BASE, borderLeft: '3px solid var(--ds-color-success)' }}>
+      <div className="card" style={{ padding: 'var(--ds-space-lg)', ...SUCCESS_PANEL }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
           <span style={{ fontSize: 16 }}>💡</span>
           <h2 style={{

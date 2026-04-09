@@ -35,15 +35,7 @@ export default function GrowthProfile(p: Props) {
   const topFive = unlocked.slice(0, 5)
 
   return (
-    <div className="dash-anim-2" style={{
-      padding: 20,
-      borderRadius: 'var(--ds-card-radius)',
-      background: 'var(--ds-card-bg)',
-      border: '1px solid var(--ds-card-border)',
-      backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-      WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-      boxShadow: 'var(--ds-shadow-sm)',
-    }}>
+    <div className="card module-enter module-enter-2" style={{ padding: 20 }}>
       <SectionHeader
         title="Perfil de crecimiento"
         action={{ label: 'Ver roadmap →', href: '/dashboard/pixel' }}
@@ -68,6 +60,7 @@ export default function GrowthProfile(p: Props) {
             <span style={{
               fontFamily: 'Syne, sans-serif', fontSize: 12, fontWeight: 700,
               color: 'var(--ds-color-warning)',
+              textShadow: '0 0 20px rgba(245, 197, 66, 0.15)',
             }}>
               {p.growthScore.toLocaleString()} pts
             </span>

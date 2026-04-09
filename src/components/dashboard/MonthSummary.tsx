@@ -32,6 +32,9 @@ interface KpiProps {
   value: string
   trend?: number
   Icon: React.ElementType
+  iconColor?: string
+  iconSoftBg?: string
+  iconSoftBorder?: string
   valueStatus?: 'neutral' | 'good' | 'warning' | 'bad'
 }
 
@@ -42,7 +45,7 @@ const STATUS_VALUE_COLOR: Record<string, string> = {
   bad:     'var(--ds-color-danger)',
 }
 
-function Kpi({ label, value, trend, Icon, valueStatus = 'neutral' }: KpiProps) {
+function Kpi({ label, value, trend, Icon, iconColor, iconSoftBg, iconSoftBorder, valueStatus = 'neutral' }: KpiProps) {
   const trendStr = trend !== undefined && trend !== 0
     ? `${trend > 0 ? '↑' : '↓'} ${Math.abs(trend).toFixed(0)}% vs mes anterior`
     : trend === 0 ? '— sin cambios' : 'Primer mes'
@@ -55,33 +58,33 @@ function Kpi({ label, value, trend, Icon, valueStatus = 'neutral' }: KpiProps) {
         : 'var(--ds-text-muted)'
 
   return (
-    <div style={{
-      padding: 16,
-      background: 'var(--ds-card-bg)',
-      border: '1px solid var(--ds-card-border)',
-      borderRadius: 'var(--ds-card-radius-sm)',
-      backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-      WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-      boxShadow: 'var(--ds-shadow-sm)',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+    <div className="card" style={{ padding: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
         <p style={{
-          fontSize: 10, fontWeight: 600, letterSpacing: '0.10em',
+          fontSize: 10, fontWeight: 700, letterSpacing: '0.10em',
           textTransform: 'uppercase', color: 'var(--ds-text-label)',
         }}>
           {label}
         </p>
-        <Icon size={14} style={{ color: 'var(--ds-text-secondary)', opacity: 0.6 }} strokeWidth={1.75} />
+        <div style={{
+          width: 28, height: 28, borderRadius: 8,
+          background: iconSoftBg || 'var(--ds-color-primary-soft)',
+          border: `1px solid ${iconSoftBorder || 'var(--ds-color-primary-border)'}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          flexShrink: 0,
+        }}>
+          <Icon size={13} style={{ color: iconColor || 'var(--ds-color-primary)', opacity: 0.85 }} strokeWidth={2} />
+        </div>
       </div>
       <p style={{
         fontFamily: 'Syne, sans-serif',
-        fontSize: 22, fontWeight: 600,
+        fontSize: 24, fontWeight: 600,
         color: STATUS_VALUE_COLOR[valueStatus],
         letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 4,
       }}>
         {value}
       </p>
-      <p style={{ fontSize: 10, color: trendColor, lineHeight: 1.3 }}>
+      <p style={{ fontSize: 11, color: trendColor, lineHeight: 1.3 }}>
         {trendStr}
       </p>
     </div>
@@ -103,19 +106,24 @@ export default function MonthSummary(p: Props) {
   const convRate = pv > 0 ? ((purchases / pv) * 100).toFixed(2) : null
 
   return (
-    <div className="dash-anim-3" style={{ marginBottom: 40 }}>
+    <div className="module-enter module-enter-3" style={{ marginBottom: 40 }}>
       <SectionHeader
         title="Resumen del mes"
         subtitle="Últimos 30 días"
       />
 
-      {/* KPI row — 5 compact metrics */}
+      {/* KPI row — 5 floating glass cards, one icon color per metric */}
       <div className="ds-grid-5">
-        <Kpi label="Inversión"    value={`${cur}${p.totalSpend.toFixed(0)}`}    trend={p.trendSpend}   Icon={DollarSign} />
-        <Kpi label="Ventas (rev)" value={`${cur}${p.totalRevenue.toFixed(0)}`}  trend={p.trendRevenue} Icon={TrendingUp} valueStatus="good" />
-        <Kpi label="ROAS"         value={p.avgRoas > 0 ? `${p.avgRoas.toFixed(1)}x` : '—'} trend={p.trendRoas} Icon={Target} valueStatus={roasStatus(p.avgRoas)} />
-        <Kpi label="Compras"      value={String(p.totalConversions)}             trend={p.trendConv}    Icon={ShoppingCart} />
-        <Kpi label="Ticket prom." value={`${cur}${p.avgTicket.toFixed(0)}`}                             Icon={CreditCard} />
+        <Kpi label="Inversión"    value={`${cur}${p.totalSpend.toFixed(0)}`}    trend={p.trendSpend}   Icon={DollarSign}
+             iconColor="var(--ds-color-primary)" iconSoftBg="var(--ds-color-primary-soft)"  iconSoftBorder="var(--ds-color-primary-border)" />
+        <Kpi label="Ventas (rev)" value={`${cur}${p.totalRevenue.toFixed(0)}`}  trend={p.trendRevenue} Icon={TrendingUp}   valueStatus="good"
+             iconColor="var(--ds-color-success)" iconSoftBg="var(--ds-color-success-soft)"  iconSoftBorder="var(--ds-color-success-border)" />
+        <Kpi label="ROAS"         value={p.avgRoas > 0 ? `${p.avgRoas.toFixed(1)}x` : '—'} trend={p.trendRoas} Icon={Target} valueStatus={roasStatus(p.avgRoas)}
+             iconColor="var(--ds-color-warning)" iconSoftBg="var(--ds-color-warning-soft)"  iconSoftBorder="var(--ds-color-warning-border)" />
+        <Kpi label="Compras"      value={String(p.totalConversions)}             trend={p.trendConv}    Icon={ShoppingCart}
+             iconColor="var(--ds-color-primary)" iconSoftBg="var(--ds-color-primary-soft)"  iconSoftBorder="var(--ds-color-primary-border)" />
+        <Kpi label="Ticket prom." value={`${cur}${p.avgTicket.toFixed(0)}`}                             Icon={CreditCard}
+             iconColor="var(--ds-color-primary)" iconSoftBg="var(--ds-color-primary-soft)"  iconSoftBorder="var(--ds-color-primary-border)" />
       </div>
 
       {/* Funnel one-liner — optional summary, not a full grid */}

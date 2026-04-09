@@ -35,8 +35,18 @@ function roasColor(r: number): string {
 }
 
 export default function PhaseSummary({ currency, phaseData }: Props) {
+  // Best-performing (highest ROAS among non-locked phases) gets a subtle
+  // success border accent.
+  const bestPhaseKey = PHASES.reduce<string | null>((best, p) => {
+    const d = phaseData[p.key]
+    if (!d || d.status === 'locked' || d.roas <= 0) return best
+    if (!best) return p.key
+    const bd = phaseData[best as Phase]
+    return d.roas > bd.roas ? p.key : best
+  }, null)
+
   return (
-    <div className="dash-anim-5" style={{ marginBottom: 32 }}>
+    <div className="module-enter module-enter-5" style={{ marginBottom: 32 }}>
       <SectionHeader
         title="Fases del funnel"
         subtitle="Estado de cada fase este mes"
@@ -48,26 +58,28 @@ export default function PhaseSummary({ currency, phaseData }: Props) {
           const data = phaseData[p.key]
           if (!data) return null
           const isLocked = data.status === 'locked'
+          const isBest = p.key === bestPhaseKey
           const badge = STATUS_BADGE[data.status]
+          const budgetPct = data.recommended > 0
+            ? Math.min(100, Math.round((data.spent / data.recommended) * 100))
+            : 0
 
           return (
-            <div key={p.key} style={{
+            <div key={p.key} className="card" style={{
               padding: 16,
-              borderRadius: 'var(--ds-card-radius-sm)',
-              background: 'var(--ds-card-bg)',
-              border: '1px solid var(--ds-card-border)',
-              backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-              WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-              boxShadow: 'var(--ds-shadow-sm)',
-              opacity: isLocked ? 0.55 : 1,
+              opacity: isLocked ? 0.45 : 1,
+              borderColor: isBest ? 'var(--ds-color-success-border)' : undefined,
+              boxShadow: isBest
+                ? 'var(--ds-shadow-md), 0 0 24px rgba(52, 211, 153, 0.08), var(--ds-card-inner-glow)'
+                : undefined,
               display: 'flex', flexDirection: 'column', gap: 12,
             }}>
               {/* Header — icon + name */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
                 <div style={{
-                  width: 30, height: 30, borderRadius: 8, flexShrink: 0,
-                  background: 'var(--ds-bg-elevated)',
-                  border: '1px solid var(--ds-card-border)',
+                  width: 32, height: 32, borderRadius: 10, flexShrink: 0,
+                  background: 'var(--ds-color-primary-soft)',
+                  border: '1px solid var(--ds-color-primary-border)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 15,
                 }}>{p.icon}</div>
@@ -110,6 +122,13 @@ export default function PhaseSummary({ currency, phaseData }: Props) {
                   </p>
                 </div>
               </div>
+
+              {/* Budget progress bar — premium with tip glow */}
+              {!isLocked && data.recommended > 0 && (
+                <div className="progress-bar" style={{ height: 6 }}>
+                  <div className="progress-bar-fill" style={{ width: `${budgetPct}%` }} />
+                </div>
+              )}
 
               {/* Status badge */}
               <div>

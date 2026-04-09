@@ -14,13 +14,14 @@ interface PixelRow {
   events_data: any
 }
 
+// Hex tones so we can concat alpha suffixes (e.g. `${color}14`) for glow.
 const LEVEL_COLORS: Record<number, string> = {
   0: '#8892b0',
-  1: 'var(--ds-color-danger)', 2: 'var(--ds-color-danger)',
-  3: 'var(--ds-color-warning)', 4: 'var(--ds-color-warning)',
-  5: 'var(--ds-color-success)', 6: 'var(--ds-color-success)',
-  7: '#3b82f6',
-  8: '#8b5cf6',
+  1: '#f87171', 2: '#f87171',
+  3: '#fbbf24', 4: '#fbbf24',
+  5: '#34d399', 6: '#34d399',
+  7: '#7c6ef0',
+  8: '#a78bfa',
 }
 
 export default function PixelLevelCard() {
@@ -69,11 +70,12 @@ export default function PixelLevelCard() {
   const m = map[level]
 
   return (
-    <Link href="/dashboard/pixel" style={{ textDecoration: 'none', display: 'block' }} className="mb-6 dash-anim-1">
-      <div className="card p-5 transition-all hover:-translate-y-0.5" style={{
+    <Link href="/dashboard/pixel" style={{ textDecoration: 'none', display: 'block' }} className="mb-6 module-enter module-enter-1">
+      <div className="card card-hover" style={{
+        padding: 20,
         borderTop: `2px solid ${currentColor}`,
         cursor: 'pointer',
-        background: `linear-gradient(135deg, ${currentColor}10, rgba(18,4,10,0.92))`,
+        boxShadow: `var(--ds-shadow-md), 0 0 32px ${currentColor}14, var(--ds-card-inner-glow)`,
       }}>
         <div className="flex items-center gap-5">
           <LevelBadge level={level} levelName={pa.level_name} size="sm" />

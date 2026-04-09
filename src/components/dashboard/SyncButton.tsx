@@ -88,16 +88,19 @@ export default function SyncButton({ variant = 'full' }: Props) {
 
   if (variant === 'compact') {
     return (
-      <button onClick={handleSync} disabled={syncing}
+      <button
+        onClick={handleSync}
+        disabled={syncing}
+        className="btn-ghost"
         style={{
-          display: 'inline-flex', alignItems: 'center', gap: 6,
-          padding: '7px 12px', borderRadius: 10,
-          background: 'rgba(255,255,255,0.05)',
-          border: '1px solid rgba(255,255,255,0.10)',
-          color: '#fff', fontSize: 12, fontWeight: 600,
+          padding: '7px 12px',
+          fontSize: 12,
+          minHeight: 34,
+          gap: 6,
           cursor: syncing ? 'wait' : 'pointer',
-        }}>
-        <RefreshCw size={13} className={syncing ? 'animate-spin' : ''} />
+        }}
+      >
+        <RefreshCw size={13} className={syncing ? 'animate-spin' : ''} style={{ color: 'var(--ds-color-primary)' }} />
         {syncing ? 'Sincronizando...' : 'Sincronizar'}
       </button>
     )
@@ -105,33 +108,32 @@ export default function SyncButton({ variant = 'full' }: Props) {
 
   return (
     <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
-      <button onClick={handleSync} disabled={syncing}
+      <button
+        onClick={handleSync}
+        disabled={syncing}
+        className="btn-ghost"
         style={{
-          display: 'inline-flex', alignItems: 'center', gap: 8,
-          padding: '10px 18px', borderRadius: 12,
-          background: syncing
-            ? 'rgba(255,255,255,0.05)'
-            : 'linear-gradient(135deg, var(--ds-color-primary-soft), var(--ds-card-border))',
-          border: `1px solid ${syncing ? 'rgba(255,255,255,0.10)' : 'transparent'}`,
-          boxShadow: syncing ? 'none' : '0 0 20px var(--ds-color-primary-soft)',
-          color: '#fff', fontSize: 13, fontWeight: 600,
+          padding: '10px 18px',
+          fontSize: 13,
           cursor: syncing ? 'wait' : 'pointer',
-          transition: 'all 0.2s',
-        }}>
+        }}
+      >
         <RefreshCw size={14} className={syncing ? 'animate-spin' : ''} style={{ color: 'var(--ds-color-primary)' }} />
         {syncing ? 'Sincronizando métricas...' : 'Sincronizar ahora'}
       </button>
-      <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)' }}>
+      <p style={{ fontSize: 11, color: 'var(--ds-text-muted)' }}>
         Última sync: {formatRelative(lastSync)}
       </p>
       {toast && (
         <div style={{
           position: 'fixed', bottom: 24, right: 24, zIndex: 100,
           padding: '12px 18px', borderRadius: 12,
-          background: 'linear-gradient(160deg, rgba(14,4,9,0.96), rgba(8,2,5,0.98))',
+          background: 'rgba(8, 10, 22, 0.90)',
           border: `1px solid ${toast.type === 'success' ? 'var(--ds-color-success-border)' : toast.type === 'partial' ? 'var(--ds-color-warning-border)' : 'var(--ds-color-danger-border)'}`,
-          boxShadow: '0 12px 48px rgba(0,0,0,0.60)',
-          color: '#fff', fontSize: 13, fontWeight: 600,
+          backdropFilter: 'blur(24px) saturate(1.3)',
+          WebkitBackdropFilter: 'blur(24px) saturate(1.3)',
+          boxShadow: '0 16px 48px rgba(0,0,0,0.60), inset 0 1px 0 rgba(255,255,255,0.05)',
+          color: 'var(--ds-text-primary)', fontSize: 13, fontWeight: 600,
           maxWidth: 360,
           animation: 'slideUp 0.3s ease',
         }}>

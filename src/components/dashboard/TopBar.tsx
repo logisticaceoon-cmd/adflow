@@ -247,9 +247,10 @@ export default function TopBar() {
               className="absolute -top-1 -right-1 rounded-full text-[10px] font-bold flex items-center justify-center"
               style={{
                 minWidth: 16, height: 16, padding: unreadCount > 9 ? '0 4px' : 0,
-                background: 'linear-gradient(135deg,var(--ds-color-primary),var(--ds-color-primary))',
+                background: 'linear-gradient(135deg, #f87171, #dc2626)',
+                border: '1px solid rgba(248, 113, 113, 0.6)',
                 color: '#fff',
-                boxShadow: '0 0 10px transparent, 0 0 16px transparent',
+                boxShadow: '0 0 0 1px rgba(248, 113, 113, 0.35), 0 0 12px rgba(248, 113, 113, 0.45), 0 0 20px rgba(248, 113, 113, 0.20)',
                 animation: 'glowPulse 2.4s ease-in-out infinite',
               }}>
               {badgeLabel}
@@ -258,12 +259,13 @@ export default function TopBar() {
         </button>
 
         {open && (
-          <div className="absolute right-0 top-11 w-96 rounded-2xl overflow-hidden z-50 elevation-3"
+          <div className="absolute right-0 top-11 w-96 rounded-2xl overflow-hidden z-50"
                style={{
-                 background: 'var(--ds-card-bg)',
+                 background: 'rgba(14, 16, 34, 0.88)',
                  border: '1px solid var(--ds-card-border)',
-                 backdropFilter: 'blur(28px) saturate(1.4)',
-                 WebkitBackdropFilter: 'blur(28px) saturate(1.4)',
+                 backdropFilter: 'blur(24px) saturate(1.4)',
+                 WebkitBackdropFilter: 'blur(24px) saturate(1.4)',
+                 boxShadow: 'var(--ds-shadow-lg), 0 0 40px rgba(124,110,240,0.12)',
                  maxHeight: 520,
                  display: 'flex',
                  flexDirection: 'column',

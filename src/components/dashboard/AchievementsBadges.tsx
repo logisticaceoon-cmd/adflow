@@ -55,15 +55,7 @@ export default function AchievementsBadges() {
 
   if (loading) {
     return (
-      <div className="dash-anim-6" style={{
-        padding: 20,
-        borderRadius: 'var(--ds-card-radius)',
-        background: 'var(--ds-card-bg)',
-        border: '1px solid var(--ds-card-border)',
-        backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-        WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-        boxShadow: 'var(--ds-shadow-sm)',
-      }}>
+      <div className="card" style={{ padding: 20 }}>
         <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>Cargando logros…</p>
       </div>
     )
@@ -82,15 +74,7 @@ export default function AchievementsBadges() {
   return (
     <>
       <AchievementToast achievements={newUnlocks} onAllDismissed={handleAllDismissed} />
-      <div className="dash-anim-6" style={{
-        padding: 20,
-        borderRadius: 'var(--ds-card-radius)',
-        background: 'var(--ds-card-bg)',
-        border: '1px solid var(--ds-card-border)',
-        backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-        WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-        boxShadow: 'var(--ds-shadow-sm)',
-      }}>
+      <div className="card module-enter module-enter-6" style={{ padding: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
           <h2 style={{
             fontFamily: 'Syne, sans-serif',
@@ -123,24 +107,29 @@ export default function AchievementsBadges() {
         }}>
           {display.map(a => (
             <div key={a.id}
+              className="achievement-item"
               title={`${a.name}${a.unlocked_at ? ` · ${new Date(a.unlocked_at).toLocaleDateString('es')}` : ''}: ${a.description}`}
               style={{
-                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
-                opacity: a.unlocked ? 1 : 0.35,
-                filter: a.unlocked ? 'none' : 'grayscale(80%)',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+                opacity: a.unlocked ? 1 : 0.25,
+                filter: a.unlocked ? 'none' : 'grayscale(100%)',
                 cursor: 'help',
+                transition: 'transform 200ms cubic-bezier(0.16, 1, 0.3, 1)',
               }}>
               <div style={{
-                width: 42, height: 42, borderRadius: '50%',
+                width: 56, height: 56, borderRadius: '50%',
                 background: a.unlocked
                   ? 'var(--ds-color-warning-soft)'
-                  : 'rgba(255,255,255,0.03)',
+                  : 'var(--ds-bg-elevated)',
                 border: a.unlocked
                   ? '1px solid var(--ds-color-warning-border)'
                   : '1px solid var(--ds-card-border)',
-                boxShadow: a.unlocked ? '0 0 16px rgba(251,191,36,0.18)' : 'none',
+                boxShadow: a.unlocked
+                  ? '0 0 0 1px rgba(251,191,36,0.20), 0 0 24px rgba(251,191,36,0.22), 0 0 40px rgba(251,191,36,0.10)'
+                  : 'none',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 20,
+                fontSize: 28,
+                transition: 'box-shadow 200ms ease',
               }}>
                 {a.icon}
               </div>

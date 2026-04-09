@@ -16,15 +16,10 @@ export default function OnboardingChecklist({ status }: Props) {
   const next = status.nextStep ? status.steps[status.nextStep] : null
 
   return (
-    <div className="dash-anim-3" style={{
+    <div className="card module-enter module-enter-3" style={{
       marginBottom: 24,
       padding: '16px 20px',
-      borderRadius: 'var(--ds-card-radius)',
-      background: 'var(--ds-card-bg)',
-      border: '1px solid var(--ds-card-border)',
-      backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-      WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-      boxShadow: 'var(--ds-shadow-sm)',
+      maxHeight: 140,
     }}>
       {/* Header row */}
       <div style={{
@@ -49,21 +44,9 @@ export default function OnboardingChecklist({ status }: Props) {
         </span>
       </div>
 
-      {/* Thin progress bar */}
-      <div style={{
-        height: 6, borderRadius: 99,
-        background: 'rgba(255, 255, 255, 0.05)',
-        overflow: 'hidden',
-        marginBottom: 12,
-      }}>
-        <div
-          className="progress-bar-fill"
-          style={{
-            height: '100%', width: `${status.completionScore}%`,
-            background: 'var(--ds-color-primary)',
-            borderRadius: 99,
-          }}
-        />
+      {/* Premium progress bar with tip glow */}
+      <div className="progress-bar" style={{ height: 6, marginBottom: 12 }}>
+        <div className="progress-bar-fill" style={{ width: `${status.completionScore}%` }} />
       </div>
 
       {/* Bottom row — mini-list + CTA link */}

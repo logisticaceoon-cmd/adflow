@@ -261,15 +261,15 @@ export default function Sidebar({ user, profile }: Props) {
                   </div>
                   {pixelLevel < 8 && (
                     <>
-                      <div style={{ height: 6, borderRadius: 99, background: 'rgba(255,255,255,0.06)', overflow: 'hidden', marginBottom: 5 }}>
-                        <div style={{
-                          height: '100%',
-                          width: `${progressPct}%`,
-                          background: `linear-gradient(90deg, ${lvColor}, ${LEVEL_COLORS[nextLevel]})`,
-                          boxShadow: `0 0 8px ${lvColor}80`,
-                          borderRadius: 99,
-                          transition: 'width 0.6s ease',
-                        }} />
+                      <div className="progress-bar" style={{ height: 6, marginBottom: 5 }}>
+                        <div
+                          className="progress-bar-fill"
+                          style={{
+                            width: `${progressPct}%`,
+                            background: `linear-gradient(90deg, ${lvColor}, ${LEVEL_COLORS[nextLevel]})`,
+                            boxShadow: `0 0 10px ${lvColor}60, 0 0 20px ${lvColor}30, inset 0 1px 0 rgba(255,255,255,0.24)`,
+                          }}
+                        />
                       </div>
                       <p style={{ fontSize: 9.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.3 }}>
                         {remaining > 0
@@ -340,8 +340,8 @@ export default function Sidebar({ user, profile }: Props) {
               >
                 <Icon size={16} strokeWidth={active ? 2.2 : 1.75}
                   style={{
-                    color: active ? 'var(--ds-color-success)' : 'var(--ds-text-secondary)',
-                    filter: active ? 'drop-shadow(0 0 8px rgba(52,211,153,0.45))' : 'none',
+                    color: active ? 'var(--ds-color-primary)' : 'var(--ds-text-secondary)',
+                    filter: active ? 'drop-shadow(0 0 8px rgba(124,110,240,0.50))' : 'none',
                     flexShrink: 0,
                   }}
                 />
@@ -388,8 +388,8 @@ export default function Sidebar({ user, profile }: Props) {
               >
                 <Icon size={16} strokeWidth={active ? 2.2 : 1.75}
                   style={{
-                    color: active ? 'var(--ds-color-success)' : 'var(--ds-text-secondary)',
-                    filter: active ? 'drop-shadow(0 0 8px rgba(52,211,153,0.45))' : 'none',
+                    color: active ? 'var(--ds-color-primary)' : 'var(--ds-text-secondary)',
+                    filter: active ? 'drop-shadow(0 0 8px rgba(124,110,240,0.50))' : 'none',
                     flexShrink: 0,
                   }} />
                 <span style={{
@@ -478,15 +478,17 @@ export default function Sidebar({ user, profile }: Props) {
                   </span>
                 </div>
 
-                <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 99, height: 5, overflow: 'hidden', marginBottom: 6 }}>
-                  <div style={{
-                    height: '100%',
-                    width: `${Math.min(100, creditsPct)}%`,
-                    borderRadius: 99,
-                    background: `linear-gradient(90deg, ${barGrad})`,
-                    boxShadow: creditsLow ? '0 0 8px #ef444490' : '0 0 10px transparent',
-                    transition: 'width 0.6s cubic-bezier(0.16,1,0.3,1)',
-                  }} />
+                <div className="progress-bar" style={{ height: 5, marginBottom: 6 }}>
+                  <div
+                    className="progress-bar-fill"
+                    style={{
+                      width: `${Math.min(100, creditsPct)}%`,
+                      background: `linear-gradient(90deg, ${barGrad})`,
+                      boxShadow: creditsLow
+                        ? '0 0 10px rgba(239,68,68,0.50), 0 0 20px rgba(239,68,68,0.24), inset 0 1px 0 rgba(255,255,255,0.24)'
+                        : undefined,
+                    }}
+                  />
                 </div>
 
                 <p style={{

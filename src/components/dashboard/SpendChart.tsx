@@ -16,13 +16,14 @@ function CustomTooltip({ active, payload, label }: any) {
   return (
     <div style={{
       padding: '10px 14px', borderRadius: 12,
-      background: 'rgba(10,10,26,0.92)',
-      border: '1px solid var(--ds-color-primary-border)',
-      backdropFilter: 'blur(16px)',
-      boxShadow: '0 8px 24px rgba(0,0,0,0.5), 0 0 16px var(--ds-color-primary-soft)',
+      background: 'rgba(14, 16, 34, 0.92)',
+      border: '1px solid var(--ds-card-border)',
+      backdropFilter: 'blur(16px) saturate(1.3)',
+      WebkitBackdropFilter: 'blur(16px) saturate(1.3)',
+      boxShadow: 'var(--ds-shadow-md)',
     }}>
-      <p style={{ fontSize: 11, color: '#8892b0', marginBottom: 4 }}>{label}</p>
-      <p style={{ fontSize: 18, fontWeight: 800, color: '#ffffff', letterSpacing: '-0.03em' }}>
+      <p style={{ fontSize: 10, color: 'var(--ds-text-muted)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}>{label}</p>
+      <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: 'var(--ds-text-primary)', letterSpacing: '-0.02em' }}>
         ${payload[0].value}
       </p>
     </div>
@@ -53,11 +54,11 @@ export default function SpendChart({ totalSpend }: Props) {
         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
         <XAxis
           dataKey="day"
-          tick={{ fontSize: 11, fill: '#a8b0c0' }}
+          tick={{ fontSize: 10, fill: 'rgba(220,226,245,0.46)' }}
           axisLine={false} tickLine={false}
         />
         <YAxis
-          tick={{ fontSize: 11, fill: '#a8b0c0' }}
+          tick={{ fontSize: 10, fill: 'rgba(220,226,245,0.46)' }}
           axisLine={false} tickLine={false}
           tickFormatter={v => `$${v}`}
         />
