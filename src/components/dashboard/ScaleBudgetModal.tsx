@@ -59,11 +59,13 @@ export default function ScaleBudgetModal({ open, onClose, onConfirm, campaignNam
         onClick={e => e.stopPropagation()}
         style={{
           width: '100%', maxWidth: 520,
-          background: 'linear-gradient(160deg, rgba(14,4,9,0.98) 0%, rgba(8,2,5,0.99) 100%)',
+          background: 'rgba(8, 10, 22, 0.90)',
           border: '1px solid var(--ds-color-primary-border)',
           borderRadius: 20,
           padding: '28px 28px 24px',
-          boxShadow: '0 24px 80px rgba(0,0,0,0.80), 0 0 100px var(--ds-color-primary-border)',
+          backdropFilter: 'blur(32px) saturate(1.3)',
+          WebkitBackdropFilter: 'blur(32px) saturate(1.3)',
+          boxShadow: '0 32px 96px rgba(0,0,0,0.80), 0 0 100px var(--ds-color-primary-glow), inset 0 1px 0 rgba(255,255,255,0.05)',
           animation: 'modalIn 0.25s cubic-bezier(0.16,1,0.3,1)',
           position: 'relative',
         }}>

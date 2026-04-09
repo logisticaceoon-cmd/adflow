@@ -200,15 +200,8 @@ export default function Sidebar({ user, profile }: Props) {
         />
       )}
       <aside
-        className={`fixed left-0 top-0 h-screen w-64 flex flex-col transition-transform duration-300 ease-out md:translate-x-0 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}
-        style={{
-          background: 'linear-gradient(180deg, rgba(11, 15, 36, 0.78) 0%, rgba(8, 11, 28, 0.85) 100%)',
-          borderRight: '1px solid var(--ds-border-soft)',
-          backdropFilter: 'blur(28px) saturate(1.5)',
-          WebkitBackdropFilter: 'blur(28px) saturate(1.5)',
-          boxShadow: '12px 0 48px rgba(2, 6, 23, 0.55), 1px 0 0 rgba(148, 168, 255, 0.06) inset',
-          zIndex: 50,
-        }}
+        className={`sidebar fixed left-0 top-0 h-screen w-64 flex flex-col transition-transform duration-300 ease-out md:translate-x-0 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        style={{ zIndex: 50 }}
       >
 
         {/* ── LOGO ── */}
