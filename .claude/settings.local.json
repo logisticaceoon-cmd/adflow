@@ -26,7 +26,9 @@
       "mcp__claude_ai_Supabase__apply_migration",
       "Bash(wc:*)",
       "Bash(grep:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Bash(ls C:/proyectos/adflow/src/components/dashboard/*Modal.tsx)",
+      "Bash(ls C:/proyectos/adflow/src/components/**/*Modal*.tsx)"
     ]
   }
 }

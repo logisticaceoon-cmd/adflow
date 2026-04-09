@@ -482,7 +482,7 @@ function FeaturesSection() {
   const { ref, visible } = useFadeIn()
   const features = [
     { icon: Bot, title: 'IA genera copies profesionales', desc: 'Copies persuasivos adaptados a tu tono de marca en segundos, optimizados para cada formato de Meta.', color: 'var(--ds-color-primary)' },
-    { icon: Facebook, title: 'Conecta Facebook Ads directo', desc: 'Integración oficial con Meta Business Manager. Publicá y gestioná campañas sin salir de AdFlow.', color: '#60a5fa' },
+    { icon: Facebook, title: 'Conecta Facebook Ads directo', desc: 'Integración oficial con Meta Business Manager. Publicá y gestioná campañas sin salir de AdFlow.', color: '#22d3ee' },
     { icon: BarChart3, title: 'Reportes diarios automáticos', desc: 'Recibí cada mañana un resumen con métricas clave y recomendaciones de IA para optimizar tu inversión.', color: '#06d6a0' },
     { icon: Target, title: 'Públicos sugeridos por IA', desc: 'Describí tu producto y la IA crea audiencias precisas: intereses, comportamientos y lookalikes.', color: '#62c4b0' },
     { icon: RefreshCw, title: 'A/B testing automático', desc: 'La IA genera variantes y las prueba automáticamente, escalando el presupuesto hacia lo que convierte.', color: '#f59e0b' },

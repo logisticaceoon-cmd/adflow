@@ -68,11 +68,11 @@ export default async function ReportsHubPage() {
         marginBottom: 32,
         borderRadius: 24, padding: '36px 40px',
         background:
-          'linear-gradient(135deg, rgba(124, 110, 240, 0.08) 0%, rgba(10, 12, 28, 0.50) 50%, rgba(167, 139, 250, 0.04) 100%)',
+          'linear-gradient(135deg, rgba(34, 211, 238, 0.08) 0%, rgba(10, 12, 28, 0.50) 50%, rgba(167, 139, 250, 0.04) 100%)',
         border: '1px solid rgba(255, 255, 255, 0.08)',
         backdropFilter: 'blur(32px) saturate(1.4)',
         WebkitBackdropFilter: 'blur(32px) saturate(1.4)',
-        boxShadow: 'var(--ds-shadow-md), 0 0 40px rgba(124, 110, 240, 0.05)',
+        boxShadow: 'var(--ds-shadow-md), 0 0 40px rgba(34, 211, 238, 0.05)',
         overflow: 'hidden',
       }}>
         <div style={{
@@ -122,7 +122,7 @@ export default async function ReportsHubPage() {
         <div className="card card-hover" style={{
           padding: '24px 28px',
           borderColor: 'var(--ds-color-primary-border)',
-          boxShadow: 'var(--ds-shadow-md), 0 0 48px rgba(124, 110, 240, 0.10), var(--ds-card-inner-glow)',
+          boxShadow: 'var(--ds-shadow-md), 0 0 48px rgba(34, 211, 238, 0.10), var(--ds-card-inner-glow)',
           cursor: 'pointer',
         }}>
           <div className="flex items-center justify-between mb-4">
@@ -253,7 +253,7 @@ export default async function ReportsHubPage() {
       <div className="card" style={{
         padding: 20, marginBottom: 24,
         borderLeft: '3px solid var(--ds-color-primary)',
-        boxShadow: 'var(--ds-shadow-md), -3px 0 15px rgba(124, 110, 240, 0.10), var(--ds-card-inner-glow)',
+        boxShadow: 'var(--ds-shadow-md), -3px 0 15px rgba(34, 211, 238, 0.10), var(--ds-card-inner-glow)',
       }}>
         <div className="flex items-start gap-4">
           <div style={{

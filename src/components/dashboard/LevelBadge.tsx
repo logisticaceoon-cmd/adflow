@@ -13,7 +13,7 @@ const LEVEL_COLORS: Record<number, string> = {
   1: 'var(--ds-color-danger)', 2: 'var(--ds-color-danger)',
   3: 'var(--ds-color-warning)', 4: 'var(--ds-color-warning)',
   5: 'var(--ds-color-success)', 6: 'var(--ds-color-success)',
-  7: '#3b82f6',
+  7: '#22d3ee',
   8: '#8b5cf6',
 }
 

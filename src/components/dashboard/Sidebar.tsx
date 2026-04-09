@@ -20,7 +20,7 @@ interface Props { user: User; profile: Profile | null }
 // Level color mapping
 const LEVEL_COLORS: Record<number, string> = {
   0: '#8892b0', 1: '#ef4444', 2: '#ef4444', 3: '#f59e0b', 4: '#f59e0b',
-  5: '#06d6a0', 6: '#06d6a0', 7: '#3b82f6', 8: '#8b5cf6',
+  5: '#06d6a0', 6: '#06d6a0', 7: '#22d3ee', 8: '#8b5cf6',
 }
 
 const LEVEL_ICONS: Record<number, string> = {
@@ -341,7 +341,7 @@ export default function Sidebar({ user, profile }: Props) {
                 <Icon size={16} strokeWidth={active ? 2.2 : 1.75}
                   style={{
                     color: active ? 'var(--ds-color-primary)' : 'var(--ds-text-secondary)',
-                    filter: active ? 'drop-shadow(0 0 8px rgba(124,110,240,0.50))' : 'none',
+                    filter: active ? 'drop-shadow(0 0 8px rgba(34, 211, 238,0.50))' : 'none',
                     flexShrink: 0,
                   }}
                 />
@@ -389,7 +389,7 @@ export default function Sidebar({ user, profile }: Props) {
                 <Icon size={16} strokeWidth={active ? 2.2 : 1.75}
                   style={{
                     color: active ? 'var(--ds-color-primary)' : 'var(--ds-text-secondary)',
-                    filter: active ? 'drop-shadow(0 0 8px rgba(124,110,240,0.50))' : 'none',
+                    filter: active ? 'drop-shadow(0 0 8px rgba(34, 211, 238,0.50))' : 'none',
                     flexShrink: 0,
                   }} />
                 <span style={{

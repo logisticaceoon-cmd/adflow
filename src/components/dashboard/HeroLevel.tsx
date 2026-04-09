@@ -30,7 +30,7 @@ const LEVEL_GLOW: Record<number, string> = {
   4: 'rgba(245, 158, 11, 0.20)',
   5: 'rgba(6, 214, 160, 0.22)',
   6: 'rgba(6, 214, 160, 0.22)',
-  7: 'rgba(124, 110, 240, 0.22)',
+  7: 'rgba(34, 211, 238, 0.22)',
   8: 'rgba(139, 92, 246, 0.22)',
 }
 
@@ -67,12 +67,12 @@ export default function HeroLevel(p: Props) {
       borderRadius: 24,
       padding: '36px 40px',
       background:
-        'linear-gradient(135deg, rgba(124, 110, 240, 0.06) 0%, rgba(10, 12, 28, 0.50) 50%, rgba(52, 211, 153, 0.03) 100%)',
+        'linear-gradient(135deg, rgba(34, 211, 238, 0.06) 0%, rgba(10, 12, 28, 0.50) 50%, rgba(52, 211, 153, 0.03) 100%)',
       border: '1px solid rgba(255, 255, 255, 0.08)',
       backdropFilter: 'blur(32px) saturate(1.4)',
       WebkitBackdropFilter: 'blur(32px) saturate(1.4)',
       boxShadow:
-        'var(--ds-shadow-md), 0 0 40px rgba(124, 110, 240, 0.05)',
+        'var(--ds-shadow-md), 0 0 40px rgba(34, 211, 238, 0.05)',
       overflow: 'hidden',
     }}>
       {/* Full-width top light reflection — brighter than regular cards */}
@@ -115,8 +115,8 @@ export default function HeroLevel(p: Props) {
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 10,
               padding: '6px 14px', borderRadius: 999,
-              background: 'rgba(124, 110, 240, 0.08)',
-              border: '1px solid rgba(124, 110, 240, 0.22)',
+              background: 'rgba(34, 211, 238, 0.08)',
+              border: '1px solid rgba(34, 211, 238, 0.22)',
               boxShadow: `0 0 24px ${levelGlow}`,
             }}>
               <span style={{ fontSize: 14 }}>{levelIcon}</span>

@@ -6,7 +6,7 @@ import AdminPlanSelect from '@/components/admin/AdminPlanSelect'
 import AdminCreditsModal from '@/components/admin/AdminCreditsModal'
 
 const PLAN_COLORS: Record<string, string> = {
-  free: '#62c4b0', starter: '#f472b6', pro: '#e91e8c', agency: '#f59e0b',
+  free: '#62c4b0', starter: '#f472b6', pro: '#22d3ee', agency: '#f59e0b',
 }
 const ROLE_COLORS: Record<string, string> = {
   user: '#8892b0', admin: '#f59e0b', super_admin: '#ef4444',

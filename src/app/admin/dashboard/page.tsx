@@ -190,12 +190,12 @@ export default async function AdminDashboardPage() {
           style={{ animation: 'adminFadeUp 0.4s ease-out both' }}>
           <div>
             <p className="text-[10px] font-bold tracking-widest uppercase mb-1.5"
-              style={{ color: '#e91e8c' }}>
+              style={{ color: '#22d3ee' }}>
               Panel de Administración · AdFlow
             </p>
             <h1 className="text-2xl font-extrabold tracking-tight mb-1.5"
               style={{
-                background: 'linear-gradient(90deg, #ffffff 20%, #e91e8c 60%, #62c4b0 100%)',
+                background: 'linear-gradient(90deg, #ffffff 20%, #22d3ee 60%, #62c4b0 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -204,7 +204,7 @@ export default async function AdminDashboardPage() {
             </h1>
             <p className="text-sm flex items-center gap-2" style={{ color: '#c0a8c0' }}>
               <span className="inline-block w-1.5 h-1.5 rounded-full"
-                style={{ background: '#e91e8c', boxShadow: '0 0 6px rgba(233,30,140,0.8)' }} />
+                style={{ background: '#22d3ee', boxShadow: '0 0 6px rgba(233,30,140,0.8)' }} />
               Sistema operativo ·{' '}
               {now.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}
             </p>
@@ -279,7 +279,7 @@ export default async function AdminDashboardPage() {
 
           {/* Recent users table */}
           <div className="col-span-3">
-            <SectionCard title="Últimos usuarios registrados" accentColor="#e91e8c" delay={600}>
+            <SectionCard title="Últimos usuarios registrados" accentColor="#22d3ee" delay={600}>
               <table className="w-full">
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
@@ -302,7 +302,7 @@ export default async function AdminDashboardPage() {
                             background: u.plan === 'pro' ? 'rgba(234,27,126,0.15)'
                               : u.plan === 'agency' ? 'rgba(245,158,11,0.15)'
                               : 'rgba(255,255,255,0.05)',
-                            color: u.plan === 'pro' ? '#e91e8c'
+                            color: u.plan === 'pro' ? '#22d3ee'
                               : u.plan === 'agency' ? '#f9a8d4'
                               : '#8892b0',
                           }}>
@@ -328,7 +328,7 @@ export default async function AdminDashboardPage() {
               <div className="px-5 py-3.5 border-t" style={{ borderColor: 'rgba(255,255,255,0.07)' }}>
                 <Link href="/admin/users"
                   className="text-xs font-semibold transition-opacity hover:opacity-80 flex items-center gap-1.5"
-                  style={{ color: '#e91e8c' }}>
+                  style={{ color: '#22d3ee' }}>
                   <Users size={12} />
                   Ver todos los usuarios →
                 </Link>
@@ -340,7 +340,7 @@ export default async function AdminDashboardPage() {
           <div className="col-span-2 flex flex-col gap-4">
 
             {/* Recent campaigns */}
-            <SectionCard title="Campañas recientes" accentColor="#e91e8c" delay={700}>
+            <SectionCard title="Campañas recientes" accentColor="#22d3ee" delay={700}>
               <div>
                 {(recentCampaigns || []).map((c: any) => (
                   <div key={c.id}
@@ -360,7 +360,7 @@ export default async function AdminDashboardPage() {
               <div className="px-5 py-3.5 border-t" style={{ borderColor: 'rgba(255,255,255,0.07)' }}>
                 <Link href="/admin/campaigns"
                   className="text-xs font-semibold transition-opacity hover:opacity-80 flex items-center gap-1.5"
-                  style={{ color: '#e91e8c' }}>
+                  style={{ color: '#22d3ee' }}>
                   <Megaphone size={12} />
                   Ver todas las campañas →
                 </Link>
@@ -376,7 +376,7 @@ export default async function AdminDashboardPage() {
               </p>
               {[
                 { label: 'Free',          key: 'free',   color: '#8892b0' },
-                { label: 'Pro ($49)',      key: 'pro',    color: '#e91e8c' },
+                { label: 'Pro ($49)',      key: 'pro',    color: '#22d3ee' },
                 { label: 'Agency ($149)', key: 'agency', color: '#f9a8d4' },
               ].map(({ label, key, color }) => {
                 const count = planCounts[key as keyof typeof planCounts]

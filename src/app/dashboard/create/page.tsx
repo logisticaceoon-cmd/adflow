@@ -513,7 +513,7 @@ export default function CreateCampaignPage() {
                     boxShadow: done
                       ? '0 0 0 1px rgba(52, 211, 153, 0.20), 0 0 16px rgba(52, 211, 153, 0.20)'
                       : active
-                        ? '0 0 0 1px rgba(124, 110, 240, 0.25), 0 0 20px rgba(124, 110, 240, 0.24)'
+                        ? '0 0 0 1px rgba(34, 211, 238, 0.25), 0 0 20px rgba(34, 211, 238, 0.24)'
                         : 'none',
                     fontSize: 11,
                   }}

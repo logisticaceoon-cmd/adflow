@@ -265,7 +265,7 @@ export default function TopBar() {
                  border: '1px solid var(--ds-card-border)',
                  backdropFilter: 'blur(24px) saturate(1.4)',
                  WebkitBackdropFilter: 'blur(24px) saturate(1.4)',
-                 boxShadow: 'var(--ds-shadow-lg), 0 0 40px rgba(124,110,240,0.12)',
+                 boxShadow: 'var(--ds-shadow-lg), 0 0 40px rgba(34, 211, 238,0.12)',
                  maxHeight: 520,
                  display: 'flex',
                  flexDirection: 'column',

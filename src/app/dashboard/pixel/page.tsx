@@ -164,12 +164,12 @@ export default function PixelDashboardPage() {
         marginBottom: 40,
         borderRadius: 24, padding: '40px 44px',
         background:
-          'linear-gradient(135deg, rgba(124, 110, 240, 0.08) 0%, rgba(10, 12, 28, 0.50) 50%, rgba(52, 211, 153, 0.04) 100%)',
+          'linear-gradient(135deg, rgba(34, 211, 238, 0.08) 0%, rgba(10, 12, 28, 0.50) 50%, rgba(52, 211, 153, 0.04) 100%)',
         border: '1px solid rgba(255, 255, 255, 0.08)',
         backdropFilter: 'blur(32px) saturate(1.4)',
         WebkitBackdropFilter: 'blur(32px) saturate(1.4)',
         boxShadow:
-          'var(--ds-shadow-md), 0 0 60px rgba(124, 110, 240, 0.06)',
+          'var(--ds-shadow-md), 0 0 60px rgba(34, 211, 238, 0.06)',
         overflow: 'hidden',
       }}>
         {/* Full-width top light reflection (brighter than regular cards) */}
@@ -217,7 +217,7 @@ export default function PixelDashboardPage() {
             padding: 6,
             background: 'var(--ds-color-primary-soft)',
             border: '1px solid var(--ds-color-primary-border)',
-            boxShadow: '0 0 30px var(--ds-color-primary-glow), 0 0 60px rgba(124, 110, 240, 0.10)',
+            boxShadow: '0 0 30px var(--ds-color-primary-glow), 0 0 60px rgba(34, 211, 238, 0.10)',
           }}>
             <LevelBadge level={level} levelName="" size="lg" showName={false} />
           </div>
@@ -228,7 +228,7 @@ export default function PixelDashboardPage() {
           <h1 style={{
             fontFamily: 'Syne, sans-serif', fontSize: 38, fontWeight: 700,
             color: 'var(--ds-text-primary)', letterSpacing: '-0.03em', marginBottom: 16,
-            textShadow: '0 0 32px rgba(124, 110, 240, 0.20)',
+            textShadow: '0 0 32px rgba(34, 211, 238, 0.20)',
           }}>
             {pa?.level_name}
           </h1>
@@ -280,7 +280,7 @@ export default function PixelDashboardPage() {
         <ScoreCard
           totalScore={totalScore}
           breakdown={[
-            { label: `Nivel ${level}`,    points: scoreLevel,   color: '#7c6ef0' },
+            { label: `Nivel ${level}`,    points: scoreLevel,   color: '#22d3ee' },
             { label: 'Tráfico web',       points: scoreTraffic, color: '#9d90ff' },
             { label: 'Compras (180d)',    points: scoreSales,   color: '#34d399' },
             { label: `Campañas (${campaignsCount})`, points: scoreCamps, color: '#fbbf24' },

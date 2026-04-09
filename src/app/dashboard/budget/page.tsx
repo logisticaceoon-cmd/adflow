@@ -15,7 +15,7 @@ interface MonthlyBudgetRow {
 
 const LEVEL_COLORS: Record<number, string> = {
   0: '#8892b0', 1: '#f87171', 2: '#f87171', 3: '#fbbf24', 4: '#fbbf24',
-  5: '#34d399', 6: '#34d399', 7: '#7c6ef0', 8: '#a78bfa',
+  5: '#34d399', 6: '#34d399', 7: '#22d3ee', 8: '#a78bfa',
 }
 
 // Minimum pixel level to unlock each phase
@@ -243,11 +243,11 @@ export default function BudgetPage() {
         marginBottom: 32,
         borderRadius: 24, padding: '36px 40px',
         background:
-          'linear-gradient(135deg, rgba(124, 110, 240, 0.08) 0%, rgba(10, 12, 28, 0.50) 50%, rgba(52, 211, 153, 0.03) 100%)',
+          'linear-gradient(135deg, rgba(34, 211, 238, 0.08) 0%, rgba(10, 12, 28, 0.50) 50%, rgba(52, 211, 153, 0.03) 100%)',
         border: '1px solid rgba(255, 255, 255, 0.08)',
         backdropFilter: 'blur(32px) saturate(1.4)',
         WebkitBackdropFilter: 'blur(32px) saturate(1.4)',
-        boxShadow: 'var(--ds-shadow-md), 0 0 40px rgba(124, 110, 240, 0.05)',
+        boxShadow: 'var(--ds-shadow-md), 0 0 40px rgba(34, 211, 238, 0.05)',
         overflow: 'hidden',
       }}>
         {/* Full-width top light reflection */}

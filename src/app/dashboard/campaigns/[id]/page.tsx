@@ -30,14 +30,14 @@ const STATUS_GRADIENTS: Record<string, { from: string; to: string; main: string;
 }
 
 const PHASE_COLORS: Record<string, { color: string; label: string }> = {
-  F1: { color: '#3b82f6', label: 'F1 · Reconocimiento' },
+  F1: { color: '#22d3ee', label: 'F1 · Reconocimiento' },
   F2: { color: 'var(--ds-color-success)', label: 'F2 · Conversión' },
   F3: { color: '#a855f7', label: 'F3 · Remarketing' },
   F4: { color: '#06b6d4', label: 'F4 · WhatsApp' },
 }
 
 const STRATEGY_COLORS: Record<string, string> = {
-  TOFU: '#3b82f6', MOFU: '#a855f7', BOFU: 'var(--ds-color-success)',
+  TOFU: '#22d3ee', MOFU: '#a855f7', BOFU: 'var(--ds-color-success)',
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -610,10 +610,10 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
               <div style={{
                 padding: '14px 18px',
                 borderRadius: 12,
-                background: 'rgba(59,130,246,0.06)',
-                border: '1px solid rgba(59,130,246,0.20)',
+                background: 'rgba(34, 211, 238,0.06)',
+                border: '1px solid rgba(34, 211, 238,0.20)',
               }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: '#3b82f6', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: '#22d3ee', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
                   Decisiones de audiencia
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>

@@ -20,7 +20,7 @@ interface Props {
 
 const RARITY_META: Record<string, { stars: string; label: string; glow: string; border: string }> = {
   common:    { stars: '⭐',     label: 'Común',     glow: 'rgba(148,163,184,0.45)', border: 'rgba(148,163,184,0.55)' },
-  rare:      { stars: '⭐⭐',   label: 'Raro',      glow: 'rgba(59,130,246,0.55)',  border: 'rgba(59,130,246,0.70)' },
+  rare:      { stars: '⭐⭐',   label: 'Raro',      glow: 'rgba(34, 211, 238,0.55)',  border: 'rgba(34, 211, 238,0.70)' },
   epic:      { stars: '⭐⭐⭐', label: 'Épico',     glow: 'rgba(168,85,247,0.60)',  border: 'rgba(168,85,247,0.75)' },
   legendary: { stars: '⭐⭐⭐⭐', label: 'Legendario', glow: 'rgba(245,158,11,0.70)',  border: 'rgba(245,158,11,0.85)' },
 }
