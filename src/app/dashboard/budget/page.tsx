@@ -14,8 +14,8 @@ interface MonthlyBudgetRow {
 }
 
 const LEVEL_COLORS: Record<number, string> = {
-  0: '#8892b0', 1: 'var(--ds-color-danger)', 2: 'var(--ds-color-danger)', 3: 'var(--ds-color-warning)', 4: 'var(--ds-color-warning)',
-  5: 'var(--ds-color-success)', 6: 'var(--ds-color-success)', 7: '#3b82f6', 8: '#8b5cf6',
+  0: '#8892b0', 1: '#f87171', 2: '#f87171', 3: '#fbbf24', 4: '#fbbf24',
+  5: '#34d399', 6: '#34d399', 7: '#7c6ef0', 8: '#a78bfa',
 }
 
 // Minimum pixel level to unlock each phase
@@ -57,47 +57,45 @@ interface NumberCardProps {
 
 function InputCard({ icon, label, helper, value, onChange, prefix, suffix, required, big }: NumberCardProps) {
   return (
-    <div style={{
-      padding: '18px 20px', borderRadius: 16,
-      background: 'var(--ds-card-bg)',
-      border: '1px solid rgba(255,255,255,0.08)',
-    }}>
+    <div className="card" style={{ padding: '18px 20px' }}>
       <div className="flex items-center gap-2 mb-2">
         <span style={{ fontSize: 18 }}>{icon}</span>
-        <p style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>
+        <p style={{
+          fontSize: 10, fontWeight: 700, color: 'var(--ds-text-label)',
+          textTransform: 'uppercase', letterSpacing: '0.10em',
+        }}>
           {label} {required && <span style={{ color: 'var(--ds-color-primary)' }}>*</span>}
         </p>
       </div>
-      <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', marginBottom: 12, lineHeight: 1.5 }}>{helper}</p>
+      <p style={{ fontSize: 12, color: 'var(--ds-text-muted)', marginBottom: 12, lineHeight: 1.5 }}>{helper}</p>
       <div style={{ position: 'relative' }}>
         {prefix && (
           <span style={{
             position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',
-            fontSize: big ? 18 : 13, color: 'var(--ds-text-secondary)', fontWeight: 600, pointerEvents: 'none',
+            fontSize: big ? 22 : 13, color: 'var(--ds-text-muted)', fontWeight: 600, pointerEvents: 'none',
+            zIndex: 1,
           }}>{prefix}</span>
         )}
         <input
           type="number" min={0}
           value={value}
           onChange={e => onChange(e.target.value)}
+          className="input-field"
           style={{
-            width: '100%',
             padding: big ? '14px 14px 14px 36px' : '11px 14px 11px 14px',
             paddingLeft: prefix ? (big ? 36 : 30) : (big ? 14 : 14),
             paddingRight: suffix ? 36 : 14,
-            borderRadius: 10,
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.10)',
-            color: '#fff',
-            fontSize: big ? 22 : 14,
+            fontSize: big ? 28 : 14,
             fontFamily: big ? 'Syne, sans-serif' : undefined,
-            fontWeight: big ? 800 : 500,
+            fontWeight: big ? 600 : 500,
+            letterSpacing: big ? '-0.02em' : undefined,
           }}
         />
         {suffix && (
           <span style={{
             position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)',
-            fontSize: 13, color: 'var(--ds-text-secondary)', fontWeight: 600, pointerEvents: 'none',
+            fontSize: 13, color: 'var(--ds-text-muted)', fontWeight: 600, pointerEvents: 'none',
+            zIndex: 1,
           }}>{suffix}</span>
         )}
       </div>
@@ -240,26 +238,31 @@ export default function BudgetPage() {
   return (
     <div className="max-w-5xl mx-auto">
       {/* ── SECTION A: HERO ───────────────────────────────────────────── */}
-      <div className="dash-anim-1 mb-6" style={{
+      <div className="module-enter module-enter-1" style={{
         position: 'relative',
-        borderRadius: 22, padding: '28px 32px',
-        background: 'linear-gradient(135deg, var(--ds-color-primary-soft) 0%, transparent 50%, var(--ds-color-primary-soft) 100%)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        backdropFilter: 'blur(20px)',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.50), 0 0 80px transparent',
+        marginBottom: 32,
+        borderRadius: 24, padding: '36px 40px',
+        background:
+          'linear-gradient(135deg, rgba(124, 110, 240, 0.08) 0%, rgba(10, 12, 28, 0.50) 50%, rgba(52, 211, 153, 0.03) 100%)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        backdropFilter: 'blur(32px) saturate(1.4)',
+        WebkitBackdropFilter: 'blur(32px) saturate(1.4)',
+        boxShadow: 'var(--ds-shadow-md), 0 0 40px rgba(124, 110, 240, 0.05)',
         overflow: 'hidden',
       }}>
+        {/* Full-width top light reflection */}
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-          background: 'linear-gradient(90deg, transparent, transparent, var(--ds-card-border), transparent)',
+          background: 'linear-gradient(90deg, transparent 10%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.12) 60%, transparent 90%)',
+          pointerEvents: 'none',
         }} />
 
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 8 }}>
+        <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ds-text-label)', marginBottom: 10 }}>
           Budget Engine · AdFlow
         </p>
         <h1 style={{
-          fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800,
-          color: '#fff', marginBottom: 8, letterSpacing: '-0.03em',
+          fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 700,
+          color: 'var(--ds-text-primary)', marginBottom: 10, letterSpacing: '-0.02em',
         }}>
           Planificá tu inversión del mes 💰
         </h1>
@@ -268,32 +271,19 @@ export default function BudgetPage() {
         </p>
 
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-          <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: 6,
-            padding: '6px 14px', borderRadius: 99,
-            background: `${lvColor}15`,
-            border: `1px solid ${lvColor}40`,
-            fontSize: 12, fontWeight: 700, color: lvColor,
+          <span className="ds-badge" style={{
+            background: `${lvColor}14`,
+            borderColor: `${lvColor}40`,
+            color: lvColor,
+            boxShadow: `0 0 12px ${lvColor}24`,
           }}>
             ⭐ Nivel {pixelLevel}: {pixelLevelName}
           </span>
-          <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: 6,
-            padding: '6px 14px', borderRadius: 99,
-            background: 'var(--ds-card-border)',
-            border: '1px solid var(--ds-card-border)',
-            fontSize: 12, fontWeight: 600, color: 'var(--ds-color-primary)',
-          }}>
+          <span className="ds-badge ds-badge--primary">
             📅 {monthLabel}
           </span>
           {activeBudget && (
-            <span style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              padding: '6px 14px', borderRadius: 99,
-              background: 'var(--ds-color-warning-soft)',
-              border: '1px solid var(--ds-color-warning-border)',
-              fontSize: 12, fontWeight: 600, color: 'var(--ds-color-warning)',
-            }}>
+            <span className="ds-badge ds-badge--warning">
               💼 Presupuesto activo: {currency} {activeBudget.total_budget.toLocaleString()}
             </span>
           )}
@@ -347,16 +337,15 @@ export default function BudgetPage() {
         </div>
 
         {/* Goal textarea full-width */}
-        <div style={{
-          padding: '18px 20px', borderRadius: 16,
-          background: 'var(--ds-card-bg)',
-          border: '1px solid rgba(255,255,255,0.08)',
-        }}>
+        <div className="card" style={{ padding: '18px 20px' }}>
           <div className="flex items-center gap-2 mb-2">
             <span style={{ fontSize: 18 }}>📝</span>
-            <p style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>Objetivo del mes (opcional)</p>
+            <p style={{
+              fontSize: 10, fontWeight: 700, color: 'var(--ds-text-label)',
+              textTransform: 'uppercase', letterSpacing: '0.10em',
+            }}>Objetivo del mes (opcional)</p>
           </div>
-          <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', marginBottom: 12 }}>
+          <p style={{ fontSize: 12, color: 'var(--ds-text-muted)', marginBottom: 12 }}>
             ¿Qué querés lograr este mes? Ej: aumentar ventas, lanzar producto nuevo
           </p>
           <textarea
@@ -364,11 +353,8 @@ export default function BudgetPage() {
             value={monthGoal}
             onChange={e => setMonthGoal(e.target.value)}
             placeholder="Ej: Lanzar mi nueva línea de zapatillas y conseguir 50 ventas el primer mes"
-            style={{
-              width: '100%', padding: '11px 14px', borderRadius: 10,
-              background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)',
-              color: '#fff', fontSize: 13, resize: 'vertical', fontFamily: 'inherit',
-            }}
+            className="input-field"
+            style={{ resize: 'vertical', fontFamily: 'inherit' }}
           />
         </div>
 
@@ -382,9 +368,12 @@ export default function BudgetPage() {
 
       {/* ── SECTION C: PHASE DISTRIBUTION ─────────────────────────────── */}
       {recommendation && (
-        <div className="card p-6 mb-6">
+        <div className="card module-enter module-enter-3" style={{ padding: 24, marginBottom: 32 }}>
           <div className="mb-4">
-            <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+            <h2 style={{
+              fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 600,
+              color: 'var(--ds-text-primary)', letterSpacing: '-0.01em', marginBottom: 4,
+            }}>
               Distribución de presupuesto por fases
             </h2>
             <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
@@ -404,13 +393,9 @@ export default function BudgetPage() {
               const detail = PHASE_DETAIL[p.key]
 
               return (
-                <div key={p.key} style={{
-                  padding: '20px 22px', borderRadius: 16,
-                  background: isLocked
-                    ? 'rgba(255,255,255,0.015)'
-                    : `linear-gradient(135deg, ${p.color}10, ${p.color}03)`,
-                  border: `1px solid ${isLocked ? 'rgba(255,255,255,0.06)' : `${p.color}30`}`,
-                  opacity: isLocked ? 0.55 : 1,
+                <div key={p.key} className="card" style={{
+                  padding: '20px 22px',
+                  opacity: isLocked ? 0.45 : 1,
                   position: 'relative',
                 }}>
                   <div className="flex items-start justify-between mb-3">
@@ -478,18 +463,12 @@ export default function BudgetPage() {
                     </div>
                   </div>
 
-                  {/* Visual progress bar */}
-                  <div style={{
-                    height: 10, borderRadius: 99,
-                    background: 'rgba(255,255,255,0.05)',
-                    overflow: 'hidden', marginBottom: 10,
-                  }}>
-                    <div style={{
-                      height: '100%', width: `${Math.min(100, assignedPct)}%`,
-                      background: `linear-gradient(90deg, ${p.color}, ${p.color}aa)`,
-                      boxShadow: `0 0 12px ${p.color}50`,
-                      transition: 'width 0.6s ease',
-                    }} />
+                  {/* Visual progress bar with tip glow */}
+                  <div className="progress-bar" style={{ height: 10, marginBottom: 10 }}>
+                    <div
+                      className="progress-bar-fill"
+                      style={{ width: `${Math.min(100, assignedPct)}%` }}
+                    />
                   </div>
 
                   {/* Why + growth note */}
@@ -518,29 +497,30 @@ export default function BudgetPage() {
           </div>
 
           {/* Total bar */}
-          <div style={{ marginTop: 22, padding: '16px 20px', borderRadius: 14, background: 'var(--ds-card-bg)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <div className="card" style={{ marginTop: 22, padding: '16px 20px' }}>
             <div className="flex items-center justify-between mb-2">
-              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.10em' }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-label)', textTransform: 'uppercase', letterSpacing: '0.10em' }}>
                 Total asignado
               </span>
-              <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff' }}>
+              <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 600, color: 'var(--ds-text-primary)' }}>
                 {currency} {totalAssigned.toLocaleString()}{' '}
-                <span style={{ fontSize: 12, color: 'var(--ds-text-secondary)', fontWeight: 500 }}>
+                <span style={{ fontSize: 12, color: 'var(--ds-text-muted)', fontWeight: 500 }}>
                   / {currency} {totalNum.toLocaleString()} disponible
                 </span>
               </span>
             </div>
-            <div style={{ height: 10, borderRadius: 99, background: 'rgba(255,255,255,0.05)', overflow: 'hidden', marginBottom: 8 }}>
-              <div style={{
-                height: '100%', width: `${Math.min(100, totalNum > 0 ? (totalAssigned / totalNum) * 100 : 0)}%`,
-                background: diff === 0
-                  ? 'linear-gradient(90deg, var(--ds-color-success), var(--ds-color-primary))'
-                  : diff > 0
-                    ? 'linear-gradient(90deg, var(--ds-color-danger), #f87171)'
-                    : 'linear-gradient(90deg, var(--ds-color-warning), var(--ds-color-warning))',
-                boxShadow: '0 0 14px var(--ds-card-border)',
-                transition: 'width 0.5s ease',
-              }} />
+            <div className="progress-bar" style={{ height: 10, marginBottom: 8 }}>
+              <div
+                className="progress-bar-fill"
+                style={{
+                  width: `${Math.min(100, totalNum > 0 ? (totalAssigned / totalNum) * 100 : 0)}%`,
+                  background: diff === 0
+                    ? 'linear-gradient(90deg, rgba(52, 211, 153, 0.70), #34d399, #6ee7b7)'
+                    : diff > 0
+                      ? 'linear-gradient(90deg, rgba(248, 113, 113, 0.70), #f87171, #fca5a5)'
+                      : 'linear-gradient(90deg, rgba(251, 191, 36, 0.70), #fbbf24, #fcd34d)',
+                }}
+              />
             </div>
             <p style={{ fontSize: 12, color: diff === 0 ? 'var(--ds-color-success)' : diff > 0 ? 'var(--ds-color-danger)' : 'var(--ds-color-warning)', fontWeight: 600 }}>
               {diff === 0
@@ -555,8 +535,11 @@ export default function BudgetPage() {
 
       {/* ── SECTION D: PROJECTIONS ────────────────────────────────────── */}
       {recommendation && (
-        <div className="card p-6 mb-6">
-          <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+        <div className="card module-enter module-enter-4" style={{ padding: 24, marginBottom: 32 }}>
+          <h2 style={{
+            fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 600,
+            color: 'var(--ds-text-primary)', letterSpacing: '-0.01em', marginBottom: 4,
+          }}>
             Proyecciones estimadas
           </h2>
           <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 18 }}>
@@ -612,7 +595,7 @@ export default function BudgetPage() {
       )}
 
       {/* History collapsible */}
-      <div className="card p-5 mb-6">
+      <div className="card" style={{ padding: 20, marginBottom: 24 }}>
         <button
           onClick={() => setHistoryOpen(!historyOpen)}
           className="w-full flex items-center justify-between"
@@ -648,9 +631,10 @@ export default function BudgetPage() {
       </div>
 
       {/* ── SECTION F: EDUCATION ──────────────────────────────────────── */}
-      <div className="card p-6 mb-6" style={{
-        background: 'linear-gradient(135deg, transparent, transparent)',
-        border: '1px solid var(--ds-color-primary-soft)',
+      <div className="card" style={{
+        padding: 24, marginBottom: 24,
+        borderLeft: '3px solid var(--ds-color-warning)',
+        boxShadow: 'var(--ds-shadow-md), -3px 0 15px rgba(251, 191, 36, 0.10), var(--ds-card-inner-glow)',
       }}>
         <div className="flex items-start gap-4">
           <div style={{

@@ -53,7 +53,7 @@ export default function AchievementsWall() {
 
   if (loading) {
     return (
-      <div className="card p-6 mb-6">
+      <div className="card" style={{ padding: 24, marginBottom: 32 }}>
         <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>Cargando logros…</p>
       </div>
     )
@@ -62,7 +62,7 @@ export default function AchievementsWall() {
   if (!achievements.length) return null
 
   return (
-    <div className="card p-6 mb-6">
+    <div className="card" style={{ padding: 24, marginBottom: 32 }}>
       <div className="flex items-center justify-between mb-3">
         <div>
           <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 2 }}>
@@ -81,16 +81,18 @@ export default function AchievementsWall() {
       </div>
 
       {/* Progress bar */}
-      <div style={{ height: 6, borderRadius: 4, background: 'rgba(255,255,255,0.05)', overflow: 'hidden', marginBottom: 18 }}>
-        <div style={{
-          height: '100%', width: `${pct}%`,
-          background: 'var(--ds-color-warning)',
-          boxShadow: '0 0 12px rgba(245,158,11,0.50)',
-          transition: 'width 0.8s ease',
-        }} />
+      <div className="progress-bar" style={{ height: 6, marginBottom: 18 }}>
+        <div
+          className="progress-bar-fill"
+          style={{
+            width: `${pct}%`,
+            background: 'linear-gradient(90deg, rgba(251, 191, 36, 0.70), #fbbf24, #fcd34d)',
+            boxShadow: '0 0 12px rgba(251, 191, 36, 0.50), 0 0 24px rgba(251, 191, 36, 0.20), inset 0 1px 0 rgba(255,255,255,0.24)',
+          }}
+        />
       </div>
 
-      {/* Category tabs */}
+      {/* Category tabs — pill buttons */}
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 22 }}>
         {CATEGORIES.map(cat => {
           const active = category === cat.key
@@ -98,10 +100,12 @@ export default function AchievementsWall() {
             <button key={cat.key} onClick={() => setCategory(cat.key)}
               style={{
                 fontSize: 11, fontWeight: 700,
-                padding: '6px 14px', borderRadius: 99,
-                background: active ? 'var(--ds-color-warning-soft)' : 'rgba(255,255,255,0.03)',
-                color: active ? 'var(--ds-color-warning)' : 'var(--ds-text-secondary)',
-                border: active ? '1px solid var(--ds-color-warning-border)' : '1px solid rgba(255,255,255,0.08)',
+                padding: '6px 14px', borderRadius: 999,
+                background: active ? 'var(--ds-color-primary-soft)' : 'rgba(255, 255, 255, 0.03)',
+                color: active ? 'var(--ds-color-primary)' : 'var(--ds-text-secondary)',
+                border: active ? '1px solid var(--ds-color-primary-border)' : '1px solid rgba(255, 255, 255, 0.08)',
+                boxShadow: active ? '0 0 16px var(--ds-color-primary-glow)' : 'none',
+                backdropFilter: 'blur(8px)',
                 cursor: 'pointer', transition: 'all 0.18s',
               }}>
               {cat.label}
@@ -117,33 +121,39 @@ export default function AchievementsWall() {
       }}>
         {filtered.map(a => (
           <div key={a.id}
+            className="achievement-item"
             style={{
               padding: '16px 12px',
               borderRadius: 14,
               background: a.unlocked
-                ? 'linear-gradient(160deg, var(--ds-color-warning-soft), rgba(245,158,11,0.02))'
-                : 'rgba(255,255,255,0.02)',
+                ? 'linear-gradient(160deg, rgba(251, 191, 36, 0.08), rgba(10, 12, 28, 0.40))'
+                : 'rgba(10, 12, 28, 0.30)',
               border: a.unlocked
                 ? '1px solid var(--ds-color-warning-border)'
-                : '1px solid rgba(255,255,255,0.06)',
-              boxShadow: a.unlocked ? '0 0 24px var(--ds-color-warning-soft)' : 'none',
-              opacity: a.unlocked ? 1 : 0.40,
-              filter: a.unlocked ? 'none' : 'grayscale(80%)',
+                : '1px solid var(--ds-card-border)',
+              opacity: a.unlocked ? 1 : 0.25,
+              filter: a.unlocked ? 'none' : 'grayscale(100%)',
               textAlign: 'center',
-              transition: 'all 0.2s',
+              transition: 'transform 200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms ease',
               cursor: 'help',
+              backdropFilter: 'blur(12px)',
             }}
             title={a.description}>
             <div style={{
               width: 56, height: 56, margin: '0 auto 10px',
               borderRadius: '50%',
               background: a.unlocked
-                ? 'radial-gradient(circle at 38% 38%, var(--ds-color-warning-border), var(--ds-color-warning-soft))'
-                : 'rgba(255,255,255,0.04)',
-              border: a.unlocked ? '2px solid rgba(245,158,11,0.60)' : '1.5px solid rgba(255,255,255,0.08)',
-              boxShadow: a.unlocked ? '0 0 24px var(--ds-color-warning-border), 0 0 48px var(--ds-color-warning-soft)' : 'none',
+                ? 'var(--ds-color-warning-soft)'
+                : 'var(--ds-bg-elevated)',
+              border: a.unlocked
+                ? '1px solid var(--ds-color-warning-border)'
+                : '1px solid var(--ds-card-border)',
+              boxShadow: a.unlocked
+                ? '0 0 0 1px rgba(251, 191, 36, 0.20), 0 0 24px rgba(251, 191, 36, 0.22), 0 0 40px rgba(251, 191, 36, 0.10)'
+                : 'none',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 26,
+              fontSize: 28,
+              transition: 'box-shadow 200ms ease',
             }}>
               {a.icon}
             </div>

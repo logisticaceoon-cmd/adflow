@@ -210,38 +210,37 @@ export default async function PhasesPage() {
   return (
     <div className="max-w-6xl mx-auto">
       {/* ── SECTION A: HERO ───────────────────────────────────────────── */}
-      <div className="dash-anim-1 mb-6" style={{
+      <div className="module-enter module-enter-1" style={{
         position: 'relative',
-        borderRadius: 22, padding: '28px 32px',
-        background: 'linear-gradient(135deg, var(--ds-card-border) 0%, rgba(245,158,11,0.05) 100%)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        backdropFilter: 'blur(20px)',
+        marginBottom: 32,
+        borderRadius: 24, padding: '36px 40px',
+        background:
+          'linear-gradient(135deg, rgba(124, 110, 240, 0.08) 0%, rgba(10, 12, 28, 0.50) 50%, rgba(251, 191, 36, 0.03) 100%)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        backdropFilter: 'blur(32px) saturate(1.4)',
+        WebkitBackdropFilter: 'blur(32px) saturate(1.4)',
+        boxShadow: 'var(--ds-shadow-md), 0 0 40px rgba(124, 110, 240, 0.05)',
         overflow: 'hidden',
       }}>
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-          background: 'linear-gradient(90deg, transparent, transparent, rgba(245,158,11,0.40), transparent)',
+          background: 'linear-gradient(90deg, transparent 10%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.12) 60%, transparent 90%)',
+          pointerEvents: 'none',
         }} />
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 8 }}>
+        <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ds-text-label)', marginBottom: 10 }}>
           Phase Performance · AdFlow
         </p>
         <h1 style={{
-          fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800,
-          color: '#fff', marginBottom: 8, letterSpacing: '-0.03em',
+          fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 700,
+          color: 'var(--ds-text-primary)', marginBottom: 10, letterSpacing: '-0.02em',
         }}>
           Rendimiento por fases 🎯
         </h1>
-        <p style={{ fontSize: 13.5, color: 'var(--ds-text-secondary)', maxWidth: 580, lineHeight: 1.55, marginBottom: 14 }}>
+        <p style={{ fontSize: 14, color: 'var(--ds-text-secondary)', maxWidth: 580, lineHeight: 1.55, marginBottom: 16 }}>
           Compará lo planeado vs lo real y encontrá oportunidades de optimización en cada fase del funnel.
         </p>
         <div className="flex items-center justify-between gap-4 flex-wrap">
-          <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: 6,
-            padding: '6px 14px', borderRadius: 99,
-            background: 'var(--ds-card-border)',
-            border: '1px solid var(--ds-card-border)',
-            fontSize: 12, fontWeight: 600, color: 'var(--ds-color-primary)',
-          }}>
+          <span className="ds-badge ds-badge--primary">
             📅 {monthLabel}
           </span>
           <SyncButton variant="compact" />
@@ -285,15 +284,13 @@ export default async function PhasesPage() {
                   : PHASE_INSIGHT[p.key](acc)
 
                 return (
-                  <div key={p.key} className="card p-5" style={{
-                    borderTop: `2px solid ${isLocked ? '#5a6478' : p.color}`,
-                    opacity: isLocked ? 0.55 : 1,
-                    background: isLocked
-                      ? 'rgba(255,255,255,0.02)'
-                      : `linear-gradient(160deg, rgba(18,4,10,0.92), rgba(12,3,7,0.96))`,
+                  <div key={p.key} className="card" style={{
+                    padding: 20,
+                    borderTop: `2px solid ${isLocked ? 'rgba(255,255,255,0.08)' : p.color}`,
+                    opacity: isLocked ? 0.45 : 1,
                     boxShadow: status.key === 'healthy'
-                      ? `0 8px 32px rgba(0,0,0,0.40), 0 0 32px ${p.color}15`
-                      : '0 8px 32px rgba(0,0,0,0.40)',
+                      ? `var(--ds-shadow-md), 0 0 32px ${p.color}15, var(--ds-card-inner-glow)`
+                      : undefined,
                   }}>
                     {/* Header */}
                     <div className="flex items-start justify-between mb-4">
@@ -331,13 +328,11 @@ export default async function PhasesPage() {
                           {currency}{acc.spend.toFixed(0)} / {currency}{acc.assigned.toFixed(0)}
                         </span>
                       </div>
-                      <div style={{ height: 8, borderRadius: 99, background: 'rgba(255,255,255,0.05)', overflow: 'hidden' }}>
-                        <div style={{
-                          height: '100%', width: `${budgetPct}%`,
-                          background: `linear-gradient(90deg, ${p.color}, ${p.color}aa)`,
-                          boxShadow: `0 0 10px ${p.color}50`,
-                          transition: 'width 0.6s ease',
-                        }} />
+                      <div className="progress-bar" style={{ height: 8 }}>
+                        <div
+                          className="progress-bar-fill"
+                          style={{ width: `${budgetPct}%` }}
+                        />
                       </div>
                       <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', marginTop: 4, textAlign: 'right' }}>
                         {budgetPct.toFixed(0)}% gastado
@@ -391,7 +386,7 @@ export default async function PhasesPage() {
           </div>
 
           {/* ── SECTION C: COMPARISON GRID ────────────────────────────── */}
-          <div className="card p-6 mb-6">
+          <div className="card module-enter module-enter-3" style={{ padding: 24, marginBottom: 32 }}>
             <div className="mb-4">
               <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
                 Comparativa detallada
@@ -487,7 +482,7 @@ export default async function PhasesPage() {
 
           {/* ── SECTION D: INSIGHTS ───────────────────────────────────── */}
           {insights.length > 0 && (
-            <div className="card p-6 mb-6">
+            <div className="card module-enter module-enter-4" style={{ padding: 24, marginBottom: 32 }}>
               <div className="mb-4">
                 <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
                   💡 Insights del sistema
@@ -518,7 +513,7 @@ export default async function PhasesPage() {
           )}
 
           {/* ── SECTION E: COMPARISON CHART ───────────────────────────── */}
-          <div className="card p-6 mb-6">
+          <div className="card module-enter module-enter-5" style={{ padding: 24, marginBottom: 32 }}>
             <div className="mb-4">
               <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
                 Comparativa visual por fase
@@ -541,9 +536,10 @@ export default async function PhasesPage() {
       )}
 
       {/* ── SECTION F: EDUCATION ──────────────────────────────────────── */}
-      <div className="card p-6 mb-6" style={{
-        background: 'linear-gradient(135deg, transparent, rgba(245,158,11,0.04))',
-        border: '1px solid transparent',
+      <div className="card" style={{
+        padding: 24, marginBottom: 24,
+        borderLeft: '3px solid var(--ds-color-warning)',
+        boxShadow: 'var(--ds-shadow-md), -3px 0 15px rgba(251, 191, 36, 0.10), var(--ds-card-inner-glow)',
       }}>
         <div className="flex items-start gap-4">
           <div style={{

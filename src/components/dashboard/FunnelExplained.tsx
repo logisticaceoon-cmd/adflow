@@ -76,8 +76,11 @@ const STEPS: StepDef[] = [
 export default function FunnelExplained({ events }: Props) {
   if (!events) {
     return (
-      <div className="card p-6 mb-6">
-        <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+      <div className="card" style={{ padding: 24, marginBottom: 32 }}>
+        <h2 style={{
+          fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 600,
+          color: 'var(--ds-text-primary)', letterSpacing: '-0.01em', marginBottom: 4,
+        }}>
           Tu embudo de conversión
         </h2>
         <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
@@ -97,9 +100,12 @@ export default function FunnelExplained({ events }: Props) {
   const max = Math.max(...values, 1)
 
   return (
-    <div className="card p-6 mb-6">
-      <div className="mb-5">
-        <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+    <div className="card" style={{ padding: 24, marginBottom: 32 }}>
+      <div style={{ marginBottom: 20 }}>
+        <h2 style={{
+          fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 600,
+          color: 'var(--ds-text-primary)', letterSpacing: '-0.01em', marginBottom: 4,
+        }}>
           Tu embudo de conversión
         </h2>
         <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>

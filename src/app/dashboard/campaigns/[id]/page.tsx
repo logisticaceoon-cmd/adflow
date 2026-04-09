@@ -260,7 +260,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
   return (
     <div style={{ maxWidth: 1100, margin: '0 auto' }}>
       {/* Breadcrumb */}
-      <div className="dash-anim-1 flex items-center gap-2 mb-5">
+      <div className="module-enter module-enter-1 flex items-center gap-2 mb-5">
         <Link href="/dashboard/campaigns"
           className="text-sm transition-opacity hover:opacity-80"
           style={{ color: 'var(--ds-text-secondary)' }}>
@@ -271,23 +271,27 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
       </div>
 
       {/* ─── SECCIÓN A: HERO ─────────────────────────────────────────── */}
-      <div className="dash-anim-1 mb-6" style={{
+      <div className="module-enter module-enter-1" style={{
         position: 'relative',
-        borderRadius: 24, padding: '32px 30px',
-        background: `linear-gradient(135deg, ${statusMeta.from} 0%, ${statusMeta.to} 100%)`,
-        border: `1px solid ${statusMeta.main}30`,
-        backdropFilter: 'blur(20px)',
-        boxShadow: `0 20px 60px rgba(0,0,0,0.45), 0 0 60px ${statusMeta.main}12`,
+        marginBottom: 32,
+        borderRadius: 24, padding: '36px 40px',
+        background:
+          `linear-gradient(135deg, ${statusMeta.main}10 0%, rgba(10, 12, 28, 0.50) 50%, ${statusMeta.main}05 100%)`,
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        backdropFilter: 'blur(32px) saturate(1.4)',
+        WebkitBackdropFilter: 'blur(32px) saturate(1.4)',
+        boxShadow: `var(--ds-shadow-md), 0 0 40px ${statusMeta.main}10`,
         overflow: 'hidden',
       }}>
         <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-          background: `linear-gradient(90deg, transparent, ${statusMeta.main}80, transparent)`,
+          position: 'absolute', top: 0, left: 0, right: 0, height: 1,
+          background: 'linear-gradient(90deg, transparent 10%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.12) 60%, transparent 90%)',
+          pointerEvents: 'none',
         }} />
 
         <h1 style={{
           fontFamily: 'Syne, sans-serif',
-          fontSize: 28, fontWeight: 800, color: '#fff',
+          fontSize: 28, fontWeight: 700, color: 'var(--ds-text-primary)',
           letterSpacing: '-0.02em', marginBottom: 14, lineHeight: 1.15,
         }}>
           {campaign.name}
@@ -380,7 +384,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
       </div>
 
       {/* ─── SECCIÓN B: INTELIGENCIA ESTRATÉGICA ─────────────────────── */}
-      <div className="dash-anim-2" style={{ marginBottom: 'var(--ds-space-2xl)' }}>
+      <div className="module-enter module-enter-2" style={{ marginBottom: 'var(--ds-space-2xl)' }}>
         <SectionHeader
           title="Inteligencia estratégica"
           subtitle="Diagnóstico experto basado en la evaluación por bloques del workbook V1.0"
@@ -477,7 +481,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
       </div>
 
       {/* ─── SECCIÓN C: RENDIMIENTO DETALLADO ─────────────────────────── */}
-      <div className="dash-anim-3 card p-6 mb-6">
+      <div className="module-enter module-enter-3 card p-6 mb-6">
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Rendimiento detallado
         </h2>
@@ -533,7 +537,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
       </div>
 
       {/* ─── SECCIÓN D: ESTRUCTURA INTERNA ─────────────────────────────── */}
-      <div className="dash-anim-4 card p-6 mb-6">
+      <div className="module-enter module-enter-4 card p-6 mb-6">
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Estructura de la campaña
         </h2>
@@ -627,7 +631,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
 
       {/* ─── SECCIÓN E: PREVIEWS DE CREATIVOS ─────────────────────────── */}
       {allAds.length > 0 && (
-        <div className="dash-anim-5 card p-6 mb-6">
+        <div className="module-enter module-enter-5 card p-6 mb-6">
           <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
             Creativos de la campaña
           </h2>
@@ -701,7 +705,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
       )}
 
       {/* ─── SECCIÓN F: HISTORIAL DE ACCIONES ─────────────────────────── */}
-      <div className="dash-anim-6 card p-6 mb-6">
+      <div className="module-enter module-enter-6 card p-6 mb-6">
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Historial de la campaña
         </h2>
@@ -751,7 +755,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
       </div>
 
       {/* ─── SECCIÓN H: AUTOMATIZACIONES ACTIVAS ─────────────────────── */}
-      <div className="dash-anim-7 card p-6 mb-6">
+      <div className="module-enter module-enter-7 card p-6 mb-6">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
           <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff' }}>
             ⚡ Automatizaciones
@@ -855,7 +859,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
       </div>
 
       {/* ─── SECCIÓN G: RECOMENDACIONES ─────────────────────────────── */}
-      <div className="dash-anim-7 card p-6 mb-6">
+      <div className="module-enter module-enter-7 card p-6 mb-6">
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Recomendaciones para esta campaña
         </h2>

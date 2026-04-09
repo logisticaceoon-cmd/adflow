@@ -63,61 +63,53 @@ export default async function ReportsHubPage() {
   return (
     <div className="max-w-6xl mx-auto">
       {/* ── SECTION A: HERO ───────────────────────────────────────────── */}
-      <div className="dash-anim-1 mb-6" style={{
+      <div className="module-enter module-enter-1" style={{
         position: 'relative',
-        borderRadius: 22, padding: '28px 32px',
-        background: 'linear-gradient(135deg, rgba(139,92,246,0.10) 0%, var(--ds-color-primary-soft) 50%, transparent 100%)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        backdropFilter: 'blur(20px)',
+        marginBottom: 32,
+        borderRadius: 24, padding: '36px 40px',
+        background:
+          'linear-gradient(135deg, rgba(124, 110, 240, 0.08) 0%, rgba(10, 12, 28, 0.50) 50%, rgba(167, 139, 250, 0.04) 100%)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        backdropFilter: 'blur(32px) saturate(1.4)',
+        WebkitBackdropFilter: 'blur(32px) saturate(1.4)',
+        boxShadow: 'var(--ds-shadow-md), 0 0 40px rgba(124, 110, 240, 0.05)',
         overflow: 'hidden',
       }}>
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-          background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.55), var(--ds-color-primary-border), transparent)',
+          background: 'linear-gradient(90deg, transparent 10%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.12) 60%, transparent 90%)',
+          pointerEvents: 'none',
         }} />
         <div className="flex items-start justify-between gap-6">
           <div style={{ flex: 1 }}>
-            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#c4b5fd', marginBottom: 8 }}>
+            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ds-text-label)', marginBottom: 10 }}>
               Reportes · AdFlow
             </p>
             <h1 style={{
-              fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800,
-              color: '#fff', marginBottom: 8, letterSpacing: '-0.03em',
+              fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 700,
+              color: 'var(--ds-text-primary)', marginBottom: 10, letterSpacing: '-0.02em',
             }}>
               Cómo viene tu negocio 📊
             </h1>
-            <p style={{ fontSize: 13.5, color: 'var(--ds-text-secondary)', maxWidth: 580, lineHeight: 1.55, marginBottom: 14 }}>
+            <p style={{ fontSize: 14, color: 'var(--ds-text-secondary)', maxWidth: 580, lineHeight: 1.55, marginBottom: 16 }}>
               Tu consultor IA analiza cada mes tu rendimiento y te dice exactamente qué hacer después.
               Reporte mensual consolidado + historial completo de tu crecimiento.
             </p>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               {pixelAnalysis && (
-                <span style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 6,
-                  padding: '6px 14px', borderRadius: 99,
-                  background: 'rgba(139,92,246,0.12)',
-                  border: '1px solid rgba(139,92,246,0.30)',
-                  fontSize: 12, fontWeight: 600, color: '#c4b5fd',
+                <span className="ds-badge" style={{
+                  background: 'rgba(167, 139, 250, 0.14)',
+                  borderColor: 'rgba(167, 139, 250, 0.35)',
+                  color: 'var(--ds-color-secondary)',
+                  boxShadow: '0 0 12px rgba(167, 139, 250, 0.24)',
                 }}>
                   ⭐ Nivel {pixelAnalysis.level}: {pixelAnalysis.level_name}
                 </span>
               )}
-              <span style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                padding: '6px 14px', borderRadius: 99,
-                background: 'var(--ds-card-border)',
-                border: '1px solid var(--ds-card-border)',
-                fontSize: 12, fontWeight: 600, color: 'var(--ds-color-primary)',
-              }}>
+              <span className="ds-badge ds-badge--primary">
                 📅 {fmtMonthYear(monthYear)}
               </span>
-              <span style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                padding: '6px 14px', borderRadius: 99,
-                background: 'var(--ds-color-success-soft)',
-                border: '1px solid var(--ds-color-success-border)',
-                fontSize: 12, fontWeight: 600, color: 'var(--ds-color-success)',
-              }}>
+              <span className="ds-badge ds-badge--success">
                 🎬 {activeCount} campaña{activeCount !== 1 ? 's' : ''} activa{activeCount !== 1 ? 's' : ''}
               </span>
             </div>
@@ -126,13 +118,11 @@ export default async function ReportsHubPage() {
       </div>
 
       {/* ── SECTION B: CURRENT MONTH SUMMARY — Hero card ──────────────── */}
-      <Link href={`/dashboard/reports/monthly?month=${monthYear}`} className="block mb-6 dash-anim-2" style={{ textDecoration: 'none' }}>
-        <div className="transition-all hover:-translate-y-0.5" style={{
-          borderRadius: 20, padding: '24px 28px',
-          background: 'linear-gradient(135deg, var(--ds-color-primary-soft) 0%, transparent 100%)',
-          border: '1px solid transparent',
-          backdropFilter: 'blur(16px)',
-          boxShadow: '0 12px 48px var(--ds-color-primary-soft), 0 0 80px transparent',
+      <Link href={`/dashboard/reports/monthly?month=${monthYear}`} className="block module-enter module-enter-2" style={{ textDecoration: 'none', marginBottom: 32 }}>
+        <div className="card card-hover" style={{
+          padding: '24px 28px',
+          borderColor: 'var(--ds-color-primary-border)',
+          boxShadow: 'var(--ds-shadow-md), 0 0 48px rgba(124, 110, 240, 0.10), var(--ds-card-inner-glow)',
           cursor: 'pointer',
         }}>
           <div className="flex items-center justify-between mb-4">
@@ -200,7 +190,7 @@ export default async function ReportsHubPage() {
       </Link>
 
       {/* ── SECTION C: PREVIOUS MONTHS GRID ──────────────────────────── */}
-      <div className="mb-6 dash-anim-3">
+      <div className="module-enter module-enter-3" style={{ marginBottom: 32 }}>
         <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Historial de meses
         </h2>
@@ -260,9 +250,10 @@ export default async function ReportsHubPage() {
       </div>
 
       {/* ── SECTION D: DAILY REPORTS INFO ────────────────────────────── */}
-      <div className="card p-5 mb-6" style={{
-        background: 'linear-gradient(135deg, transparent, var(--ds-color-primary-soft))',
-        border: '1px solid transparent',
+      <div className="card" style={{
+        padding: 20, marginBottom: 24,
+        borderLeft: '3px solid var(--ds-color-primary)',
+        boxShadow: 'var(--ds-shadow-md), -3px 0 15px rgba(124, 110, 240, 0.10), var(--ds-card-inner-glow)',
       }}>
         <div className="flex items-start gap-4">
           <div style={{

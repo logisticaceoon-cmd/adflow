@@ -159,19 +159,26 @@ export default function PixelDashboardPage() {
   return (
     <div className="max-w-6xl mx-auto">
       {/* ── SECTION A: HERO ───────────────────────────────────────────── */}
-      <div className="dash-anim-1 mb-6" style={{
+      <div className="module-enter module-enter-1" style={{
         position: 'relative',
-        borderRadius: 24, padding: '36px 32px',
-        background: `linear-gradient(135deg, ${grad.from} 0%, ${grad.to} 100%)`,
-        border: `1px solid ${grad.main}30`,
-        backdropFilter: 'blur(20px)',
-        boxShadow: `0 20px 80px rgba(0,0,0,0.55), 0 0 80px ${grad.main}15`,
+        marginBottom: 40,
+        borderRadius: 24, padding: '40px 44px',
+        background:
+          'linear-gradient(135deg, rgba(124, 110, 240, 0.08) 0%, rgba(10, 12, 28, 0.50) 50%, rgba(52, 211, 153, 0.04) 100%)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        backdropFilter: 'blur(32px) saturate(1.4)',
+        WebkitBackdropFilter: 'blur(32px) saturate(1.4)',
+        boxShadow:
+          'var(--ds-shadow-md), 0 0 60px rgba(124, 110, 240, 0.06)',
         overflow: 'hidden',
       }}>
-        {/* Top edge accent */}
+        {/* Full-width top light reflection (brighter than regular cards) */}
         <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-          background: `linear-gradient(90deg, transparent, ${grad.main}80, transparent)`,
+          position: 'absolute',
+          top: 0, left: 0, right: 0, height: 1,
+          background:
+            'linear-gradient(90deg, transparent 10%, rgba(255, 255, 255, 0.12) 40%, rgba(255, 255, 255, 0.20) 50%, rgba(255, 255, 255, 0.12) 60%, transparent 90%)',
+          pointerEvents: 'none',
         }} />
         {/* Imperio: extra glow particles */}
         {level === 8 && (
@@ -185,77 +192,80 @@ export default function PixelDashboardPage() {
         <button
           onClick={handleRefresh}
           disabled={refreshing}
+          className="btn-ghost"
           style={{
             position: 'absolute', top: 20, right: 20,
-            display: 'inline-flex', alignItems: 'center', gap: 6,
-            padding: '8px 14px', borderRadius: 10,
-            background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)',
-            color: '#fff', fontSize: 12, fontWeight: 600,
+            padding: '8px 14px',
+            fontSize: 12,
+            minHeight: 34,
+            gap: 6,
             cursor: refreshing ? 'wait' : 'pointer',
           }}>
-          <RefreshCw size={13} className={refreshing ? 'animate-spin' : ''} />
+          <RefreshCw size={13} className={refreshing ? 'animate-spin' : ''} style={{ color: 'var(--ds-color-primary)' }} />
           {refreshing ? 'Actualizando...' : 'Actualizar análisis'}
         </button>
 
         {/* Centered hero content */}
         <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto' }}>
-          {/* Big level badge */}
-          <div style={{ display: 'inline-block', marginBottom: 18 }}>
+          {/* Big level badge with primary glow */}
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: 18,
+            borderRadius: '50%',
+            padding: 6,
+            background: 'var(--ds-color-primary-soft)',
+            border: '1px solid var(--ds-color-primary-border)',
+            boxShadow: '0 0 30px var(--ds-color-primary-glow), 0 0 60px rgba(124, 110, 240, 0.10)',
+          }}>
             <LevelBadge level={level} levelName="" size="lg" showName={false} />
           </div>
 
-          <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 6 }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ds-text-label)', textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 6 }}>
             Nivel {level} de 8
           </p>
           <h1 style={{
-            fontFamily: 'Syne, sans-serif', fontSize: 36, fontWeight: 900,
-            color: grad.main, letterSpacing: '-0.03em', marginBottom: 14,
-            textShadow: `0 0 32px ${grad.main}50`,
+            fontFamily: 'Syne, sans-serif', fontSize: 38, fontWeight: 700,
+            color: 'var(--ds-text-primary)', letterSpacing: '-0.03em', marginBottom: 16,
+            textShadow: '0 0 32px rgba(124, 110, 240, 0.20)',
           }}>
             {pa?.level_name}
           </h1>
 
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            padding: '8px 18px', borderRadius: 99, marginBottom: 24,
-            background: 'var(--ds-color-warning-soft)',
-            border: '1px solid var(--ds-color-warning-border)',
+          <div className="ds-badge ds-badge--warning" style={{
+            marginBottom: 28,
+            padding: '8px 18px',
+            fontSize: 13,
           }}>
-            <span style={{ fontSize: 16 }}>⭐</span>
-            <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 800, color: 'var(--ds-color-warning)' }}>
+            <span style={{ fontSize: 14 }}>⭐</span>
+            <span style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, letterSpacing: '0.02em' }}>
               {totalScore.toLocaleString()} puntos de crecimiento
             </span>
           </div>
 
           {level < 8 && nextMetric.required > 0 && (
             <>
-              <div style={{
-                height: 16, borderRadius: 99,
-                background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.06)',
-                overflow: 'hidden', marginBottom: 12,
-              }}>
-                <div style={{
-                  height: '100%', width: `${progressPct}%`,
-                  background: `linear-gradient(90deg, ${grad.main}, ${LEVEL_GRADIENT[nextLevel].main})`,
-                  boxShadow: `0 0 24px ${LEVEL_GRADIENT[nextLevel].main}90`,
-                  borderRadius: 99,
-                  transition: 'width 1s cubic-bezier(0.16,1,0.3,1)',
-                }} />
+              <div className="progress-bar" style={{ height: 12, marginBottom: 14 }}>
+                <div
+                  className="progress-bar-fill progress-animated"
+                  style={{ width: `${progressPct}%` }}
+                />
               </div>
-              <p style={{ fontSize: 14, color: 'var(--ds-text-primary)', marginBottom: 8 }}>
-                <b style={{ color: '#fff' }}>{nextMetric.current.toLocaleString()}</b> de{' '}
-                <b style={{ color: '#fff' }}>{nextMetric.required.toLocaleString()}</b> {nextMetric.label} para nivel{' '}
-                <b style={{ color: LEVEL_GRADIENT[nextLevel].main }}>{nextLevel}: {LEVEL_NAMES[nextLevel]}</b>
+              <p style={{ fontSize: 14, color: 'var(--ds-text-secondary)', marginBottom: 8, lineHeight: 1.5 }}>
+                <b style={{ color: 'var(--ds-text-primary)', fontWeight: 600 }}>{nextMetric.current.toLocaleString()}</b> de{' '}
+                <b style={{ color: 'var(--ds-text-primary)', fontWeight: 600 }}>{nextMetric.required.toLocaleString()}</b> {nextMetric.label} para nivel{' '}
+                <b style={{ color: 'var(--ds-color-primary)', fontWeight: 600 }}>{nextLevel}: {LEVEL_NAMES[nextLevel]}</b>
               </p>
             </>
           )}
 
-          <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', fontStyle: 'italic', marginTop: 6 }}>
+          <p style={{ fontSize: 13, color: 'var(--ds-text-muted)', fontStyle: 'italic', marginTop: 6 }}>
             {motivation}
           </p>
 
-          <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', marginTop: 22 }}>
-            Pixel ID: <code style={{ color: '#a0a8c0' }}>{pa?.pixel_id}</code>
+          <p style={{ fontSize: 10, color: 'var(--ds-text-muted)', marginTop: 22 }}>
+            Pixel ID: <code style={{ color: 'var(--ds-text-secondary)' }}>{pa?.pixel_id}</code>
             {' · '}
             Última actualización: {pa?.analyzed_at ? new Date(pa.analyzed_at).toLocaleString('es') : 'nunca'}
           </p>
@@ -263,32 +273,37 @@ export default function PixelDashboardPage() {
       </div>
 
       {/* ── SECTION B: LEVEL MAP ──────────────────────────────────────── */}
-      <LevelMap currentLevel={level} />
+      <div className="module-enter module-enter-2"><LevelMap currentLevel={level} /></div>
 
       {/* ── SECTION C: SCORE CARD ─────────────────────────────────────── */}
-      <ScoreCard
-        totalScore={totalScore}
-        breakdown={[
-          { label: `Nivel ${level}`,    points: scoreLevel,   color: grad.main },
-          { label: 'Tráfico web',       points: scoreTraffic, color: 'var(--ds-color-primary)' },
-          { label: 'Compras (180d)',    points: scoreSales,   color: 'var(--ds-color-success)' },
-          { label: `Campañas (${campaignsCount})`, points: scoreCamps, color: 'var(--ds-color-primary)' },
-        ]}
-        monthStars={monthStars}
-      />
+      <div className="module-enter module-enter-3">
+        <ScoreCard
+          totalScore={totalScore}
+          breakdown={[
+            { label: `Nivel ${level}`,    points: scoreLevel,   color: '#7c6ef0' },
+            { label: 'Tráfico web',       points: scoreTraffic, color: '#9d90ff' },
+            { label: 'Compras (180d)',    points: scoreSales,   color: '#34d399' },
+            { label: `Campañas (${campaignsCount})`, points: scoreCamps, color: '#fbbf24' },
+          ]}
+          monthStars={monthStars}
+        />
+      </div>
 
       {/* ── SECTION D: FUNNEL EXPLAINED ───────────────────────────────── */}
-      <FunnelExplained events={events ?? null} />
+      <div className="module-enter module-enter-4"><FunnelExplained events={events ?? null} /></div>
 
       {/* ── SECTION E: CAPABILITIES ───────────────────────────────────── */}
-      <CapabilitiesCard level={level} />
+      <div className="module-enter module-enter-5"><CapabilitiesCard level={level} /></div>
 
       {/* ── SECTION F: ACHIEVEMENTS WALL ──────────────────────────────── */}
-      <AchievementsWall />
+      <div className="module-enter module-enter-6"><AchievementsWall /></div>
 
       {/* ── SECTION G: GROWTH TIMELINE ────────────────────────────────── */}
-      <div className="card p-6 mb-6">
-        <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+      <div className="card module-enter module-enter-7" style={{ padding: 24, marginBottom: 32 }}>
+        <h2 style={{
+          fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 600,
+          color: 'var(--ds-text-primary)', letterSpacing: '-0.01em', marginBottom: 4,
+        }}>
           Tu viaje de crecimiento
         </h2>
         <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 18 }}>

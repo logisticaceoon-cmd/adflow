@@ -484,30 +484,69 @@ export default function CreateCampaignPage() {
         </div>
       )}
 
-      {/* Steps indicator */}
+      {/* Steps indicator — premium glass pills with glow on completed/current */}
       <div className="flex items-center mb-10">
-        {STEPS.map((label, i) => (
-          <div key={i} className="flex items-center flex-1">
-            <div className="flex items-center gap-1.5 flex-shrink-0">
-              <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all" style={{
-                background: i < step ? 'linear-gradient(135deg, var(--ds-color-primary), #3a9a8a)'
-                  : i === step ? 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))'
-                    : 'rgba(255,255,255,0.05)',
-                border: i > step ? '1px solid rgba(255,255,255,0.10)' : 'none',
-                color: i <= step ? '#fff' : 'rgba(255,255,255,0.35)',
-                boxShadow: i === step ? '0 0 18px var(--ds-color-primary-border)' : 'none', fontSize: 11,
-              }}>
-                {i < step ? '✓' : i + 1}
+        {STEPS.map((label, i) => {
+          const done = i < step
+          const active = i === step
+          return (
+            <div key={i} className="flex items-center flex-1">
+              <div className="flex items-center gap-1.5 flex-shrink-0">
+                <div
+                  className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all"
+                  style={{
+                    background: done
+                      ? 'var(--ds-color-success-soft)'
+                      : active
+                        ? 'var(--ds-color-primary-soft)'
+                        : 'var(--ds-bg-elevated)',
+                    border: done
+                      ? '1px solid var(--ds-color-success-border)'
+                      : active
+                        ? '1px solid var(--ds-color-primary-border)'
+                        : '1px solid var(--ds-card-border)',
+                    color: done
+                      ? 'var(--ds-color-success)'
+                      : active
+                        ? 'var(--ds-color-primary)'
+                        : 'var(--ds-text-muted)',
+                    boxShadow: done
+                      ? '0 0 0 1px rgba(52, 211, 153, 0.20), 0 0 16px rgba(52, 211, 153, 0.20)'
+                      : active
+                        ? '0 0 0 1px rgba(124, 110, 240, 0.25), 0 0 20px rgba(124, 110, 240, 0.24)'
+                        : 'none',
+                    fontSize: 11,
+                  }}
+                >
+                  {done ? '✓' : i + 1}
+                </div>
+                <span
+                  style={{
+                    fontSize: 11,
+                    color: active
+                      ? 'var(--ds-text-primary)'
+                      : done
+                        ? 'var(--ds-text-secondary)'
+                        : 'var(--ds-text-muted)',
+                    fontWeight: active ? 600 : 500,
+                  }}
+                >
+                  {label}
+                </span>
               </div>
-              <span style={{ fontSize: 11, color: i === step ? '#ffffff' : i < step ? 'var(--ds-text-secondary)' : 'rgba(255,255,255,0.25)', fontWeight: i === step ? 600 : 400 }}>
-                {label}
-              </span>
+              {i < STEPS.length - 1 && (
+                <div
+                  className="flex-1 mx-2 h-px"
+                  style={{
+                    background: i < step
+                      ? 'linear-gradient(to right, var(--ds-color-success), var(--ds-color-primary))'
+                      : 'var(--ds-card-border)',
+                  }}
+                />
+              )}
             </div>
-            {i < STEPS.length - 1 && (
-              <div className="flex-1 mx-2 h-px" style={{ background: i < step ? 'linear-gradient(to right, var(--ds-color-primary), var(--ds-color-primary))' : 'rgba(255,255,255,0.07)' }} />
-            )}
-          </div>
-        ))}
+          )
+        })}
       </div>
 
       {/* Global error (shown above steps except 4 which handles internally) */}
@@ -580,10 +619,10 @@ export default function CreateCampaignPage() {
 
       {/* Step 5 — ¡Listo! */}
       {step === 5 && (
-        <div style={{
-          borderRadius: 20, padding: 40, textAlign: 'center',
-          background: 'var(--ds-card-bg)',
-          border: '1px solid rgba(255,255,255,0.10)',
+        <div className="card" style={{
+          padding: 40, textAlign: 'center',
+          borderColor: 'var(--ds-color-success-border)',
+          boxShadow: 'var(--ds-shadow-md), 0 0 48px rgba(52, 211, 153, 0.12), var(--ds-card-inner-glow)',
         }}>
           <div style={{
             width: 72, height: 72, margin: '0 auto 20px', borderRadius: '50%',

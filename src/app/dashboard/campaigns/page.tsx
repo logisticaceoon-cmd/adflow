@@ -22,12 +22,12 @@ export default async function CampaignsPage() {
   return (
     <div>
       {/* ── Header ── */}
-      <div className="flex justify-between items-start mb-8 dash-anim-1">
+      <div className="flex justify-between items-start mb-8 module-enter module-enter-1">
         <div>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 8 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ds-text-label)', marginBottom: 8 }}>
             Mis campañas · AdFlow
           </p>
-          <h1 style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.03em' }}>
+          <h1 style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 700, color: 'var(--ds-text-primary)', marginBottom: 8, letterSpacing: '-0.02em' }}>
             Gestión de campañas 📣
           </h1>
           <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', marginBottom: 10 }}>
@@ -54,25 +54,25 @@ export default async function CampaignsPage() {
       </div>
 
       {/* ── Mini stat row ── */}
-      <div className="grid grid-cols-3 gap-4 mb-6 dash-anim-2">
+      <div className="grid grid-cols-3 gap-4 mb-6 module-enter module-enter-2">
         {[
           { label: 'Campañas totales', value: total,  Icon: Megaphone, color: 'var(--ds-color-primary)' },
           { label: 'Activas ahora',    value: active, Icon: Activity,  color: 'var(--ds-color-success)' },
           { label: 'En borrador',      value: draft,  Icon: TrendingUp, color: 'var(--ds-color-warning)' },
         ].map(({ label, value, Icon, color }) => (
-          <div key={label} className="metric-card" style={{ borderTop: `2px solid ${color}`, padding: '14px 18px' }}>
+          <div key={label} className="card" style={{ padding: '16px 18px', borderTop: `2px solid ${color}` }}>
             <div className="flex items-center justify-between mb-1">
-              <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#8892b0' }}>{label}</p>
+              <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'var(--ds-text-label)' }}>{label}</p>
               <Icon size={14} style={{ color }} strokeWidth={1.75} />
             </div>
-            <p style={{ fontSize: 28, fontWeight: 900, letterSpacing: '-0.04em', color: '#ffffff' }}>{value}</p>
+            <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 600, letterSpacing: '-0.02em', color: 'var(--ds-text-primary)' }}>{value}</p>
           </div>
         ))}
       </div>
 
       {/* ── Empty state ── */}
       {!campaigns?.length ? (
-        <div className="card p-16 text-center dash-anim-3" style={{ maxWidth: 520, margin: '0 auto' }}>
+        <div className="card module-enter module-enter-3" style={{ padding: 64, textAlign: 'center', maxWidth: 520, margin: '0 auto' }}>
           <div style={{
             width: 72, height: 72, borderRadius: '50%', margin: '0 auto 20px',
             background: 'var(--ds-color-primary-soft)', border: '1px solid var(--ds-color-primary-soft)',

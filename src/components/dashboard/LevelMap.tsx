@@ -11,16 +11,17 @@ interface LevelDef {
   unlocks: string[]
 }
 
+// Hex so alpha suffixes (`${lv.color}40`) produce valid rgba strings.
 const LEVELS: LevelDef[] = [
   { level: 0, name: 'Sin Data',     emoji: '🌑', color: '#8892b0', requirement: 'Instalá tu pixel',                    unlocks: ['Medición básica de visitantes'] },
-  { level: 1, name: 'Explorador',   emoji: '🌱', color: 'var(--ds-color-danger)', requirement: '100+ PageView en 30 días',            unlocks: ['Audiencias por intereses'] },
-  { level: 2, name: 'Aprendiz',     emoji: '📚', color: 'var(--ds-color-danger)', requirement: '500+ PageView en 30 días',            unlocks: ['Mejor optimización del pixel'] },
-  { level: 3, name: 'Estratega',    emoji: '🧠', color: 'var(--ds-color-warning)', requirement: '1.000+ ViewContent en 30 días',       unlocks: ['Retargeting de visitantes', 'Estrategia MOFU'] },
-  { level: 4, name: 'Vendedor',     emoji: '🛒', color: 'var(--ds-color-warning)', requirement: '100+ AddToCart en 30 días',           unlocks: ['Retargeting de carrito abandonado'] },
-  { level: 5, name: 'Profesional',  emoji: '💼', color: 'var(--ds-color-success)', requirement: '50+ Purchases en 30 días',            unlocks: ['Retargeting de compradores', 'Estrategia BOFU'] },
-  { level: 6, name: 'Escalador',    emoji: '🚀', color: 'var(--ds-color-success)', requirement: '100+ Purchases en 30 días',           unlocks: ['Lookalike Audiences'] },
-  { level: 7, name: 'Maestro',      emoji: '👑', color: '#3b82f6', requirement: '500+ Purchases en 180 días',          unlocks: ['Lookalikes ampliados', 'Audiencias premium'] },
-  { level: 8, name: 'Imperio',      emoji: '🏰', color: '#8b5cf6', requirement: '1.000+ Purchases en 180 días',        unlocks: ['Expansión global', 'Nivel máximo'] },
+  { level: 1, name: 'Explorador',   emoji: '🌱', color: '#f87171', requirement: '100+ PageView en 30 días',            unlocks: ['Audiencias por intereses'] },
+  { level: 2, name: 'Aprendiz',     emoji: '📚', color: '#f87171', requirement: '500+ PageView en 30 días',            unlocks: ['Mejor optimización del pixel'] },
+  { level: 3, name: 'Estratega',    emoji: '🧠', color: '#fbbf24', requirement: '1.000+ ViewContent en 30 días',       unlocks: ['Retargeting de visitantes', 'Estrategia MOFU'] },
+  { level: 4, name: 'Vendedor',     emoji: '🛒', color: '#fbbf24', requirement: '100+ AddToCart en 30 días',           unlocks: ['Retargeting de carrito abandonado'] },
+  { level: 5, name: 'Profesional',  emoji: '💼', color: '#34d399', requirement: '50+ Purchases en 30 días',            unlocks: ['Retargeting de compradores', 'Estrategia BOFU'] },
+  { level: 6, name: 'Escalador',    emoji: '🚀', color: '#34d399', requirement: '100+ Purchases en 30 días',           unlocks: ['Lookalike Audiences'] },
+  { level: 7, name: 'Maestro',      emoji: '👑', color: '#7c6ef0', requirement: '500+ Purchases en 180 días',          unlocks: ['Lookalikes ampliados', 'Audiencias premium'] },
+  { level: 8, name: 'Imperio',      emoji: '🏰', color: '#a78bfa', requirement: '1.000+ Purchases en 180 días',        unlocks: ['Expansión global', 'Nivel máximo'] },
 ]
 
 interface Props {
@@ -31,9 +32,12 @@ export default function LevelMap({ currentLevel }: Props) {
   const [hovered, setHovered] = useState<number | null>(null)
 
   return (
-    <div className="card p-6 mb-6">
-      <div className="mb-5">
-        <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+    <div className="card" style={{ padding: 24, marginBottom: 32 }}>
+      <div style={{ marginBottom: 20 }}>
+        <h2 style={{
+          fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 600,
+          color: 'var(--ds-text-primary)', letterSpacing: '-0.01em', marginBottom: 4,
+        }}>
           Tu camino de crecimiento
         </h2>
         <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>

@@ -124,7 +124,7 @@ export default async function BillingPage() {
     <div style={{ maxWidth: 900, margin: '0 auto' }}>
 
       {/* ── Header ── */}
-      <div className="mb-8 dash-anim-1">
+      <div className="mb-8 module-enter module-enter-1">
         <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 6 }}>
           Facturación y plan
         </p>
@@ -135,7 +135,7 @@ export default async function BillingPage() {
       </div>
 
       {/* ── Credits summary card ── */}
-      <div className="mb-8 dash-anim-2" style={{
+      <div className="mb-8 module-enter module-enter-2" style={{
         borderRadius: 20, padding: '24px 28px',
         background: 'linear-gradient(135deg, var(--ds-color-primary-soft) 0%, transparent 60%, transparent 100%)',
         border: '1px solid transparent',
@@ -220,7 +220,7 @@ export default async function BillingPage() {
       </div>
 
       {/* ── Plans grid ── */}
-      <div className="dash-anim-3">
+      <div className="module-enter module-enter-3">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
           <h2 className="section-title">Elegí tu plan</h2>
           <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>Todos los planes incluyen acceso completo al generador de IA</p>
@@ -464,7 +464,7 @@ export default async function BillingPage() {
       </div>
 
       {/* ── Footer note ── */}
-      <div className="dash-anim-4" style={{ textAlign: 'center', marginTop: 36 }}>
+      <div className="module-enter module-enter-4" style={{ textAlign: 'center', marginTop: 36 }}>
         <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 6 }}>
           Los pagos se procesan de forma manual vía WhatsApp. Te contactamos en menos de 24hs.
         </p>

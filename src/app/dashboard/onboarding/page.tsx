@@ -33,10 +33,10 @@ export default async function OnboardingPage() {
   return (
     <div style={{ maxWidth: 880, margin: '0 auto' }}>
       {/* ── Header ─────────────────────────────────────────────────────── */}
-      <div className="dash-anim-1 mb-8" style={{ paddingTop: 4 }}>
+      <div className="module-enter module-enter-1 mb-8" style={{ paddingTop: 4 }}>
         <h1 style={{
           fontFamily: 'Syne, sans-serif',
-          fontSize: 32, fontWeight: 800, color: '#fff',
+          fontSize: 32, fontWeight: 700, color: 'var(--ds-text-primary)',
           letterSpacing: '-0.02em', marginBottom: 8, lineHeight: 1.1,
         }}>
           Bienvenido a AdFlow ✨
@@ -67,12 +67,7 @@ export default async function OnboardingPage() {
       </div>
 
       {/* ── Progress bar ──────────────────────────────────────────────── */}
-      <div className="dash-anim-2 mb-8" style={{
-        padding: '18px 20px',
-        borderRadius: 16,
-        background: 'rgba(255,255,255,0.02)',
-        border: '1px solid rgba(255,255,255,0.06)',
-      }}>
+      <div className="card module-enter module-enter-2 mb-8" style={{ padding: '18px 20px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
           <span style={{
             fontFamily: 'Syne, sans-serif', fontSize: 12, fontWeight: 700,
@@ -87,14 +82,11 @@ export default async function OnboardingPage() {
             {status.completionScore}%
           </span>
         </div>
-        <div style={{ height: 12, borderRadius: 99, background: 'rgba(255,255,255,0.04)', overflow: 'hidden' }}>
-          <div style={{
-            height: '100%', width: `${status.completionScore}%`,
-            background: 'var(--ds-color-primary)',
-            boxShadow: '0 0 16px var(--ds-color-primary-border), 0 0 32px var(--ds-card-border)',
-            borderRadius: 99,
-            transition: 'width 0.8s cubic-bezier(0.22, 1, 0.36, 1)',
-          }} />
+        <div className="progress-bar" style={{ height: 12 }}>
+          <div
+            className="progress-bar-fill progress-animated"
+            style={{ width: `${status.completionScore}%` }}
+          />
         </div>
         {status.isComplete && (
           <p style={{ marginTop: 12, fontSize: 13, color: 'var(--ds-color-success)', fontWeight: 600 }}>
@@ -132,17 +124,14 @@ export default async function OnboardingPage() {
               : 'none'
 
           return (
-            <div key={key} className={`dash-anim-${Math.min(3 + idx, 8)}`}
+            <div key={key} className={`card module-enter module-enter-${Math.min(3 + idx, 8)}`}
               style={{
-                position: 'relative',
                 padding: isCurrent ? '24px 26px' : '18px 22px',
-                borderRadius: 18,
                 background: bg,
                 border: border,
-                boxShadow: glow,
-                opacity: isLocked ? 0.55 : 1,
+                boxShadow: glow !== 'none' ? `${glow}, var(--ds-card-inner-glow)` : undefined,
+                opacity: isLocked ? 0.45 : 1,
                 transition: 'all 0.3s ease',
-                overflow: 'hidden',
               }}>
               {isCurrent && (
                 <div style={{
@@ -259,19 +248,12 @@ export default async function OnboardingPage() {
 
       {/* ── Celebration card when everything is done ──────────────────── */}
       {status.isComplete && (
-        <div className="dash-anim-8 mt-8" style={{
+        <div className="card module-enter module-enter-8 mt-8" style={{
           padding: '36px 32px',
-          borderRadius: 22,
-          background: 'linear-gradient(135deg, rgba(34,197,94,0.16), transparent)',
-          border: '1.5px solid var(--ds-color-success-border)',
-          boxShadow: '0 30px 70px rgba(0,0,0,0.45), 0 0 60px var(--ds-color-success-soft)',
+          borderColor: 'var(--ds-color-success-border)',
+          boxShadow: 'var(--ds-shadow-md), 0 0 60px rgba(52, 211, 153, 0.14), var(--ds-card-inner-glow)',
           textAlign: 'center',
-          position: 'relative', overflow: 'hidden',
         }}>
-          <div style={{
-            position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-            background: 'linear-gradient(90deg, transparent, var(--ds-color-success), transparent)',
-          }} />
           <p style={{ fontSize: 44, marginBottom: 12 }}>🎉</p>
           <h2 style={{
             fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff',

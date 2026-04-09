@@ -11,13 +11,14 @@ interface LevelHistoryRow {
   created_at: string
 }
 
+// Hex so we can concat alpha suffixes (`${color}40`) safely.
 const LEVEL_COLORS: Record<number, string> = {
   0: '#8892b0',
-  1: 'var(--ds-color-danger)', 2: 'var(--ds-color-danger)',
-  3: 'var(--ds-color-warning)', 4: 'var(--ds-color-warning)',
-  5: 'var(--ds-color-success)', 6: 'var(--ds-color-success)',
-  7: '#3b82f6',
-  8: '#8b5cf6',
+  1: '#f87171', 2: '#f87171',
+  3: '#fbbf24', 4: '#fbbf24',
+  5: '#34d399', 6: '#34d399',
+  7: '#7c6ef0',
+  8: '#a78bfa',
 }
 
 export default function GrowthTimeline() {
@@ -60,7 +61,7 @@ export default function GrowthTimeline() {
       {/* Vertical line */}
       <div style={{
         position: 'absolute', left: 11, top: 8, bottom: 8, width: 2,
-        background: 'linear-gradient(180deg, var(--ds-card-border), rgba(255,255,255,0.05))',
+        background: 'linear-gradient(180deg, var(--ds-color-primary) 0%, var(--ds-card-border) 100%)',
       }} />
       {history.map((h, i) => {
         const color = LEVEL_COLORS[h.new_level] ?? '#8892b0'
@@ -71,15 +72,22 @@ export default function GrowthTimeline() {
               width: 18, height: 18, borderRadius: '50%',
               background: `radial-gradient(circle, ${color}, ${color}40)`,
               border: `2px solid ${color}`,
-              boxShadow: `0 0 10px ${color}80`,
+              boxShadow: `0 0 0 1px ${color}40, 0 0 14px ${color}80`,
             }} />
-            <div className="p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{
+              padding: 14,
+              borderRadius: 12,
+              background: 'var(--ds-card-bg)',
+              border: '1px solid var(--ds-card-border)',
+              backdropFilter: 'blur(16px) saturate(1.2)',
+              boxShadow: 'var(--ds-card-inner-glow)',
+            }}>
               <p style={{ fontSize: 12, fontWeight: 700, color, marginBottom: 2 }}>
-                {h.old_level !== null && <span style={{ color: 'var(--ds-text-secondary)' }}>Nivel {h.old_level} → </span>}
+                {h.old_level !== null && <span style={{ color: 'var(--ds-text-muted)' }}>Nivel {h.old_level} → </span>}
                 Nivel {h.new_level}: {h.level_name}
               </p>
               {h.reason && <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>{h.reason}</p>}
-              <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', marginTop: 4 }}>
+              <p style={{ fontSize: 10, color: 'var(--ds-text-muted)', marginTop: 4 }}>
                 {new Date(h.created_at).toLocaleDateString('es', { day: 'numeric', month: 'short', year: 'numeric' })}
               </p>
             </div>

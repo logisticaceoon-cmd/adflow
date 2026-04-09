@@ -24,12 +24,16 @@ export default function ScoreCard({ totalScore, breakdown, monthStars }: Props) 
   const earnedStars    = monthStars.filter(s => s.earned).length
 
   return (
-    <div className="card p-6 mb-6" style={{
-      background: 'linear-gradient(135deg, rgba(245,158,11,0.06) 0%, transparent 100%)',
-      border: '1px solid rgba(245,158,11,0.18)',
+    <div className="card" style={{
+      padding: 24, marginBottom: 32,
+      borderColor: 'rgba(245, 197, 66, 0.20)',
+      boxShadow: 'var(--ds-shadow-md), 0 0 48px rgba(245, 197, 66, 0.06), var(--ds-card-inner-glow)',
     }}>
-      <div className="mb-5">
-        <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+      <div style={{ marginBottom: 20 }}>
+        <h2 style={{
+          fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 600,
+          color: 'var(--ds-text-primary)', letterSpacing: '-0.01em', marginBottom: 4,
+        }}>
           ⭐ Tu Growth Score
         </h2>
         <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
@@ -48,9 +52,9 @@ export default function ScoreCard({ totalScore, breakdown, monthStars }: Props) 
           </div>
           <p style={{
             fontFamily: 'Syne, sans-serif',
-            fontSize: 48, fontWeight: 900, color: 'var(--ds-color-warning)',
+            fontSize: 44, fontWeight: 700, color: 'var(--ds-color-warning)',
             letterSpacing: '-0.04em', lineHeight: 1,
-            textShadow: '0 0 32px rgba(245,158,11,0.45)',
+            textShadow: '0 0 30px rgba(245, 197, 66, 0.12), 0 0 60px rgba(245, 197, 66, 0.06)',
           }}>
             {totalScore.toLocaleString()}
           </p>
@@ -74,13 +78,15 @@ export default function ScoreCard({ totalScore, breakdown, monthStars }: Props) 
                     <span style={{ fontSize: 11, color: '#a0a8c0' }}>{b.label}</span>
                     <span style={{ fontSize: 11, fontWeight: 700, color: b.color }}>+{Math.round(b.points)} pts</span>
                   </div>
-                  <div style={{ height: 6, borderRadius: 4, background: 'rgba(255,255,255,0.05)', overflow: 'hidden' }}>
-                    <div style={{
-                      height: '100%', width: `${pct}%`,
-                      background: `linear-gradient(90deg, ${b.color}, ${b.color}aa)`,
-                      boxShadow: `0 0 8px ${b.color}50`,
-                      transition: 'width 0.6s ease',
-                    }} />
+                  <div className="progress-bar" style={{ height: 6 }}>
+                    <div
+                      className="progress-bar-fill"
+                      style={{
+                        width: `${pct}%`,
+                        background: `linear-gradient(90deg, ${b.color}cc, ${b.color})`,
+                        boxShadow: `0 0 10px ${b.color}60, 0 0 20px ${b.color}20, inset 0 1px 0 rgba(255,255,255,0.24)`,
+                      }}
+                    />
                   </div>
                 </div>
               )

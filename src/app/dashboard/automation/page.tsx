@@ -82,7 +82,7 @@ export default async function AutomationPage() {
   return (
     <div>
       {/* Header */}
-      <div className="dash-anim-1" style={{ marginBottom: 32 }}>
+      <div className="module-enter module-enter-1" style={{ marginBottom: 32 }}>
         <p style={{
           fontSize: 10, fontWeight: 600, letterSpacing: '0.12em',
           textTransform: 'uppercase', color: 'var(--ds-text-label)',
@@ -105,7 +105,7 @@ export default async function AutomationPage() {
 
       {/* ─── PENDING EXECUTIONS ─────────────────────────────────── */}
       {pending.length > 0 && (
-        <div className="dash-anim-2" style={{ marginBottom: 40 }}>
+        <div className="module-enter module-enter-2" style={{ marginBottom: 40 }}>
           <SectionHeader
             title={`Pendientes de aprobación (${pending.length})`}
             subtitle="El sistema detectó oportunidades en tus campañas. Revisá cada una."
@@ -186,7 +186,7 @@ export default async function AutomationPage() {
       )}
 
       {/* ─── USER RULES ─────────────────────────────────────────── */}
-      <div className="dash-anim-3" style={{ marginBottom: 40 }}>
+      <div className="module-enter module-enter-3" style={{ marginBottom: 40 }}>
         <SectionHeader
           title="Tus reglas de automatización"
           subtitle="Activá o desactivá las reglas que querés que el sistema evalúe todos los días"
@@ -276,7 +276,7 @@ export default async function AutomationPage() {
       </div>
 
       {/* ─── HISTORY ─────────────────────────────────────────────── */}
-      <div className="dash-anim-4">
+      <div className="module-enter module-enter-4">
         <SectionHeader
           title="Historial de ejecuciones"
           subtitle="Últimas 10 ejecuciones de automatizaciones"
@@ -332,7 +332,7 @@ export default async function AutomationPage() {
       </div>
 
       {/* ─── EXPERT RULES — the 17 rules from the V1.0 workbook ─── */}
-      <div className="dash-anim-5" style={{ marginTop: 40 }}>
+      <div className="module-enter module-enter-5" style={{ marginTop: 40 }}>
         <SectionHeader
           title="Reglas expertas del sistema"
           subtitle="17 reglas basadas en el workbook de evaluación. El sistema las usa automáticamente para diagnosticar tus campañas."

@@ -100,30 +100,35 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
   return (
     <div className="max-w-5xl mx-auto">
       {/* ── SECTION A: HERO ───────────────────────────────────────────── */}
-      <div className="dash-anim-1 mb-6" style={{
+      <div className="module-enter module-enter-1" style={{
         position: 'relative',
-        borderRadius: 22, padding: '28px 32px',
-        background: 'linear-gradient(135deg, rgba(139,92,246,0.10) 0%, var(--ds-color-primary-soft) 50%, transparent 100%)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        backdropFilter: 'blur(20px)',
+        marginBottom: 32,
+        borderRadius: 24, padding: '36px 40px',
+        background:
+          'linear-gradient(135deg, rgba(124, 110, 240, 0.08) 0%, rgba(10, 12, 28, 0.50) 50%, rgba(167, 139, 250, 0.04) 100%)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        backdropFilter: 'blur(32px) saturate(1.4)',
+        WebkitBackdropFilter: 'blur(32px) saturate(1.4)',
+        boxShadow: 'var(--ds-shadow-md), 0 0 40px rgba(124, 110, 240, 0.05)',
         overflow: 'hidden',
       }}>
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-          background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.55), var(--ds-color-primary-border), transparent)',
+          background: 'linear-gradient(90deg, transparent 10%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.12) 60%, transparent 90%)',
+          pointerEvents: 'none',
         }} />
 
         <div className="flex items-center justify-between mb-4">
           <div>
-            <Link href="/dashboard/reports" style={{ fontSize: 11, color: '#c4b5fd', display: 'inline-flex', alignItems: 'center', gap: 4, textDecoration: 'none', marginBottom: 8 }}>
+            <Link href="/dashboard/reports" style={{ fontSize: 11, color: 'var(--ds-color-primary)', display: 'inline-flex', alignItems: 'center', gap: 4, textDecoration: 'none', marginBottom: 8 }}>
               <ArrowLeft size={12} /> Volver a reportes
             </Link>
-            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#c4b5fd', marginBottom: 4 }}>
+            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ds-text-label)', marginBottom: 4 }}>
               Reporte mensual
             </p>
             <h1 style={{
-              fontFamily: 'Syne, sans-serif', fontSize: 32, fontWeight: 800,
-              color: '#fff', letterSpacing: '-0.03em',
+              fontFamily: 'Syne, sans-serif', fontSize: 32, fontWeight: 700,
+              color: 'var(--ds-text-primary)', letterSpacing: '-0.03em',
             }}>
               {fmtMonthYear(targetMonth)} 📊
             </h1>
@@ -131,28 +136,20 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
 
           {/* Month navigator */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Link href={`/dashboard/reports/monthly?month=${prevMonth(targetMonth)}`} style={{
-              padding: '8px 12px', borderRadius: 10,
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.10)',
-              color: '#fff', textDecoration: 'none',
-              display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12,
+            <Link href={`/dashboard/reports/monthly?month=${prevMonth(targetMonth)}`} className="btn-ghost" style={{
+              padding: '8px 12px', fontSize: 12, minHeight: 34, textDecoration: 'none',
             }}>
               <ArrowLeft size={14} /> Anterior
             </Link>
-            <Link href={`/dashboard/reports/monthly?month=${nextMonth(targetMonth)}`} style={{
-              padding: '8px 12px', borderRadius: 10,
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.10)',
-              color: '#fff', textDecoration: 'none',
-              display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12,
+            <Link href={`/dashboard/reports/monthly?month=${nextMonth(targetMonth)}`} className="btn-ghost" style={{
+              padding: '8px 12px', fontSize: 12, minHeight: 34, textDecoration: 'none',
             }}>
               Siguiente <ArrowRight size={14} />
             </Link>
           </div>
         </div>
 
-        <p style={{ fontSize: 13.5, color: 'var(--ds-text-secondary)', maxWidth: 620, lineHeight: 1.55 }}>
+        <p style={{ fontSize: 14, color: 'var(--ds-text-secondary)', maxWidth: 620, lineHeight: 1.55 }}>
           Tu consultor IA analizó el mes. Acá está el resumen ejecutivo, las métricas clave, y las acciones recomendadas para el próximo mes.
         </p>
       </div>
@@ -172,21 +169,21 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
       ) : (
         <>
           {/* ── SECTION B: TOP METRICS WITH TRENDS ─────────────────── */}
-          <div className="grid grid-cols-4 gap-4 mb-6 dash-anim-2">
+          <div className="grid grid-cols-4 gap-4 module-enter module-enter-2" style={{ marginBottom: 32 }}>
             {[
-              { label: 'Inversión total',  value: `$${(report.total_spend ?? 0).toFixed(0)}`,     trend: trendSpend,   color: 'var(--ds-color-primary)', inverse: true },
-              { label: 'Ventas generadas', value: `$${(report.total_revenue ?? 0).toFixed(0)}`,   trend: trendRevenue, color: 'var(--ds-color-success)', inverse: false },
-              { label: 'ROAS promedio',    value: `${(report.avg_roas ?? 0).toFixed(2)}x`,        trend: trendRoas,    color: 'var(--ds-color-warning)', inverse: false },
-              { label: 'Conversiones',     value: String(report.total_conversions ?? 0),         trend: trendConv,    color: 'var(--ds-color-primary)', inverse: false },
+              { label: 'Inversión total',  value: `$${(report.total_spend ?? 0).toFixed(0)}`,     trend: trendSpend,   color: 'var(--ds-color-primary)' },
+              { label: 'Ventas generadas', value: `$${(report.total_revenue ?? 0).toFixed(0)}`,   trend: trendRevenue, color: 'var(--ds-color-success)' },
+              { label: 'ROAS promedio',    value: `${(report.avg_roas ?? 0).toFixed(2)}x`,        trend: trendRoas,    color: 'var(--ds-color-warning)' },
+              { label: 'Conversiones',     value: String(report.total_conversions ?? 0),         trend: trendConv,    color: 'var(--ds-color-primary)' },
             ].map(m => (
-              <div key={m.label} className="card p-5" style={{
+              <div key={m.label} className="card" style={{
+                padding: 20,
                 borderTop: `2px solid ${m.color}`,
-                boxShadow: `0 10px 32px rgba(0,0,0,0.35), 0 0 28px ${m.color}12`,
               }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8 }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-label)', textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 8 }}>
                   {m.label}
                 </p>
-                <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff', lineHeight: 1, letterSpacing: '-0.02em', marginBottom: 8 }}>
+                <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 24, fontWeight: 600, color: 'var(--ds-text-primary)', lineHeight: 1, letterSpacing: '-0.02em', marginBottom: 8 }}>
                   {m.value}
                 </p>
                 <ChangeIndicator value={m.trend} />
@@ -196,10 +193,10 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
 
           {/* ── SECTION C: EXECUTIVE AI ANALYSIS ───────────────────── */}
           {report.ai_analysis && (
-            <div className="card p-6 mb-6 dash-anim-3" style={{
-              background: 'linear-gradient(135deg, var(--ds-color-primary-soft) 0%, transparent 50%, rgba(139,92,246,0.04) 100%)',
-              border: '1px solid transparent',
-              boxShadow: '0 12px 48px var(--ds-color-primary-soft)',
+            <div className="card module-enter module-enter-3" style={{
+              padding: 24, marginBottom: 32,
+              borderLeft: '3px solid var(--ds-color-primary)',
+              boxShadow: 'var(--ds-shadow-md), -3px 0 15px rgba(124, 110, 240, 0.12), 0 0 48px rgba(124, 110, 240, 0.06), var(--ds-card-inner-glow)',
             }}>
               <div className="flex items-start gap-4">
                 <div style={{
@@ -228,7 +225,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
           )}
 
           {/* ── SECTION D: LEVEL EVOLUTION + BUDGET EFFICIENCY + GROWTH ── */}
-          <div className="grid grid-cols-3 gap-4 mb-6 dash-anim-4">
+          <div className="grid grid-cols-3 gap-4 module-enter module-enter-4" style={{ marginBottom: 32 }}>
             {/* Level evolution */}
             <div className="card p-5">
               <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 14 }}>
@@ -258,17 +255,18 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
               <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', lineHeight: 1, marginBottom: 10 }}>
                 {budgetEffic.toFixed(0)}%
               </p>
-              <div style={{ height: 6, borderRadius: 4, background: 'rgba(255,255,255,0.05)', overflow: 'hidden', marginBottom: 8 }}>
-                <div style={{
-                  height: '100%',
-                  width: `${Math.min(100, budgetEffic)}%`,
-                  background: budgetEffic > 100
-                    ? 'linear-gradient(90deg, var(--ds-color-danger), #f87171)'
-                    : budgetEffic > 90
-                      ? 'linear-gradient(90deg, var(--ds-color-success), var(--ds-color-primary))'
-                      : 'var(--ds-color-warning)',
-                  boxShadow: '0 0 12px var(--ds-card-border)',
-                }} />
+              <div className="progress-bar" style={{ height: 6, marginBottom: 8 }}>
+                <div
+                  className="progress-bar-fill"
+                  style={{
+                    width: `${Math.min(100, budgetEffic)}%`,
+                    background: budgetEffic > 100
+                      ? 'linear-gradient(90deg, rgba(248,113,113,0.70), #f87171)'
+                      : budgetEffic > 90
+                        ? 'linear-gradient(90deg, rgba(52,211,153,0.70), #34d399)'
+                        : 'linear-gradient(90deg, rgba(251,191,36,0.70), #fbbf24)',
+                  }}
+                />
               </div>
               <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', lineHeight: 1.5 }}>
                 ${(report.total_spend ?? 0).toFixed(0)} gastado de ${budgetPlanned.toFixed(0)} planeado

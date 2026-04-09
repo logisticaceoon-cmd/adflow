@@ -31,9 +31,13 @@ export default function CapabilitiesCard({ level }: Props) {
   const futureLocked = ALL_CAPS.filter(c => c.level > lockedNextLevel)
 
   return (
-    <div className="grid grid-cols-2 gap-4 mb-6">
+    <div className="grid grid-cols-2 gap-4" style={{ marginBottom: 32 }}>
       {/* ── Unlocked ── */}
-      <div className="card p-5" style={{ borderLeft: '3px solid var(--ds-color-success)' }}>
+      <div className="card" style={{
+        padding: 20,
+        borderLeft: '3px solid var(--ds-color-success)',
+        boxShadow: 'var(--ds-shadow-md), -3px 0 15px rgba(52, 211, 153, 0.10), var(--ds-card-inner-glow)',
+      }}>
         <div className="flex items-center justify-between mb-3">
           <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff' }}>
             ✨ Lo que ya podés hacer
@@ -74,7 +78,11 @@ export default function CapabilitiesCard({ level }: Props) {
       </div>
 
       {/* ── Locked / next ── */}
-      <div className="card p-5" style={{ borderLeft: '3px solid var(--ds-color-warning)' }}>
+      <div className="card" style={{
+        padding: 20,
+        borderLeft: '3px solid var(--ds-color-warning)',
+        boxShadow: 'var(--ds-shadow-md), -3px 0 15px rgba(251, 191, 36, 0.10), var(--ds-card-inner-glow)',
+      }}>
         <div className="flex items-center justify-between mb-3">
           <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff' }}>
             🔒 Lo que viene
