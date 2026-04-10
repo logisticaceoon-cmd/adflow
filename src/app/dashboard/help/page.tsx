@@ -72,8 +72,6 @@ export default function HelpPage() {
           { icon: '🤖', title: '¿Cómo funciona la IA?',                   desc: 'Claude analiza tu negocio + tu nivel + tus datos y genera copies, audiencias y recomendaciones adaptadas a vos.' },
         ].map((card, i) => (
           <div key={i} className="card p-5" style={{
-            background: 'linear-gradient(160deg, rgba(18,4,10,0.92), rgba(12,3,7,0.96))',
-            border: '1px solid rgba(255,255,255,0.08)',
             transition: 'all 0.2s',
           }}>
             <div style={{

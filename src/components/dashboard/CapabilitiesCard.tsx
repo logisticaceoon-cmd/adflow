@@ -36,7 +36,6 @@ export default function CapabilitiesCard({ level }: Props) {
       <div className="card" style={{
         padding: 20,
         borderLeft: '3px solid var(--ds-color-success)',
-        boxShadow: 'var(--ds-shadow-md), -3px 0 15px rgba(52, 211, 153, 0.10), var(--ds-card-inner-glow)',
       }}>
         <div className="flex items-center justify-between mb-3">
           <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff' }}>
@@ -81,7 +80,6 @@ export default function CapabilitiesCard({ level }: Props) {
       <div className="card" style={{
         padding: 20,
         borderLeft: '3px solid var(--ds-color-warning)',
-        boxShadow: 'var(--ds-shadow-md), -3px 0 15px rgba(251, 191, 36, 0.10), var(--ds-card-inner-glow)',
       }}>
         <div className="flex items-center justify-between mb-3">
           <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff' }}>

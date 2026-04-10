@@ -128,8 +128,11 @@ export default async function OnboardingPage() {
               style={{
                 padding: isCurrent ? '24px 26px' : '18px 22px',
                 background: bg,
-                border: border,
-                boxShadow: glow !== 'none' ? `${glow}, var(--ds-card-inner-glow)` : undefined,
+                borderColor: isDone
+                  ? 'var(--ds-color-success-border)'
+                  : isCurrent
+                    ? 'var(--ds-color-primary-border)'
+                    : undefined,
                 opacity: isLocked ? 0.45 : 1,
                 transition: 'all 0.3s ease',
               }}>

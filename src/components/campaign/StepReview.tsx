@@ -92,10 +92,8 @@ export default function StepReview({
   // ── Loading state ─────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <div style={{
-        borderRadius: 20, padding: 40, textAlign: 'center',
-        background: 'var(--ds-card-bg)',
-        border: '1px solid var(--ds-card-border)',
+      <div className="card" style={{
+        padding: 40, textAlign: 'center',
       }}>
         <div className="space-y-6">
           <div style={{

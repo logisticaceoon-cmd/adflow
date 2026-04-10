@@ -135,12 +135,9 @@ export default async function BillingPage() {
       </div>
 
       {/* ── Credits summary card ── */}
-      <div className="mb-8 module-enter module-enter-2" style={{
-        borderRadius: 20, padding: '24px 28px',
+      <div className="card mb-8 module-enter module-enter-2" style={{
+        padding: '24px 28px',
         background: 'linear-gradient(135deg, var(--ds-color-primary-soft) 0%, transparent 60%, transparent 100%)',
-        border: '1px solid transparent',
-        backdropFilter: 'blur(20px)',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.40), 0 0 0 1px rgba(255,255,255,0.04) inset',
         position: 'relative', overflow: 'hidden',
       }}>
         {/* top radial glow */}
@@ -235,29 +232,17 @@ export default async function BillingPage() {
             return (
               <div
                 key={plan.key}
+                className="card"
                 style={{
-                  borderRadius: 22,
                   padding: plan.featured ? '28px' : '24px',
                   position: 'relative',
                   overflow: 'hidden',
-                  backdropFilter: 'blur(16px)',
                   transition: 'transform 0.25s ease, box-shadow 0.25s ease',
-                  // Featured card is the Pro plan — always stands out
-                  background: plan.featured
-                    ? 'linear-gradient(145deg, transparent 0%, transparent 60%, rgba(14,4,8,0.95) 100%)'
-                    : isCurrent
-                      ? `linear-gradient(145deg, ${plan.color}0e 0%, rgba(14,4,8,0.92) 100%)`
-                      : 'linear-gradient(145deg, rgba(18,4,10,0.92) 0%, rgba(12,3,7,0.96) 100%)',
                   border: plan.featured
                     ? '1.5px solid var(--ds-color-primary-border)'
                     : isCurrent
                       ? `1.5px solid ${plan.color}45`
-                      : '1px solid rgba(255,255,255,0.09)',
-                  boxShadow: plan.featured
-                    ? '0 0 48px transparent, 0 20px 60px rgba(0,0,0,0.60), 0 1px 0 rgba(255,255,255,0.07) inset'
-                    : isCurrent
-                      ? `0 0 28px ${plan.color}18, 0 12px 40px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.05) inset`
-                      : '0 8px 32px rgba(0,0,0,0.40), 0 1px 0 rgba(255,255,255,0.04) inset',
+                      : undefined,
                 }}
               >
                 {/* Radial glow inside featured/current card */}

@@ -445,14 +445,8 @@ export default async function DashboardPage() {
 
       {/* 8. Spend chart + Tip del día */}
       <div className="module-enter module-enter-9 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2" style={{
+        <div className="md:col-span-2 card" style={{
           padding: 'var(--ds-space-lg)',
-          background: 'var(--ds-card-bg)',
-          border: '1px solid var(--ds-card-border)',
-          borderRadius: 'var(--ds-card-radius)',
-          backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-          WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-          boxShadow: 'var(--ds-shadow-sm)',
           maxHeight: 280,
           overflow: 'hidden',
         }}>
@@ -475,14 +469,8 @@ export default async function DashboardPage() {
           <SpendChart totalSpend={totalSpend} />
         </div>
 
-        <div style={{
+        <div className="card" style={{
           padding: 'var(--ds-space-lg)',
-          background: 'var(--ds-card-bg)',
-          border: '1px solid var(--ds-card-border)',
-          borderRadius: 'var(--ds-card-radius)',
-          backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-          WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-          boxShadow: 'var(--ds-shadow-sm)',
         }}>
           <div style={{
             width: 36, height: 36, borderRadius: 10, marginBottom: 12,

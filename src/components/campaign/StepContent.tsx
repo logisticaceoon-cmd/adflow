@@ -51,11 +51,7 @@ export default function StepContent({
       </div>
 
       {/* Media upload card */}
-      <div style={{
-        borderRadius: 18, padding: 22,
-        background: 'var(--ds-card-bg)',
-        border: '1px solid var(--ds-card-border)',
-      }}>
+      <div className="card" style={{ padding: 22 }}>
         <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
           🎨 Materiales creativos
         </h3>
@@ -153,11 +149,7 @@ export default function StepContent({
       </div>
 
       {/* Optional extras */}
-      <div style={{
-        borderRadius: 18, padding: 22,
-        background: 'var(--ds-card-bg)',
-        border: '1px solid var(--ds-card-border)',
-      }}>
+      <div className="card" style={{ padding: 22 }}>
         <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
           ✏️ Información adicional
           <span style={{ fontWeight: 400, color: 'var(--ds-text-secondary)', fontSize: 11, marginLeft: 4 }}>(opcional)</span>

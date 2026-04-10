@@ -58,16 +58,12 @@ export default function ConfirmModal({
         animation: 'fadeIn 0.2s ease',
       }}>
       <div
+        className="card"
         onClick={e => e.stopPropagation()}
         style={{
           width: '100%', maxWidth: 440,
-          background: 'rgba(8, 10, 22, 0.90)',
-          border: `1px solid ${color.border}`,
-          borderRadius: 20,
+          borderColor: color.border,
           padding: '28px 28px 24px',
-          backdropFilter: 'blur(32px) saturate(1.3)',
-          WebkitBackdropFilter: 'blur(32px) saturate(1.3)',
-          boxShadow: `0 32px 96px rgba(0,0,0,0.80), 0 0 80px ${color.glow}, inset 0 1px 0 rgba(255,255,255,0.05)`,
           animation: 'modalIn 0.25s cubic-bezier(0.16,1,0.3,1)',
           position: 'relative',
         }}>

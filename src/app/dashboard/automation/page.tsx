@@ -115,15 +115,10 @@ export default async function AutomationPage() {
               const rule = e.automation_rules
               const snapshot = (e.decision_snapshot || {}) as Record<string, number>
               return (
-                <div key={e.id} style={{
+                <div key={e.id} className="card" style={{
                   padding: 'var(--ds-space-lg)',
-                  borderRadius: 'var(--ds-card-radius)',
-                  background: 'var(--ds-card-bg)',
-                  border: '1px solid var(--ds-color-primary-border)',
+                  borderColor: 'var(--ds-color-primary-border)',
                   borderLeft: '3px solid var(--ds-color-primary)',
-                  backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-                  WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-                  boxShadow: 'var(--ds-shadow-md)',
                 }}>
                   <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start', flexWrap: 'wrap' }}>
                     <div style={{ flex: 1, minWidth: 280 }}>
@@ -206,14 +201,8 @@ export default async function AutomationPage() {
         ) : (
           <div className="ds-grid-2">
             {rules.map((rule: any) => (
-              <div key={rule.id} style={{
+              <div key={rule.id} className="card" style={{
                 padding: 'var(--ds-space-lg)',
-                borderRadius: 'var(--ds-card-radius)',
-                background: 'var(--ds-card-bg)',
-                border: '1px solid var(--ds-card-border)',
-                backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-                WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-                boxShadow: 'var(--ds-shadow-sm)',
               }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 10 }}>
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -286,14 +275,8 @@ export default async function AutomationPage() {
             Todavía no hay ejecuciones. Se irán registrando aquí a medida que las reglas activas se disparen.
           </p>
         ) : (
-          <div style={{
+          <div className="card" style={{
             padding: 'var(--ds-space-lg)',
-            borderRadius: 'var(--ds-card-radius)',
-            background: 'var(--ds-card-bg)',
-            border: '1px solid var(--ds-card-border)',
-            backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-            WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-            boxShadow: 'var(--ds-shadow-sm)',
           }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {history.map((e: any, i: number) => {
@@ -348,14 +331,8 @@ export default async function AutomationPage() {
             }
             const cfg = typeConfig[r.type]
             return (
-              <div key={r.id} style={{
+              <div key={r.id} className="card" style={{
                 padding: 'var(--ds-space-lg)',
-                borderRadius: 'var(--ds-card-radius)',
-                background: 'var(--ds-card-bg)',
-                border: '1px solid var(--ds-card-border)',
-                backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-                WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-                boxShadow: 'var(--ds-shadow-sm)',
               }}>
                 <div style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
