@@ -64,10 +64,10 @@
   --ds-surface-primary: rgba(8, 12, 24, 0.70);
 
   /* ── Cards — dark semitransparent for space bg ── */
-  --ds-card-bg:           rgba(8, 12, 24, 0.65);
-  --ds-card-bg-hover:     rgba(12, 18, 32, 0.75);
-  --ds-card-border:       rgba(255, 255, 255, 0.08);
-  --ds-card-border-hover: rgba(255, 255, 255, 0.14);
+  --ds-card-bg:           rgba(8, 14, 28, 0.35);
+  --ds-card-bg-hover:     rgba(10, 18, 34, 0.45);
+  --ds-card-border:       rgba(45, 212, 168, 0.12);
+  --ds-card-border-hover: rgba(45, 212, 168, 0.22);
   --ds-card-blur:         20px;
   --ds-card-radius:       16px;
   --ds-card-radius-sm:    10px;
@@ -311,18 +311,28 @@
   }
 
   /* ─────────────────────────────────────────────────────────────
-     CARDS — clean, dark semitransparent for space bg
+     CARDS — transparent glass over space bg, green glow border
   ───────────────────────────────────────────────────────────── */
   .card,
   .ds-card {
     background: var(--ds-card-bg);
-    backdrop-filter: blur(20px) saturate(1.2);
-    -webkit-backdrop-filter: blur(20px) saturate(1.2);
+    backdrop-filter: blur(24px) saturate(1.3);
+    -webkit-backdrop-filter: blur(24px) saturate(1.3);
     border: 1px solid var(--ds-card-border);
-    border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
-    transition: all 200ms ease;
+    border-radius: 18px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), 0 0 1px rgba(45, 212, 168, 0.08);
+    transition: all 250ms ease;
     position: relative;
+    overflow: hidden;
+  }
+  .card::before,
+  .ds-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 8%; right: 8%; height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(45, 212, 168, 0.15) 20%, rgba(45, 212, 168, 0.30) 50%, rgba(45, 212, 168, 0.15) 80%, transparent 100%);
+    z-index: 2;
+    pointer-events: none;
   }
 
   .card-hover { cursor: pointer; }
@@ -332,8 +342,12 @@
   .card-hover:hover {
     background: var(--ds-card-bg-hover);
     border-color: var(--ds-card-border-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.30), 0 0 20px rgba(45, 212, 168, 0.06);
+    transform: translateY(-2px);
+  }
+  .card:hover::before,
+  .ds-card:hover::before {
+    background: linear-gradient(90deg, transparent 0%, rgba(45, 212, 168, 0.25) 20%, rgba(45, 212, 168, 0.45) 50%, rgba(45, 212, 168, 0.25) 80%, transparent 100%);
   }
   .card-hover:active {
     transform: scale(0.995);
@@ -894,8 +908,10 @@
   .topbar {
     @apply sticky top-0 z-40 flex items-center justify-end;
     padding: 16px 32px;
-    background: rgba(6, 10, 18, 0.88);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(6, 10, 20, 0.70);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(45, 212, 168, 0.08);
     min-height: 64px;
   }
 
@@ -904,8 +920,10 @@
   ───────────────────────────────────────────────────────────── */
   .sidebar {
     position: relative;
-    background: rgba(6, 10, 18, 0.92);
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(6, 10, 20, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(45, 212, 168, 0.08);
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -1047,13 +1065,13 @@
 
   .dashboard-panel {
     position: relative;
-    background: rgba(8, 12, 24, 0.55);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(8, 14, 28, 0.30);
+    border: 1px solid rgba(45, 212, 168, 0.08);
     border-radius: 20px;
-    backdrop-filter: blur(20px) saturate(1.2);
-    -webkit-backdrop-filter: blur(20px) saturate(1.2);
+    backdrop-filter: blur(24px) saturate(1.3);
+    -webkit-backdrop-filter: blur(24px) saturate(1.3);
     padding: var(--ds-space-2xl);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.30);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.20);
   }
   /* Children handle their own margin-bottom; the panel just contains them. */
 
