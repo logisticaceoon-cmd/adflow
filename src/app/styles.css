@@ -1152,7 +1152,12 @@
      The result is sober but never flat — the eye picks up depth and tint
      without any visible "blob" or shape.                              */
   .dashboard-layout {
-    background: linear-gradient(160deg, #0f0f1f 0%, #0a1025 50%, #0f0f1f 100%);
+    background-color: #030810;
+    background-image: url('/bg-space.png');
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     position: relative;
     min-height: 100vh;
     overflow-x: hidden;
