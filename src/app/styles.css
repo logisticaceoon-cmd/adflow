@@ -73,7 +73,7 @@
   --ds-card-radius:       18px;
   --ds-card-radius-sm:    12px;
 
-  --ds-card-inner-glow: none;
+  --ds-card-inner-glow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 
   /* ── Border tokens (semantic) ── */
   --ds-border-soft:    rgba(255, 255, 255, 0.06);
@@ -108,11 +108,19 @@
   --ds-space-3xl: 64px;
 
   /* ── Shadows — flat, no glow ── */
-  --ds-shadow-sm:    0 2px 8px rgba(0, 0, 0, 0.25);
-  --ds-shadow-md:    0 4px 16px rgba(0, 0, 0, 0.25);
-  --ds-shadow-lg:    0 8px 32px rgba(0, 0, 0, 0.30);
-  --ds-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.30);
-  --ds-shadow-glow:  none;
+  --ds-shadow-sm:
+    0 2px 8px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(45, 212, 168, 0.05);
+  --ds-shadow-md:
+    0 4px 16px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(45, 212, 168, 0.06);
+  --ds-shadow-lg:
+    0 8px 32px rgba(0, 0, 0, 0.30),
+    0 0 0 1px rgba(45, 212, 168, 0.08);
+  --ds-shadow-hover:
+    0 8px 24px rgba(0, 0, 0, 0.30),
+    0 0 30px rgba(45, 212, 168, 0.08);
+  --ds-shadow-glow:  0 0 40px rgba(45, 212, 168, 0.10);
 
   --ds-glow-primary:   none;
   --ds-glow-accent:    none;
@@ -206,6 +214,7 @@
   /* ── Primary button — flat solid green ── */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 select-none;
+    position: relative;
     min-height: var(--touch-min);
     min-width: var(--touch-min);
     padding: 10px 24px;
@@ -217,10 +226,18 @@
     font-size: 14px;
     cursor: pointer;
     transition: all 200ms ease;
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.25),
+      0 0 24px rgba(45, 212, 168, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
   }
   .btn-primary:hover {
     background: #3ce0b5;
     transform: translateY(-1px);
+    box-shadow:
+      0 4px 14px rgba(0, 0, 0, 0.30),
+      0 0 36px rgba(45, 212, 168, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.20);
   }
   .btn-primary:active {
     transform: scale(0.98);
@@ -320,18 +337,35 @@
   }
 
   /* ─────────────────────────────────────────────────────────────
-     CARDS — minimal flat surfaces, no glow, no reflection
+     CARDS — subtle premium: hairline glow + top reflection
   ───────────────────────────────────────────────────────────── */
   .card,
   .ds-card {
     position: relative;
-    background: var(--ds-card-bg);
+    background: linear-gradient(160deg,
+      rgba(20, 38, 30, 0.60) 0%,
+      rgba(14, 21, 18, 0.55) 100%);
     backdrop-filter: blur(var(--ds-card-blur));
     -webkit-backdrop-filter: blur(var(--ds-card-blur));
     border: 1px solid var(--ds-card-border);
     border-radius: var(--ds-card-radius);
-    box-shadow: var(--ds-shadow-sm);
+    box-shadow: var(--ds-shadow-sm), var(--ds-card-inner-glow);
     transition: all 200ms ease;
+  }
+  .card::before,
+  .ds-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 10%; right: 10%; height: 1px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.08) 20%,
+      rgba(255, 255, 255, 0.15) 50%,
+      rgba(255, 255, 255, 0.08) 80%,
+      transparent 100%);
+    pointer-events: none;
+    z-index: 1;
+    border-radius: inherit;
   }
 
   .card-hover { cursor: pointer; }
@@ -339,10 +373,21 @@
   .ds-card:hover,
   .ds-card.ds-card--hover:hover,
   .card-hover:hover {
-    background: var(--ds-card-bg-hover);
+    background: linear-gradient(160deg,
+      rgba(24, 44, 35, 0.70) 0%,
+      rgba(18, 26, 22, 0.65) 100%);
     border-color: var(--ds-card-border-hover);
-    box-shadow: var(--ds-shadow-hover);
+    box-shadow: var(--ds-shadow-hover), var(--ds-card-inner-glow);
     transform: translateY(-1px);
+  }
+  .card:hover::before,
+  .ds-card:hover::before {
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(45, 212, 168, 0.15) 20%,
+      rgba(45, 212, 168, 0.28) 50%,
+      rgba(45, 212, 168, 0.15) 80%,
+      transparent 100%);
   }
 
   /* ── Variants — flat tints only ── */
@@ -685,7 +730,8 @@
   input:focus,
   textarea:focus,
   select:focus {
-    border-color: rgba(45, 212, 168, 0.35);
+    border-color: rgba(45, 212, 168, 0.45);
+    box-shadow: 0 0 0 3px rgba(45, 212, 168, 0.10);
   }
 
   /* Generic glass form controls (any input/textarea/select inside dashboard) */
@@ -698,11 +744,23 @@
   .dashboard-layout textarea:not(.input-field):focus,
   .dashboard-layout select:not(.input-field):focus {
     outline: none;
-    border-color: rgba(45, 212, 168, 0.35) !important;
+    border-color: rgba(45, 212, 168, 0.45) !important;
+    box-shadow: 0 0 0 3px rgba(45, 212, 168, 0.10);
   }
 
-  /* Hero glow halo removed (.ds-hero-glow now no-op) */
+  /* ── Hero glow halo (subtle green ambient) ── */
   .ds-hero-glow { position: relative; }
+  .ds-hero-glow::after {
+    content: '';
+    position: absolute;
+    top: -30%; left: 15%; right: 15%; height: 50%;
+    background: radial-gradient(ellipse at center,
+      rgba(45, 212, 168, 0.08) 0%,
+      transparent 60%);
+    filter: blur(35px);
+    pointer-events: none;
+    z-index: 0;
+  }
 
   /* ── Form error styles ── */
   .input-error {
@@ -918,12 +976,15 @@
     outline-offset: -2px;
   }
 
-  /* ACTIVE — flat green tint */
+  /* ACTIVE — green tint with inset left marker + soft glow */
   .nav-item-active {
     color: var(--ds-text-primary);
     background: rgba(45, 212, 168, 0.10);
     font-weight: 600;
     border-radius: var(--ds-card-radius-sm);
+    box-shadow:
+      inset 2px 0 0 #2dd4a8,
+      0 0 20px rgba(45, 212, 168, 0.08);
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -966,9 +1027,12 @@
   }
   .progress-bar-fill {
     height: 100%;
-    background: #2dd4a8;
+    background: linear-gradient(90deg, #14b8a6 0%, #2dd4a8 100%);
     border-radius: 99px;
     transition: width 600ms ease;
+    box-shadow:
+      0 0 12px rgba(45, 212, 168, 0.30),
+      inset 0 1px 0 rgba(255, 255, 255, 0.20);
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -1158,6 +1222,20 @@
     position: relative;
     min-height: 100vh;
     overflow-x: hidden;
+  }
+  .dashboard-layout::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 1000px 700px at 15% -5%,
+        rgba(45, 212, 168, 0.04) 0%,
+        transparent 55%),
+      radial-gradient(ellipse 900px 600px at 90% 100%,
+        rgba(20, 184, 166, 0.03) 0%,
+        transparent 55%);
   }
   .dashboard-layout > * { position: relative; z-index: 1; }
 
