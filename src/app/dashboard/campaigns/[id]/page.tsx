@@ -271,15 +271,10 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
       </div>
 
       {/* ─── SECCIÓN A: HERO ─────────────────────────────────────────── */}
-      <div className="module-enter module-enter-1" style={{
+      <div className="card module-enter module-enter-1" style={{
         position: 'relative',
         marginBottom: 32,
-        borderRadius: 24, padding: '36px 40px',
-        background:
-          `linear-gradient(135deg, ${statusMeta.main}10 0%, rgba(10, 12, 28, 0.50) 50%, ${statusMeta.main}05 100%)`,
-        border: '1px solid rgba(255, 255, 255, 0.08)',
-        backdropFilter: 'blur(32px) saturate(1.4)',
-        WebkitBackdropFilter: 'blur(32px) saturate(1.4)',
+        padding: '36px 40px',
         boxShadow: `var(--ds-shadow-md), 0 0 40px ${statusMeta.main}10`,
         overflow: 'hidden',
       }}>
@@ -439,15 +434,9 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
         )}
 
         {/* Next best action card */}
-        <div style={{
+        <div className="card" style={{
           padding: 'var(--ds-space-lg)',
-          borderRadius: 'var(--ds-card-radius)',
-          background: 'var(--ds-card-bg)',
-          border: '1px solid var(--ds-card-border)',
           borderLeft: '3px solid var(--ds-color-primary)',
-          backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-          WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-          boxShadow: 'var(--ds-shadow-sm)',
           display: 'flex', alignItems: 'flex-start', gap: 14,
         }}>
           <span style={{ fontSize: 26, lineHeight: 1, flexShrink: 0, marginTop: 2 }}>

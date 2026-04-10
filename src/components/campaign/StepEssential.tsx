@@ -174,11 +174,7 @@ export default function StepEssential({ form, setField, currency, currSymbol, bu
             </p>
           </div>
 
-          <div style={{
-            borderRadius: 18, padding: 22,
-            background: 'var(--ds-card-bg)',
-            border: '1px solid var(--ds-card-border)',
-          }}>
+          <div className="card" style={{ padding: 22 }}>
             <div className="space-y-5">
               {/* Product description */}
               <div>

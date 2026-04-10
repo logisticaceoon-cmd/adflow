@@ -76,11 +76,7 @@ interface QuestionBlockProps {
 
 function QuestionBlock({ number, title, helper, children }: QuestionBlockProps) {
   return (
-    <div style={{
-      borderRadius: 18, padding: 22,
-      background: 'var(--ds-card-bg)',
-      border: '1px solid var(--ds-card-border)',
-    }}>
+    <div className="card" style={{ padding: 22 }}>
       <div className="flex items-start gap-3 mb-4">
         <div style={{
           width: 28, height: 28, borderRadius: 8, flexShrink: 0,

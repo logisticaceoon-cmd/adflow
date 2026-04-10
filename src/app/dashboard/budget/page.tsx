@@ -238,16 +238,10 @@ export default function BudgetPage() {
   return (
     <div className="max-w-5xl mx-auto">
       {/* ── SECTION A: HERO ───────────────────────────────────────────── */}
-      <div className="module-enter module-enter-1" style={{
+      <div className="card module-enter module-enter-1" style={{
         position: 'relative',
         marginBottom: 32,
-        borderRadius: 24, padding: '36px 40px',
-        background:
-          'linear-gradient(135deg, rgba(34, 211, 238, 0.08) 0%, rgba(10, 12, 28, 0.50) 50%, rgba(52, 211, 153, 0.03) 100%)',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
-        backdropFilter: 'blur(32px) saturate(1.4)',
-        WebkitBackdropFilter: 'blur(32px) saturate(1.4)',
-        boxShadow: 'var(--ds-shadow-md), 0 0 40px rgba(34, 211, 238, 0.05)',
+        padding: '36px 40px',
         overflow: 'hidden',
       }}>
         {/* Full-width top light reflection */}

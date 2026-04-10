@@ -105,17 +105,10 @@ export default function LabsPage() {
     <div>
       {/* ─── HERO ────────────────────────────────────────────────── */}
       <div
-        className="module-enter module-enter-1"
+        className="card module-enter module-enter-1"
         style={{
           position: 'relative',
           padding: '40px 44px',
-          borderRadius: 'var(--ds-card-radius)',
-          background:
-            'linear-gradient(135deg, var(--ds-color-primary-soft) 0%, transparent 60%), var(--ds-card-bg)',
-          border: '1px solid var(--ds-color-primary-border)',
-          backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.3)',
-          WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.3)',
-          boxShadow: 'var(--ds-shadow-md)',
           marginBottom: 48,
           overflow: 'hidden',
         }}
@@ -177,15 +170,9 @@ export default function LabsPage() {
             return (
               <div
                 key={f.id}
-                className={`labs-card module-enter module-enter-${i + 2}`}
+                className={`card labs-card module-enter module-enter-${i + 2}`}
                 style={{
                   padding: 'var(--ds-space-lg)',
-                  borderRadius: 'var(--ds-card-radius)',
-                  background: 'var(--ds-card-bg)',
-                  border: '1px solid var(--ds-card-border)',
-                  backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-                  WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-                  boxShadow: 'var(--ds-shadow-md)',
                   display: 'flex', flexDirection: 'column', gap: 16,
                 }}
               >
@@ -344,14 +331,9 @@ export default function LabsPage() {
         />
 
         <div
+          className="card"
           style={{
             padding: 'var(--ds-space-xl)',
-            borderRadius: 'var(--ds-card-radius)',
-            background: 'var(--ds-card-bg)',
-            border: '1px solid var(--ds-card-border)',
-            backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-            WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-            boxShadow: 'var(--ds-shadow-sm)',
           }}
         >
           <div style={{ position: 'relative' }}>
