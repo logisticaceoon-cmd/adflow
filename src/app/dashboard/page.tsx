@@ -1,23 +1,16 @@
 // src/app/dashboard/page.tsx — Growth OS dashboard (server component)
+// Clean layout: Hero → Next Action → Month Metrics → Setup → Tip+Objetivo
 import { createClient } from '@/lib/supabase/server'
 import OnboardingWizard from '@/components/dashboard/OnboardingWizard'
-import SpendChart from '@/components/dashboard/SpendChart'
 import HeroLevel from '@/components/dashboard/HeroLevel'
-import GrowthProfile from '@/components/dashboard/GrowthProfile'
 import NextBestAction from '@/components/dashboard/NextBestAction'
 import MonthSummary from '@/components/dashboard/MonthSummary'
-import PhaseSummary from '@/components/dashboard/PhaseSummary'
-import AchievementsBadges from '@/components/dashboard/AchievementsBadges'
-import AlertsOpportunities from '@/components/dashboard/AlertsOpportunities'
 import SyncButton from '@/components/dashboard/SyncButton'
 import OnboardingChecklist from '@/components/dashboard/OnboardingChecklist'
 import { calculateOnboardingStatus } from '@/lib/onboarding-engine'
 import { generateStrategicDecisions, type DecisionInput } from '@/lib/decision-engine'
 import { getDecisionMemory, saveDecision, detectCompletedActions } from '@/lib/memory-engine'
 import { countPendingExecutions } from '@/lib/automation-engine'
-import { generateForecast } from '@/lib/forecast-engine'
-import ForecastWidget from '@/components/intelligence/ForecastWidget'
-import type { Phase } from '@/lib/budget-engine'
 
 const AI_TIPS = [
   'Los anuncios con video generan 3x más engagement que las imágenes estáticas en Instagram.',
@@ -28,8 +21,6 @@ const AI_TIPS = [
   'Los anuncios con precio explícito tienen mayor CTR y menor coste por lead calificado.',
   'El Pixel tarda 7 días en optimizarse. No hagas cambios bruscos antes de ese período.',
 ]
-
-const STRATEGY_TO_PHASE: Record<string, Phase> = { TOFU: 'F1', BOFU: 'F2', MOFU: 'F3' }
 
 const LEVEL_NAMES = ['Sin Data', 'Explorador', 'Aprendiz', 'Estratega', 'Vendedor', 'Profesional', 'Escalador', 'Maestro', 'Imperio']
 const UNLOCK_TEASERS: Record<number, string> = {
@@ -57,15 +48,6 @@ function nextLevelMetric(level: number, events: any) {
   return map[level] || { current: 0, required: 0, label: '' }
 }
 
-function classifyPhase(c: any): Phase {
-  const name = (c.name || '').toLowerCase()
-  if (/whatsapp|wa\b|mensaje/.test(name)) return 'F4'
-  if (/retargeting|remarketing|carrito|tibio|caliente/.test(name)) return 'F3'
-  if (c.strategy_type === 'BOFU' || /bofu|conversion|purchase|venta/.test(name)) return 'F2'
-  if (c.strategy_type && STRATEGY_TO_PHASE[c.strategy_type]) return STRATEGY_TO_PHASE[c.strategy_type]
-  return 'F1'
-}
-
 export default async function DashboardPage() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -81,7 +63,6 @@ export default async function DashboardPage() {
     { data: businessProfile },
     { data: pixelAnalysis },
     { data: monthlyBudget },
-    { data: levelHistory },
     { data: prevMonthReport },
     { data: fbConnection },
   ] = await Promise.all([
@@ -90,7 +71,6 @@ export default async function DashboardPage() {
     supabase.from('business_profiles').select('selected_ad_account_id, business_name, currency, pixel_id').eq('user_id', user.id).maybeSingle(),
     supabase.from('pixel_analysis').select('*').eq('user_id', user.id).maybeSingle(),
     supabase.from('monthly_budgets').select('*').eq('user_id', user.id).eq('month_year', monthYear).maybeSingle(),
-    supabase.from('level_history').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(10),
     supabase.from('monthly_reports').select('total_spend, total_revenue, total_conversions, avg_roas')
       .eq('user_id', user.id)
       .lt('month_year', monthYear)
@@ -117,8 +97,17 @@ export default async function DashboardPage() {
   const totalSpend       = monthCampaigns.reduce((s, c) => s + (c.metrics?.spend       || 0), 0)
   const totalRevenue     = monthCampaigns.reduce((s, c) => s + ((c.metrics?.roas || 0) * (c.metrics?.spend || 0)), 0)
   const totalConversions = monthCampaigns.reduce((s, c) => s + (c.metrics?.conversions || 0), 0)
-  const avgRoas  = totalSpend       > 0 ? totalRevenue / totalSpend       : 0
-  const avgTicket = totalConversions > 0 ? totalRevenue / totalConversions : 0
+  const avgRoas          = totalSpend > 0 ? totalRevenue / totalSpend : 0
+
+  // Impressions, reach, frequency, CPM — aggregated from campaign metrics
+  const totalImpressions = monthCampaigns.reduce((s, c) => s + (c.metrics?.impressions || 0), 0)
+  const totalReach       = monthCampaigns.reduce((s, c) => s + (c.metrics?.reach       || 0), 0)
+  const avgCpm           = totalImpressions > 0 ? (totalSpend / totalImpressions) * 1000 : 0
+  const avgFrequency     = totalReach > 0 ? totalImpressions / totalReach : 0
+
+  // Carts from pixel events
+  const events    = pixelAnalysis?.events_data
+  const totalCarts = events?.AddToCart?.count_30d ?? 0
 
   // Trends vs previous month
   const calcTrend = (curr: number, prev: number) => prev > 0 ? Math.round(((curr - prev) / prev) * 100) : undefined
@@ -130,7 +119,6 @@ export default async function DashboardPage() {
   // ── Pixel level + next milestone ───────────────────────────────────────
   const level     = pixelAnalysis?.level ?? 0
   const levelName = pixelAnalysis?.level_name ?? 'Sin Data'
-  const events    = pixelAnalysis?.events_data
   const nextMetric = nextLevelMetric(level, events)
   const nextLevel = Math.min(level + 1, 8)
 
@@ -138,76 +126,16 @@ export default async function DashboardPage() {
   const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
   const daysRemaining  = Math.max(0, lastDayOfMonth - now.getDate())
 
-  // ── First level history entry to compute "Desde" ──────────────────────
-  const levelSinceEntry = (levelHistory || []).find((h: any) => h.new_level === level)
-  const levelSinceDate  = levelSinceEntry?.created_at || null
-
-  // ── Growth score: simple formula tied to real progress ────────────────
-  const growthScore =
-    level * 100 +
-    Math.min(200, (events?.PageView?.count_30d  ?? 0) / 5) +
-    Math.min(150, (events?.Purchase?.count_180d ?? 0) * 2) +
-    allCampaigns.length * 10
-
-  // ── Phase data ─────────────────────────────────────────────────────────
-  const recommendedByPhase = (monthlyBudget?.phase_budgets_recommended as Record<string, number>) || {}
-  const assignedByPhase    = (monthlyBudget?.phase_budgets             as Record<string, number>) || {}
-
-  const phaseAccum: Record<Phase, { spend: number; revenue: number; roas: number; conversions: number; count: number }> = {
-    F1: { spend: 0, revenue: 0, roas: 0, conversions: 0, count: 0 },
-    F2: { spend: 0, revenue: 0, roas: 0, conversions: 0, count: 0 },
-    F3: { spend: 0, revenue: 0, roas: 0, conversions: 0, count: 0 },
-    F4: { spend: 0, revenue: 0, roas: 0, conversions: 0, count: 0 },
-  }
-  for (const c of monthCampaigns) {
-    const ph = classifyPhase(c)
-    const sp = c.metrics?.spend || 0
-    phaseAccum[ph].spend       += sp
-    phaseAccum[ph].revenue     += (c.metrics?.roas || 0) * sp
-    phaseAccum[ph].roas        += c.metrics?.roas || 0
-    phaseAccum[ph].conversions += c.metrics?.conversions || 0
-    phaseAccum[ph].count       += 1
-  }
-
-  function deriveStatus(ph: Phase, roas: number, count: number): 'healthy' | 'risk' | 'optimize' | 'locked' {
-    // F3 needs ViewContent retarget ability; F2 BOFU needs purchase ability
-    if (ph === 'F3' && !pixelAnalysis?.can_retarget_view_content) return 'locked'
-    if (ph === 'F2' && !pixelAnalysis?.can_retarget_purchase && level < 5) return 'locked'
-    if (count === 0) return 'optimize'
-    if (roas >= 2) return 'healthy'
-    if (roas >= 1) return 'risk'
-    return 'optimize'
-  }
-
-  const phaseInsights: Record<Phase, string> = {
-    F1: 'Generá tráfico para alimentar el pixel',
-    F2: 'Convertí audiencias frías en compradores',
-    F3: 'Recuperá visitantes que no compraron',
-    F4: 'Convertí consultas en ventas por chat',
-  }
-
-  const phaseData: Record<Phase, any> = {} as any
-  for (const ph of ['F1', 'F2', 'F3', 'F4'] as Phase[]) {
-    const acc = phaseAccum[ph]
-    const phaseRoas = acc.count > 0 ? acc.roas / acc.count : 0
-    phaseData[ph] = {
-      recommended: recommendedByPhase[ph] ?? assignedByPhase[ph] ?? 0,
-      spent:       acc.spend,
-      roas:        phaseRoas,
-      conversions: acc.conversions,
-      status:      deriveStatus(ph, phaseRoas, acc.count),
-      insight:     phaseInsights[ph],
-    }
-  }
-
   const showOnboarding = !allCampaigns.length && !businessProfile?.selected_ad_account_id
   const todayTip = AI_TIPS[new Date().getDay()]
   const fullName = profile?.full_name?.split(' ')[0] || 'crecedor'
   const currency = businessProfile?.currency === 'USD' ? '$' : (businessProfile?.currency || '$')
 
+  // ── Budget goal ────────────────────────────────────────────────────────
+  const budgetTotal = (monthlyBudget?.total_budget as number) || 0
+  const budgetPct   = budgetTotal > 0 ? Math.min(100, Math.round((totalSpend / budgetTotal) * 100)) : 0
+
   // ── Strategic decision engine ───────────────────────────────────────────
-  // Build the full snapshot of the business state and let the engine decide
-  // what the user should see right now. Fully server-side — no extra fetches.
   const bestRoasCampaign = allCampaigns.reduce<{ name: string; roas: number; id: string } | undefined>((best, c) => {
     const roas = c.metrics?.roas || 0
     if (roas > 0 && (!best || roas > best.roas)) return { name: c.name, roas, id: c.id }
@@ -227,9 +155,7 @@ export default async function DashboardPage() {
     .sort()
     .reverse()[0]
 
-  // ── Strategic memory — auto-complete past decisions + load recall ───────
-  // Both calls are wrapped in try/catch internally; if memory is unavailable
-  // the decision engine still works stateless.
+  // ── Strategic memory ───────────────────────────────────────────────────
   let memorySnapshot: Awaited<ReturnType<typeof getDecisionMemory>> | null = null
   try {
     await detectCompletedActions(user.id)
@@ -238,19 +164,8 @@ export default async function DashboardPage() {
     memorySnapshot = null
   }
 
-  // Pending automation executions — surfaces in the decision engine as R16
   let pendingAutomationCount = 0
   try { pendingAutomationCount = await countPendingExecutions(user.id) } catch { /* ignore */ }
-
-  // Forecast for next month — powered by the intelligence engine. Safe to
-  // no-op if the user has < 30 days of history (returns an "empty" scenario).
-  let forecastData: Awaited<ReturnType<typeof generateForecast>> | null = null
-  try {
-    const nm = new Date()
-    nm.setMonth(nm.getMonth() + 1)
-    const targetMonthFc = `${nm.getFullYear()}-${String(nm.getMonth() + 1).padStart(2, '0')}`
-    forecastData = await generateForecast(user.id, targetMonthFc)
-  } catch { forecastData = null }
 
   const decisionInput: DecisionInput = {
     onboardingComplete:       onboardingStatus.isComplete,
@@ -283,11 +198,11 @@ export default async function DashboardPage() {
     worstRoasCampaign,
 
     hasBudget:   !!monthlyBudget,
-    budgetTotal: (monthlyBudget?.total_budget as number) || 0,
+    budgetTotal,
     budgetSpent,
 
     metaConnected: !!fbConnection?.access_token,
-    tokenExpiresAt: undefined, // token_expires_at column not currently tracked
+    tokenExpiresAt: undefined,
     lastSyncAt,
 
     pendingAutomationCount,
@@ -302,7 +217,6 @@ export default async function DashboardPage() {
 
   const decisions = generateStrategicDecisions(decisionInput)
 
-  // Persist this generation to memory. Never blocks the render.
   try {
     await saveDecision({
       userId:                user.id,
@@ -322,22 +236,12 @@ export default async function DashboardPage() {
     <>
       <OnboardingWizard show={showOnboarding} />
 
-      {/* ═══════════════════════════════════════════════════════════════
-          Dashboard layout — strict hierarchy top→bottom
-          L1 primary focus  · hero + GPS
-          L2 quick context  · month summary
-          L3 support        · setup (if incomplete) + phases
-          L4 secondary      · profile/achievements + alerts + chart/tip
-         ═══════════════════════════════════════════════════════════════ */}
-
       {/* Sync control */}
       <div className="flex justify-end mb-4 dash-anim-1">
         <SyncButton variant="full" />
       </div>
 
-      {/* ─────────────── LEVEL 1 — PRIMARY FOCUS ─────────────── */}
-
-      {/* 1. HERO — el centro de mando, el primer latido visual */}
+      {/* ═══ BLOQUE 1 — HERO: Bienvenida + Estado + 4 KPIs ═══ */}
       <div className="module-enter module-enter-1">
         <HeroLevel
           fullName={fullName}
@@ -357,121 +261,43 @@ export default async function DashboardPage() {
         />
       </div>
 
-      {/* 2. GPS — "tu siguiente mejor acción", pegado al hero */}
+      {/* ═══ BLOQUE 2 — SIGUIENTE ACCIÓN ═══ */}
       <div className="module-enter module-enter-2">
-      <NextBestAction
-        primaryAction={decisions.primaryAction}
-        secondaryActions={decisions.secondaryActions}
-      />
+        <NextBestAction
+          primaryAction={decisions.primaryAction}
+          secondaryActions={decisions.secondaryActions}
+        />
       </div>
 
-      {/* ─────────────── LEVEL 2 — QUICK CONTEXT ─────────────── */}
-
-      {/* 3a. Forecast del próximo mes — solo si hay datos con confianza > 0 */}
-      {forecastData &&
-        forecastData.scenarios.length > 0 &&
-        forecastData.scenarios.some(s => s.confidence > 0) && (
-          <div className="module-enter module-enter-3" style={{ marginBottom: 40 }}>
-            <ForecastWidget
-              scenarios={forecastData.scenarios}
-              recommendation={forecastData.recommendation}
-              currentMetrics={{
-                spend: forecastData.currentMetrics.spend,
-                revenue: forecastData.currentMetrics.revenue,
-                roas: forecastData.currentMetrics.roas,
-                purchases: forecastData.currentMetrics.purchases,
-              }}
-              currencySymbol={currency}
-            />
-          </div>
-        )}
-
-      {/* 3. Resumen del mes — métricas compactas */}
-      <div className="module-enter module-enter-4">
-      <MonthSummary
-        totalSpend={totalSpend}
-        totalRevenue={totalRevenue}
-        totalConversions={totalConversions}
-        avgRoas={avgRoas}
-        avgTicket={avgTicket}
-        trendSpend={trendSpend}
-        trendRevenue={trendRevenue}
-        trendRoas={trendRoas}
-        trendConv={trendConv}
-        events={events}
-        currency={currency}
-      />
+      {/* ═══ BLOQUE 3 — MÉTRICAS DEL MES (7 business KPIs) ═══ */}
+      <div className="module-enter module-enter-3">
+        <MonthSummary
+          totalSpend={totalSpend}
+          totalRevenue={totalRevenue}
+          totalConversions={totalConversions}
+          totalCarts={totalCarts}
+          avgRoas={avgRoas}
+          avgCpm={avgCpm}
+          avgFrequency={avgFrequency}
+          trendSpend={trendSpend}
+          trendRevenue={trendRevenue}
+          trendRoas={trendRoas}
+          trendConv={trendConv}
+          currency={currency}
+        />
       </div>
 
-      {/* ─────────────── LEVEL 3 — SUPPORT ─────────────── */}
-
-      {/* 4. Onboarding (solo si incompleto, compacto) */}
+      {/* ═══ BLOQUE 4 — SETUP (solo si incompleto) ═══ */}
       {!onboardingStatus.isComplete && (
-        <div className="module-enter module-enter-5">
+        <div className="module-enter module-enter-4">
           <OnboardingChecklist status={onboardingStatus} />
         </div>
       )}
 
-      {/* 5. Fases del funnel — uniformes y compactas */}
-      <div className="module-enter module-enter-6">
-        <PhaseSummary currency={currency} phaseData={phaseData} />
-      </div>
-
-      {/* ─────────────── LEVEL 4 — SECONDARY ─────────────── */}
-
-      {/* 6. Growth profile + achievements lado a lado */}
-      <div className="module-enter module-enter-7 ds-grid-2">
-        <GrowthProfile
-          level={level}
-          levelName={levelName}
-          levelSinceDate={levelSinceDate}
-          growthScore={Math.round(growthScore)}
-          availableStrategies={(pixelAnalysis?.available_strategies as string[]) || ['TOFU']}
-          canRetargetVC={!!pixelAnalysis?.can_retarget_view_content}
-          canRetargetATC={!!pixelAnalysis?.can_retarget_add_to_cart}
-          canRetargetPurchase={!!pixelAnalysis?.can_retarget_purchase}
-          canCreateLookalike={!!pixelAnalysis?.can_create_lookalike}
-          metricCurrent={nextMetric.current}
-          metricRequired={nextMetric.required}
-          metricLabel={nextMetric.label}
-        />
-        <AchievementsBadges />
-      </div>
-
-      {/* 7. Alertas + oportunidades */}
-      <div className="module-enter module-enter-8">
-        <AlertsOpportunities alerts={decisions.alerts} />
-      </div>
-
-      {/* 8. Spend chart + Tip del día */}
-      <div className="module-enter module-enter-9 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 card" style={{
-          padding: 'var(--ds-space-lg)',
-          maxHeight: 280,
-          overflow: 'hidden',
-        }}>
-          <div className="flex items-center justify-between mb-1">
-            <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 600, color: 'var(--ds-text-primary)' }}>
-              Gasto semanal
-            </h2>
-            <span style={{
-              fontSize: 10, padding: '3px 10px', borderRadius: 99,
-              background: 'var(--ds-color-primary-soft)', color: 'var(--ds-color-primary)',
-              border: '1px solid var(--ds-color-primary-border)',
-              fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em',
-            }}>
-              Últimos 7 días
-            </span>
-          </div>
-          <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 14 }}>
-            Cuánto invertiste cada día
-          </p>
-          <SpendChart totalSpend={totalSpend} />
-        </div>
-
-        <div className="card" style={{
-          padding: 'var(--ds-space-lg)',
-        }}>
+      {/* ═══ BLOQUE 5 — TIP + OBJETIVO DEL MES ═══ */}
+      <div className="module-enter module-enter-5 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Tip del día */}
+        <div className="card" style={{ padding: 'var(--ds-space-lg)' }}>
           <div style={{
             width: 36, height: 36, borderRadius: 10, marginBottom: 12,
             background: 'var(--ds-color-primary-soft)',
@@ -489,6 +315,45 @@ export default async function DashboardPage() {
           <p style={{ fontSize: 13, color: 'var(--ds-text-primary)', lineHeight: 1.6 }}>
             {todayTip}
           </p>
+        </div>
+
+        {/* Objetivo del mes */}
+        <div className="card" style={{ padding: 'var(--ds-space-lg)' }}>
+          <div style={{
+            width: 36, height: 36, borderRadius: 10, marginBottom: 12,
+            background: budgetTotal > 0 ? 'var(--ds-color-success-soft)' : 'var(--ds-color-primary-soft)',
+            border: `1px solid ${budgetTotal > 0 ? 'var(--ds-color-success-border)' : 'var(--ds-color-primary-border)'}`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16,
+          }}>
+            🎯
+          </div>
+          <p style={{
+            fontSize: 10, fontWeight: 600,
+            color: budgetTotal > 0 ? 'var(--ds-color-success)' : 'var(--ds-color-primary)',
+            textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 6,
+          }}>
+            Objetivo del mes
+          </p>
+          {budgetTotal > 0 ? (
+            <>
+              <p style={{ fontSize: 13, color: 'var(--ds-text-primary)', lineHeight: 1.6, marginBottom: 10 }}>
+                Presupuesto: <strong>{currency}{budgetTotal.toLocaleString()}</strong> — {budgetPct}% ejecutado
+              </p>
+              <div className="progress-bar" style={{ height: 6 }}>
+                <div
+                  className="progress-bar-fill"
+                  style={{ width: `${budgetPct}%` }}
+                />
+              </div>
+            </>
+          ) : (
+            <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', lineHeight: 1.6 }}>
+              Todavía no configuraste un presupuesto mensual.{' '}
+              <a href="/dashboard/budget" style={{ color: 'var(--ds-color-primary)', textDecoration: 'underline' }}>
+                Configurar →
+              </a>
+            </p>
+          )}
         </div>
       </div>
     </>

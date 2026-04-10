@@ -1,29 +1,21 @@
 'use client'
 // src/components/dashboard/MonthSummary.tsx
-// Quick-glance monthly KPIs. No funnel breakdown here — that belongs to
-// /dashboard/pixel. A single optional funnel one-liner under the metrics.
-import { DollarSign, TrendingUp, Target, ShoppingCart, CreditCard } from 'lucide-react'
+// 7 business KPIs — no funnel events (those belong to /dashboard/pixel).
+import { DollarSign, TrendingUp, Target, ShoppingCart, CreditCard, BarChart3, Users } from 'lucide-react'
 import SectionHeader from '@/components/ui/SectionHeader'
-
-interface FunnelEvents {
-  PageView:         { count_30d: number }
-  ViewContent:      { count_30d: number }
-  AddToCart:        { count_30d: number }
-  InitiateCheckout: { count_30d: number }
-  Purchase:         { count_30d: number }
-}
 
 interface Props {
   totalSpend:       number
   totalRevenue:     number
   totalConversions: number
+  totalCarts:       number
   avgRoas:          number
-  avgTicket:        number
+  avgCpm:           number
+  avgFrequency:     number
   trendSpend?:      number
   trendRevenue?:    number
   trendRoas?:       number
   trendConv?:       number
-  events:           FunnelEvents | null
   currency?:        string
 }
 
@@ -98,46 +90,43 @@ function roasStatus(r: number): 'good' | 'warning' | 'bad' | 'neutral' {
   return 'neutral'
 }
 
+function freqStatus(f: number): 'good' | 'warning' | 'bad' | 'neutral' {
+  if (f <= 0)   return 'neutral'
+  if (f <= 3)   return 'good'
+  if (f <= 3.5) return 'warning'
+  return 'bad'
+}
+
 export default function MonthSummary(p: Props) {
   const cur = p.currency || '$'
-  const events = p.events
-  const pv = events?.PageView.count_30d ?? 0
-  const purchases = events?.Purchase.count_30d ?? p.totalConversions
-  const convRate = pv > 0 ? ((purchases / pv) * 100).toFixed(2) : null
 
   return (
-    <div className="module-enter module-enter-3" style={{ marginBottom: 40 }}>
+    <div style={{ marginBottom: 40 }}>
       <SectionHeader
-        title="Resumen del mes"
-        subtitle="Últimos 30 días"
+        title="Métricas del mes"
+        subtitle="Últimos 30 días — solo negocio"
       />
 
-      {/* KPI row — 5 floating glass cards, one icon color per metric */}
-      <div className="ds-grid-5">
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+        gap: 'var(--ds-space-md)',
+      }}>
         <Kpi label="Inversión"    value={`${cur}${p.totalSpend.toFixed(0)}`}    trend={p.trendSpend}   Icon={DollarSign}
              iconColor="var(--ds-color-primary)" iconSoftBg="var(--ds-color-primary-soft)"  iconSoftBorder="var(--ds-color-primary-border)" />
-        <Kpi label="Ventas (rev)" value={`${cur}${p.totalRevenue.toFixed(0)}`}  trend={p.trendRevenue} Icon={TrendingUp}   valueStatus="good"
+        <Kpi label="Facturación"  value={`${cur}${p.totalRevenue.toFixed(0)}`}  trend={p.trendRevenue} Icon={TrendingUp}   valueStatus="good"
              iconColor="var(--ds-color-success)" iconSoftBg="var(--ds-color-success-soft)"  iconSoftBorder="var(--ds-color-success-border)" />
+        <Kpi label="Carritos"     value={String(p.totalCarts)}                                          Icon={ShoppingCart}
+             iconColor="var(--ds-color-warning)" iconSoftBg="var(--ds-color-warning-soft)"  iconSoftBorder="var(--ds-color-warning-border)" />
+        <Kpi label="Ventas"       value={String(p.totalConversions)}             trend={p.trendConv}    Icon={CreditCard}
+             iconColor="var(--ds-color-primary)" iconSoftBg="var(--ds-color-primary-soft)"  iconSoftBorder="var(--ds-color-primary-border)" />
         <Kpi label="ROAS"         value={p.avgRoas > 0 ? `${p.avgRoas.toFixed(1)}x` : '—'} trend={p.trendRoas} Icon={Target} valueStatus={roasStatus(p.avgRoas)}
              iconColor="var(--ds-color-warning)" iconSoftBg="var(--ds-color-warning-soft)"  iconSoftBorder="var(--ds-color-warning-border)" />
-        <Kpi label="Compras"      value={String(p.totalConversions)}             trend={p.trendConv}    Icon={ShoppingCart}
+        <Kpi label="CPM"          value={p.avgCpm > 0 ? `${cur}${p.avgCpm.toFixed(1)}` : '—'}          Icon={BarChart3}
              iconColor="var(--ds-color-primary)" iconSoftBg="var(--ds-color-primary-soft)"  iconSoftBorder="var(--ds-color-primary-border)" />
-        <Kpi label="Ticket prom." value={`${cur}${p.avgTicket.toFixed(0)}`}                             Icon={CreditCard}
+        <Kpi label="Frecuencia"   value={p.avgFrequency > 0 ? `${p.avgFrequency.toFixed(1)}x` : '—'}   Icon={Users} valueStatus={freqStatus(p.avgFrequency)}
              iconColor="var(--ds-color-primary)" iconSoftBg="var(--ds-color-primary-soft)"  iconSoftBorder="var(--ds-color-primary-border)" />
       </div>
-
-      {/* Funnel one-liner — optional summary, not a full grid */}
-      {events && convRate !== null && (
-        <p style={{
-          marginTop: 14,
-          fontSize: 12,
-          color: 'var(--ds-text-muted)',
-          textAlign: 'center',
-          fontStyle: 'italic',
-        }}>
-          Funnel: {pv.toLocaleString()} visitas → {purchases.toLocaleString()} compras ({convRate}%)
-        </p>
-      )}
     </div>
   )
 }
