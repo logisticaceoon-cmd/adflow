@@ -50,7 +50,7 @@ export default function StepStrategy({
       </div>
 
       {/* Diagnosis result banner */}
-      <div style={{ borderRadius: 16, padding: '16px 20px', background: 'linear-gradient(135deg, var(--ds-color-primary-soft), transparent)', border: '1px solid var(--ds-color-primary-border)' }}>
+      <div style={{ borderRadius: 16, padding: '16px 20px', background: 'var(--ds-color-primary-soft)', border: '1px solid var(--ds-color-primary-border)' }}>
         <div className="flex items-start gap-3">
           <span style={{ fontSize: 20, flexShrink: 0 }}>🤖</span>
           <div>
@@ -104,9 +104,8 @@ export default function StepStrategy({
               style={{
                 animationDelay: `${idx * 60}ms`,
                 borderRadius: 18, padding: '20px 22px',
-                background: selected ? cfg.bg : 'linear-gradient(160deg, rgba(18,4,10,0.90), rgba(12,3,7,0.94))',
+                background: selected ? cfg.bg : 'var(--ds-card-bg)',
                 border: `${selected ? '1.5px' : '1px'} solid ${selected ? cfg.borderColor : 'var(--ds-card-border)'}`,
-                boxShadow: selected ? `0 0 28px ${cfg.color}25, 0 8px 32px rgba(0,0,0,0.50)` : '0 4px 20px rgba(0,0,0,0.40)',
                 cursor: isLocked ? 'not-allowed' : 'pointer',
                 opacity: isLocked ? 0.45 : 1,
                 position: 'relative',
@@ -130,15 +129,14 @@ export default function StepStrategy({
                 </div>
               )}
               {!isLocked && selected && !isRecommended && (
-                <div style={{ position: 'absolute', top: 14, right: 14, width: 22, height: 22, borderRadius: '50%', background: `linear-gradient(135deg, ${cfg.color}, ${cfg.color}aa)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#fff', fontWeight: 900 }}>✓</div>
+                <div style={{ position: 'absolute', top: 14, right: 14, width: 22, height: 22, borderRadius: '50%', background: cfg.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#fff', fontWeight: 900 }}>✓</div>
               )}
               <div className="flex items-start gap-4">
                 <div style={{
                   width: 52, height: 52, borderRadius: 14, flexShrink: 0,
-                  background: `radial-gradient(circle at 38% 38%, ${cfg.color}30, ${cfg.color}10)`,
+                  background: `${cfg.color}18`,
                   border: `1.5px solid ${selected ? cfg.color + '60' : cfg.color + '25'}`,
                   display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24,
-                  boxShadow: selected ? `0 0 20px ${cfg.color}40` : 'none',
                 }}>
                   {cfg.icon}
                 </div>

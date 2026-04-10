@@ -17,7 +17,7 @@ const LEVEL_COLORS: Record<number, string> = {
   1: '#f87171', 2: '#f87171',
   3: '#fbbf24', 4: '#fbbf24',
   5: '#34d399', 6: '#34d399',
-  7: '#22d3ee',
+  7: '#2dd4a8',
   8: '#a78bfa',
 }
 
@@ -61,7 +61,7 @@ export default function GrowthTimeline() {
       {/* Vertical line */}
       <div style={{
         position: 'absolute', left: 11, top: 8, bottom: 8, width: 2,
-        background: 'linear-gradient(180deg, var(--ds-color-primary) 0%, var(--ds-card-border) 100%)',
+        background: 'var(--ds-card-border)',
       }} />
       {history.map((h, i) => {
         const color = LEVEL_COLORS[h.new_level] ?? '#8892b0'
@@ -70,17 +70,11 @@ export default function GrowthTimeline() {
             <div style={{
               position: 'absolute', left: -19, top: 4,
               width: 18, height: 18, borderRadius: '50%',
-              background: `radial-gradient(circle, ${color}, ${color}40)`,
+              background: color,
               border: `2px solid ${color}`,
-              boxShadow: `0 0 0 1px ${color}40, 0 0 14px ${color}80`,
             }} />
-            <div style={{
+            <div className="card" style={{
               padding: 14,
-              borderRadius: 12,
-              background: 'var(--ds-card-bg)',
-              border: '1px solid var(--ds-card-border)',
-              backdropFilter: 'blur(16px) saturate(1.2)',
-              boxShadow: 'var(--ds-card-inner-glow)',
             }}>
               <p style={{ fontSize: 12, fontWeight: 700, color, marginBottom: 2 }}>
                 {h.old_level !== null && <span style={{ color: 'var(--ds-text-muted)' }}>Nivel {h.old_level} → </span>}

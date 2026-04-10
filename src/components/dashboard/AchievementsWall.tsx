@@ -86,8 +86,7 @@ export default function AchievementsWall() {
           className="progress-bar-fill"
           style={{
             width: `${pct}%`,
-            background: 'linear-gradient(90deg, rgba(251, 191, 36, 0.70), #fbbf24, #fcd34d)',
-            boxShadow: '0 0 12px rgba(251, 191, 36, 0.50), 0 0 24px rgba(251, 191, 36, 0.20), inset 0 1px 0 rgba(255,255,255,0.24)',
+            background: 'var(--ds-color-warning)',
           }}
         />
       </div>
@@ -104,8 +103,6 @@ export default function AchievementsWall() {
                 background: active ? 'var(--ds-color-primary-soft)' : 'rgba(255, 255, 255, 0.03)',
                 color: active ? 'var(--ds-color-primary)' : 'var(--ds-text-secondary)',
                 border: active ? '1px solid var(--ds-color-primary-border)' : '1px solid rgba(255, 255, 255, 0.08)',
-                boxShadow: active ? '0 0 16px var(--ds-color-primary-glow)' : 'none',
-                backdropFilter: 'blur(8px)',
                 cursor: 'pointer', transition: 'all 0.18s',
               }}>
               {cat.label}
@@ -126,17 +123,16 @@ export default function AchievementsWall() {
               padding: '16px 12px',
               borderRadius: 14,
               background: a.unlocked
-                ? 'linear-gradient(160deg, rgba(251, 191, 36, 0.08), rgba(10, 12, 28, 0.40))'
-                : 'rgba(10, 12, 28, 0.30)',
+                ? 'var(--ds-color-warning-soft)'
+                : 'var(--ds-bg-elevated)',
               border: a.unlocked
                 ? '1px solid var(--ds-color-warning-border)'
                 : '1px solid var(--ds-card-border)',
               opacity: a.unlocked ? 1 : 0.25,
               filter: a.unlocked ? 'none' : 'grayscale(100%)',
               textAlign: 'center',
-              transition: 'transform 200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms ease',
+              transition: 'transform 200ms cubic-bezier(0.16, 1, 0.3, 1)',
               cursor: 'help',
-              backdropFilter: 'blur(12px)',
             }}
             title={a.description}>
             <div style={{
@@ -148,12 +144,8 @@ export default function AchievementsWall() {
               border: a.unlocked
                 ? '1px solid var(--ds-color-warning-border)'
                 : '1px solid var(--ds-card-border)',
-              boxShadow: a.unlocked
-                ? '0 0 0 1px rgba(251, 191, 36, 0.20), 0 0 24px rgba(251, 191, 36, 0.22), 0 0 40px rgba(251, 191, 36, 0.10)'
-                : 'none',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 28,
-              transition: 'box-shadow 200ms ease',
             }}>
               {a.icon}
             </div>

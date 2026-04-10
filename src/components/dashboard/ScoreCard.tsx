@@ -27,7 +27,6 @@ export default function ScoreCard({ totalScore, breakdown, monthStars }: Props) 
     <div className="card" style={{
       padding: 24, marginBottom: 32,
       borderColor: 'rgba(245, 197, 66, 0.20)',
-      boxShadow: 'var(--ds-shadow-md), 0 0 48px rgba(245, 197, 66, 0.06), var(--ds-card-inner-glow)',
     }}>
       <div style={{ marginBottom: 20 }}>
         <h2 style={{
@@ -48,13 +47,12 @@ export default function ScoreCard({ totalScore, breakdown, monthStars }: Props) 
             display: 'inline-flex', alignItems: 'center', gap: 8,
             marginBottom: 4,
           }}>
-            <Star size={22} style={{ color: 'var(--ds-color-warning)', fill: 'var(--ds-color-warning)', filter: 'drop-shadow(0 0 8px var(--ds-color-warning))' }} />
+            <Star size={22} style={{ color: 'var(--ds-color-warning)', fill: 'var(--ds-color-warning)' }} />
           </div>
           <p style={{
             fontFamily: 'Syne, sans-serif',
             fontSize: 44, fontWeight: 700, color: 'var(--ds-color-warning)',
             letterSpacing: '-0.04em', lineHeight: 1,
-            textShadow: '0 0 30px rgba(245, 197, 66, 0.12), 0 0 60px rgba(245, 197, 66, 0.06)',
           }}>
             {totalScore.toLocaleString()}
           </p>
@@ -83,8 +81,7 @@ export default function ScoreCard({ totalScore, breakdown, monthStars }: Props) 
                       className="progress-bar-fill"
                       style={{
                         width: `${pct}%`,
-                        background: `linear-gradient(90deg, ${b.color}cc, ${b.color})`,
-                        boxShadow: `0 0 10px ${b.color}60, 0 0 20px ${b.color}20, inset 0 1px 0 rgba(255,255,255,0.24)`,
+                        background: b.color,
                       }}
                     />
                   </div>
@@ -107,7 +104,6 @@ export default function ScoreCard({ totalScore, breakdown, monthStars }: Props) 
                   style={{
                     color: s.earned ? 'var(--ds-color-warning)' : '#3a3a48',
                     fill: s.earned ? 'var(--ds-color-warning)' : 'none',
-                    filter: s.earned ? 'drop-shadow(0 0 8px rgba(245,158,11,0.70))' : 'none',
                     transition: 'all 0.3s',
                   }}
                   strokeWidth={s.earned ? 0 : 1.5}

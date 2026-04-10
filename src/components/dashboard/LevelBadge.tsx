@@ -13,7 +13,7 @@ const LEVEL_COLORS: Record<number, string> = {
   1: 'var(--ds-color-danger)', 2: 'var(--ds-color-danger)',
   3: 'var(--ds-color-warning)', 4: 'var(--ds-color-warning)',
   5: 'var(--ds-color-success)', 6: 'var(--ds-color-success)',
-  7: '#22d3ee',
+  7: '#2dd4a8',
   8: '#8b5cf6',
 }
 
@@ -34,9 +34,8 @@ export default function LevelBadge({ level, levelName, size = 'md', showName = t
         className={isMax ? 'level-badge-pulse' : ''}
         style={{
           width: dim.box, height: dim.box, borderRadius: '50%',
-          background: `radial-gradient(circle at 38% 38%, ${color}40, ${color}10)`,
+          background: `${color}14`,
           border: `2px solid ${color}80`,
-          boxShadow: `0 0 ${dim.box / 2}px ${color}55, 0 0 ${dim.box}px ${color}25`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: dim.num, fontWeight: 900, color,
           fontFamily: 'system-ui, sans-serif', letterSpacing: '-0.04em',
@@ -48,13 +47,6 @@ export default function LevelBadge({ level, levelName, size = 'md', showName = t
           {levelName}
         </span>
       )}
-      <style>{`
-        @keyframes lvlPulse {
-          0%, 100% { box-shadow: 0 0 ${dim.box / 2}px ${color}80, 0 0 ${dim.box}px ${color}40; }
-          50%      { box-shadow: 0 0 ${dim.box}px ${color}aa, 0 0 ${dim.box * 2}px ${color}55; }
-        }
-        .level-badge-pulse { animation: lvlPulse 2.4s ease-in-out infinite; }
-      `}</style>
     </div>
   )
 }

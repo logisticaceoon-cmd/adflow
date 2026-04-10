@@ -216,11 +216,6 @@ export default async function PhasesPage() {
         padding: '36px 40px',
         overflow: 'hidden',
       }}>
-        <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-          background: 'linear-gradient(90deg, transparent 10%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.12) 60%, transparent 90%)',
-          pointerEvents: 'none',
-        }} />
         <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ds-text-label)', marginBottom: 10 }}>
           Phase Performance · AdFlow
         </p>
@@ -282,9 +277,6 @@ export default async function PhasesPage() {
                     padding: 20,
                     borderTop: `2px solid ${isLocked ? 'rgba(255,255,255,0.08)' : p.color}`,
                     opacity: isLocked ? 0.45 : 1,
-                    boxShadow: status.key === 'healthy'
-                      ? `var(--ds-shadow-md), 0 0 32px ${p.color}15, var(--ds-card-inner-glow)`
-                      : undefined,
                   }}>
                     {/* Header */}
                     <div className="flex items-start justify-between mb-4">
@@ -293,7 +285,6 @@ export default async function PhasesPage() {
                           width: 44, height: 44, borderRadius: 12,
                           background: `${p.color}20`, border: `1px solid ${p.color}50`,
                           display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22,
-                          boxShadow: isLocked ? 'none' : `0 0 16px ${p.color}30`,
                         }}>{p.icon}</div>
                         <div>
                           <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 700, color: p.color }}>
@@ -533,7 +524,6 @@ export default async function PhasesPage() {
       <div className="card" style={{
         padding: 24, marginBottom: 24,
         borderLeft: '3px solid var(--ds-color-warning)',
-        boxShadow: 'var(--ds-shadow-md), -3px 0 15px rgba(251, 191, 36, 0.10), var(--ds-card-inner-glow)',
       }}>
         <div className="flex items-start gap-4">
           <div style={{
@@ -541,7 +531,6 @@ export default async function PhasesPage() {
             background: 'var(--ds-card-border)',
             border: '1px solid var(--ds-card-border)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
-            boxShadow: '0 0 16px var(--ds-card-border)',
           }}>📚</div>
           <div style={{ flex: 1 }}>
             <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 12 }}>

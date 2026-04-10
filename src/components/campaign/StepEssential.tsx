@@ -103,12 +103,9 @@ export default function StepEssential({ form, setField, currency, currSymbol, bu
                 style={{
                   padding: '18px 20px', borderRadius: 16,
                   background: isSelected
-                    ? `linear-gradient(135deg, ${it.color}18, ${it.color}06)`
+                    ? `${it.color}14`
                     : 'var(--ds-card-bg)',
                   border: `${isSelected ? '1.5px' : '1px'} solid ${isSelected ? `${it.color}55` : 'var(--ds-card-border)'}`,
-                  boxShadow: isSelected
-                    ? `0 0 28px ${it.color}25, 0 8px 32px rgba(0,0,0,0.40)`
-                    : '0 4px 16px rgba(0,0,0,0.30)',
                   cursor: 'pointer',
                   animationDelay: `${i * 50}ms`,
                   display: 'flex', alignItems: 'flex-start', gap: 14,
@@ -117,10 +114,9 @@ export default function StepEssential({ form, setField, currency, currSymbol, bu
                   width: 44, height: 44, borderRadius: 12, flexShrink: 0,
                   background: `${it.color}15`,
                   border: `1px solid ${it.color}40`,
-                  boxShadow: isSelected ? `0 0 16px ${it.color}40` : 'none',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
-                  <Icon size={20} style={{ color: it.color, filter: `drop-shadow(0 0 4px ${it.color})` }} strokeWidth={1.75} />
+                  <Icon size={20} style={{ color: it.color }} strokeWidth={1.75} />
                 </div>
                 <div style={{ flex: 1 }}>
                   <p style={{
@@ -138,7 +134,7 @@ export default function StepEssential({ form, setField, currency, currSymbol, bu
                 {isSelected && (
                   <div style={{
                     width: 22, height: 22, borderRadius: '50%',
-                    background: `linear-gradient(135deg, ${it.color}, ${it.color}aa)`,
+                    background: it.color,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     fontSize: 11, color: '#fff', fontWeight: 900, flexShrink: 0,
                   }}>✓</div>

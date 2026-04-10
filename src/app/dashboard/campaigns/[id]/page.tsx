@@ -30,14 +30,14 @@ const STATUS_GRADIENTS: Record<string, { from: string; to: string; main: string;
 }
 
 const PHASE_COLORS: Record<string, { color: string; label: string }> = {
-  F1: { color: '#22d3ee', label: 'F1 · Reconocimiento' },
+  F1: { color: '#2dd4a8', label: 'F1 · Reconocimiento' },
   F2: { color: 'var(--ds-color-success)', label: 'F2 · Conversión' },
   F3: { color: '#a855f7', label: 'F3 · Remarketing' },
   F4: { color: '#06b6d4', label: 'F4 · WhatsApp' },
 }
 
 const STRATEGY_COLORS: Record<string, string> = {
-  TOFU: '#22d3ee', MOFU: '#a855f7', BOFU: 'var(--ds-color-success)',
+  TOFU: '#2dd4a8', MOFU: '#a855f7', BOFU: 'var(--ds-color-success)',
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -275,15 +275,8 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
         position: 'relative',
         marginBottom: 32,
         padding: '36px 40px',
-        boxShadow: `var(--ds-shadow-md), 0 0 40px ${statusMeta.main}10`,
         overflow: 'hidden',
       }}>
-        <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-          background: 'linear-gradient(90deg, transparent 10%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.12) 60%, transparent 90%)',
-          pointerEvents: 'none',
-        }} />
-
         <h1 style={{
           fontFamily: 'Syne, sans-serif',
           fontSize: 28, fontWeight: 700, color: 'var(--ds-text-primary)',
@@ -599,10 +592,10 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
               <div style={{
                 padding: '14px 18px',
                 borderRadius: 12,
-                background: 'rgba(34, 211, 238,0.06)',
-                border: '1px solid rgba(34, 211, 238,0.20)',
+                background: 'rgba(45, 212, 168,0.06)',
+                border: '1px solid rgba(45, 212, 168,0.20)',
               }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: '#22d3ee', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: '#2dd4a8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
                   Decisiones de audiencia
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -646,7 +639,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
                     height: 140,
                     background: img
                       ? `url(${img}) center/cover`
-                      : `linear-gradient(135deg, ${strategyColor}15, ${strategyColor}05)`,
+                      : `${strategyColor}10`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     borderBottom: '1px solid rgba(255,255,255,0.06)',
                   }}>

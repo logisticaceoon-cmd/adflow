@@ -21,7 +21,7 @@ export default function AdminClientShell({ children }: { children: React.ReactNo
             background: 'rgba(233,30,140,0.12)',
             border: '1px solid rgba(233,30,140,0.28)', borderLeft: 'none',
             cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            zIndex: 60, color: '#22d3ee',
+            zIndex: 60, color: '#2dd4a8',
           }}
         >
           <ChevronRight size={12} />
@@ -47,7 +47,7 @@ export default function AdminClientShell({ children }: { children: React.ReactNo
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <div style={{
               width: 20, height: 20, borderRadius: 6,
-              background: 'linear-gradient(135deg, #22d3ee, #c5006a)',
+              background: 'linear-gradient(135deg, #2dd4a8, #c5006a)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               boxShadow: '0 0 10px rgba(233,30,140,0.4)',
             }}>
@@ -55,7 +55,7 @@ export default function AdminClientShell({ children }: { children: React.ReactNo
             </div>
             <span style={{
               fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase',
-              background: 'linear-gradient(90deg, #22d3ee, #62c4b0)',
+              background: 'linear-gradient(90deg, #2dd4a8, #62c4b0)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
             }}>
@@ -65,7 +65,7 @@ export default function AdminClientShell({ children }: { children: React.ReactNo
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{
               width: 6, height: 6, borderRadius: '50%',
-              background: '#22d3ee',
+              background: '#2dd4a8',
               boxShadow: '0 0 8px rgba(233,30,140,0.8)',
               display: 'inline-block',
             }} className="glow-dot" />

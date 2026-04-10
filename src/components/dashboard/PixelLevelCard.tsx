@@ -20,7 +20,7 @@ const LEVEL_COLORS: Record<number, string> = {
   1: '#f87171', 2: '#f87171',
   3: '#fbbf24', 4: '#fbbf24',
   5: '#34d399', 6: '#34d399',
-  7: '#22d3ee',
+  7: '#2dd4a8',
   8: '#a78bfa',
 }
 
@@ -75,7 +75,6 @@ export default function PixelLevelCard() {
         padding: 20,
         borderTop: `2px solid ${currentColor}`,
         cursor: 'pointer',
-        boxShadow: `var(--ds-shadow-md), 0 0 32px ${currentColor}14, var(--ds-card-inner-glow)`,
       }}>
         <div className="flex items-center gap-5">
           <LevelBadge level={level} levelName={pa.level_name} size="sm" />

@@ -24,11 +24,10 @@ export default function PhaseChart({ data }: Props) {
           <YAxis tick={{ fill: '#a0a8c0', fontSize: 11 }} axisLine={{ stroke: 'rgba(255,255,255,0.10)' }} />
           <Tooltip
             contentStyle={{
-              background: 'rgba(14,4,9,0.95)',
+              background: 'rgba(10, 15, 13, 0.95)',
               border: '1px solid var(--ds-color-primary-border)',
               borderRadius: 10,
               fontSize: 12,
-              backdropFilter: 'blur(12px)',
             }}
             cursor={{ fill: 'rgba(255,255,255,0.04)' }}
           />

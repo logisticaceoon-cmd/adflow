@@ -20,7 +20,7 @@ const LEVELS: LevelDef[] = [
   { level: 4, name: 'Vendedor',     emoji: '🛒', color: '#fbbf24', requirement: '100+ AddToCart en 30 días',           unlocks: ['Retargeting de carrito abandonado'] },
   { level: 5, name: 'Profesional',  emoji: '💼', color: '#34d399', requirement: '50+ Purchases en 30 días',            unlocks: ['Retargeting de compradores', 'Estrategia BOFU'] },
   { level: 6, name: 'Escalador',    emoji: '🚀', color: '#34d399', requirement: '100+ Purchases en 30 días',           unlocks: ['Lookalike Audiences'] },
-  { level: 7, name: 'Maestro',      emoji: '👑', color: '#22d3ee', requirement: '500+ Purchases en 180 días',          unlocks: ['Lookalikes ampliados', 'Audiencias premium'] },
+  { level: 7, name: 'Maestro',      emoji: '👑', color: '#2dd4a8', requirement: '500+ Purchases en 180 días',          unlocks: ['Lookalikes ampliados', 'Audiencias premium'] },
   { level: 8, name: 'Imperio',      emoji: '🏰', color: '#a78bfa', requirement: '1.000+ Purchases en 180 días',        unlocks: ['Expansión global', 'Nivel máximo'] },
 ]
 
@@ -69,7 +69,7 @@ export default function LevelMap({ currentLevel }: Props) {
                     width: '100%',
                     height: 3,
                     background: passed || (current && lv.level < currentLevel)
-                      ? 'linear-gradient(90deg, var(--ds-color-success), rgba(6,214,160,0.30))'
+                      ? 'var(--ds-color-success)'
                       : 'rgba(255,255,255,0.06)',
                     borderRadius: 2,
                     zIndex: 0,
@@ -85,14 +85,9 @@ export default function LevelMap({ currentLevel }: Props) {
                   style={{
                     width: size, height: size, borderRadius: '50%',
                     background: locked
-                      ? 'radial-gradient(circle at 38% 38%, rgba(255,255,255,0.04), rgba(255,255,255,0.01))'
-                      : `radial-gradient(circle at 38% 38%, ${lv.color}40, ${lv.color}10)`,
+                      ? 'rgba(255,255,255,0.03)'
+                      : `${lv.color}14`,
                     border: `${current ? '2.5px' : '2px'} solid ${locked ? 'rgba(255,255,255,0.10)' : `${lv.color}80`}`,
-                    boxShadow: current
-                      ? `0 0 32px ${lv.color}90, 0 0 64px ${lv.color}40`
-                      : passed
-                        ? `0 0 16px ${lv.color}40`
-                        : 'none',
                     opacity: locked ? 0.35 : 1,
                     filter: locked ? 'grayscale(60%)' : 'none',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -109,7 +104,6 @@ export default function LevelMap({ currentLevel }: Props) {
                       background: 'var(--ds-color-success)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       fontSize: 10, color: '#fff', fontWeight: 900,
-                      boxShadow: '0 0 8px rgba(6,214,160,0.60)',
                     }}>✓</span>
                   )}
                   {locked && (
@@ -126,7 +120,6 @@ export default function LevelMap({ currentLevel }: Props) {
                     fontSize: 8, fontWeight: 800, letterSpacing: '0.10em',
                     padding: '2px 8px', borderRadius: 99,
                     background: lv.color, color: '#fff',
-                    boxShadow: `0 0 12px ${lv.color}80`,
                     whiteSpace: 'nowrap',
                   }}>ESTÁS AQUÍ</span>
                 )}

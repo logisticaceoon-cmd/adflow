@@ -76,7 +76,7 @@ ALTER TABLE ai_requests ENABLE ROW LEVEL SECURITY;`}
 
       <div className="grid grid-cols-3 gap-4 mb-8">
         {[
-          { label: 'Requests totales', value: totalRequests ?? 0, color: '#22d3ee' },
+          { label: 'Requests totales', value: totalRequests ?? 0, color: '#2dd4a8' },
           { label: 'Tokens (últimos 50)', value: totalTokens.toLocaleString(), color: '#a855f7' },
           { label: 'Costo estimado', value: `$${totalCost.toFixed(4)}`, color: '#f59e0b' },
         ].map(({ label, value, color }) => (

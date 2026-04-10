@@ -63,7 +63,7 @@ export default function UsersKpiNode({ count }: { count: number }) {
           position: 'absolute',
           inset: 0,
           borderRadius: '50%',
-          border: '2px solid #22d3ee',
+          border: '2px solid #2dd4a8',
           boxShadow: hovered
             ? 'inset 0 0 40px rgba(233,30,140,0.40), 0 0 50px rgba(233,30,140,0.55), 0 0 100px rgba(233,30,140,0.30), 0 0 160px rgba(233,30,140,0.12)'
             : 'inset 0 0 30px rgba(233,30,140,0.20), 0 0 40px rgba(233,30,140,0.40), 0 0 80px rgba(233,30,140,0.20), 0 0 120px rgba(233,30,140,0.10)',
@@ -159,7 +159,7 @@ export default function UsersKpiNode({ count }: { count: number }) {
             fontWeight: 700,
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
-            color: '#22d3ee',
+            color: '#2dd4a8',
           }}>
             Usuarios totales
           </div>

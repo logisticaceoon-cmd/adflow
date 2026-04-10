@@ -10,14 +10,10 @@ interface Props {
 
 const DANGER_PANEL: React.CSSProperties = {
   borderLeft: '3px solid var(--ds-color-danger)',
-  boxShadow:
-    'var(--ds-shadow-md), -3px 0 15px rgba(248, 113, 113, 0.10), var(--ds-card-inner-glow)',
 }
 
 const SUCCESS_PANEL: React.CSSProperties = {
   borderLeft: '3px solid var(--ds-color-success)',
-  boxShadow:
-    'var(--ds-shadow-md), -3px 0 15px rgba(52, 211, 153, 0.10), var(--ds-card-inner-glow)',
 }
 
 export default function AlertsOpportunities({ alerts }: Props) {

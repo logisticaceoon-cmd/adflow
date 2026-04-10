@@ -189,7 +189,6 @@ export default function LabsPage() {
                       border: '1px solid var(--ds-color-primary-border)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       fontSize: 28, lineHeight: 1,
-                      boxShadow: '0 0 24px var(--ds-color-primary-glow)',
                     }}
                   >
                     {f.icon}
@@ -345,8 +344,7 @@ export default function LabsPage() {
                 left: 11,
                 right: 11,
                 height: 2,
-                background:
-                  'linear-gradient(90deg, var(--ds-color-primary) 0%, var(--ds-card-border) 30%, var(--ds-card-border) 100%)',
+                background: 'var(--ds-card-border)',
                 zIndex: 0,
               }}
             />
@@ -399,10 +397,6 @@ export default function LabsPage() {
                         background: color,
                         border: `2px solid ${borderColor}`,
                         marginBottom: 12,
-                        boxShadow:
-                          item.status === 'near'
-                            ? '0 0 16px var(--ds-color-primary-glow)'
-                            : 'none',
                       }}
                     />
                     <p

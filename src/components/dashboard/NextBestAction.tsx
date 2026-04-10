@@ -30,7 +30,7 @@ const PRIORITY_CONFIG: Record<PrimaryAction['priority'], {
     border: 'var(--ds-color-primary)',
     overline: 'Tu siguiente mejor acción',
     overlineColor: 'var(--ds-color-primary)',
-    glowColor: 'rgba(34, 211, 238, 0.12)',
+    glowColor: 'rgba(45, 212, 168, 0.12)',
     softBg: 'var(--ds-color-primary-soft)',
     softBorder: 'var(--ds-color-primary-border)',
   },
@@ -52,7 +52,6 @@ export default function NextBestAction({ primaryAction, secondaryActions }: Prop
     <div className="card module-enter module-enter-2" style={{
       padding: 24,
       borderLeft: `3px solid ${cfg.border}`,
-      boxShadow: `var(--ds-shadow-md), -3px 0 15px ${cfg.glowColor}, var(--ds-card-inner-glow)`,
       marginBottom: 32,
     }}>
       <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
@@ -63,7 +62,6 @@ export default function NextBestAction({ primaryAction, secondaryActions }: Prop
           border: `1px solid ${cfg.softBorder}`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 20, lineHeight: 1,
-          boxShadow: `0 0 20px ${cfg.glowColor}`,
         }}>
           {primaryAction.icon}
         </div>

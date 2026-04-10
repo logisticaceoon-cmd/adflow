@@ -16,11 +16,8 @@ function CustomTooltip({ active, payload, label }: any) {
   return (
     <div style={{
       padding: '10px 14px', borderRadius: 12,
-      background: 'rgba(14, 16, 34, 0.92)',
+      background: 'rgba(10, 15, 13, 0.95)',
       border: '1px solid var(--ds-card-border)',
-      backdropFilter: 'blur(16px) saturate(1.3)',
-      WebkitBackdropFilter: 'blur(16px) saturate(1.3)',
-      boxShadow: 'var(--ds-shadow-md)',
     }}>
       <p style={{ fontSize: 10, color: 'var(--ds-text-muted)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}>{label}</p>
       <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: 'var(--ds-text-primary)', letterSpacing: '-0.02em' }}>
@@ -70,7 +67,7 @@ export default function SpendChart({ totalSpend }: Props) {
           strokeWidth={2.5}
           fill="url(#spendGradPink)"
           dot={false}
-          activeDot={{ r: 5, fill: 'var(--ds-color-primary)', strokeWidth: 2, stroke: 'transparent', filter: 'drop-shadow(0 0 6px transparent)' }}
+          activeDot={{ r: 5, fill: 'var(--ds-color-primary)', strokeWidth: 2, stroke: 'transparent' }}
         />
       </AreaChart>
     </ResponsiveContainer>

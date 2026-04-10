@@ -298,7 +298,7 @@ async function sendReportEmail(
 
   const campaignRows = campaigns.map(c => {
     const m = metrics[c.id] || {}
-    const roasColor = (m.roas || 0) >= 4 ? '#06d6a0' : (m.roas || 0) >= 2 ? '#f59e0b' : '#ef4444'
+    const roasColor = (m.roas || 0) >= 4 ? '#2dd4a8' : (m.roas || 0) >= 2 ? '#f59e0b' : '#ef4444'
     return `
       <tr style="border-bottom: 1px solid #1e2035;">
         <td style="padding: 12px 16px; font-size: 13px; font-weight: 500;">${c.name}</td>
@@ -341,7 +341,7 @@ async function sendReportEmail(
         <p style="font-size: 11px; color: #6b7280; margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.05em;">Gasto total</p>
         <p style="font-size: 24px; font-weight: 800; margin: 0;">$${totalSpend.toFixed(0)}</p>
       </div>
-      <div style="background: #0e1020; border: 1px solid #1e2035; border-top: 2px solid #06d6a0; border-radius: 12px; padding: 16px;">
+      <div style="background: #0e1020; border: 1px solid #1e2035; border-top: 2px solid #2dd4a8; border-radius: 12px; padding: 16px;">
         <p style="font-size: 11px; color: #6b7280; margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.05em;">ROAS promedio</p>
         <p style="font-size: 24px; font-weight: 800; margin: 0;">${avgRoas.toFixed(1)}x</p>
       </div>

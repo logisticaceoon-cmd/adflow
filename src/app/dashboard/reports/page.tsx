@@ -69,11 +69,6 @@ export default async function ReportsHubPage() {
         padding: '36px 40px',
         overflow: 'hidden',
       }}>
-        <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-          background: 'linear-gradient(90deg, transparent 10%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.12) 60%, transparent 90%)',
-          pointerEvents: 'none',
-        }} />
         <div className="flex items-start justify-between gap-6">
           <div style={{ flex: 1 }}>
             <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ds-text-label)', marginBottom: 10 }}>
@@ -95,7 +90,6 @@ export default async function ReportsHubPage() {
                   background: 'rgba(167, 139, 250, 0.14)',
                   borderColor: 'rgba(167, 139, 250, 0.35)',
                   color: 'var(--ds-color-secondary)',
-                  boxShadow: '0 0 12px rgba(167, 139, 250, 0.24)',
                 }}>
                   ⭐ Nivel {pixelAnalysis.level}: {pixelAnalysis.level_name}
                 </span>
@@ -116,7 +110,6 @@ export default async function ReportsHubPage() {
         <div className="card card-hover" style={{
           padding: '24px 28px',
           borderColor: 'var(--ds-color-primary-border)',
-          boxShadow: 'var(--ds-shadow-md), 0 0 48px rgba(34, 211, 238, 0.10), var(--ds-card-inner-glow)',
           cursor: 'pointer',
         }}>
           <div className="flex items-center justify-between mb-4">
@@ -125,7 +118,6 @@ export default async function ReportsHubPage() {
                 width: 48, height: 48, borderRadius: 14,
                 background: 'var(--ds-color-primary-soft)',
                 border: '1px solid transparent',
-                boxShadow: '0 0 24px transparent',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22,
               }}>📊</div>
               <div>
@@ -247,14 +239,12 @@ export default async function ReportsHubPage() {
       <div className="card" style={{
         padding: 20, marginBottom: 24,
         borderLeft: '3px solid var(--ds-color-primary)',
-        boxShadow: 'var(--ds-shadow-md), -3px 0 15px rgba(34, 211, 238, 0.10), var(--ds-card-inner-glow)',
       }}>
         <div className="flex items-start gap-4">
           <div style={{
             width: 44, height: 44, borderRadius: 12, flexShrink: 0,
             background: 'var(--ds-card-border)', border: '1px solid var(--ds-card-border)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
-            boxShadow: '0 0 16px var(--ds-card-border)',
           }}>
             <Clock size={20} style={{ color: 'var(--ds-color-primary)' }} />
           </div>

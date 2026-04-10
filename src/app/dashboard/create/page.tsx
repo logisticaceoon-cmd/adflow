@@ -445,7 +445,7 @@ export default function CreateCampaignPage() {
             display: 'inline-flex', alignItems: 'center', gap: 8,
             padding: '6px 14px', borderRadius: 99, marginTop: 10,
             background: pixelLevel >= 5 ? 'var(--ds-color-success-soft)' : pixelLevel >= 3 ? 'var(--ds-color-warning-soft)' : 'var(--ds-color-danger-soft)',
-            border: `1px solid ${pixelLevel >= 5 ? 'rgba(6,214,160,0.30)' : pixelLevel >= 3 ? 'var(--ds-color-warning-border)' : 'var(--ds-color-danger-border)'}`,
+            border: `1px solid ${pixelLevel >= 5 ? 'rgba(45, 212, 168,0.30)' : pixelLevel >= 3 ? 'var(--ds-color-warning-border)' : 'var(--ds-color-danger-border)'}`,
           }}>
             <span style={{ fontSize: 14 }}>
               {pixelLevel >= 6 ? '🚀' : pixelLevel >= 3 ? '📊' : '🌱'}
@@ -510,11 +510,6 @@ export default function CreateCampaignPage() {
                       : active
                         ? 'var(--ds-color-primary)'
                         : 'var(--ds-text-muted)',
-                    boxShadow: done
-                      ? '0 0 0 1px rgba(52, 211, 153, 0.20), 0 0 16px rgba(52, 211, 153, 0.20)'
-                      : active
-                        ? '0 0 0 1px rgba(34, 211, 238, 0.25), 0 0 20px rgba(34, 211, 238, 0.24)'
-                        : 'none',
                     fontSize: 11,
                   }}
                 >
@@ -539,7 +534,7 @@ export default function CreateCampaignPage() {
                   className="flex-1 mx-2 h-px"
                   style={{
                     background: i < step
-                      ? 'linear-gradient(to right, var(--ds-color-success), var(--ds-color-primary))'
+                      ? 'var(--ds-color-success)'
                       : 'var(--ds-card-border)',
                   }}
                 />
@@ -622,13 +617,12 @@ export default function CreateCampaignPage() {
         <div className="card" style={{
           padding: 40, textAlign: 'center',
           borderColor: 'var(--ds-color-success-border)',
-          boxShadow: 'var(--ds-shadow-md), 0 0 48px rgba(52, 211, 153, 0.12), var(--ds-card-inner-glow)',
         }}>
           <div style={{
             width: 72, height: 72, margin: '0 auto 20px', borderRadius: '50%',
             background: publishedOk
-              ? 'linear-gradient(135deg, rgba(24,119,242,0.15), rgba(24,119,242,0.08))'
-              : 'linear-gradient(135deg, var(--ds-card-border), transparent)',
+              ? 'rgba(24,119,242,0.12)'
+              : 'var(--ds-bg-elevated)',
             border: `1px solid ${publishedOk ? 'rgba(24,119,242,0.30)' : 'var(--ds-card-border)'}`,
             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30,
           }}>
@@ -649,7 +643,7 @@ export default function CreateCampaignPage() {
               <a href={`https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=${metaCampaignId}`}
                  target="_blank" rel="noopener noreferrer"
                  className="flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold w-full max-w-xs justify-center transition-opacity hover:opacity-90"
-                 style={{ background: 'linear-gradient(135deg, #1877F2, #0d5cc7)', color: '#fff', boxShadow: '0 4px 16px rgba(24,119,242,0.30)' }}>
+                 style={{ background: '#1877F2', color: '#fff' }}>
                 <ExternalLink size={14} /> Ver en Ads Manager ↗
               </a>
             )}
@@ -677,18 +671,16 @@ export default function CreateCampaignPage() {
         <div
           style={{
             position: 'fixed', inset: 0, zIndex: 1000,
-            background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(6px)',
+            background: 'rgba(0,0,0,0.75)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             padding: 16,
           }}
           onClick={e => { if (e.target === e.currentTarget) setNoCreditsModal(false) }}
         >
-          <div style={{
-            background: 'linear-gradient(160deg, #0e0a12 0%, #0a0610 100%)',
-            border: '1px solid rgba(239,68,68,0.28)',
-            borderRadius: 20, padding: 36, width: '100%', maxWidth: 380,
+          <div className="card" style={{
+            borderColor: 'rgba(239,68,68,0.28)',
+            padding: 36, width: '100%', maxWidth: 380,
             textAlign: 'center',
-            boxShadow: '0 24px 64px rgba(0,0,0,0.72), 0 0 80px var(--ds-color-danger-soft)',
           }}>
             <div style={{ fontSize: 38, marginBottom: 14 }}>⚡</div>
             <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8, color: '#ffffff' }}>
@@ -701,9 +693,8 @@ export default function CreateCampaignPage() {
               onClick={() => router.push('/dashboard/billing')}
               style={{
                 width: '100%', padding: '12px 0', borderRadius: 12, cursor: 'pointer',
-                background: 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))',
+                background: 'var(--ds-color-primary)',
                 color: '#ffffff', fontSize: 14, fontWeight: 700, border: 'none',
-                boxShadow: '0 4px 20px transparent',
                 marginBottom: 12, display: 'block',
               }}
             >

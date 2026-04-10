@@ -230,9 +230,6 @@ export default function TopBar() {
           style={{
             background: open ? 'transparent' : 'rgba(255,255,255,0.04)',
             border: `1px solid ${open ? 'transparent' : 'rgba(255,255,255,0.09)'}`,
-            boxShadow: unreadCount > 0
-              ? '0 0 16px transparent, 0 0 28px transparent'
-              : (open ? '0 0 16px transparent' : 'none'),
           }}
           onMouseEnter={e => { if (!open) { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.07)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.16)' } }}
           onMouseLeave={e => { if (!open) { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.09)' } }}
@@ -240,18 +237,15 @@ export default function TopBar() {
         >
           <Bell size={16} style={{
             color: unreadCount > 0 || open ? 'var(--ds-color-primary)' : 'var(--ds-text-secondary)',
-            filter: unreadCount > 0 ? 'drop-shadow(0 0 4px transparent)' : 'none',
           }} strokeWidth={1.75} />
           {unreadCount > 0 && (
             <span
               className="absolute -top-1 -right-1 rounded-full text-[10px] font-bold flex items-center justify-center"
               style={{
                 minWidth: 16, height: 16, padding: unreadCount > 9 ? '0 4px' : 0,
-                background: 'linear-gradient(135deg, #f87171, #dc2626)',
+                background: '#ef4444',
                 border: '1px solid rgba(248, 113, 113, 0.6)',
                 color: '#fff',
-                boxShadow: '0 0 0 1px rgba(248, 113, 113, 0.35), 0 0 12px rgba(248, 113, 113, 0.45), 0 0 20px rgba(248, 113, 113, 0.20)',
-                animation: 'glowPulse 2.4s ease-in-out infinite',
               }}>
               {badgeLabel}
             </span>
@@ -259,16 +253,12 @@ export default function TopBar() {
         </button>
 
         {open && (
-          <div className="absolute right-0 top-11 w-96 rounded-2xl overflow-hidden z-50"
+          <div className="card absolute right-0 top-11 w-96 overflow-hidden z-50"
                style={{
-                 background: 'rgba(14, 16, 34, 0.88)',
-                 border: '1px solid var(--ds-card-border)',
-                 backdropFilter: 'blur(24px) saturate(1.4)',
-                 WebkitBackdropFilter: 'blur(24px) saturate(1.4)',
-                 boxShadow: 'var(--ds-shadow-lg), 0 0 40px rgba(34, 211, 238,0.12)',
                  maxHeight: 520,
                  display: 'flex',
                  flexDirection: 'column',
+                 padding: 0,
                }}>
             <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: 'var(--ds-card-border)' }}>
               <div className="flex items-center gap-2">

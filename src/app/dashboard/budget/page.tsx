@@ -15,7 +15,7 @@ interface MonthlyBudgetRow {
 
 const LEVEL_COLORS: Record<number, string> = {
   0: '#8892b0', 1: '#f87171', 2: '#f87171', 3: '#fbbf24', 4: '#fbbf24',
-  5: '#34d399', 6: '#34d399', 7: '#22d3ee', 8: '#a78bfa',
+  5: '#34d399', 6: '#34d399', 7: '#2dd4a8', 8: '#a78bfa',
 }
 
 // Minimum pixel level to unlock each phase
@@ -244,13 +244,6 @@ export default function BudgetPage() {
         padding: '36px 40px',
         overflow: 'hidden',
       }}>
-        {/* Full-width top light reflection */}
-        <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-          background: 'linear-gradient(90deg, transparent 10%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.12) 60%, transparent 90%)',
-          pointerEvents: 'none',
-        }} />
-
         <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ds-text-label)', marginBottom: 10 }}>
           Budget Engine · AdFlow
         </p>
@@ -269,7 +262,6 @@ export default function BudgetPage() {
             background: `${lvColor}14`,
             borderColor: `${lvColor}40`,
             color: lvColor,
-            boxShadow: `0 0 12px ${lvColor}24`,
           }}>
             ⭐ Nivel {pixelLevel}: {pixelLevelName}
           </span>
@@ -398,7 +390,6 @@ export default function BudgetPage() {
                         width: 44, height: 44, borderRadius: 12, flexShrink: 0,
                         background: `${p.color}20`, border: `1px solid ${p.color}50`,
                         display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22,
-                        boxShadow: isLocked ? 'none' : `0 0 16px ${p.color}30`,
                       }}>{p.icon}</div>
                       <div>
                         <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: p.color }}>
@@ -509,10 +500,10 @@ export default function BudgetPage() {
                 style={{
                   width: `${Math.min(100, totalNum > 0 ? (totalAssigned / totalNum) * 100 : 0)}%`,
                   background: diff === 0
-                    ? 'linear-gradient(90deg, rgba(52, 211, 153, 0.70), #34d399, #6ee7b7)'
+                    ? 'var(--ds-color-success)'
                     : diff > 0
-                      ? 'linear-gradient(90deg, rgba(248, 113, 113, 0.70), #f87171, #fca5a5)'
-                      : 'linear-gradient(90deg, rgba(251, 191, 36, 0.70), #fbbf24, #fcd34d)',
+                      ? 'var(--ds-color-danger)'
+                      : 'var(--ds-color-warning)',
                 }}
               />
             </div>
@@ -580,7 +571,7 @@ export default function BudgetPage() {
         <div className="mb-6">
           <div className="flex items-center gap-4 mb-6">
             <button onClick={handleSave} disabled={saving} className="btn-primary"
-              style={{ fontSize: 14, padding: '14px 32px', boxShadow: '0 0 32px transparent, 0 6px 24px var(--ds-color-primary-border)' }}>
+              style={{ fontSize: 14, padding: '14px 32px' }}>
               {saving ? 'Guardando...' : '💾 Guardar presupuesto del mes'}
             </button>
             {savedMsg && <span style={{ fontSize: 13, color: 'var(--ds-color-success)', fontWeight: 600 }}>{savedMsg}</span>}
@@ -628,7 +619,6 @@ export default function BudgetPage() {
       <div className="card" style={{
         padding: 24, marginBottom: 24,
         borderLeft: '3px solid var(--ds-color-warning)',
-        boxShadow: 'var(--ds-shadow-md), -3px 0 15px rgba(251, 191, 36, 0.10), var(--ds-card-inner-glow)',
       }}>
         <div className="flex items-start gap-4">
           <div style={{
@@ -636,7 +626,6 @@ export default function BudgetPage() {
             background: 'var(--ds-color-primary-soft)',
             border: '1px solid var(--ds-color-primary-border)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
-            boxShadow: '0 0 16px var(--ds-color-primary-border)',
           }}>💡</div>
           <div style={{ flex: 1 }}>
             <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 8 }}>

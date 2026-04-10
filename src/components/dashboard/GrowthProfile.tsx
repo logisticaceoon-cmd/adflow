@@ -60,7 +60,6 @@ export default function GrowthProfile(p: Props) {
             <span style={{
               fontFamily: 'Syne, sans-serif', fontSize: 12, fontWeight: 700,
               color: 'var(--ds-color-warning)',
-              textShadow: '0 0 20px rgba(245, 197, 66, 0.15)',
             }}>
               {p.growthScore.toLocaleString()} pts
             </span>

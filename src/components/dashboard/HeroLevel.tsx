@@ -21,19 +21,6 @@ interface Props {
   hasPixel:        boolean
 }
 
-// Color glow per level (used for the level badge soft glow)
-const LEVEL_GLOW: Record<number, string> = {
-  0: 'rgba(136, 146, 176, 0.18)',
-  1: 'rgba(239, 68, 68, 0.20)',
-  2: 'rgba(239, 68, 68, 0.20)',
-  3: 'rgba(245, 158, 11, 0.20)',
-  4: 'rgba(245, 158, 11, 0.20)',
-  5: 'rgba(6, 214, 160, 0.22)',
-  6: 'rgba(6, 214, 160, 0.22)',
-  7: 'rgba(34, 211, 238, 0.22)',
-  8: 'rgba(139, 92, 246, 0.22)',
-}
-
 const LEVEL_ICONS: Record<number, string> = {
   0: '🌑', 1: '🌱', 2: '📚', 3: '🧠', 4: '🛒', 5: '💼', 6: '🚀', 7: '👑', 8: '🏰',
 }
@@ -50,7 +37,6 @@ export default function HeroLevel(p: Props) {
     ? Math.min(100, Math.round((p.metricCurrent / p.metricRequired) * 100))
     : 0
 
-  const levelGlow = LEVEL_GLOW[p.level] || LEVEL_GLOW[0]
   const levelIcon = LEVEL_ICONS[p.level] || '🌑'
 
   const kpis: Array<{ label: string; value: string; color?: string }> = [
@@ -67,16 +53,6 @@ export default function HeroLevel(p: Props) {
       padding: '36px 40px',
       overflow: 'hidden',
     }}>
-      {/* Full-width top light reflection — brighter than regular cards */}
-      <div style={{
-        position: 'absolute',
-        top: 0, left: 0, right: 0, height: 1,
-        background:
-          'linear-gradient(90deg, transparent 10%, rgba(255, 255, 255, 0.12) 40%, rgba(255, 255, 255, 0.18) 50%, rgba(255, 255, 255, 0.12) 60%, transparent 90%)',
-        pointerEvents: 'none',
-        borderRadius: 'inherit',
-      }} />
-
       {/* ── Top row: greeting (left) + KPIs strip (right) ─────────────── */}
       <div style={{
         display: 'grid',
@@ -107,9 +83,8 @@ export default function HeroLevel(p: Props) {
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 10,
               padding: '6px 14px', borderRadius: 999,
-              background: 'rgba(34, 211, 238, 0.08)',
-              border: '1px solid rgba(34, 211, 238, 0.22)',
-              boxShadow: `0 0 24px ${levelGlow}`,
+              background: 'rgba(45, 212, 168, 0.08)',
+              border: '1px solid rgba(45, 212, 168, 0.22)',
             }}>
               <span style={{ fontSize: 14 }}>{levelIcon}</span>
               <span style={{

@@ -106,12 +106,6 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
         padding: '36px 40px',
         overflow: 'hidden',
       }}>
-        <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-          background: 'linear-gradient(90deg, transparent 10%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.12) 60%, transparent 90%)',
-          pointerEvents: 'none',
-        }} />
-
         <div className="flex items-center justify-between mb-4">
           <div>
             <Link href="/dashboard/reports" style={{ fontSize: 11, color: 'var(--ds-color-primary)', display: 'inline-flex', alignItems: 'center', gap: 4, textDecoration: 'none', marginBottom: 8 }}>
@@ -190,14 +184,12 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
             <div className="card module-enter module-enter-3" style={{
               padding: 24, marginBottom: 32,
               borderLeft: '3px solid var(--ds-color-primary)',
-              boxShadow: 'var(--ds-shadow-md), -3px 0 15px rgba(34, 211, 238, 0.12), 0 0 48px rgba(34, 211, 238, 0.06), var(--ds-card-inner-glow)',
             }}>
               <div className="flex items-start gap-4">
                 <div style={{
                   width: 52, height: 52, borderRadius: 14, flexShrink: 0,
                   background: 'var(--ds-color-primary-soft)',
                   border: '1px solid transparent',
-                  boxShadow: '0 0 24px transparent',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26,
                 }}>🤖</div>
                 <div style={{ flex: 1 }}>
@@ -255,10 +247,10 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
                   style={{
                     width: `${Math.min(100, budgetEffic)}%`,
                     background: budgetEffic > 100
-                      ? 'linear-gradient(90deg, rgba(248,113,113,0.70), #f87171)'
+                      ? 'var(--ds-color-danger)'
                       : budgetEffic > 90
-                        ? 'linear-gradient(90deg, rgba(52,211,153,0.70), #34d399)'
-                        : 'linear-gradient(90deg, rgba(251,191,36,0.70), #fbbf24)',
+                        ? 'var(--ds-color-success)'
+                        : 'var(--ds-color-warning)',
                   }}
                 />
               </div>
@@ -328,7 +320,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
 
                 return (
                   <div key={p.key} className="p-4 rounded-xl" style={{
-                    background: `linear-gradient(135deg, ${p.color}08, ${p.color}02)`,
+                    background: `${p.color}08`,
                     border: `1px solid ${p.color}25`,
                     display: 'grid',
                     gridTemplateColumns: '200px 1fr 80px 80px 80px',
@@ -414,10 +406,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
           )}
 
           {/* ── SECTION G: CAMPAIGN STATS ───────────────────────────── */}
-          <div className="card p-5 mb-6 dash-anim-6" style={{
-            background: 'linear-gradient(135deg, transparent, transparent)',
-            border: '1px solid transparent',
-          }}>
+          <div className="card p-5 mb-6 dash-anim-6">
             <div className="grid grid-cols-2 gap-6">
               <div>
                 <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ds-color-primary)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 6 }}>

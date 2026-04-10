@@ -69,9 +69,6 @@ export default function PhaseSummary({ currency, phaseData }: Props) {
               padding: 16,
               opacity: isLocked ? 0.45 : 1,
               borderColor: isBest ? 'var(--ds-color-success-border)' : undefined,
-              boxShadow: isBest
-                ? 'var(--ds-shadow-md), 0 0 24px rgba(52, 211, 153, 0.08), var(--ds-card-inner-glow)'
-                : undefined,
               display: 'flex', flexDirection: 'column', gap: 12,
             }}>
               {/* Header — icon + name */}

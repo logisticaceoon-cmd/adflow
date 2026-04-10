@@ -198,14 +198,14 @@ export default function ScaleBudgetModal({ open, onClose, onConfirm, campaignNam
         {/* Preview */}
         <div style={{
           padding: '16px 18px', borderRadius: 14, marginBottom: 18,
-          background: 'linear-gradient(135deg, rgba(6,214,160,0.08), transparent)',
+          background: 'linear-gradient(135deg, rgba(45, 212, 168,0.08), transparent)',
           border: '1px solid var(--ds-color-success-border)',
         }}>
           <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-color-success)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 6 }}>
             Nuevo presupuesto
           </p>
           <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 900, color: 'var(--ds-color-success)', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 10 }}>
-            {currency}{newBudget.toFixed(0)}<span style={{ fontSize: 13, color: 'rgba(6,214,160,0.70)', fontWeight: 600 }}>/día</span>
+            {currency}{newBudget.toFixed(0)}<span style={{ fontSize: 13, color: 'rgba(45, 212, 168,0.70)', fontWeight: 600 }}>/día</span>
             <span style={{ fontSize: 13, marginLeft: 10, color: pct >= 0 ? 'var(--ds-color-success)' : 'var(--ds-color-danger)' }}>
               ({pct >= 0 ? '+' : ''}{pct}%)
             </span>

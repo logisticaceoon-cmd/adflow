@@ -34,7 +34,6 @@ function OptionCard({ icon, label, selected, onClick }: OptionCardProps) {
           ? 'var(--ds-color-success-soft)'
           : 'var(--ds-card-bg)',
         border: `${selected ? '1.5px' : '1px'} solid ${selected ? 'var(--ds-color-success-border)' : 'var(--ds-card-border)'}`,
-        boxShadow: selected ? '0 0 20px var(--ds-color-success-soft)' : 'none',
         cursor: 'pointer',
         display: 'flex', alignItems: 'center', gap: 12,
       }}>
@@ -60,7 +59,6 @@ function OptionCard({ icon, label, selected, onClick }: OptionCardProps) {
           background: 'var(--ds-color-success)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 10, color: '#fff', fontWeight: 900, flexShrink: 0,
-          boxShadow: '0 0 12px transparent',
         }}>✓</div>
       )}
     </button>
@@ -80,7 +78,7 @@ function QuestionBlock({ number, title, helper, children }: QuestionBlockProps) 
       <div className="flex items-start gap-3 mb-4">
         <div style={{
           width: 28, height: 28, borderRadius: 8, flexShrink: 0,
-          background: 'linear-gradient(135deg, var(--ds-color-primary-soft), var(--ds-card-border))',
+          background: 'var(--ds-color-primary-soft)',
           border: '1px solid var(--ds-color-primary-border)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 12, fontWeight: 800, color: 'var(--ds-color-primary)',
@@ -165,7 +163,7 @@ export default function StepDiagnosis({ diagnosis, setDiagField, form, setField,
 
       {/* WhatsApp field — shown when objective is whatsapp */}
       {diagnosis.mainObjective === 'whatsapp' && (
-        <div style={{ borderRadius: 18, padding: 22, background: 'linear-gradient(135deg, rgba(37,211,102,0.10), rgba(37,211,102,0.03))', border: '1px solid rgba(37,211,102,0.30)' }}>
+        <div style={{ borderRadius: 18, padding: 22, background: 'rgba(37,211,102,0.08)', border: '1px solid rgba(37,211,102,0.30)' }}>
           <p className="text-sm font-semibold mb-1" style={{ fontFamily: 'Syne, sans-serif', color: '#fff' }}>
             💬 Tu número de WhatsApp *
           </p>

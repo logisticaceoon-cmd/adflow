@@ -146,7 +146,7 @@ export default function StepReview({
       {showPixelWarning && (
         <div style={{
           borderRadius: 14, padding: '12px 16px',
-          background: 'rgba(34, 211, 238,0.08)', border: '1px solid rgba(34, 211, 238,0.25)',
+          background: 'rgba(45, 212, 168,0.08)', border: '1px solid rgba(45, 212, 168,0.25)',
           display: 'flex', gap: 10, alignItems: 'flex-start',
         }}>
           <span style={{ fontSize: 16, flexShrink: 0 }}>ℹ️</span>
@@ -487,12 +487,12 @@ export default function StepReview({
                     ))}
                     {/* Pixel badge: blue check if configured, blue info if needed but missing */}
                     {(s as any).requires_pixel && pixelId && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(34, 211, 238,0.14)', color: '#93c5fd' }}>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(45, 212, 168,0.14)', color: '#93c5fd' }}>
                         ✓ Pixel configurado
                       </span>
                     )}
                     {(s as any).requires_pixel && !pixelId && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(34, 211, 238,0.10)', color: '#7dd3fc' }}>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(45, 212, 168,0.10)', color: '#7dd3fc' }}>
                         ℹ Requiere Pixel
                       </span>
                     )}

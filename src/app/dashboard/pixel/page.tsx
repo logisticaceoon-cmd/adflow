@@ -165,20 +165,12 @@ export default function PixelDashboardPage() {
         padding: '40px 44px',
         overflow: 'hidden',
       }}>
-        {/* Full-width top light reflection (brighter than regular cards) */}
-        <div style={{
-          position: 'absolute',
-          top: 0, left: 0, right: 0, height: 1,
-          background:
-            'linear-gradient(90deg, transparent 10%, rgba(255, 255, 255, 0.12) 40%, rgba(255, 255, 255, 0.20) 50%, rgba(255, 255, 255, 0.12) 60%, transparent 90%)',
-          pointerEvents: 'none',
-        }} />
-        {/* Imperio: extra glow particles */}
+        {/* Imperio: extra particles */}
         {level === 8 && (
           <>
-            <div style={{ position: 'absolute', top: '15%', right: '10%', width: 4, height: 4, borderRadius: '50%', background: 'var(--ds-color-warning)', boxShadow: '0 0 20px var(--ds-color-warning)' }} />
-            <div style={{ position: 'absolute', top: '60%', right: '25%', width: 3, height: 3, borderRadius: '50%', background: 'var(--ds-color-warning)', boxShadow: '0 0 16px var(--ds-color-warning)' }} />
-            <div style={{ position: 'absolute', top: '30%', left: '15%', width: 5, height: 5, borderRadius: '50%', background: '#c4b5fd', boxShadow: '0 0 22px #c4b5fd' }} />
+            <div style={{ position: 'absolute', top: '15%', right: '10%', width: 4, height: 4, borderRadius: '50%', background: 'var(--ds-color-warning)' }} />
+            <div style={{ position: 'absolute', top: '60%', right: '25%', width: 3, height: 3, borderRadius: '50%', background: 'var(--ds-color-warning)' }} />
+            <div style={{ position: 'absolute', top: '30%', left: '15%', width: 5, height: 5, borderRadius: '50%', background: '#c4b5fd' }} />
           </>
         )}
 
@@ -210,7 +202,6 @@ export default function PixelDashboardPage() {
             padding: 6,
             background: 'var(--ds-color-primary-soft)',
             border: '1px solid var(--ds-color-primary-border)',
-            boxShadow: '0 0 30px var(--ds-color-primary-glow), 0 0 60px rgba(34, 211, 238, 0.10)',
           }}>
             <LevelBadge level={level} levelName="" size="lg" showName={false} />
           </div>
@@ -221,7 +212,6 @@ export default function PixelDashboardPage() {
           <h1 style={{
             fontFamily: 'Syne, sans-serif', fontSize: 38, fontWeight: 700,
             color: 'var(--ds-text-primary)', letterSpacing: '-0.03em', marginBottom: 16,
-            textShadow: '0 0 32px rgba(34, 211, 238, 0.20)',
           }}>
             {pa?.level_name}
           </h1>
@@ -273,7 +263,7 @@ export default function PixelDashboardPage() {
         <ScoreCard
           totalScore={totalScore}
           breakdown={[
-            { label: `Nivel ${level}`,    points: scoreLevel,   color: '#22d3ee' },
+            { label: `Nivel ${level}`,    points: scoreLevel,   color: '#2dd4a8' },
             { label: 'Tráfico web',       points: scoreTraffic, color: '#9d90ff' },
             { label: 'Compras (180d)',    points: scoreSales,   color: '#34d399' },
             { label: `Campañas (${campaignsCount})`, points: scoreCamps, color: '#fbbf24' },

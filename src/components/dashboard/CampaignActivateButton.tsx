@@ -45,7 +45,7 @@ export default function CampaignActivateButton({ campaignId, metaCampaignId, cur
         onClick={toggle}
         disabled={loading}
         className="btn-ghost text-xs py-2 px-3 gap-1.5"
-        style={isActive ? { borderColor: 'rgba(245,158,11,0.4)', color: 'var(--ds-color-warning)' } : { borderColor: 'rgba(6,214,160,0.4)', color: 'var(--ds-color-success)' }}
+        style={isActive ? { borderColor: 'rgba(245,158,11,0.4)', color: 'var(--ds-color-warning)' } : { borderColor: 'rgba(45, 212, 168,0.4)', color: 'var(--ds-color-success)' }}
       >
         {loading ? <Loader2 size={13} className="animate-spin" /> : <Icon size={13} />}
         {loading ? (isActive ? 'Pausando...' : 'Activando...') : label}

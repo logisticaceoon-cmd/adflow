@@ -124,12 +124,8 @@ export default function AchievementsBadges() {
                 border: a.unlocked
                   ? '1px solid var(--ds-color-warning-border)'
                   : '1px solid var(--ds-card-border)',
-                boxShadow: a.unlocked
-                  ? '0 0 0 1px rgba(251,191,36,0.20), 0 0 24px rgba(251,191,36,0.22), 0 0 40px rgba(251,191,36,0.10)'
-                  : 'none',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 28,
-                transition: 'box-shadow 200ms ease',
               }}>
                 {a.icon}
               </div>

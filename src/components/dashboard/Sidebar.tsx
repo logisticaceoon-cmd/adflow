@@ -20,7 +20,7 @@ interface Props { user: User; profile: Profile | null }
 // Level color mapping
 const LEVEL_COLORS: Record<number, string> = {
   0: '#8892b0', 1: '#ef4444', 2: '#ef4444', 3: '#f59e0b', 4: '#f59e0b',
-  5: '#06d6a0', 6: '#06d6a0', 7: '#22d3ee', 8: '#8b5cf6',
+  5: '#2dd4a8', 6: '#2dd4a8', 7: '#2dd4a8', 8: '#8b5cf6',
 }
 
 const LEVEL_ICONS: Record<number, string> = {
@@ -185,17 +185,13 @@ export default function Sidebar({ user, profile }: Props) {
     { href: '/dashboard/help',     icon: HelpCircle, label: 'Ayuda' },
   ]
 
-  const barGrad = creditsRemaining === 0 ? '#ef4444, #ef4444'
-    : creditsPct >= 80 ? '#f59e0b, #ef8c22'
-    : 'var(--ds-color-primary), var(--ds-color-primary)'
-
   return (
     <>
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
           className="fixed inset-0 z-40 md:hidden"
-          style={{ background: 'rgba(0,0,0,0.60)', backdropFilter: 'blur(4px)' }}
+          style={{ background: 'rgba(0,0,0,0.60)' }}
           onClick={close}
         />
       )}
@@ -232,22 +228,13 @@ export default function Sidebar({ user, profile }: Props) {
             <div style={{
               padding: '14px 14px 12px',
               borderRadius: 14,
-              background: hasPixel
-                ? `linear-gradient(135deg, ${lvColor}14, ${lvColor}04)`
-                : 'linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))',
+              background: hasPixel ? `${lvColor}10` : 'rgba(255,255,255,0.03)',
               border: hasPixel ? `1px solid ${lvColor}40` : '1px solid rgba(255,255,255,0.08)',
-              boxShadow: hasPixel ? `0 4px 20px rgba(0,0,0,0.25), 0 0 24px ${lvColor}10` : '0 4px 16px rgba(0,0,0,0.25)',
               cursor: 'pointer', position: 'relative', overflow: 'hidden',
               transition: 'all 0.2s ease',
             }}>
               {hasPixel ? (
                 <>
-                  {/* Top glow */}
-                  <div style={{
-                    position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-                    background: `linear-gradient(90deg, transparent, ${lvColor}80, transparent)`,
-                    pointerEvents: 'none',
-                  }} />
                   <div className="flex items-center gap-2 mb-2">
                     <span style={{ fontSize: 18 }}>{LEVEL_ICONS[pixelLevel]}</span>
                     <div style={{ flex: 1, minWidth: 0 }}>
@@ -266,8 +253,7 @@ export default function Sidebar({ user, profile }: Props) {
                           className="progress-bar-fill"
                           style={{
                             width: `${progressPct}%`,
-                            background: `linear-gradient(90deg, ${lvColor}, ${LEVEL_COLORS[nextLevel]})`,
-                            boxShadow: `0 0 10px ${lvColor}60, 0 0 20px ${lvColor}30, inset 0 1px 0 rgba(255,255,255,0.24)`,
+                            background: lvColor,
                           }}
                         />
                       </div>
@@ -341,14 +327,12 @@ export default function Sidebar({ user, profile }: Props) {
                 <Icon size={16} strokeWidth={active ? 2.2 : 1.75}
                   style={{
                     color: active ? 'var(--ds-color-primary)' : 'var(--ds-text-secondary)',
-                    filter: active ? 'drop-shadow(0 0 8px rgba(34, 211, 238,0.50))' : 'none',
                     flexShrink: 0,
                   }}
                 />
                 <span style={{
                   fontSize: 13,
                   color: active ? '#ffffff' : '#a0a8c0',
-                  textShadow: active ? '0 0 12px rgba(255,255,255,0.15)' : 'none',
                 }}>
                   {label}
                 </span>
@@ -359,7 +343,6 @@ export default function Sidebar({ user, profile }: Props) {
                       background: `${lvColor}20`,
                       color: lvColor,
                       border: `1px solid ${lvColor}50`,
-                      boxShadow: `0 0 8px ${lvColor}30`,
                     } : customBadge ? {
                       background: `${badgeColor}1f`,
                       color: badgeColor,
@@ -389,13 +372,11 @@ export default function Sidebar({ user, profile }: Props) {
                 <Icon size={16} strokeWidth={active ? 2.2 : 1.75}
                   style={{
                     color: active ? 'var(--ds-color-primary)' : 'var(--ds-text-secondary)',
-                    filter: active ? 'drop-shadow(0 0 8px rgba(34, 211, 238,0.50))' : 'none',
                     flexShrink: 0,
                   }} />
                 <span style={{
                   fontSize: 13,
                   color: active ? '#ffffff' : '#a0a8c0',
-                  textShadow: active ? '0 0 12px rgba(255,255,255,0.15)' : 'none',
                 }}>
                   {label}
                 </span>
@@ -426,35 +407,19 @@ export default function Sidebar({ user, profile }: Props) {
                 borderRadius: 14,
                 padding: '14px 14px 12px',
                 background: creditsLow
-                  ? 'linear-gradient(135deg, rgba(239,68,68,0.14) 0%, rgba(220,38,38,0.07) 100%)'
+                  ? 'rgba(239,68,68,0.10)'
                   : creditsPlenty
-                    ? 'linear-gradient(135deg, var(--ds-color-primary-soft) 0%, transparent 100%)'
-                    : 'linear-gradient(135deg, rgba(245,158,11,0.10) 0%, transparent 100%)',
+                    ? 'var(--ds-color-primary-soft)'
+                    : 'rgba(245,158,11,0.10)',
                 border: creditsLow
                   ? '1px solid rgba(239,68,68,0.40)'
                   : creditsPlenty
-                    ? '1.5px solid transparent'
+                    ? '1px solid var(--ds-color-primary-border)'
                     : '1px solid rgba(245,158,11,0.30)',
-                backgroundImage: creditsPlenty
-                  ? 'linear-gradient(rgba(10,3,6,0.8), rgba(6,8,6,0.8)), linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))'
-                  : undefined,
-                backgroundOrigin: creditsPlenty ? 'border-box' : undefined,
-                backgroundClip: creditsPlenty ? 'padding-box, border-box' : undefined,
-                boxShadow: creditsLow
-                  ? '0 4px 16px rgba(239,68,68,0.14), 0 1px 0 rgba(255,255,255,0.05) inset'
-                  : '0 4px 20px var(--ds-color-primary-soft), 0 1px 0 rgba(255,255,255,0.06) inset',
                 cursor: 'pointer',
                 position: 'relative', overflow: 'hidden',
                 transition: 'all 0.2s ease',
               }}>
-                <div style={{
-                  position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-                  background: creditsLow
-                    ? 'linear-gradient(90deg, transparent, rgba(239,68,68,0.55), transparent)'
-                    : 'linear-gradient(90deg, transparent, transparent, transparent, transparent)',
-                  pointerEvents: 'none',
-                }} />
-
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-1.5">
                     <Zap size={10} style={{ color: creditsLow ? '#fca5a5' : 'var(--ds-color-primary)' }} strokeWidth={2.2} />
@@ -469,7 +434,6 @@ export default function Sidebar({ user, profile }: Props) {
                     fontFamily: 'Syne, sans-serif',
                     fontSize: 24, fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1,
                     color: creditsLow ? '#fca5a5' : '#ffffff',
-                    textShadow: creditsLow ? '0 0 16px rgba(239,68,68,0.70)' : '0 0 20px rgba(255,255,255,0.25)',
                   }}>
                     {creditsRemaining}
                   </span>
@@ -483,10 +447,7 @@ export default function Sidebar({ user, profile }: Props) {
                     className="progress-bar-fill"
                     style={{
                       width: `${Math.min(100, creditsPct)}%`,
-                      background: `linear-gradient(90deg, ${barGrad})`,
-                      boxShadow: creditsLow
-                        ? '0 0 10px rgba(239,68,68,0.50), 0 0 20px rgba(239,68,68,0.24), inset 0 1px 0 rgba(255,255,255,0.24)'
-                        : undefined,
+                      background: creditsRemaining === 0 ? '#ef4444' : creditsPct >= 80 ? '#f59e0b' : 'var(--ds-color-primary)',
                     }}
                   />
                 </div>
@@ -519,7 +480,6 @@ export default function Sidebar({ user, profile }: Props) {
                   <Icon size={16} strokeWidth={active ? 2.2 : 1.75}
                     style={{
                       color: active ? 'var(--ds-color-primary)' : '#8892b0',
-                      filter: active ? 'drop-shadow(0 0 5px transparent)' : 'none',
                       flexShrink: 0,
                     }} />
                   <span style={{ fontSize: 13, color: active ? '#ffffff' : '#a0a8c0' }}>{label}</span>
@@ -553,8 +513,7 @@ export default function Sidebar({ user, profile }: Props) {
           <div
             className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
             style={{
-              background: 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))',
-              boxShadow: '0 0 16px transparent, 0 0 32px var(--ds-color-primary-soft)',
+              background: 'var(--ds-color-primary)',
               fontSize: 11, fontWeight: 700, color: '#fff',
             }}
           >
@@ -569,7 +528,6 @@ export default function Sidebar({ user, profile }: Props) {
                 width: 5, height: 5, borderRadius: '50%',
                 background: planColor,
                 display: 'inline-block',
-                boxShadow: `0 0 8px ${planColor}`,
               }} />
               Plan {planLabel}
             </p>

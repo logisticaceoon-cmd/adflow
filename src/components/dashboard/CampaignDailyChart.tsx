@@ -23,7 +23,7 @@ type MetricKey = 'spend' | 'roas' | 'clicks' | 'purchases'
 const METRICS: Array<{ key: MetricKey; label: string; color: string; format: (v: number) => string }> = [
   { key: 'spend',     label: 'Inversión', color: 'var(--ds-color-primary)', format: v => `$${Math.round(v).toLocaleString('es')}` },
   { key: 'roas',      label: 'ROAS',      color: 'var(--ds-color-primary)', format: v => `${v.toFixed(2)}x` },
-  { key: 'clicks',    label: 'Clicks',    color: '#22d3ee', format: v => Math.round(v).toLocaleString('es') },
+  { key: 'clicks',    label: 'Clicks',    color: '#2dd4a8', format: v => Math.round(v).toLocaleString('es') },
   { key: 'purchases', label: 'Ventas',    color: 'var(--ds-color-warning)', format: v => Math.round(v).toLocaleString('es') },
 ]
 
@@ -37,10 +37,8 @@ function CustomTooltip({ active, payload, label, formatter, color }: any) {
   return (
     <div style={{
       padding: '10px 14px', borderRadius: 12,
-      background: 'rgba(10,10,26,0.92)',
+      background: 'rgba(10, 15, 13, 0.95)',
       border: `1px solid ${color}40`,
-      backdropFilter: 'blur(16px)',
-      boxShadow: `0 8px 24px rgba(0,0,0,0.5), 0 0 16px ${color}20`,
     }}>
       <p style={{ fontSize: 11, color: '#8892b0', marginBottom: 4 }}>{label}</p>
       <p style={{ fontSize: 18, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>
@@ -121,7 +119,7 @@ export default function CampaignDailyChart({ data }: Props) {
                 stroke={`url(#stroke-${active})`}
                 strokeWidth={2.5}
                 dot={{ r: 3, fill: metric.color, strokeWidth: 0 }}
-                activeDot={{ r: 6, fill: metric.color, strokeWidth: 2, stroke: `${metric.color}55`, filter: `drop-shadow(0 0 8px ${metric.color})` }} />
+                activeDot={{ r: 6, fill: metric.color, strokeWidth: 2, stroke: `${metric.color}55` }} />
         </LineChart>
       </ResponsiveContainer>
     </div>
