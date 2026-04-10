@@ -24,75 +24,73 @@
   --duration-slow: 300ms;
 
   /* ─────────────────────────────────────────────────────────────
-     LANDING-MATCHED — same style as page.tsx testimonials section
-     Dark navy #0f0f1f, cards rgba(255,255,255,0.04), accents #2dd4bf/#62c4b0
+     SPACE BG — dark blue cards, green accents, no glow
   ───────────────────────────────────────────────────────────── */
 
-  --ds-bg-deep:     #0f0f1f;
-  --ds-bg-surface:  #121229;
-  --ds-bg-elevated: #161633;
-  --ds-bg-hover:    #1a1a3d;
+  --ds-bg-deep:     #080c14;
+  --ds-bg-surface:  #0a0f18;
+  --ds-bg-elevated: #0e1420;
+  --ds-bg-hover:    #141c2a;
 
   --ds-color-primary:        #2dd4bf;
   --ds-color-primary-strong: #14b8a6;
-  --ds-color-primary-soft:   rgba(45, 212, 191, 0.12);
+  --ds-color-primary-soft:   rgba(45, 212, 191, 0.10);
   --ds-color-primary-border: rgba(45, 212, 191, 0.20);
-  --ds-color-primary-glow:   rgba(45, 212, 191, 0.15);
+  --ds-color-primary-glow:   transparent;
 
   --ds-color-accent:      #62c4b0;
-  --ds-color-accent-soft: rgba(98, 196, 176, 0.12);
-  --ds-color-accent-glow: rgba(98, 196, 176, 0.15);
+  --ds-color-accent-soft: rgba(98, 196, 176, 0.10);
+  --ds-color-accent-glow: transparent;
 
   --ds-color-success:        #34d399;
   --ds-color-success-strong: #10b981;
-  --ds-color-success-soft:   rgba(52, 211, 153, 0.12);
-  --ds-color-success-border: rgba(52, 211, 153, 0.25);
+  --ds-color-success-soft:   rgba(52, 211, 153, 0.10);
+  --ds-color-success-border: rgba(52, 211, 153, 0.20);
 
   --ds-color-warning:        #fbbf24;
-  --ds-color-warning-soft:   rgba(251, 191, 36, 0.10);
-  --ds-color-warning-border: rgba(251, 191, 36, 0.20);
+  --ds-color-warning-soft:   rgba(251, 191, 36, 0.08);
+  --ds-color-warning-border: rgba(251, 191, 36, 0.18);
 
   --ds-color-danger:         #f87171;
   --ds-color-danger-strong:  #ef4444;
-  --ds-color-danger-soft:    rgba(248, 113, 113, 0.10);
-  --ds-color-danger-border:  rgba(248, 113, 113, 0.20);
+  --ds-color-danger-soft:    rgba(248, 113, 113, 0.08);
+  --ds-color-danger-border:  rgba(248, 113, 113, 0.18);
 
   --ds-color-locked:        rgba(255, 255, 255, 0.03);
-  --ds-color-locked-border: rgba(255, 255, 255, 0.06);
+  --ds-color-locked-border: rgba(255, 255, 255, 0.05);
   --ds-color-disabled-text: rgba(255, 255, 255, 0.30);
 
-  /* ── Container / surface layer ── */
-  --ds-surface-primary: rgba(15, 15, 31, 0.70);
+  /* ── Container / surface ── */
+  --ds-surface-primary: rgba(8, 12, 24, 0.70);
 
-  /* ── Cards — same as .glass-card from landing ── */
-  --ds-card-bg:           rgba(255, 255, 255, 0.04);
-  --ds-card-bg-hover:     rgba(255, 255, 255, 0.07);
-  --ds-card-border:       rgba(255, 255, 255, 0.09);
-  --ds-card-border-hover: rgba(255, 255, 255, 0.18);
-  --ds-card-blur:         24px;
-  --ds-card-radius:       20px;
-  --ds-card-radius-sm:    12px;
+  /* ── Cards — dark semitransparent for space bg ── */
+  --ds-card-bg:           rgba(8, 12, 24, 0.65);
+  --ds-card-bg-hover:     rgba(12, 18, 32, 0.75);
+  --ds-card-border:       rgba(255, 255, 255, 0.08);
+  --ds-card-border-hover: rgba(255, 255, 255, 0.14);
+  --ds-card-blur:         20px;
+  --ds-card-radius:       16px;
+  --ds-card-radius-sm:    10px;
 
-  --ds-card-inner-glow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  --ds-card-inner-glow: none;
 
-  /* ── Border tokens (semantic) ── */
-  --ds-border-soft:    rgba(255, 255, 255, 0.07);
-  --ds-border-active:  rgba(45, 212, 191, 0.35);
-  --ds-border-success: rgba(52, 211, 153, 0.35);
+  /* ── Border tokens ── */
+  --ds-border-soft:    rgba(255, 255, 255, 0.06);
+  --ds-border-active:  rgba(45, 212, 191, 0.25);
+  --ds-border-success: rgba(52, 211, 153, 0.30);
 
-  /* Tinted surfaces for variants */
-  --ds-surface-glass-blue:  rgba(45, 212, 191, 0.08);
-  --ds-surface-glass-green: rgba(52, 211, 153, 0.10);
+  --ds-surface-glass-blue:  rgba(45, 212, 191, 0.06);
+  --ds-surface-glass-green: rgba(52, 211, 153, 0.08);
 
   --ds-color-completed:        #10b981;
-  --ds-color-completed-soft:   rgba(16, 185, 129, 0.14);
-  --ds-color-completed-border: rgba(16, 185, 129, 0.35);
+  --ds-color-completed-soft:   rgba(16, 185, 129, 0.12);
+  --ds-color-completed-border: rgba(16, 185, 129, 0.30);
 
   --ds-color-secondary:        #a78bfa;
-  --ds-color-secondary-soft:   rgba(167, 139, 250, 0.10);
-  --ds-color-secondary-border: rgba(167, 139, 250, 0.22);
+  --ds-color-secondary-soft:   rgba(167, 139, 250, 0.08);
+  --ds-color-secondary-border: rgba(167, 139, 250, 0.18);
 
-  /* ── Text — same as landing (#94a3b8 secondary, #8892b0 muted) ── */
+  /* ── Text ── */
   --ds-text-primary:   rgba(255, 255, 255, 0.95);
   --ds-text-secondary: #94a3b8;
   --ds-text-muted:     #8892b0;
@@ -107,26 +105,18 @@
   --ds-space-2xl: 48px;
   --ds-space-3xl: 64px;
 
-  /* ── Shadows — matching landing's subtle style ── */
-  --ds-shadow-sm:
-    0 4px 16px rgba(0, 0, 0, 0.30),
-    0 0 0 1px rgba(255, 255, 255, 0.03) inset;
-  --ds-shadow-md:
-    0 8px 32px rgba(0, 0, 0, 0.38),
-    0 0 0 1px rgba(255, 255, 255, 0.03) inset;
-  --ds-shadow-lg:
-    0 16px 56px rgba(0, 0, 0, 0.45),
-    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
-  --ds-shadow-hover:
-    0 20px 56px rgba(0, 0, 0, 0.48),
-    0 0 0 1px rgba(255, 255, 255, 0.06) inset;
-  --ds-shadow-glow: none;
+  /* ── Shadows — dark only, no color glow ── */
+  --ds-shadow-sm:    0 2px 12px rgba(0, 0, 0, 0.30);
+  --ds-shadow-md:    0 4px 20px rgba(0, 0, 0, 0.35);
+  --ds-shadow-lg:    0 8px 32px rgba(0, 0, 0, 0.40);
+  --ds-shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.35);
+  --ds-shadow-glow:  none;
 
-  --ds-glow-primary: none;
-  --ds-glow-accent:  none;
-  --ds-glow-success: none;
-  --ds-glow-warning: none;
-  --ds-glow-danger:  none;
+  --ds-glow-primary:   none;
+  --ds-glow-accent:    none;
+  --ds-glow-success:   none;
+  --ds-glow-warning:   none;
+  --ds-glow-danger:    none;
   --ds-glow-secondary: none;
 
   --ds-color-success-glow: transparent;
@@ -177,16 +167,10 @@
       transition-duration: 0.01ms !important;
     }
   }
-  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 2px;
-    transition: background 200ms ease;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.15);
-  }
+  ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.14); }
   * {
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
@@ -217,19 +201,18 @@
     min-height: var(--touch-min);
     min-width: var(--touch-min);
     padding: 10px 24px;
-    border-radius: var(--ds-card-radius-sm);
-    background: linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary));
+    border-radius: 10px;
+    background: var(--ds-color-primary);
     border: none;
-    color: #fff;
+    color: #080c14;
     font-weight: 600;
     font-size: 14px;
     cursor: pointer;
-    transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 0 16px rgba(45, 212, 191, 0.35);
+    transition: all 200ms ease;
   }
   .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 32px rgba(45, 212, 191, 0.55);
+    opacity: 0.9;
+    transform: translateY(-1px);
   }
   .btn-primary:active {
     transform: scale(0.98);
@@ -262,15 +245,15 @@
     min-height: var(--touch-min);
     min-width: var(--touch-min);
     padding: 10px 22px;
-    border-radius: var(--ds-card-radius-sm);
-    color: #94a3b8;
-    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    color: var(--ds-text-secondary);
+    background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.10);
-    transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 200ms ease;
   }
   .btn-ghost:hover {
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.20);
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.15);
   }
   .btn-ghost:active {
     transform: scale(0.98);
@@ -328,30 +311,18 @@
   }
 
   /* ─────────────────────────────────────────────────────────────
-     CARDS — identical to .glass-card from landing page
+     CARDS — clean, dark semitransparent for space bg
   ───────────────────────────────────────────────────────────── */
   .card,
   .ds-card {
-    position: relative;
-    overflow: hidden;
     background: var(--ds-card-bg);
+    backdrop-filter: blur(20px) saturate(1.2);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
     border: 1px solid var(--ds-card-border);
-    border-radius: var(--ds-card-radius);
-    backdrop-filter: blur(var(--ds-card-blur));
-    -webkit-backdrop-filter: blur(var(--ds-card-blur));
-    box-shadow: var(--ds-shadow-md);
-    transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  /* Same ::before as .glass-card — top gradient glow (50% height) */
-  .card::before,
-  .ds-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 50%;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 100%);
-    pointer-events: none;
-    border-radius: inherit;
-    z-index: 1;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    transition: all 200ms ease;
+    position: relative;
   }
 
   .card-hover { cursor: pointer; }
@@ -361,63 +332,36 @@
   .card-hover:hover {
     background: var(--ds-card-bg-hover);
     border-color: var(--ds-card-border-hover);
-    box-shadow: var(--ds-shadow-hover);
-    transform: translateY(-4px);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
   }
   .card-hover:active {
-    transform: translateY(0) scale(0.995);
+    transform: scale(0.995);
     transition: all 80ms ease;
   }
 
-  /* ── Variants — subtle tints ── */
-  .ds-card--selected {
-    background: var(--ds-color-success-soft) !important;
-    border-color: var(--ds-color-success-border) !important;
-  }
-  .ds-card--info {
-    background: var(--ds-color-primary-soft) !important;
-    border-color: var(--ds-color-primary-border) !important;
-  }
-  .ds-card--danger {
-    background: var(--ds-color-danger-soft) !important;
-    border-color: var(--ds-color-danger-border) !important;
-  }
+  /* ── Variants ── */
+  .ds-card--selected { background: var(--ds-color-success-soft) !important; border-color: var(--ds-color-success-border) !important; }
+  .ds-card--info     { background: var(--ds-color-primary-soft) !important; border-color: var(--ds-color-primary-border) !important; }
+  .ds-card--danger   { background: var(--ds-color-danger-soft) !important;  border-color: var(--ds-color-danger-border) !important; }
 
-  /* ── Selected state ── */
-  .card-selected,
-  .ds-card.is-selected,
-  .ds-option-card.is-selected {
+  .card-selected, .ds-card.is-selected, .ds-option-card.is-selected {
     background: var(--ds-color-success-soft) !important;
     border: 1px solid var(--ds-color-success-border) !important;
   }
-
-  /* ── Completed state ── */
-  .card-completed,
-  .ds-card.is-completed {
+  .card-completed, .ds-card.is-completed {
     background: var(--ds-color-completed-soft) !important;
     border: 1px solid var(--ds-color-completed-border) !important;
   }
-
-  /* ── Disabled / locked ── */
-  .card-disabled,
-  .ds-card.is-disabled,
-  .ds-option-card.is-locked {
-    background: var(--ds-color-locked);
-    border: 1px solid var(--ds-color-locked-border);
-    color: var(--ds-color-disabled-text);
-    box-shadow: none;
-    cursor: not-allowed;
-    opacity: 0.55;
+  .card-disabled, .ds-card.is-disabled, .ds-option-card.is-locked {
+    background: var(--ds-color-locked); border: 1px solid var(--ds-color-locked-border);
+    color: var(--ds-color-disabled-text); box-shadow: none; cursor: not-allowed; opacity: 0.55;
   }
-
-  /* ── OptionCard interactive ── */
-  .ds-option-card {
-    transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1);
-  }
+  .ds-option-card { transition: all 200ms ease; }
   .ds-option-card:not(.is-selected):not(.is-locked):hover {
     border-color: var(--ds-card-border-hover) !important;
     background: var(--ds-card-bg-hover) !important;
-    transform: translateY(-4px);
+    transform: translateY(-1px);
   }
 
   /* ── Feature card (landing sections) ── */
@@ -628,9 +572,9 @@
     border: 1px solid transparent;
   }
   .ds-badge--default {
-    color: #2dd4bf;
-    background: rgba(45, 212, 191, 0.12);
-    border-color: rgba(45, 212, 191, 0.25);
+    color: var(--ds-color-primary);
+    background: rgba(45, 212, 191, 0.10);
+    border-color: rgba(45, 212, 191, 0.20);
   }
   .ds-badge--success {
     color: var(--ds-color-success);
@@ -686,14 +630,14 @@
   select {
     @apply block w-full px-4 py-3 text-sm;
     min-height: var(--touch-min);
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.09);
-    border-radius: var(--ds-card-radius-sm);
+    background: rgba(8, 12, 24, 0.70);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
     color: var(--ds-text-primary);
     caret-color: var(--ds-color-primary);
     color-scheme: dark;
     outline: none;
-    transition: all 0.2s ease;
+    transition: border-color 200ms ease;
   }
   .input-field::placeholder,
   input::placeholder,
@@ -705,8 +649,7 @@
   input:focus,
   textarea:focus,
   select:focus {
-    border-color: rgba(45, 212, 191, 0.40);
-    box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.10);
+    border-color: var(--ds-color-primary);
   }
 
   /* Generic glass form controls (any input/textarea/select inside dashboard) */
@@ -719,12 +662,8 @@
   .dashboard-layout textarea:not(.input-field):focus,
   .dashboard-layout select:not(.input-field):focus {
     outline: none;
-    border-color: rgba(45, 212, 191, 0.40) !important;
-    box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.10);
+    border-color: var(--ds-color-primary) !important;
   }
-
-  /* Hero glow disabled — landing doesn't use it */
-  .ds-hero-glow { position: relative; }
 
   /* ── Form error styles ── */
   .input-error {
@@ -928,61 +867,53 @@
     background: transparent;
     font-weight: 500;
   }
-  /* HOVER — same as landing links */
   .nav-item-inactive:hover,
   .nav-item:hover:not(.nav-item-active) {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.04);
-    border-radius: var(--ds-card-radius-sm);
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
   }
   .nav-item-inactive:focus-visible {
     outline: 2px solid var(--ds-color-primary);
     outline-offset: -2px;
   }
 
-  /* ACTIVE — like landing active sidebar item */
   .nav-item-active {
     color: var(--ds-text-primary);
-    background: rgba(45, 212, 191, 0.12);
-    border-left: 3px solid var(--ds-color-primary);
+    background: rgba(45, 212, 191, 0.10);
+    border-left: 2px solid var(--ds-color-primary);
     font-weight: 600;
-    border-radius: var(--ds-card-radius-sm);
-    box-shadow: 0 0 12px rgba(45, 212, 191, 0.12);
+    border-radius: 8px;
   }
 
   /* ─────────────────────────────────────────────────────────────
      TOP BAR — frosted aqua glass
   ───────────────────────────────────────────────────────────── */
   /* ─────────────────────────────────────────────────────────────
-     TOP BAR — same as landing navbar: rgba(18,17,42,0.97)
+     TOP BAR — transparent over space bg
   ───────────────────────────────────────────────────────────── */
   .topbar {
     @apply sticky top-0 z-40 flex items-center justify-end;
     padding: 16px 32px;
-    background: rgba(18, 17, 42, 0.97);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(6, 10, 18, 0.88);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     min-height: 64px;
   }
 
   /* ─────────────────────────────────────────────────────────────
-     SIDEBAR — same dark as landing nav
+     SIDEBAR — blends with space bg
   ───────────────────────────────────────────────────────────── */
   .sidebar {
     position: relative;
-    background: rgba(15, 15, 31, 0.95);
-    border-right: 1px solid rgba(255, 255, 255, 0.07);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(6, 10, 18, 0.92);
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
   }
 
   /* ─────────────────────────────────────────────────────────────
      METRIC CARD STATUS VARIANTS — subtle 0.05 opacity status glow
   ───────────────────────────────────────────────────────────── */
-  .metric-card--good    { border-color: rgba(52, 211, 153, 0.20) !important; }
-  .metric-card--warning { border-color: rgba(251, 191, 36, 0.20)  !important; }
-  .metric-card--bad     { border-color: rgba(248, 113, 113, 0.20) !important; }
+  .metric-card--good    { border-color: var(--ds-color-success-border) !important; }
+  .metric-card--warning { border-color: var(--ds-color-warning-border) !important; }
+  .metric-card--bad     { border-color: var(--ds-color-danger-border)  !important; }
 
   /* ─────────────────────────────────────────────────────────────
      PROGRESS BARS — gradient fill with radial glow at the tip
@@ -997,9 +928,9 @@
   }
   .progress-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--ds-color-primary), var(--ds-color-primary));
+    background: var(--ds-color-primary);
     border-radius: 99px;
-    transition: width 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition: width 500ms ease;
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -1078,14 +1009,13 @@
     animation-delay: 200ms;
   }
 
-  /* Hover states — matching landing's translateY(-4px) */
-  .glow-hover { transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1); }
-  .glow-hover:hover { border-color: rgba(255, 255, 255, 0.18); transform: translateY(-2px); }
-  .achievement-glow { border: 1px solid rgba(255, 255, 255, 0.09); transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1); }
-  .achievement-glow:hover { border-color: rgba(255, 255, 255, 0.18); }
+  .glow-hover { transition: all 200ms ease; }
+  .glow-hover:hover { border-color: rgba(255, 255, 255, 0.14); }
+  .achievement-glow { border: 1px solid rgba(255, 255, 255, 0.08); transition: all 200ms ease; }
+  .achievement-glow:hover { border-color: rgba(255, 255, 255, 0.14); }
   .achievement-item:hover { transform: scale(1.02); }
-  .labs-card { transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1); }
-  .labs-card:hover { transform: translateY(-4px); border-color: rgba(255, 255, 255, 0.18); }
+  .labs-card { transition: all 200ms ease; }
+  .labs-card:hover { transform: translateY(-1px); border-color: rgba(255, 255, 255, 0.14); }
 
   @keyframes fadeInScale {
     from { opacity: 0; transform: translateY(16px) scale(0.97); }
@@ -1115,28 +1045,15 @@
     z-index: 1;
   }
 
-  /* ── Main panel — glass card matching landing ── */
   .dashboard-panel {
     position: relative;
-    overflow: hidden;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.09);
-    border-radius: 24px;
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    background: rgba(8, 12, 24, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 20px;
+    backdrop-filter: blur(20px) saturate(1.2);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
     padding: var(--ds-space-2xl);
-    box-shadow:
-      0 8px 32px rgba(0, 0, 0, 0.38),
-      0 0 0 1px rgba(255, 255, 255, 0.03) inset;
-  }
-  .dashboard-panel::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 50%;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, transparent 100%);
-    pointer-events: none;
-    border-radius: inherit;
-    z-index: 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.30);
   }
   /* Children handle their own margin-bottom; the panel just contains them. */
 
@@ -1152,7 +1069,7 @@
      The result is sober but never flat — the eye picks up depth and tint
      without any visible "blob" or shape.                              */
   .dashboard-layout {
-    background-color: #030810;
+    background-color: #080c14;
     background-image: url('/bg-space.png');
     background-size: cover;
     background-position: center bottom;
