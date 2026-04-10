@@ -28,7 +28,17 @@
       "Bash(grep:*)",
       "Bash(sed:*)",
       "Bash(ls C:/proyectos/adflow/src/components/dashboard/*Modal.tsx)",
-      "Bash(ls C:/proyectos/adflow/src/components/**/*Modal*.tsx)"
+      "Bash(ls C:/proyectos/adflow/src/components/**/*Modal*.tsx)",
+      "Read(//mnt/user-data/uploads/**)",
+      "Bash(cp /mnt/user-data/uploads/1775790086226_image.png \"C:\\\\proyectos\\\\adflow\\\\public\\\\bg-space.png\")",
+      "Read(//c/Users/Rafael B/**)",
+      "Read(//tmp/**)",
+      "Bash(cp \"Public/bg-space.png.png\" \"public/bg-space.png\")",
+      "Bash(rm -rf Public/)",
+      "Bash(ls -d */)",
+      "Bash(find . -iname \"public\" -type d)",
+      "Bash(find . -iname \"bg-space*\")",
+      "Bash(find . -iname \"Public\" -type d)"
     ]
   }
 }

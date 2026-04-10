@@ -1454,49 +1454,15 @@
      The result is sober but never flat — the eye picks up depth and tint
      without any visible "blob" or shape.                              */
   .dashboard-layout {
-    background: linear-gradient(160deg,
-      #0a4d46 0%,
-      #073d38 25%,
-      #052e2b 50%,
-      #062a27 75%,
-      #041f1d 100%);
+    background-color: #030810;
+    background-image: url('/bg-space.png');
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     position: relative;
     min-height: 100vh;
     overflow-x: hidden;
-  }
-  .dashboard-layout::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    background:
-      radial-gradient(ellipse 1200px 800px at 12% -5%,
-        rgba(45, 212, 191, 0.12) 0%,
-        rgba(45, 212, 191, 0.04) 35%,
-        transparent 65%),
-      radial-gradient(ellipse 1000px 700px at 88% 105%,
-        rgba(34, 211, 238, 0.08) 0%,
-        rgba(34, 211, 238, 0.025) 40%,
-        transparent 70%),
-      radial-gradient(ellipse 1400px 900px at 50% 50%,
-        rgba(20, 184, 166, 0.05) 0%,
-        transparent 70%);
-  }
-  .dashboard-layout::after {
-    content: '';
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    height: 40vh;
-    background:
-      radial-gradient(ellipse 130% 70% at 25% 110%,
-        rgba(45, 212, 191, 0.08) 0%, transparent 50%),
-      radial-gradient(ellipse 110% 60% at 75% 115%,
-        rgba(34, 211, 238, 0.06) 0%, transparent 45%);
-    pointer-events: none;
-    z-index: 0;
-    mask-image: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
   }
   .dashboard-layout > * { position: relative; z-index: 1; }
 
