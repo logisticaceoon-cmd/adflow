@@ -263,7 +263,7 @@ export default function PixelDashboardPage() {
         <ScoreCard
           totalScore={totalScore}
           breakdown={[
-            { label: `Nivel ${level}`,    points: scoreLevel,   color: '#2dd4a8' },
+            { label: `Nivel ${level}`,    points: scoreLevel,   color: '#2dd4bf' },
             { label: 'Tráfico web',       points: scoreTraffic, color: '#9d90ff' },
             { label: 'Compras (180d)',    points: scoreSales,   color: '#34d399' },
             { label: `Campañas (${campaignsCount})`, points: scoreCamps, color: '#fbbf24' },

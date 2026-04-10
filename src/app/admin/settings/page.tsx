@@ -156,9 +156,9 @@ export default function AdminSettingsPage() {
       {toast && (
         <div className="fixed top-6 right-6 z-50 px-4 py-3 rounded-xl text-sm font-semibold shadow-xl"
           style={{
-            background: toast.ok ? 'rgba(45, 212, 168,0.15)' : 'rgba(239,68,68,0.15)',
-            border: `1px solid ${toast.ok ? 'rgba(45, 212, 168,0.4)' : 'rgba(239,68,68,0.4)'}`,
-            color: toast.ok ? '#2dd4a8' : '#ef4444',
+            background: toast.ok ? 'rgba(45, 212, 191,0.15)' : 'rgba(239,68,68,0.15)',
+            border: `1px solid ${toast.ok ? 'rgba(45, 212, 191,0.4)' : 'rgba(239,68,68,0.4)'}`,
+            color: toast.ok ? '#2dd4bf' : '#ef4444',
           }}>
           {toast.msg}
         </div>

@@ -220,7 +220,7 @@ function HeroSection() {
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <Orb color="var(--ds-color-primary)" size={700} top="-15%" right="-8%" opacity={0.18} blur={45} />
         <Orb color="#62c4b0" size={550} bottom="-5%" left="-8%" opacity={0.14} blur={60} />
-        <Orb color="#2dd4a8" size={300} top="40%" left="42%" opacity={0.07} blur={50} />
+        <Orb color="#2dd4bf" size={300} top="40%" left="42%" opacity={0.07} blur={50} />
         <div className="absolute inset-0" style={{
           backgroundImage: 'linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px)',
           backgroundSize: '64px 64px',
@@ -290,7 +290,7 @@ function HeroSection() {
               </div>
               <div className="col-span-3 space-y-3">
                 <div className="grid grid-cols-3 gap-3">
-                  {[{ label: 'ROAS', value: '4.2x', color: '#2dd4a8' }, { label: 'Alcance', value: '48.2K', color: '#62c4b0' }, { label: 'Conversiones', value: '328', color: 'var(--ds-color-primary)' }].map(({ label, value, color }) => (
+                  {[{ label: 'ROAS', value: '4.2x', color: '#2dd4bf' }, { label: 'Alcance', value: '48.2K', color: '#62c4b0' }, { label: 'Conversiones', value: '328', color: 'var(--ds-color-primary)' }].map(({ label, value, color }) => (
                     <div key={label} className="p-3 rounded-xl" style={{ background: 'linear-gradient(160deg, rgba(18,14,28,0.90), rgba(10,10,20,0.96))', border: `1px solid ${color}22`, boxShadow: `0 0 20px ${color}12` }}>
                       <div className="text-xs mb-1" style={{ color: '#8892b0' }}>{label}</div>
                       <div className="text-xl font-bold" style={{ color, textShadow: `0 0 12px ${color}80` }}>{value}</div>
@@ -305,7 +305,7 @@ function HeroSection() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  {[{ name: 'Campaña Verano 2024', status: 'Activa', statusColor: '#2dd4a8', roas: '4.2x' }, { name: 'Retargeting Premium', status: 'Pausada', statusColor: '#f59e0b', roas: '3.1x' }].map(({ name, status, statusColor, roas }) => (
+                  {[{ name: 'Campaña Verano 2024', status: 'Activa', statusColor: '#2dd4bf', roas: '4.2x' }, { name: 'Retargeting Premium', status: 'Pausada', statusColor: '#f59e0b', roas: '3.1x' }].map(({ name, status, statusColor, roas }) => (
                     <div key={name} className="flex items-center gap-3 p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
                       <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: statusColor, boxShadow: `0 0 6px ${statusColor}` }} />
                       <div className="text-xs flex-1" style={{ color: '#94a3b8' }}>{name}</div>
@@ -321,7 +321,7 @@ function HeroSection() {
 
         {/* Mobile stats */}
         <div className="sm:hidden flex justify-center gap-8 mt-4">
-          {[{ num: '4.2x', label: 'ROAS', color: '#2dd4a8' }, { num: '8 min', label: 'Primera campaña', color: 'var(--ds-color-primary)' }, { num: '+500', label: 'Empresas', color: '#62c4b0' }].map(({ num, label, color }) => (
+          {[{ num: '4.2x', label: 'ROAS', color: '#2dd4bf' }, { num: '8 min', label: 'Primera campaña', color: 'var(--ds-color-primary)' }, { num: '+500', label: 'Empresas', color: '#62c4b0' }].map(({ num, label, color }) => (
             <div key={label} className="text-center">
               <div className="font-display font-extrabold text-2xl" style={{ color }}>{num}</div>
               <div className="text-xs mt-1" style={{ color: '#94a3b8' }}>{label}</div>
@@ -482,8 +482,8 @@ function FeaturesSection() {
   const { ref, visible } = useFadeIn()
   const features = [
     { icon: Bot, title: 'IA genera copies profesionales', desc: 'Copies persuasivos adaptados a tu tono de marca en segundos, optimizados para cada formato de Meta.', color: 'var(--ds-color-primary)' },
-    { icon: Facebook, title: 'Conecta Facebook Ads directo', desc: 'Integración oficial con Meta Business Manager. Publicá y gestioná campañas sin salir de AdFlow.', color: '#2dd4a8' },
-    { icon: BarChart3, title: 'Reportes diarios automáticos', desc: 'Recibí cada mañana un resumen con métricas clave y recomendaciones de IA para optimizar tu inversión.', color: '#2dd4a8' },
+    { icon: Facebook, title: 'Conecta Facebook Ads directo', desc: 'Integración oficial con Meta Business Manager. Publicá y gestioná campañas sin salir de AdFlow.', color: '#2dd4bf' },
+    { icon: BarChart3, title: 'Reportes diarios automáticos', desc: 'Recibí cada mañana un resumen con métricas clave y recomendaciones de IA para optimizar tu inversión.', color: '#2dd4bf' },
     { icon: Target, title: 'Públicos sugeridos por IA', desc: 'Describí tu producto y la IA crea audiencias precisas: intereses, comportamientos y lookalikes.', color: '#62c4b0' },
     { icon: RefreshCw, title: 'A/B testing automático', desc: 'La IA genera variantes y las prueba automáticamente, escalando el presupuesto hacia lo que convierte.', color: '#f59e0b' },
     { icon: MessageSquare, title: 'CTAs con WhatsApp', desc: 'Conectá tus ads directamente con WhatsApp Business para cerrar ventas en el momento.', color: '#34d399' },
@@ -542,7 +542,7 @@ function HowItWorksSection() {
       </div>
       <div ref={ref} className={`relative z-10 max-w-5xl mx-auto px-5 sm:px-8 py-24 sm:py-28 ${fi(visible)}`}>
         <div className="text-center mb-16 sm:mb-20">
-          <Badge color="#2dd4a8">Cómo funciona</Badge>
+          <Badge color="#2dd4bf">Cómo funciona</Badge>
           <h2 className="font-display font-extrabold text-fluid-3xl text-white" style={{ letterSpacing: '-1.5px' }}>
             De cero a campaña activa{' '}
             <span style={{ background: 'linear-gradient(135deg,#62c4b0,var(--ds-color-primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
@@ -627,7 +627,7 @@ function DemoSection() {
             <div className="text-xs mb-1.5 font-semibold" style={{ color: '#c4b5fd' }}>Audiencia sugerida</div>
             <p className="text-sm" style={{ color: '#e2e8f0' }}>Fotografía, Diseño, Arte · 25-45 años · LATAM</p>
           </div>
-          <div className="p-3 rounded-lg border-l-2" style={{ background: 'rgba(45, 212, 168,0.10)', borderColor: '#2dd4a8' }}>
+          <div className="p-3 rounded-lg border-l-2" style={{ background: 'rgba(45, 212, 191,0.10)', borderColor: '#2dd4bf' }}>
             <div className="text-xs mb-1.5 font-semibold" style={{ color: '#6ee7b7' }}>Variante A/B lista</div>
             <p className="text-sm" style={{ color: '#e2e8f0' }}>2 versiones del copy para testear automáticamente</p>
           </div>
@@ -641,7 +641,7 @@ function DemoSection() {
         <div className="space-y-3">
           <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(233,30,140,0.20)' }}>
             <span className="text-sm" style={{ color: '#e2e8f0' }}>Campaña &quot;Curso Fotografía&quot;</span>
-            <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: 'rgba(45, 212, 168,0.18)', color: '#6ee7b7' }}>Lista ✓</span>
+            <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: 'rgba(45, 212, 191,0.18)', color: '#6ee7b7' }}>Lista ✓</span>
           </div>
           <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(233,30,140,0.20)' }}>
             <span className="text-sm" style={{ color: '#e2e8f0' }}>Presupuesto: $20/día</span>

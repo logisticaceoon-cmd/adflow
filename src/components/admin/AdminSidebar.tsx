@@ -65,7 +65,7 @@ export default function AdminSidebar({
           style={{ height: 64, borderBottom: '1px solid rgba(255,255,255,0.08)', flexShrink: 0 }}>
           <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-              style={{ background: 'linear-gradient(135deg, #2dd4a8, #c5006a)' }}>
+              style={{ background: 'linear-gradient(135deg, #2dd4bf, #c5006a)' }}>
               <Shield size={14} color="#fff" strokeWidth={2.5} />
             </div>
             <div>
@@ -95,11 +95,11 @@ export default function AdminSidebar({
                 style={active ? {
                   background: 'rgba(233,30,140,0.20)',
                   color: '#ffffff',
-                  boxShadow: 'inset 3px 0 0 #2dd4a8',
+                  boxShadow: 'inset 3px 0 0 #2dd4bf',
                 } : {}}>
                 <Icon
                   size={16}
-                  style={{ color: active ? '#ffffff' : '#2dd4a8', opacity: active ? 1 : 0.7 }}
+                  style={{ color: active ? '#ffffff' : '#2dd4bf', opacity: active ? 1 : 0.7 }}
                   strokeWidth={active ? 2 : 1.75}
                 />
                 <span className="text-[13px] font-medium whitespace-nowrap"
@@ -116,13 +116,13 @@ export default function AdminSidebar({
             <Link href="/dashboard"
               className="nav-item nav-item-inactive"
               style={{ color: '#6b8a8a' }}>
-              <Eye size={16} strokeWidth={1.75} style={{ color: '#2dd4a8', opacity: 0.5 }} />
+              <Eye size={16} strokeWidth={1.75} style={{ color: '#2dd4bf', opacity: 0.5 }} />
               <span className="text-[13px] whitespace-nowrap">Ver panel usuario</span>
             </Link>
             <button onClick={handleLogout}
               className="nav-item nav-item-inactive text-left"
               style={{ color: '#6b8a8a' }}>
-              <LogOut size={16} strokeWidth={1.75} style={{ color: '#2dd4a8', opacity: 0.5 }} />
+              <LogOut size={16} strokeWidth={1.75} style={{ color: '#2dd4bf', opacity: 0.5 }} />
               <span className="text-[13px] whitespace-nowrap">Cerrar sesión</span>
             </button>
           </div>

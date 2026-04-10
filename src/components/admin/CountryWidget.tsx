@@ -3,7 +3,7 @@
 
 export type CountryData = { country: string; count: number; pct: number }
 
-const COLORS = ['#2dd4a8', '#62c4b0', '#f472b6', '#f59e0b', '#2dd4a8', '#8892b0']
+const COLORS = ['#2dd4bf', '#62c4b0', '#f472b6', '#f59e0b', '#2dd4bf', '#8892b0']
 
 const FLAG: Record<string, string> = {
   AR: '🇦🇷', CO: '🇨🇴', CL: '🇨🇱', MX: '🇲🇽', PE: '🇵🇪',

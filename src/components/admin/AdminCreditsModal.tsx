@@ -50,7 +50,7 @@ export default function AdminCreditsModal({
 
   const newAvailable = Math.max(0, total - creditsUsed)
   const usedPct      = total > 0 ? Math.min(100, Math.round((creditsUsed / total) * 100)) : 0
-  const barColor     = newAvailable === 0 ? '#ef4444' : usedPct >= 80 ? '#f59e0b' : '#2dd4a8'
+  const barColor     = newAvailable === 0 ? '#ef4444' : usedPct >= 80 ? '#f59e0b' : '#2dd4bf'
   const planColor    = PLAN_COLOR[plan] ?? '#62c4b0'
 
   function handleOpen() {
@@ -505,10 +505,10 @@ export default function AdminCreditsModal({
       {mounted && toast && createPortal(
         <div style={{
           position: 'fixed', bottom: 28, right: 28, zIndex: 10000,
-          background: 'linear-gradient(135deg, #2dd4a8, #059669)',
+          background: 'linear-gradient(135deg, #2dd4bf, #059669)',
           color: '#ffffff', borderRadius: 12, padding: '12px 20px',
           fontSize: 14, fontWeight: 600,
-          boxShadow: '0 8px 32px rgba(45, 212, 168,0.36)',
+          boxShadow: '0 8px 32px rgba(45, 212, 191,0.36)',
           animation: 'fadeInUp 0.25s ease both',
           display: 'flex', alignItems: 'center', gap: 8,
         }}>

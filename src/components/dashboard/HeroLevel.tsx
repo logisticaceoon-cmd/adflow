@@ -83,8 +83,8 @@ export default function HeroLevel(p: Props) {
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 10,
               padding: '6px 14px', borderRadius: 999,
-              background: 'rgba(45, 212, 168, 0.08)',
-              border: '1px solid rgba(45, 212, 168, 0.22)',
+              background: 'rgba(45, 212, 191, 0.08)',
+              border: '1px solid rgba(45, 212, 191, 0.22)',
             }}>
               <span style={{ fontSize: 14 }}>{levelIcon}</span>
               <span style={{

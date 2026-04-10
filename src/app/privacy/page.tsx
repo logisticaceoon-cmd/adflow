@@ -116,7 +116,7 @@ export default function PrivacyPage() {
 
           {section('5. No vendemos tus datos', (
             <p>
-              <strong style={{ color: '#2dd4a8' }}>AdFlow no vende, alquila ni comparte tus datos personales ni los de tus campañas con terceros con fines comerciales.</strong>{' '}
+              <strong style={{ color: '#2dd4bf' }}>AdFlow no vende, alquila ni comparte tus datos personales ni los de tus campañas con terceros con fines comerciales.</strong>{' '}
               Solo compartimos información con proveedores de infraestructura necesarios para operar el servicio (Supabase para base de datos, Vercel para hosting, Anthropic para procesamiento de IA) bajo contratos de confidencialidad y procesamiento de datos.
             </p>
           ))}

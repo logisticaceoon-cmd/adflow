@@ -229,7 +229,7 @@ export default function CampaignActions({
           <span style={{
             width: 6, height: 6, borderRadius: '50%',
             background: status === 'active' ? 'var(--ds-color-success)' : status === 'paused' ? 'var(--ds-color-warning)' : status === 'error' ? 'var(--ds-color-danger)' : '#8892b0',
-            boxShadow: status === 'active' ? '0 0 8px rgba(45, 212, 168,0.60)' : undefined,
+            boxShadow: status === 'active' ? '0 0 8px rgba(45, 212, 191,0.60)' : undefined,
           }} />
           {status === 'active' ? 'Activa' : status === 'paused' ? 'Pausada' : status === 'draft' ? 'Borrador' : status}
         </span>

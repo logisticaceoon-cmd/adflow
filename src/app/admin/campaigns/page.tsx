@@ -3,7 +3,7 @@ import { createAdminClient } from '@/lib/supabase/server'
 import type { Campaign } from '@/types'
 
 const STATUS_COLORS: Record<string, string> = {
-  active: '#2dd4a8', draft: '#8892b0', paused: '#f59e0b',
+  active: '#2dd4bf', draft: '#8892b0', paused: '#f59e0b',
   completed: '#62c4b0', error: '#ef4444',
 }
 
@@ -85,7 +85,7 @@ export default async function AdminCampaignsPage() {
                 <td className="px-4 py-3.5 text-sm">${c.daily_budget}</td>
                 <td className="px-4 py-3.5 text-sm">${(c.metrics?.spend || 0).toFixed(0)}</td>
                 <td className="px-4 py-3.5 text-sm font-semibold"
-                    style={{ color: (c.metrics?.roas || 0) >= 3 ? '#2dd4a8' : (c.metrics?.roas || 0) > 0 ? '#f59e0b' : '#8892b0' }}>
+                    style={{ color: (c.metrics?.roas || 0) >= 3 ? '#2dd4bf' : (c.metrics?.roas || 0) > 0 ? '#f59e0b' : '#8892b0' }}>
                   {c.metrics?.roas ? `${c.metrics.roas.toFixed(1)}x` : '—'}
                 </td>
                 <td className="px-4 py-3.5 text-xs" style={{ color: '#b0b0d0' }}>

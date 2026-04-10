@@ -162,10 +162,10 @@ export default function HelpPage() {
 
       {/* Soporte por WhatsApp */}
       <div className="p-5 rounded-2xl flex items-center justify-between gap-4"
-           style={{ background: 'var(--ds-color-success-soft)', border: '1px solid rgba(45, 212, 168,0.2)' }}>
+           style={{ background: 'var(--ds-color-success-soft)', border: '1px solid rgba(45, 212, 191,0.2)' }}>
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0"
-               style={{ background: 'rgba(45, 212, 168,0.12)' }}>
+               style={{ background: 'rgba(45, 212, 191,0.12)' }}>
             <MessageCircle size={22} style={{ color: 'var(--ds-color-success)' }} strokeWidth={1.75} />
           </div>
           <div>

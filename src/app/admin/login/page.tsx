@@ -63,13 +63,13 @@ export default function AdminLoginPage() {
         {/* Logo */}
         <div className="flex items-center justify-center gap-3 mb-8">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-               style={{ background: 'linear-gradient(135deg, #2dd4a8, #c5006a)' }}>
+               style={{ background: 'linear-gradient(135deg, #2dd4bf, #c5006a)' }}>
             <Shield size={18} color="#fff" strokeWidth={2} />
           </div>
           <div>
             <span className="font-display text-xl font-bold block leading-none">AdFlow</span>
             <span className="text-[10px] font-bold tracking-widest uppercase block"
-                  style={{ color: '#2dd4a8' }}>Admin Panel</span>
+                  style={{ color: '#2dd4bf' }}>Admin Panel</span>
           </div>
         </div>
 
@@ -118,7 +118,7 @@ export default function AdminLoginPage() {
               disabled={loading}
               className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm transition-all"
               style={{
-                background: loading ? 'rgba(233,30,140,0.5)' : 'linear-gradient(135deg, #2dd4a8, #c5006a)',
+                background: loading ? 'rgba(233,30,140,0.5)' : 'linear-gradient(135deg, #2dd4bf, #c5006a)',
                 color: '#fff',
                 opacity: loading ? 0.8 : 1,
               }}

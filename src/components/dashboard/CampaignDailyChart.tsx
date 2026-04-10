@@ -23,7 +23,7 @@ type MetricKey = 'spend' | 'roas' | 'clicks' | 'purchases'
 const METRICS: Array<{ key: MetricKey; label: string; color: string; format: (v: number) => string }> = [
   { key: 'spend',     label: 'Inversión', color: 'var(--ds-color-primary)', format: v => `$${Math.round(v).toLocaleString('es')}` },
   { key: 'roas',      label: 'ROAS',      color: 'var(--ds-color-primary)', format: v => `${v.toFixed(2)}x` },
-  { key: 'clicks',    label: 'Clicks',    color: '#2dd4a8', format: v => Math.round(v).toLocaleString('es') },
+  { key: 'clicks',    label: 'Clicks',    color: '#2dd4bf', format: v => Math.round(v).toLocaleString('es') },
   { key: 'purchases', label: 'Ventas',    color: 'var(--ds-color-warning)', format: v => Math.round(v).toLocaleString('es') },
 ]
 

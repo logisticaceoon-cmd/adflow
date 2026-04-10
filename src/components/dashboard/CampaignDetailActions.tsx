@@ -173,7 +173,7 @@ export default function CampaignDetailActions({ campaign }: Props) {
               {publishState === 'success' && (
                 <div className="text-center py-4">
                   <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                       style={{ background: 'var(--ds-color-success-soft)', border: '1px solid rgba(45, 212, 168,0.25)' }}>
+                       style={{ background: 'var(--ds-color-success-soft)', border: '1px solid rgba(45, 212, 191,0.25)' }}>
                     <CheckCircle2 size={26} style={{ color: 'var(--ds-color-success)' }} />
                   </div>
                   <p className="font-semibold mb-1" style={{ color: 'var(--ds-color-success)' }}>¡Publicada en Meta Ads!</p>
@@ -183,7 +183,7 @@ export default function CampaignDetailActions({ campaign }: Props) {
 
                   {metaCampaignId && (
                     <div className="p-3 rounded-xl text-xs mb-4"
-                         style={{ background: 'var(--ds-color-success-soft)', border: '1px solid rgba(45, 212, 168,0.15)' }}>
+                         style={{ background: 'var(--ds-color-success-soft)', border: '1px solid rgba(45, 212, 191,0.15)' }}>
                       <p style={{ color: '#8892b0' }}>Meta Campaign ID</p>
                       <p className="font-mono font-semibold mt-0.5" style={{ color: 'var(--ds-color-success)' }}>{metaCampaignId}</p>
                     </div>

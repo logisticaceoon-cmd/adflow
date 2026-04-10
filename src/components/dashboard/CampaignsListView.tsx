@@ -67,7 +67,7 @@ function StatusBadge({ status }: { status: string }) {
 function RoasCell({ roas }: { roas?: number }) {
   if (!roas) return <span style={{ color: 'var(--ds-text-secondary)' }}>—</span>
   const color = roas >= 4 ? 'var(--ds-color-success)' : roas >= 2 ? 'var(--ds-color-warning)' : 'var(--ds-color-danger)'
-  const glow  = roas >= 4 ? 'rgba(45, 212, 168,0.35)' : roas >= 2 ? 'rgba(245,158,11,0.35)' : 'var(--ds-color-danger-border)'
+  const glow  = roas >= 4 ? 'rgba(45, 212, 191,0.35)' : roas >= 2 ? 'rgba(245,158,11,0.35)' : 'var(--ds-color-danger-border)'
   return (
     <span style={{ color, fontWeight: 700, fontSize: 14, textShadow: `0 0 12px ${glow}` }}>
       {roas.toFixed(1)}x

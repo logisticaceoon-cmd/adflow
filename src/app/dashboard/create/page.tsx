@@ -445,7 +445,7 @@ export default function CreateCampaignPage() {
             display: 'inline-flex', alignItems: 'center', gap: 8,
             padding: '6px 14px', borderRadius: 99, marginTop: 10,
             background: pixelLevel >= 5 ? 'var(--ds-color-success-soft)' : pixelLevel >= 3 ? 'var(--ds-color-warning-soft)' : 'var(--ds-color-danger-soft)',
-            border: `1px solid ${pixelLevel >= 5 ? 'rgba(45, 212, 168,0.30)' : pixelLevel >= 3 ? 'var(--ds-color-warning-border)' : 'var(--ds-color-danger-border)'}`,
+            border: `1px solid ${pixelLevel >= 5 ? 'rgba(45, 212, 191,0.30)' : pixelLevel >= 3 ? 'var(--ds-color-warning-border)' : 'var(--ds-color-danger-border)'}`,
           }}>
             <span style={{ fontSize: 14 }}>
               {pixelLevel >= 6 ? '🚀' : pixelLevel >= 3 ? '📊' : '🌱'}

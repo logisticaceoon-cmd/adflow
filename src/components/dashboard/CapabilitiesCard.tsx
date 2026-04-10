@@ -46,7 +46,7 @@ export default function CapabilitiesCard({ level }: Props) {
             fontSize: 10, fontWeight: 700,
             padding: '3px 10px', borderRadius: 99,
             background: 'var(--ds-color-success-soft)', color: 'var(--ds-color-success)',
-            border: '1px solid rgba(45, 212, 168,0.30)',
+            border: '1px solid rgba(45, 212, 191,0.30)',
           }}>
             {unlocked.length} desbloqueadas
           </span>
@@ -58,8 +58,8 @@ export default function CapabilitiesCard({ level }: Props) {
           {unlocked.map((cap, i) => (
             <li key={i} style={{
               padding: '10px 12px', borderRadius: 10,
-              background: 'rgba(45, 212, 168,0.05)',
-              border: '1px solid rgba(45, 212, 168,0.15)',
+              background: 'rgba(45, 212, 191,0.05)',
+              border: '1px solid rgba(45, 212, 191,0.15)',
               display: 'flex', alignItems: 'flex-start', gap: 10,
             }}>
               <span style={{ fontSize: 16, flexShrink: 0 }}>{cap.icon}</span>

@@ -2,9 +2,9 @@
 import { createAdminClient } from '@/lib/supabase/server'
 
 const EVENT_COLORS: Record<string, string> = {
-  signup:             '#2dd4a8',
+  signup:             '#2dd4bf',
   login:              '#62c4b0',
-  campaign_created:   '#2dd4a8',
+  campaign_created:   '#2dd4bf',
   campaign_published: '#f59e0b',
   fb_connected:       '#1877f2',
   ai_generated:       '#62c4b0',
@@ -51,7 +51,7 @@ ALTER TABLE user_events ENABLE ROW LEVEL SECURITY;`}
           </div>
           <p className="text-xs mt-4" style={{ color: '#b0b0d0' }}>
             Ejecutar en:{' '}
-            <span style={{ color: '#2dd4a8' }}>
+            <span style={{ color: '#2dd4bf' }}>
               supabase.com/dashboard/project/vnjgzmbzvlobttubjysw/sql/new
             </span>
           </p>

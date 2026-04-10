@@ -30,7 +30,7 @@ const PRIORITY_CONFIG: Record<PrimaryAction['priority'], {
     border: 'var(--ds-color-primary)',
     overline: 'Tu siguiente mejor acción',
     overlineColor: 'var(--ds-color-primary)',
-    glowColor: 'rgba(45, 212, 168, 0.12)',
+    glowColor: 'rgba(45, 212, 191, 0.12)',
     softBg: 'var(--ds-color-primary-soft)',
     softBorder: 'var(--ds-color-primary-border)',
   },

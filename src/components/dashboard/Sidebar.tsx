@@ -20,7 +20,7 @@ interface Props { user: User; profile: Profile | null }
 // Level color mapping
 const LEVEL_COLORS: Record<number, string> = {
   0: '#8892b0', 1: '#ef4444', 2: '#ef4444', 3: '#f59e0b', 4: '#f59e0b',
-  5: '#2dd4a8', 6: '#2dd4a8', 7: '#2dd4a8', 8: '#8b5cf6',
+  5: '#2dd4bf', 6: '#2dd4bf', 7: '#2dd4bf', 8: '#8b5cf6',
 }
 
 const LEVEL_ICONS: Record<number, string> = {
