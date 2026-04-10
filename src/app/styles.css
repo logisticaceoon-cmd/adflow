@@ -24,87 +24,79 @@
   --duration-slow: 300ms;
 
   /* ─────────────────────────────────────────────────────────────
-     AQUA BUBBLE PREMIUM — verde agua brillante con efecto burbuja
-     Multi-layer glass, dual reflection, saturate blur, colored glows.
+     LANDING-MATCHED — same style as page.tsx testimonials section
+     Dark navy #0f0f1f, cards rgba(255,255,255,0.04), accents #2dd4bf/#62c4b0
   ───────────────────────────────────────────────────────────── */
 
-  --ds-bg-deep:     #052e2b;
-  --ds-bg-surface:  #073d38;
-  --ds-bg-elevated: #0a4d46;
-  --ds-bg-hover:    #0e5c55;
+  --ds-bg-deep:     #0f0f1f;
+  --ds-bg-surface:  #121229;
+  --ds-bg-elevated: #161633;
+  --ds-bg-hover:    #1a1a3d;
 
   --ds-color-primary:        #2dd4bf;
   --ds-color-primary-strong: #14b8a6;
-  --ds-color-primary-soft:   rgba(45, 212, 191, 0.14);
-  --ds-color-primary-border: rgba(45, 212, 191, 0.30);
-  --ds-color-primary-glow:   rgba(45, 212, 191, 0.22);
+  --ds-color-primary-soft:   rgba(45, 212, 191, 0.12);
+  --ds-color-primary-border: rgba(45, 212, 191, 0.20);
+  --ds-color-primary-glow:   rgba(45, 212, 191, 0.15);
 
-  --ds-color-accent:      #22d3ee;
-  --ds-color-accent-soft: rgba(34, 211, 238, 0.14);
-  --ds-color-accent-glow: rgba(34, 211, 238, 0.20);
+  --ds-color-accent:      #62c4b0;
+  --ds-color-accent-soft: rgba(98, 196, 176, 0.12);
+  --ds-color-accent-glow: rgba(98, 196, 176, 0.15);
 
   --ds-color-success:        #34d399;
   --ds-color-success-strong: #10b981;
-  --ds-color-success-soft:   rgba(52, 211, 153, 0.14);
-  --ds-color-success-border: rgba(52, 211, 153, 0.35);
+  --ds-color-success-soft:   rgba(52, 211, 153, 0.12);
+  --ds-color-success-border: rgba(52, 211, 153, 0.25);
 
   --ds-color-warning:        #fbbf24;
-  --ds-color-warning-soft:   rgba(251, 191, 36, 0.12);
-  --ds-color-warning-border: rgba(251, 191, 36, 0.28);
+  --ds-color-warning-soft:   rgba(251, 191, 36, 0.10);
+  --ds-color-warning-border: rgba(251, 191, 36, 0.20);
 
   --ds-color-danger:         #f87171;
   --ds-color-danger-strong:  #ef4444;
-  --ds-color-danger-soft:    rgba(248, 113, 113, 0.12);
-  --ds-color-danger-border:  rgba(248, 113, 113, 0.28);
+  --ds-color-danger-soft:    rgba(248, 113, 113, 0.10);
+  --ds-color-danger-border:  rgba(248, 113, 113, 0.20);
 
-  --ds-color-locked:        rgba(255, 255, 255, 0.04);
-  --ds-color-locked-border: rgba(255, 255, 255, 0.08);
+  --ds-color-locked:        rgba(255, 255, 255, 0.03);
+  --ds-color-locked-border: rgba(255, 255, 255, 0.06);
   --ds-color-disabled-text: rgba(255, 255, 255, 0.30);
 
   /* ── Container / surface layer ── */
-  --ds-surface-primary: rgba(10, 77, 70, 0.55);
+  --ds-surface-primary: rgba(15, 15, 31, 0.70);
 
-  /* ── Cards — bubble glass with aqua tint ── */
-  --ds-card-bg:           rgba(20, 100, 90, 0.25);
-  --ds-card-bg-hover:     rgba(30, 130, 115, 0.35);
-  --ds-card-border:       rgba(45, 212, 191, 0.22);
-  --ds-card-border-hover: rgba(45, 212, 191, 0.42);
+  /* ── Cards — same as .glass-card from landing ── */
+  --ds-card-bg:           rgba(255, 255, 255, 0.04);
+  --ds-card-bg-hover:     rgba(255, 255, 255, 0.07);
+  --ds-card-border:       rgba(255, 255, 255, 0.09);
+  --ds-card-border-hover: rgba(255, 255, 255, 0.18);
   --ds-card-blur:         24px;
   --ds-card-radius:       20px;
-  --ds-card-radius-sm:    14px;
+  --ds-card-radius-sm:    12px;
 
-  --ds-card-inner-glow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --ds-card-inner-glow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
 
   /* ── Border tokens (semantic) ── */
-  --ds-border-soft:    rgba(45, 212, 191, 0.12);
-  --ds-border-active:  rgba(45, 212, 191, 0.50);
-  --ds-border-success: rgba(52, 211, 153, 0.50);
+  --ds-border-soft:    rgba(255, 255, 255, 0.07);
+  --ds-border-active:  rgba(45, 212, 191, 0.35);
+  --ds-border-success: rgba(52, 211, 153, 0.35);
 
-  /* Tinted glass surfaces for variants */
-  --ds-surface-glass-blue: linear-gradient(
-    160deg,
-    rgba(45, 212, 191, 0.18) 0%,
-    rgba(7, 61, 56, 0.60) 100%
-  );
-  --ds-surface-glass-green: linear-gradient(
-    160deg,
-    rgba(52, 211, 153, 0.20) 0%,
-    rgba(6, 78, 59, 0.55) 100%
-  );
+  /* Tinted surfaces for variants */
+  --ds-surface-glass-blue:  rgba(45, 212, 191, 0.08);
+  --ds-surface-glass-green: rgba(52, 211, 153, 0.10);
 
   --ds-color-completed:        #10b981;
-  --ds-color-completed-soft:   rgba(16, 185, 129, 0.22);
-  --ds-color-completed-border: rgba(16, 185, 129, 0.55);
+  --ds-color-completed-soft:   rgba(16, 185, 129, 0.14);
+  --ds-color-completed-border: rgba(16, 185, 129, 0.35);
 
   --ds-color-secondary:        #a78bfa;
-  --ds-color-secondary-soft:   rgba(167, 139, 250, 0.14);
-  --ds-color-secondary-border: rgba(167, 139, 250, 0.30);
+  --ds-color-secondary-soft:   rgba(167, 139, 250, 0.10);
+  --ds-color-secondary-border: rgba(167, 139, 250, 0.22);
 
-  /* ── Text — tuned for aqua green bg ── */
-  --ds-text-primary:   rgba(255, 255, 255, 0.96);
-  --ds-text-secondary: rgba(220, 252, 245, 0.72);
-  --ds-text-muted:     rgba(220, 252, 245, 0.45);
-  --ds-text-label:     rgba(220, 252, 245, 0.55);
+  /* ── Text — same as landing (#94a3b8 secondary, #8892b0 muted) ── */
+  --ds-text-primary:   rgba(255, 255, 255, 0.95);
+  --ds-text-secondary: #94a3b8;
+  --ds-text-muted:     #8892b0;
+  --ds-text-label:     #8892b0;
 
   /* ── Spacing ── */
   --ds-space-xs:  4px;
@@ -115,51 +107,31 @@
   --ds-space-2xl: 48px;
   --ds-space-3xl: 64px;
 
-  /* ── Shadows — bubble glass with aqua glow ── */
+  /* ── Shadows — matching landing's subtle style ── */
   --ds-shadow-sm:
-    0 2px 10px rgba(0, 0, 0, 0.30),
-    0 0 0 1px rgba(45, 212, 191, 0.10),
-    0 0 20px rgba(45, 212, 191, 0.06);
+    0 4px 16px rgba(0, 0, 0, 0.30),
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset;
   --ds-shadow-md:
-    0 6px 24px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(45, 212, 191, 0.12),
-    0 0 32px rgba(45, 212, 191, 0.10);
+    0 8px 32px rgba(0, 0, 0, 0.38),
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset;
   --ds-shadow-lg:
-    0 12px 40px rgba(0, 0, 0, 0.40),
-    0 0 0 1px rgba(45, 212, 191, 0.15),
-    0 0 48px rgba(45, 212, 191, 0.14);
+    0 16px 56px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
   --ds-shadow-hover:
-    0 14px 44px rgba(0, 0, 0, 0.40),
-    0 0 0 1px rgba(45, 212, 191, 0.28),
-    0 0 60px rgba(45, 212, 191, 0.20);
-  --ds-shadow-glow:
-    0 0 60px rgba(45, 212, 191, 0.22),
-    0 0 100px rgba(34, 211, 238, 0.10);
+    0 20px 56px rgba(0, 0, 0, 0.48),
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+  --ds-shadow-glow: none;
 
-  --ds-glow-primary:
-    0 0 0 1px rgba(45, 212, 191, 0.35),
-    0 8px 32px rgba(45, 212, 191, 0.24),
-    0 0 60px rgba(45, 212, 191, 0.14);
-  --ds-glow-accent:
-    0 0 0 1px rgba(34, 211, 238, 0.35),
-    0 8px 32px rgba(34, 211, 238, 0.22);
-  --ds-glow-success:
-    0 0 0 1px rgba(52, 211, 153, 0.40),
-    0 8px 32px rgba(16, 185, 129, 0.24),
-    0 0 60px rgba(16, 185, 129, 0.14);
-  --ds-glow-warning:
-    0 0 0 1px rgba(251, 191, 36, 0.35),
-    0 8px 28px rgba(251, 191, 36, 0.20);
-  --ds-glow-danger:
-    0 0 0 1px rgba(248, 113, 113, 0.40),
-    0 8px 28px rgba(239, 68, 68, 0.22);
-  --ds-glow-secondary:
-    0 0 0 1px rgba(167, 139, 250, 0.30),
-    0 8px 32px rgba(124, 58, 237, 0.18);
+  --ds-glow-primary: none;
+  --ds-glow-accent:  none;
+  --ds-glow-success: none;
+  --ds-glow-warning: none;
+  --ds-glow-danger:  none;
+  --ds-glow-secondary: none;
 
-  --ds-color-success-glow: rgba(52, 211, 153, 0.18);
-  --ds-color-warning-glow: rgba(251, 191, 36, 0.16);
-  --ds-color-danger-glow:  rgba(248, 113, 113, 0.16);
+  --ds-color-success-glow: transparent;
+  --ds-color-warning-glow: transparent;
+  --ds-color-danger-glow:  transparent;
 
   /* ── Transitions — all cubic-bezier for smoothness (no ease) ── */
   --ds-transition-fast:    150ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -242,41 +214,22 @@
   /* ── Primary button — flat solid green ── */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 select-none;
-    position: relative;
-    overflow: hidden;
     min-height: var(--touch-min);
     min-width: var(--touch-min);
-    padding: 11px 26px;
+    padding: 10px 24px;
     border-radius: var(--ds-card-radius-sm);
-    background: linear-gradient(135deg, #2dd4bf 0%, #14b8a6 100%);
-    border: 1px solid rgba(45, 212, 191, 0.45);
-    color: #052e2b;
-    font-weight: 700;
+    background: linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary));
+    border: none;
+    color: #fff;
+    font-weight: 600;
     font-size: 14px;
     cursor: pointer;
-    transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow:
-      0 4px 18px rgba(0, 0, 0, 0.30),
-      0 0 0 1px rgba(45, 212, 191, 0.40),
-      0 0 32px rgba(45, 212, 191, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.30);
-  }
-  .btn-primary::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 50%;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.28), transparent);
-    pointer-events: none;
-    border-radius: inherit;
+    transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 0 16px rgba(45, 212, 191, 0.35);
   }
   .btn-primary:hover {
-    background: linear-gradient(135deg, #5eead4 0%, #2dd4bf 100%);
     transform: translateY(-2px);
-    box-shadow:
-      0 8px 28px rgba(0, 0, 0, 0.35),
-      0 0 0 1px rgba(45, 212, 191, 0.60),
-      0 0 48px rgba(45, 212, 191, 0.40),
-      inset 0 1px 0 rgba(255, 255, 255, 0.36);
+    box-shadow: 0 0 32px rgba(45, 212, 191, 0.55);
   }
   .btn-primary:active {
     transform: scale(0.98);
@@ -310,19 +263,14 @@
     min-width: var(--touch-min);
     padding: 10px 22px;
     border-radius: var(--ds-card-radius-sm);
-    color: var(--ds-text-secondary);
-    background: rgba(45, 212, 191, 0.06);
-    border: 1px solid rgba(45, 212, 191, 0.22);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
+    color: #94a3b8;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .btn-ghost:hover {
-    color: var(--ds-text-primary);
-    background: rgba(45, 212, 191, 0.14);
-    border-color: rgba(45, 212, 191, 0.42);
-    box-shadow: 0 0 24px rgba(45, 212, 191, 0.15);
-    transform: translateY(-1px);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.20);
   }
   .btn-ghost:active {
     transform: scale(0.98);
@@ -380,52 +328,30 @@
   }
 
   /* ─────────────────────────────────────────────────────────────
-     CARDS — aqua bubble: dual reflection, saturate blur, multi glow
+     CARDS — identical to .glass-card from landing page
   ───────────────────────────────────────────────────────────── */
   .card,
   .ds-card {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(160deg,
-      rgba(45, 212, 191, 0.10) 0%,
-      rgba(20, 100, 90, 0.22) 50%,
-      rgba(7, 61, 56, 0.30) 100%);
-    backdrop-filter: blur(var(--ds-card-blur)) saturate(1.5);
-    -webkit-backdrop-filter: blur(var(--ds-card-blur)) saturate(1.5);
+    background: var(--ds-card-bg);
     border: 1px solid var(--ds-card-border);
     border-radius: var(--ds-card-radius);
-    box-shadow: var(--ds-shadow-md), var(--ds-card-inner-glow);
-    transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(var(--ds-card-blur));
+    -webkit-backdrop-filter: blur(var(--ds-card-blur));
+    box-shadow: var(--ds-shadow-md);
+    transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  /* Top-edge full-width reflection — signature "lit from above" */
+  /* Same ::before as .glass-card — top gradient glow (50% height) */
   .card::before,
   .ds-card::before {
     content: '';
     position: absolute;
-    top: 0; left: 5%; right: 5%; height: 1px;
-    background: linear-gradient(90deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.20) 15%,
-      rgba(255, 255, 255, 0.38) 50%,
-      rgba(255, 255, 255, 0.20) 85%,
-      transparent 100%);
+    top: 0; left: 0; right: 0; height: 50%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 100%);
     pointer-events: none;
-    z-index: 2;
     border-radius: inherit;
-  }
-  /* Corner bubble highlight — the shiny-sphere effect */
-  .card::after,
-  .ds-card::after {
-    content: '';
-    position: absolute;
-    top: -30%; left: 15%; right: 15%; height: 60%;
-    background: radial-gradient(ellipse at center top,
-      rgba(255, 255, 255, 0.12) 0%,
-      rgba(45, 212, 191, 0.08) 35%,
-      transparent 70%);
-    filter: blur(30px);
-    pointer-events: none;
-    z-index: 0;
+    z-index: 1;
   }
 
   .card-hover { cursor: pointer; }
@@ -433,110 +359,43 @@
   .ds-card:hover,
   .ds-card.ds-card--hover:hover,
   .card-hover:hover {
-    background: linear-gradient(160deg,
-      rgba(45, 212, 191, 0.15) 0%,
-      rgba(30, 130, 115, 0.30) 50%,
-      rgba(10, 77, 70, 0.38) 100%);
+    background: var(--ds-card-bg-hover);
     border-color: var(--ds-card-border-hover);
-    box-shadow: var(--ds-shadow-hover), var(--ds-card-inner-glow);
-    transform: translateY(-2px);
-  }
-  .card:hover::before,
-  .ds-card:hover::before {
-    background: linear-gradient(90deg,
-      transparent 0%,
-      rgba(45, 212, 191, 0.30) 15%,
-      rgba(45, 212, 191, 0.55) 50%,
-      rgba(45, 212, 191, 0.30) 85%,
-      transparent 100%);
-  }
-  .card:hover::after,
-  .ds-card:hover::after {
-    background: radial-gradient(ellipse at center top,
-      rgba(255, 255, 255, 0.18) 0%,
-      rgba(45, 212, 191, 0.14) 35%,
-      transparent 70%);
-  }
-
-  /* ── Variants — colored bubble glass with glow ── */
-  .ds-card--selected {
-    background: var(--ds-surface-glass-green) !important;
-    border-color: var(--ds-border-success) !important;
-    box-shadow:
-      0 0 0 1px rgba(52, 211, 153, 0.30),
-      0 12px 36px rgba(16, 185, 129, 0.24),
-      0 0 56px rgba(16, 185, 129, 0.16),
-      var(--ds-card-inner-glow) !important;
-  }
-  .ds-card--selected::before {
-    background: linear-gradient(90deg,
-      transparent,
-      rgba(110, 231, 183, 0.65),
-      transparent) !important;
-  }
-  .ds-card--info {
-    background: var(--ds-surface-glass-blue) !important;
-    border-color: var(--ds-color-primary-border) !important;
-    box-shadow:
-      0 0 0 1px rgba(45, 212, 191, 0.30),
-      0 12px 36px rgba(45, 212, 191, 0.20),
-      0 0 56px rgba(45, 212, 191, 0.14),
-      var(--ds-card-inner-glow) !important;
-  }
-  .ds-card--info::before {
-    background: linear-gradient(90deg,
-      transparent,
-      rgba(94, 234, 212, 0.65),
-      transparent) !important;
-  }
-  .ds-card--danger {
-    background: linear-gradient(160deg,
-      rgba(248, 113, 113, 0.14) 0%,
-      rgba(7, 61, 56, 0.55) 100%) !important;
-    border-color: var(--ds-color-danger-border) !important;
-    box-shadow:
-      0 0 0 1px rgba(248, 113, 113, 0.30),
-      0 12px 36px rgba(239, 68, 68, 0.22),
-      0 0 56px rgba(239, 68, 68, 0.14),
-      var(--ds-card-inner-glow) !important;
-  }
-  .ds-card--danger::before {
-    background: linear-gradient(90deg,
-      transparent,
-      rgba(252, 165, 165, 0.65),
-      transparent) !important;
+    box-shadow: var(--ds-shadow-hover);
+    transform: translateY(-4px);
   }
   .card-hover:active {
     transform: translateY(0) scale(0.995);
     transition: all 80ms ease;
   }
 
+  /* ── Variants — subtle tints ── */
+  .ds-card--selected {
+    background: var(--ds-color-success-soft) !important;
+    border-color: var(--ds-color-success-border) !important;
+  }
+  .ds-card--info {
+    background: var(--ds-color-primary-soft) !important;
+    border-color: var(--ds-color-primary-border) !important;
+  }
+  .ds-card--danger {
+    background: var(--ds-color-danger-soft) !important;
+    border-color: var(--ds-color-danger-border) !important;
+  }
+
   /* ── Selected state ── */
   .card-selected,
   .ds-card.is-selected,
   .ds-option-card.is-selected {
-    background: var(--ds-surface-glass-green) !important;
-    border: 1px solid var(--ds-border-success) !important;
-    box-shadow:
-      0 0 0 1px rgba(52, 211, 153, 0.28),
-      0 8px 28px rgba(16, 185, 129, 0.22),
-      0 0 56px rgba(16, 185, 129, 0.14),
-      var(--ds-card-inner-glow) !important;
-    transform: translateY(-1px);
+    background: var(--ds-color-success-soft) !important;
+    border: 1px solid var(--ds-color-success-border) !important;
   }
 
   /* ── Completed state ── */
   .card-completed,
   .ds-card.is-completed {
-    background: linear-gradient(160deg,
-      rgba(16, 185, 129, 0.30) 0%,
-      rgba(6, 78, 59, 0.65) 100%) !important;
+    background: var(--ds-color-completed-soft) !important;
     border: 1px solid var(--ds-color-completed-border) !important;
-    box-shadow:
-      0 0 0 1px rgba(52, 211, 153, 0.38),
-      0 12px 32px rgba(16, 185, 129, 0.32),
-      0 0 64px rgba(16, 185, 129, 0.20),
-      var(--ds-card-inner-glow) !important;
   }
 
   /* ── Disabled / locked ── */
@@ -550,18 +409,15 @@
     cursor: not-allowed;
     opacity: 0.55;
   }
-  .ds-option-card.is-locked::before,
-  .ds-option-card.is-locked::after { display: none; }
 
   /* ── OptionCard interactive ── */
   .ds-option-card {
-    transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .ds-option-card:not(.is-selected):not(.is-locked):hover {
-    border-color: var(--ds-border-active) !important;
+    border-color: var(--ds-card-border-hover) !important;
     background: var(--ds-card-bg-hover) !important;
-    transform: translateY(-2px);
-    box-shadow: var(--ds-glow-primary), var(--ds-card-inner-glow) !important;
+    transform: translateY(-4px);
   }
 
   /* ── Feature card (landing sections) ── */
@@ -770,46 +626,31 @@
     line-height: 1;
     text-transform: uppercase;
     border: 1px solid transparent;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
   }
   .ds-badge--default {
     color: #2dd4bf;
-    background: rgba(45, 212, 191, 0.14);
-    border-color: rgba(45, 212, 191, 0.32);
-    box-shadow: 0 0 16px rgba(45, 212, 191, 0.14);
+    background: rgba(45, 212, 191, 0.12);
+    border-color: rgba(45, 212, 191, 0.25);
   }
   .ds-badge--success {
     color: var(--ds-color-success);
     background: var(--ds-color-success-soft);
     border-color: var(--ds-color-success-border);
-    box-shadow:
-      0 0 0 1px rgba(52, 211, 153, 0.18),
-      0 0 14px var(--ds-color-success-glow);
   }
   .ds-badge--warning {
     color: var(--ds-color-warning);
     background: var(--ds-color-warning-soft);
     border-color: var(--ds-color-warning-border);
-    box-shadow:
-      0 0 0 1px rgba(251, 191, 36, 0.18),
-      0 0 14px var(--ds-color-warning-glow);
   }
   .ds-badge--danger {
     color: var(--ds-color-danger);
     background: var(--ds-color-danger-soft);
     border-color: var(--ds-color-danger-border);
-    box-shadow:
-      0 0 0 1px rgba(248, 113, 113, 0.18),
-      0 0 14px var(--ds-color-danger-glow);
   }
   .ds-badge--primary {
     color: var(--ds-color-primary);
     background: var(--ds-color-primary-soft);
     border-color: var(--ds-color-primary-border);
-    box-shadow:
-      0 0 0 1px rgba(45, 212, 191, 0.22),
-      0 0 14px var(--ds-color-primary-glow);
   }
 
   /* Animated badge with pulsing glow */
@@ -845,20 +686,18 @@
   select {
     @apply block w-full px-4 py-3 text-sm;
     min-height: var(--touch-min);
-    background: rgba(7, 40, 37, 0.60);
-    border: 1px solid rgba(45, 212, 191, 0.16);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.09);
     border-radius: var(--ds-card-radius-sm);
     color: var(--ds-text-primary);
     caret-color: var(--ds-color-primary);
-    backdrop-filter: blur(12px) saturate(1.2);
-    -webkit-backdrop-filter: blur(12px) saturate(1.2);
     color-scheme: dark;
     outline: none;
-    transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.2s ease;
   }
   .input-field::placeholder,
   input::placeholder,
-  textarea::placeholder { color: var(--ds-text-muted); }
+  textarea::placeholder { color: #8892b0; }
   .input-field:focus,
   input.input-field:focus,
   textarea.input-field:focus,
@@ -866,18 +705,8 @@
   input:focus,
   textarea:focus,
   select:focus {
-    border-color: rgba(45, 212, 191, 0.55);
-    box-shadow:
-      0 0 0 3px rgba(45, 212, 191, 0.14),
-      0 0 28px rgba(45, 212, 191, 0.14);
-    background: rgba(10, 60, 55, 0.65);
-  }
-  .input-field:hover:not(:focus),
-  input:hover:not(:focus),
-  textarea:hover:not(:focus),
-  select:hover:not(:focus) {
-    border-color: rgba(45, 212, 191, 0.28);
-    background: rgba(10, 55, 50, 0.62);
+    border-color: rgba(45, 212, 191, 0.40);
+    box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.10);
   }
 
   /* Generic glass form controls (any input/textarea/select inside dashboard) */
@@ -890,26 +719,12 @@
   .dashboard-layout textarea:not(.input-field):focus,
   .dashboard-layout select:not(.input-field):focus {
     outline: none;
-    border-color: rgba(45, 212, 191, 0.55) !important;
-    box-shadow:
-      0 0 0 3px rgba(45, 212, 191, 0.14),
-      0 0 28px rgba(45, 212, 191, 0.14);
+    border-color: rgba(45, 212, 191, 0.40) !important;
+    box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.10);
   }
 
-  /* ── Hero glow halo (aqua ambient bubble) ── */
+  /* Hero glow disabled — landing doesn't use it */
   .ds-hero-glow { position: relative; }
-  .ds-hero-glow::after {
-    content: '';
-    position: absolute;
-    top: -30%; left: 12%; right: 12%; height: 55%;
-    background: radial-gradient(ellipse at center,
-      rgba(45, 212, 191, 0.18) 0%,
-      rgba(34, 211, 238, 0.08) 35%,
-      transparent 65%);
-    filter: blur(40px);
-    pointer-events: none;
-    z-index: 0;
-  }
 
   /* ── Form error styles ── */
   .input-error {
@@ -1113,11 +928,11 @@
     background: transparent;
     font-weight: 500;
   }
-  /* HOVER — soft tint */
+  /* HOVER — same as landing links */
   .nav-item-inactive:hover,
   .nav-item:hover:not(.nav-item-active) {
-    color: var(--ds-text-primary);
-    background: rgba(255, 255, 255, 0.03);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.04);
     border-radius: var(--ds-card-radius-sm);
   }
   .nav-item-inactive:focus-visible {
@@ -1125,96 +940,49 @@
     outline-offset: -2px;
   }
 
-  /* ACTIVE — aqua tint with inset left marker + glow halo */
+  /* ACTIVE — like landing active sidebar item */
   .nav-item-active {
     color: var(--ds-text-primary);
-    background: rgba(45, 212, 191, 0.16);
-    border: 1px solid rgba(45, 212, 191, 0.30);
+    background: rgba(45, 212, 191, 0.12);
+    border-left: 3px solid var(--ds-color-primary);
     font-weight: 600;
     border-radius: var(--ds-card-radius-sm);
-    box-shadow:
-      inset 3px 0 0 #2dd4bf,
-      0 0 0 1px rgba(45, 212, 191, 0.18),
-      0 4px 18px rgba(45, 212, 191, 0.18),
-      0 0 32px rgba(45, 212, 191, 0.12);
-  }
-  .nav-item-active::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 12px; right: 12px; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(94, 234, 212, 0.60), transparent);
-    pointer-events: none;
+    box-shadow: 0 0 12px rgba(45, 212, 191, 0.12);
   }
 
   /* ─────────────────────────────────────────────────────────────
      TOP BAR — frosted aqua glass
   ───────────────────────────────────────────────────────────── */
+  /* ─────────────────────────────────────────────────────────────
+     TOP BAR — same as landing navbar: rgba(18,17,42,0.97)
+  ───────────────────────────────────────────────────────────── */
   .topbar {
     @apply sticky top-0 z-40 flex items-center justify-end;
     padding: 16px 32px;
-    background: rgba(7, 40, 37, 0.75);
-    border-bottom: 1px solid rgba(45, 212, 191, 0.15);
-    backdrop-filter: blur(22px) saturate(1.4);
-    -webkit-backdrop-filter: blur(22px) saturate(1.4);
+    background: rgba(18, 17, 42, 0.97);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     min-height: 64px;
-    box-shadow:
-      0 4px 20px rgba(0, 0, 0, 0.25),
-      0 0 30px rgba(45, 212, 191, 0.06),
-      var(--ds-card-inner-glow);
   }
 
   /* ─────────────────────────────────────────────────────────────
-     SIDEBAR — deep frosted aqua glass with top reflection
+     SIDEBAR — same dark as landing nav
   ───────────────────────────────────────────────────────────── */
   .sidebar {
     position: relative;
-    background: rgba(5, 46, 43, 0.85);
-    border-right: 1px solid rgba(45, 212, 191, 0.15);
-    backdrop-filter: blur(28px) saturate(1.5);
-    -webkit-backdrop-filter: blur(28px) saturate(1.5);
-    box-shadow:
-      12px 0 48px rgba(0, 0, 0, 0.35),
-      1px 0 0 rgba(45, 212, 191, 0.10),
-      var(--ds-card-inner-glow);
-  }
-  .sidebar::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg,
-      transparent,
-      rgba(45, 212, 191, 0.45),
-      transparent);
-    pointer-events: none;
+    background: rgba(15, 15, 31, 0.95);
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
 
   /* ─────────────────────────────────────────────────────────────
      METRIC CARD STATUS VARIANTS — subtle 0.05 opacity status glow
   ───────────────────────────────────────────────────────────── */
-  .metric-card--good {
-    border-color: rgba(52, 211, 153, 0.30) !important;
-    box-shadow:
-      0 0 0 1px rgba(52, 211, 153, 0.12),
-      var(--ds-shadow-md),
-      0 0 36px rgba(52, 211, 153, 0.10),
-      var(--ds-card-inner-glow) !important;
-  }
-  .metric-card--warning {
-    border-color: rgba(251, 191, 36, 0.28) !important;
-    box-shadow:
-      0 0 0 1px rgba(251, 191, 36, 0.12),
-      var(--ds-shadow-md),
-      0 0 36px rgba(251, 191, 36, 0.10),
-      var(--ds-card-inner-glow) !important;
-  }
-  .metric-card--bad {
-    border-color: rgba(248, 113, 113, 0.30) !important;
-    box-shadow:
-      0 0 0 1px rgba(248, 113, 113, 0.12),
-      var(--ds-shadow-md),
-      0 0 36px rgba(248, 113, 113, 0.10),
-      var(--ds-card-inner-glow) !important;
-  }
+  .metric-card--good    { border-color: rgba(52, 211, 153, 0.20) !important; }
+  .metric-card--warning { border-color: rgba(251, 191, 36, 0.20)  !important; }
+  .metric-card--bad     { border-color: rgba(248, 113, 113, 0.20) !important; }
 
   /* ─────────────────────────────────────────────────────────────
      PROGRESS BARS — gradient fill with radial glow at the tip
@@ -1224,33 +992,14 @@
     width: 100%;
     height: 8px;
     background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(45, 212, 191, 0.12);
     border-radius: 99px;
-    overflow: visible;
+    overflow: hidden;
   }
   .progress-bar-fill {
-    position: relative;
     height: 100%;
-    background: linear-gradient(90deg, #14b8a6 0%, #2dd4bf 50%, #5eead4 100%);
+    background: linear-gradient(90deg, var(--ds-color-primary), var(--ds-color-primary));
     border-radius: 99px;
-    transition: width 700ms cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow:
-      0 0 14px rgba(45, 212, 191, 0.45),
-      0 0 28px rgba(45, 212, 191, 0.22),
-      inset 0 1px 0 rgba(255, 255, 255, 0.28);
-  }
-  .progress-bar-fill::after {
-    content: '';
-    position: absolute;
-    right: -6px; top: 50%;
-    width: 16px; height: 16px;
-    transform: translateY(-50%);
-    background: radial-gradient(circle,
-      rgba(94, 234, 212, 0.75) 0%,
-      rgba(45, 212, 191, 0.35) 40%,
-      transparent 70%);
-    pointer-events: none;
-    border-radius: 50%;
+    transition: width 600ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -1329,32 +1078,14 @@
     animation-delay: 200ms;
   }
 
-  /* Subtle hover (no glow) for level badges, achievements, etc. */
-  .glow-hover {
-    transition: border-color 200ms ease;
-  }
-  .glow-hover:hover {
-    border-color: var(--ds-card-border-hover);
-  }
-  .achievement-glow {
-    border: 1px solid rgba(251, 191, 36, 0.18);
-    transition: border-color 200ms ease;
-  }
-  .achievement-glow:hover {
-    border-color: rgba(251, 191, 36, 0.30);
-  }
-
-  /* Achievement items — flat hover */
+  /* Hover states — matching landing's translateY(-4px) */
+  .glow-hover { transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1); }
+  .glow-hover:hover { border-color: rgba(255, 255, 255, 0.18); transform: translateY(-2px); }
+  .achievement-glow { border: 1px solid rgba(255, 255, 255, 0.09); transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1); }
+  .achievement-glow:hover { border-color: rgba(255, 255, 255, 0.18); }
   .achievement-item:hover { transform: scale(1.02); }
-
-  /* Labs cards — flat hover lift */
-  .labs-card {
-    transition: transform 200ms ease, border-color 200ms ease;
-  }
-  .labs-card:hover {
-    transform: translateY(-1px);
-    border-color: var(--ds-card-border-hover);
-  }
+  .labs-card { transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1); }
+  .labs-card:hover { transform: translateY(-4px); border-color: rgba(255, 255, 255, 0.18); }
 
   @keyframes fadeInScale {
     from { opacity: 0; transform: translateY(16px) scale(0.97); }
@@ -1384,61 +1115,28 @@
     z-index: 1;
   }
 
-  /* ── Main panel — the "active route" highlight, mirrors .nav-item-active
-        Aqua glowing border + inset left marker + top reflection + ambient halo */
+  /* ── Main panel — glass card matching landing ── */
   .dashboard-panel {
     position: relative;
-    background: linear-gradient(160deg,
-      rgba(45, 212, 191, 0.08) 0%,
-      rgba(20, 100, 90, 0.18) 50%,
-      rgba(7, 61, 56, 0.26) 100%);
-    border: 1px solid rgba(45, 212, 191, 0.30);
-    border-radius: 28px;
-    backdrop-filter: blur(32px) saturate(1.5);
-    -webkit-backdrop-filter: blur(32px) saturate(1.5);
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 24px;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     padding: var(--ds-space-2xl);
     box-shadow:
-      /* aqua left marker (same recipe as .nav-item-active) */
-      inset 4px 0 0 #2dd4bf,
-      /* outer ring */
-      0 0 0 1px rgba(45, 212, 191, 0.22),
-      /* main drop shadow */
-      0 24px 72px rgba(0, 0, 0, 0.55),
-      0 8px 28px rgba(0, 0, 0, 0.35),
-      /* aqua glow halo — the "you are here" signal */
-      0 10px 40px rgba(45, 212, 191, 0.18),
-      0 0 72px rgba(45, 212, 191, 0.14),
-      /* inner top highlight */
-      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      0 8px 32px rgba(0, 0, 0, 0.38),
+      0 0 0 1px rgba(255, 255, 255, 0.03) inset;
   }
-  /* Top-edge full-width aqua reflection — lit from above */
   .dashboard-panel::before {
     content: '';
     position: absolute;
-    top: 0; left: 6%; right: 6%; height: 1px;
-    background: linear-gradient(90deg,
-      transparent,
-      rgba(94, 234, 212, 0.55) 20%,
-      rgba(94, 234, 212, 0.85) 50%,
-      rgba(94, 234, 212, 0.55) 80%,
-      transparent);
+    top: 0; left: 0; right: 0; height: 50%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, transparent 100%);
     pointer-events: none;
-    z-index: 2;
     border-radius: inherit;
-  }
-  /* Ambient aqua glow under the panel — sells the floating effect */
-  .dashboard-panel::after {
-    content: '';
-    position: absolute;
-    left: 5%; right: 5%; bottom: -70px; height: 120px;
-    background: radial-gradient(ellipse 80% 100% at 50% 0%,
-      rgba(45, 212, 191, 0.28),
-      rgba(45, 212, 191, 0.08) 40%,
-      rgba(34, 211, 238, 0.04) 60%,
-      transparent 80%);
-    pointer-events: none;
-    z-index: -1;
-    filter: blur(24px);
+    z-index: 0;
   }
   /* Children handle their own margin-bottom; the panel just contains them. */
 
@@ -1454,12 +1152,7 @@
      The result is sober but never flat — the eye picks up depth and tint
      without any visible "blob" or shape.                              */
   .dashboard-layout {
-    background-color: #030810;
-    background-image: url('/bg-space.png');
-    background-size: cover;
-    background-position: center bottom;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    background: linear-gradient(160deg, #0f0f1f 0%, #0a1025 50%, #0f0f1f 100%);
     position: relative;
     min-height: 100vh;
     overflow-x: hidden;
