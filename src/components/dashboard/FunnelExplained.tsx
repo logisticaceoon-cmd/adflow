@@ -126,7 +126,6 @@ export default function FunnelExplained({ events }: Props) {
                 width: `${widthPct}%`,
                 padding: '14px 22px',
                 borderRadius: 'var(--ds-card-radius-sm)',
-                background: 'var(--ds-card-bg)',
                 border: '1px solid var(--ds-card-border)',
                 display: 'flex', alignItems: 'center', gap: 14,
                 transition: 'all 0.3s',

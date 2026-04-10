@@ -35,10 +35,7 @@ export default function DiagnosticBadge({ diagnosticType, ruleId, ruleLabel, roa
       style={{
         padding: 'var(--ds-space-lg)',
         borderRadius: 'var(--ds-card-radius)',
-        background: 'var(--ds-card-bg)',
         border: '1px solid var(--ds-card-border)',
-        backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-        WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
         boxShadow: 'var(--ds-shadow-sm)',
         display: 'flex', flexDirection: 'column', gap: 12,
       }}

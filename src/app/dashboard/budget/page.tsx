@@ -599,7 +599,7 @@ export default function BudgetPage() {
         {historyOpen && history.length > 0 && (
           <div className="mt-4 space-y-2">
             {history.map(h => (
-              <div key={h.month_year} className="p-3 rounded-lg flex items-center justify-between" style={{ background: 'var(--ds-card-bg)', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div key={h.month_year} className="p-3 rounded-lg flex items-center justify-between" style={{ border: '1px solid rgba(255,255,255,0.06)' }}>
                 <div>
                   <p style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{h.month_year}</p>
                   <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>

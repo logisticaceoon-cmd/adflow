@@ -38,7 +38,9 @@
       "Bash(ls -d */)",
       "Bash(find . -iname \"public\" -type d)",
       "Bash(find . -iname \"bg-space*\")",
-      "Bash(find . -iname \"Public\" -type d)"
+      "Bash(find . -iname \"Public\" -type d)",
+      "Bash(cat)",
+      "Bash(bash /tmp/search_files.sh)"
     ]
   }
 }

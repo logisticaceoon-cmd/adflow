@@ -104,7 +104,7 @@ export default function StepStrategy({
               style={{
                 animationDelay: `${idx * 60}ms`,
                 borderRadius: 18, padding: '20px 22px',
-                background: selected ? cfg.bg : 'var(--ds-card-bg)',
+                background: selected ? cfg.bg : undefined,
                 border: `${selected ? '1.5px' : '1px'} solid ${selected ? cfg.borderColor : 'var(--ds-card-border)'}`,
                 cursor: isLocked ? 'not-allowed' : 'pointer',
                 opacity: isLocked ? 0.45 : 1,

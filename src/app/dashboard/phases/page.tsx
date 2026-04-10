@@ -479,7 +479,6 @@ export default async function PhasesPage() {
               <div className="space-y-3">
                 {insights.map((ins, i) => (
                   <div key={i} className="p-4 rounded-xl flex items-start gap-3" style={{
-                    background: 'var(--ds-card-bg)',
                     border: '1px solid rgba(255,255,255,0.06)',
                   }}>
                     <span style={{ fontSize: 18, flexShrink: 0 }}>{ins.icon}</span>

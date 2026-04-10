@@ -170,7 +170,7 @@ export default function CreativesPage() {
         <div className="grid grid-cols-4 gap-4">
           {files.map(f => (
             <div key={f.path} className="group relative rounded-2xl overflow-hidden"
-                 style={{ background: 'var(--ds-card-bg)', border: '1px solid var(--ds-card-border)', aspectRatio: '1' }}>
+                 style={{ border: '1px solid var(--ds-card-border)', aspectRatio: '1' }}>
               {f.type === 'image' ? (
                 <img src={f.url} alt={f.name}
                      className="w-full h-full object-cover" />

@@ -47,10 +47,7 @@ export default function ScalingBlocksChecklist({
     <div style={{
       padding: 'var(--ds-space-lg)',
       borderRadius: 'var(--ds-card-radius)',
-      background: 'var(--ds-card-bg)',
       border: '1px solid var(--ds-card-border)',
-      backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-      WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
       boxShadow: 'var(--ds-shadow-sm)',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, flexWrap: 'wrap', gap: 8 }}>

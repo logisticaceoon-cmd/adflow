@@ -380,7 +380,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
               <div className="space-y-3">
                 {(report.recommendations as any[]).slice(0, 6).map((r, i) => {
                   const color  = r.priority === 'high' ? 'var(--ds-color-primary)' : r.priority === 'medium' ? 'var(--ds-color-warning)' : '#8892b0'
-                  const bg     = r.priority === 'high' ? 'var(--ds-color-primary-soft)' : r.priority === 'medium' ? 'rgba(245,158,11,0.06)' : 'var(--ds-card-bg)'
+                  const bg     = r.priority === 'high' ? 'var(--ds-color-primary-soft)' : r.priority === 'medium' ? 'rgba(245,158,11,0.06)' : undefined
                   const border = r.priority === 'high' ? 'var(--ds-color-primary-border)' : r.priority === 'medium' ? 'var(--ds-color-warning-border)' : 'rgba(255,255,255,0.08)'
                   return (
                     <div key={i} className="p-4 rounded-xl flex items-start gap-3" style={{ background: bg, border: `1px solid ${border}` }}>

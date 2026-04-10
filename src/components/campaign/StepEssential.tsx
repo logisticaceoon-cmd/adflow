@@ -104,7 +104,7 @@ export default function StepEssential({ form, setField, currency, currSymbol, bu
                   padding: '18px 20px', borderRadius: 16,
                   background: isSelected
                     ? `${it.color}14`
-                    : 'var(--ds-card-bg)',
+                    : undefined,
                   border: `${isSelected ? '1.5px' : '1px'} solid ${isSelected ? `${it.color}55` : 'var(--ds-card-border)'}`,
                   cursor: 'pointer',
                   animationDelay: `${i * 50}ms`,

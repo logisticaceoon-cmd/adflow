@@ -36,15 +36,15 @@ interface PixelAnalysisRow {
 
 // Hero accents per level — uniform card base with sober per-level emoji
 const LEVEL_GRADIENT: Record<number, { from: string; to: string; main: string; emoji: string }> = {
-  0: { from: 'var(--ds-card-bg)', to: 'var(--ds-card-bg)', main: 'var(--ds-text-muted)',     emoji: '🌑' },
-  1: { from: 'var(--ds-card-bg)', to: 'var(--ds-card-bg)', main: 'var(--ds-color-primary)',  emoji: '🌱' },
-  2: { from: 'var(--ds-card-bg)', to: 'var(--ds-card-bg)', main: 'var(--ds-color-primary)',  emoji: '📚' },
-  3: { from: 'var(--ds-card-bg)', to: 'var(--ds-card-bg)', main: 'var(--ds-color-primary)',  emoji: '🧠' },
-  4: { from: 'var(--ds-card-bg)', to: 'var(--ds-card-bg)', main: 'var(--ds-color-primary)',  emoji: '🛒' },
-  5: { from: 'var(--ds-card-bg)', to: 'var(--ds-card-bg)', main: 'var(--ds-color-primary)',  emoji: '💼' },
-  6: { from: 'var(--ds-card-bg)', to: 'var(--ds-card-bg)', main: 'var(--ds-color-primary)',  emoji: '🚀' },
-  7: { from: 'var(--ds-card-bg)', to: 'var(--ds-card-bg)', main: 'var(--ds-color-primary)',  emoji: '👑' },
-  8: { from: 'var(--ds-card-bg)', to: 'var(--ds-card-bg)', main: 'var(--ds-color-primary)',  emoji: '🏰' },
+  0: { from: 'linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%)', to: 'linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%)', main: 'var(--ds-text-muted)',     emoji: '🌑' },
+  1: { from: 'linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%)', to: 'linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%)', main: 'var(--ds-color-primary)',  emoji: '🌱' },
+  2: { from: 'linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%)', to: 'linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%)', main: 'var(--ds-color-primary)',  emoji: '📚' },
+  3: { from: 'linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%)', to: 'linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%)', main: 'var(--ds-color-primary)',  emoji: '🧠' },
+  4: { from: 'linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%)', to: 'linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%)', main: 'var(--ds-color-primary)',  emoji: '🛒' },
+  5: { from: 'linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%)', to: 'linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%)', main: 'var(--ds-color-primary)',  emoji: '💼' },
+  6: { from: 'linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%)', to: 'linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%)', main: 'var(--ds-color-primary)',  emoji: '🚀' },
+  7: { from: 'linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%)', to: 'linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%)', main: 'var(--ds-color-primary)',  emoji: '👑' },
+  8: { from: 'linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%)', to: 'linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%)', main: 'var(--ds-color-primary)',  emoji: '🏰' },
 }
 
 function nextLevelMetric(level: number, events: PixelEvents | undefined) {

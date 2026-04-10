@@ -65,12 +65,9 @@ export default function ForecastWidget({ scenarios, recommendation, currentMetri
                 position: 'relative',
                 padding: 'var(--ds-space-lg)',
                 borderRadius: 'var(--ds-card-radius)',
-                background: 'var(--ds-card-bg)',
                 border: isRecommended
                   ? '1px solid var(--ds-color-primary-border)'
                   : '1px solid var(--ds-card-border)',
-                backdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
-                WebkitBackdropFilter: 'blur(var(--ds-card-blur)) saturate(1.2)',
                 boxShadow: isRecommended ? 'var(--ds-glow-primary)' : 'var(--ds-shadow-sm)',
                 opacity: isUnavailable ? 0.55 : 1,
                 display: 'flex', flexDirection: 'column', gap: 14,

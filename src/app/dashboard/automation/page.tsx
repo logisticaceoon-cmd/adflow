@@ -190,7 +190,6 @@ export default async function AutomationPage() {
           <div style={{
             padding: 32,
             borderRadius: 'var(--ds-card-radius)',
-            background: 'var(--ds-card-bg)',
             border: '1px dashed var(--ds-card-border)',
             textAlign: 'center',
             color: 'var(--ds-text-secondary)',

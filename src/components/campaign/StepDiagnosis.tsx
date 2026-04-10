@@ -32,7 +32,7 @@ function OptionCard({ icon, label, selected, onClick }: OptionCardProps) {
         padding: '14px 16px', borderRadius: 14,
         background: selected
           ? 'var(--ds-color-success-soft)'
-          : 'var(--ds-card-bg)',
+          : undefined,
         border: `${selected ? '1.5px' : '1px'} solid ${selected ? 'var(--ds-color-success-border)' : 'var(--ds-card-border)'}`,
         cursor: 'pointer',
         display: 'flex', alignItems: 'center', gap: 12,
@@ -194,7 +194,7 @@ export default function StepDiagnosis({ diagnosis, setDiagField, form, setField,
                     padding: '14px 16px', borderRadius: 14,
                     background: diagnosis.monthlyBudget === opt.value
                       ? 'var(--ds-color-success-soft)'
-                      : 'var(--ds-card-bg)',
+                      : undefined,
                     border: `${diagnosis.monthlyBudget === opt.value ? '1.5px' : '1px'} solid ${diagnosis.monthlyBudget === opt.value ? 'var(--ds-color-success-border)' : 'var(--ds-card-border)'}`,
                     color: diagnosis.monthlyBudget === opt.value ? '#fff' : 'rgba(255,255,255,0.65)',
                     fontSize: 13, fontWeight: diagnosis.monthlyBudget === opt.value ? 700 : 500,

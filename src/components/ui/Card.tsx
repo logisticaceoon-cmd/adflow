@@ -42,11 +42,8 @@ export default function Card({
   className, onClick, style, as = 'div', href,
 }: CardProps) {
   const baseStyle: CSSProperties = {
-    background: 'var(--ds-card-bg)',
     border: '1px solid var(--ds-card-border)',
     borderRadius: 'var(--ds-card-radius)',
-    backdropFilter: 'blur(var(--ds-card-blur))',
-    WebkitBackdropFilter: 'blur(var(--ds-card-blur))',
     padding: PADDING_MAP[padding],
     transition: 'all var(--ds-transition-normal)',
     cursor: onClick || href ? 'pointer' : undefined,

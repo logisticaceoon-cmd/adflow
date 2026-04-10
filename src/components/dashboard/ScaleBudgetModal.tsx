@@ -110,7 +110,6 @@ export default function ScaleBudgetModal({ open, onClose, onConfirm, campaignNam
 
         <div style={{
           padding: '14px 16px', borderRadius: 12, marginBottom: 18,
-          background: 'var(--ds-card-bg)',
           border: '1px solid rgba(255,255,255,0.06)',
         }}>
           <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 4 }}>
