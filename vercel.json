@@ -3,12 +3,19 @@
     {
       "path": "/api/cron/daily-report",
       "schedule": "0 11 * * *"
+    },
+    {
+      "path": "/api/cron/automation",
+      "schedule": "0 */3 * * *"
     }
   ],
   "functions": {
     "src/app/api/ai/generate-copies/route.ts": {
       "maxDuration": 60,
       "memory": 1024
+    },
+    "src/app/api/cron/automation/route.ts": {
+      "maxDuration": 60
     }
   }
 }

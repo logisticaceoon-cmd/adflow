@@ -2,6 +2,7 @@
 import { createAdminClient } from '@/lib/supabase/server'
 import type { PlanType, CreditsInfo } from '@/types'
 import { PLAN_CREDITS } from '@/lib/plans'
+import { sendCreditsWarningEmail } from '@/lib/email/transactional'
 
 export async function getCreditsInfo(userId: string): Promise<CreditsInfo | null> {
   const db = createAdminClient()
@@ -108,8 +109,34 @@ export async function consumeCredits(
   if (error) throw new Error(error.message)
 
   const row = Array.isArray(data) ? data[0] : data
-  return {
+  const result = {
     success:          row?.success          ?? false,
     creditsRemaining: row?.credits_remaining ?? 0,
   }
+
+  // Aviso por email al cruzar el 80% o llegar al 100% de consumo (best-effort).
+  if (result.success) {
+    try {
+      const { data: p } = await db
+        .from('profiles')
+        .select('report_email, full_name, credits_total, credits_used')
+        .eq('id', userId)
+        .single()
+      const total = p?.credits_total ?? 0
+      const used  = p?.credits_used ?? 0
+      if (total > 0 && p?.report_email) {
+        const prevUsed = used - cost
+        const crossed80 = used / total >= 0.8 && prevUsed / total < 0.8
+        const hit100    = used >= total && prevUsed < total
+        if (hit100 || crossed80) {
+          const name = (p.full_name as string | null)?.split(' ')[0]
+          await sendCreditsWarningEmail(p.report_email as string, name, used, total)
+        }
+      }
+    } catch (e) {
+      console.warn('[credits] aviso de créditos falló:', e)
+    }
+  }
+
+  return result
 }

@@ -2,12 +2,24 @@
 // Automation rules engine: evaluates user-defined rules against real campaign
 // metrics, executes actions against Meta when approved, and persists the full
 // audit trail (automation_rules + automation_executions + campaign_actions).
-//
-// Companion of the legacy `autoscaling-engine.ts` stub — both coexist; the
-// stub is preserved for Phase 4 foundation but is not called from anywhere.
 import { createAdminClient } from '@/lib/supabase/server'
 import { createNotification } from './notification-engine'
 import { markActionCompleted } from './memory-engine'
+import { toMetaDailyBudget } from './meta/currency'
+import { decryptSecret } from './security/crypto'
+
+/** Resolve the user's ad account currency for budget conversions. */
+async function getUserCurrency(
+  db: ReturnType<typeof createAdminClient>,
+  userId: string,
+): Promise<string> {
+  const { data } = await db
+    .from('business_profiles')
+    .select('currency')
+    .eq('user_id', userId)
+    .maybeSingle()
+  return (data as any)?.currency || 'USD'
+}
 
 const GRAPH = 'https://graph.facebook.com/v20.0'
 
@@ -166,6 +178,7 @@ async function executeAction(
   campaign: CampaignRow,
   token: string,
   db: ReturnType<typeof createAdminClient>,
+  currency: string = 'USD',
 ): Promise<ExecutionResult> {
   try {
     // ── PAUSE CAMPAIGN ───────────────────────────────────────
@@ -201,7 +214,7 @@ async function executeAction(
       if (adsetIds.length === 0) {
         return { success: false, message: 'La campaña no tiene ad sets publicados' }
       }
-      const perAdsetCents = Math.round((newBudget / adsetIds.length) * 100)
+      const perAdsetCents = toMetaDailyBudget(newBudget / adsetIds.length, currency)
 
       for (const adsetId of adsetIds) {
         const res = await fetch(`${GRAPH}/${adsetId}`, {
@@ -233,7 +246,7 @@ async function executeAction(
       if (adsetIds.length === 0) {
         return { success: false, message: 'La campaña no tiene ad sets publicados' }
       }
-      const perAdsetCents = Math.round((newBudget / adsetIds.length) * 100)
+      const perAdsetCents = toMetaDailyBudget(newBudget / adsetIds.length, currency)
 
       for (const adsetId of adsetIds) {
         const res = await fetch(`${GRAPH}/${adsetId}`, {
@@ -320,6 +333,9 @@ export async function evaluateAutomationRules(userId: string): Promise<Automatio
 
     if (!conn?.access_token) return result
 
+    // 2b) User currency (for correct budget conversion)
+    const userCurrency = await getUserCurrency(db, userId)
+
     // 3) Published campaigns
     const { data: campaigns } = await db
       .from('campaigns')
@@ -357,6 +373,23 @@ export async function evaluateAutomationRules(userId: string): Promise<Automatio
         const metrics = await getMetricsForPeriod(db, campaign.id, condition.period || 'last_3d')
         if (!evaluateCondition(condition, metrics)) continue
 
+        // Claim atómico del cooldown ANTES de ejecutar: evita que el cron y una
+        // evaluación manual concurrente disparen la misma regla dos veces
+        // (doble escalado de presupuesto). El WHERE sobre last_triggered_at hace
+        // que solo un proceso gane la carrera; el resto obtiene 0 filas.
+        const cooldownCutoff = new Date(Date.now() - (rule.cooldown_hours || 24) * 3600000).toISOString()
+        const { data: claimed } = await db
+          .from('automation_rules')
+          .update({
+            last_triggered_at: new Date().toISOString(),
+            trigger_count: (rule.trigger_count || 0) + 1,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', rule.id)
+          .or(`last_triggered_at.is.null,last_triggered_at.lt.${cooldownCutoff}`)
+          .select('id')
+        if (!claimed || claimed.length === 0) break // otra ejecución ya tomó esta regla
+
         result.triggered++
 
         const beforeState = {
@@ -367,7 +400,7 @@ export async function evaluateAutomationRules(userId: string): Promise<Automatio
 
         // AUTO-EXECUTE PATH
         if (rule.auto_execute && !rule.approval_required) {
-          const execResult = await executeAction(action, campaign, conn.access_token, db)
+          const execResult = await executeAction(action, campaign, decryptSecret(conn.access_token), db, userCurrency)
 
           await db.from('automation_executions').insert({
             rule_id: rule.id,
@@ -459,14 +492,8 @@ export async function evaluateAutomationRules(userId: string): Promise<Automatio
           })
         }
 
-        // Update rule's trigger bookkeeping
-        await db.from('automation_rules').update({
-          last_triggered_at: new Date().toISOString(),
-          trigger_count: (rule.trigger_count || 0) + 1,
-          updated_at: new Date().toISOString(),
-        }).eq('id', rule.id)
-
-        // Only one trigger per rule per evaluation cycle
+        // El cooldown/trigger_count ya se registró atómicamente en el claim previo.
+        // Solo un disparo por regla por ciclo de evaluación.
         break
       }
     }
@@ -489,13 +516,16 @@ export async function approveExecution(
   try {
     const db = createAdminClient()
 
-    // Fetch execution + its rule
+    // Claim atómico: solo un proceso puede pasar 'pending' → 'executing'.
+    // Evita la doble ejecución si el usuario hace doble click en "Aprobar"
+    // (dos requests concurrentes): la segunda obtiene 0 filas y aborta.
     const { data: execution } = await db
       .from('automation_executions')
-      .select('*, automation_rules(*)')
+      .update({ status: 'executing' })
       .eq('id', executionId)
       .eq('user_id', userId)
       .eq('status', 'pending')
+      .select('*, automation_rules(*)')
       .maybeSingle()
 
     if (!execution) {
@@ -523,7 +553,8 @@ export async function approveExecution(
       return { success: false, message: 'Regla asociada no encontrada' }
     }
 
-    const result = await executeAction(rule.actions, campaign as CampaignRow, conn.access_token, db)
+    const execCurrency = await getUserCurrency(db, userId)
+    const result = await executeAction(rule.actions, campaign as CampaignRow, decryptSecret(conn.access_token), db, execCurrency)
 
     await db.from('automation_executions').update({
       status: result.success ? 'executed' : 'failed',

@@ -31,9 +31,11 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
   const [loadingInstagram,   setLoadingInstagram]   = useState(false)
 
   // Errores por sección independiente
-  const [baseError,  setBaseError]  = useState('')
-  const [pixelError, setPixelError] = useState('')
-  const [igError,    setIgError]    = useState('')
+  const [baseError,     setBaseError]     = useState('')
+  const [pixelError,    setPixelError]    = useState('')
+  const [igError,       setIgError]       = useState('')
+  const [tokenExpired,  setTokenExpired]  = useState(false)
+  const [reconnecting,  setReconnecting]  = useState(false)
 
   // Guardar
   const [saving,          setSaving]          = useState(false)
@@ -67,10 +69,34 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
   async function loadInitialAssets(queryString: string) {
     setLoadingBase(true)
     setBaseError('')
+    setTokenExpired(false)
     try {
       const res  = await fetch(`/api/facebook/meta-assets${queryString ? '?' + queryString : ''}`)
       const data = await res.json()
+
+      if (data.error === 'token_expired') {
+        setTokenExpired(true)
+        return
+      }
       if (data.error) { setBaseError(data.error); return }
+
+      // Surface adAccountsError if it contains a token/auth error
+      if (data.adAccountsError) {
+        try {
+          const parsed = JSON.parse(data.adAccountsError)
+          if (parsed.code === 190) { setTokenExpired(true); return }
+        } catch { /* not JSON, show as-is */ }
+        setBaseError(`Error al cargar cuentas publicitarias: ${data.adAccountsError}`)
+      }
+
+      // Surface igDebugError
+      if (data.igDebugError && !data.adAccountsError) {
+        try {
+          const parsed = JSON.parse(data.igDebugError)
+          if (parsed.code === 190) { setTokenExpired(true); return }
+        } catch { /* not JSON */ }
+        setIgError(`Error al cargar Instagram: ${data.igDebugError}`)
+      }
 
       setBusinesses(data.businesses   || [])
       setAdAccounts(data.adAccounts   || [])
@@ -90,8 +116,13 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
     try {
       const res  = await fetch(`/api/facebook/meta-assets?business_id=${businessId}`)
       const data = await res.json()
+      if (data.error === 'token_expired') { setTokenExpired(true); return }
       if (data.error) { setBaseError(`Error al cargar cuentas: ${data.error}`); return }
       if (data.adAccountsError) {
+        try {
+          const parsed = JSON.parse(data.adAccountsError)
+          if (parsed.code === 190) { setTokenExpired(true); return }
+        } catch { /* not JSON */ }
         setBaseError(`Meta API: ${data.adAccountsError}`)
         return
       }
@@ -112,6 +143,7 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
     try {
       const res  = await fetch(`/api/facebook/meta-assets?ad_account_id=${adAccountId}`)
       const data = await res.json()
+      if (data.error === 'token_expired') { setTokenExpired(true); return }
       if (data.error) { setPixelError(`Error al cargar pixels: ${data.error}`); return }
       setPixels(data.pixels || [])
     } catch {
@@ -127,6 +159,7 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
     try {
       const res  = await fetch(`/api/facebook/meta-assets?page_id=${pageId}`)
       const data = await res.json()
+      if (data.error === 'token_expired') { setTokenExpired(true); return }
       if (data.error) { setIgError(`Error al cargar Instagram: ${data.error}`); return }
       const accounts = data.instagramAccounts || []
       setIgAccounts(accounts)
@@ -200,6 +233,17 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
     setForm(p => ({ ...p, instagram_account_id: id, instagram_account_name: ig?.username || '' }))
   }
 
+  async function handleReconnect() {
+    setReconnecting(true)
+    try {
+      await fetch('/api/facebook/disconnect', { method: 'POST' })
+      window.location.href = `/api/auth/facebook`
+    } catch {
+      setReconnecting(false)
+      setBaseError('Error al desconectar. Intentá de nuevo.')
+    }
+  }
+
   async function save(e: React.FormEvent) {
     e.preventDefault()
     setSaveError('')
@@ -250,8 +294,38 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
         Seleccioná los activos que se usarán por defecto en tus campañas
       </p>
 
+      {/* Token expired — prominent reconnect banner */}
+      {tokenExpired && (
+        <div className="mb-4 p-4 rounded-xl" style={{
+          background: 'rgba(239,68,68,0.08)',
+          border: '1px solid rgba(239,68,68,0.28)',
+        }}>
+          <div className="flex items-start gap-3">
+            <span style={{ fontSize: 22, flexShrink: 0 }}>🔴</span>
+            <div className="flex-1">
+              <p style={{ fontWeight: 700, fontSize: 13, color: '#f87171', marginBottom: 4 }}>
+                Tu conexión con Facebook expiró
+              </p>
+              <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', lineHeight: 1.55, marginBottom: 12 }}>
+                El token de acceso fue invalidado por Facebook (puede pasar si cambiaste tu contraseña o por motivos de seguridad).
+                Necesitás reconectar tu cuenta para volver a usar los activos publicitarios.
+              </p>
+              <button
+                type="button"
+                onClick={handleReconnect}
+                disabled={reconnecting}
+                className="px-4 py-2 rounded-lg text-sm font-bold transition-opacity hover:opacity-90"
+                style={{ background: '#1877F2', color: '#fff', border: 'none', cursor: 'pointer' }}
+              >
+                {reconnecting ? 'Reconectando...' : '🔄 Reconectar Facebook'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Error de carga base */}
-      {baseError && (
+      {baseError && !tokenExpired && (
         <div className="mb-4 p-3 rounded-lg text-xs flex items-center gap-2"
              style={{ background: 'rgba(239,68,68,0.1)', color: 'var(--ds-color-danger)' }}>
           <span>⚠</span> {baseError}

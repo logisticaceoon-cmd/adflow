@@ -4,6 +4,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createNotification } from '@/lib/notification-engine'
+import { toMetaDailyBudget } from '@/lib/meta/currency'
+import { decryptSecret } from '@/lib/security/crypto'
 
 const GRAPH = 'https://graph.facebook.com/v20.0'
 
@@ -46,6 +48,15 @@ export async function POST(req: NextRequest) {
   if (!conn?.access_token) {
     return NextResponse.json({ error: 'Facebook no está conectado' }, { status: 400 })
   }
+  const fbToken = decryptSecret(conn.access_token)
+
+  // Moneda del usuario (para convertir presupuesto a subunidades de Meta correctamente)
+  const { data: bizProfile } = await supabase
+    .from('business_profiles')
+    .select('currency')
+    .eq('user_id', user.id)
+    .maybeSingle()
+  const currency = (bizProfile as any)?.currency || 'USD'
 
   const previousBudget = Number(campaign.daily_budget) || 0
 
@@ -58,8 +69,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'El nuevo presupuesto debe ser mayor a 0' }, { status: 400 })
   }
 
-  // Split equally among ad sets (Meta expects cents)
-  const perAdsetCents = Math.max(100, Math.round((newTotalBudget / adsetIds.length) * 100))
+  // Split equally among ad sets (Meta expects minor units; zero-decimal aware)
+  const perAdsetCents = toMetaDailyBudget(newTotalBudget / adsetIds.length, currency)
 
   const updated: string[] = []
   const failed: Array<{ id: string; error: string }> = []
@@ -71,7 +82,7 @@ export async function POST(req: NextRequest) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           daily_budget: perAdsetCents,
-          access_token: conn.access_token,
+          access_token: fbToken,
         }),
       })
       const data = await res.json()
@@ -86,14 +97,21 @@ export async function POST(req: NextRequest) {
     await new Promise(r => setTimeout(r, 200))
   }
 
-  // Update campaign row with the new daily budget (total, in user currency)
-  await supabase.from('campaigns').update({
-    daily_budget: newTotalBudget,
-    updated_at:   new Date().toISOString(),
-  }).eq('id', campaign_id)
-
-  // Log action
   const status = failed.length === 0 ? 'success' : updated.length > 0 ? 'partial' : 'failed'
+
+  // Persistir SOLO el presupuesto realmente aplicado en Meta.
+  // Antes se guardaba el nuevo total aunque Meta rechazara todos los ad sets,
+  // dejando la DB mintiendo (el automation engine y el dashboard escalaban sobre
+  // un valor falso). En fallo total no se toca; en parcial se guarda lo aplicado.
+  if (status !== 'failed') {
+    const effectiveTotal = status === 'success'
+      ? newTotalBudget
+      : (newTotalBudget / adsetIds.length) * updated.length
+    await supabase.from('campaigns').update({
+      daily_budget: effectiveTotal,
+      updated_at:   new Date().toISOString(),
+    }).eq('id', campaign_id)
+  }
   await supabase.from('campaign_actions').insert({
     user_id: user.id,
     campaign_id,

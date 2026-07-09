@@ -1,12 +1,20 @@
 // src/app/api/facebook/meta-assets/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { decryptSecret } from '@/lib/security/crypto'
 
 async function graphFetch(url: string, label: string) {
   const res  = await fetch(url)
   const data = await res.json()
   if (data.error) console.error(`[meta-assets] ${label}:`, JSON.stringify(data.error))
   return data
+}
+
+function isTokenExpired(error: { code?: number; error_subcode?: number } | null): boolean {
+  if (!error) return false
+  // code 190 = invalid/expired access token
+  // subcodes: 460 = password changed, 463 = token expired, 467 = invalid token
+  return error.code === 190
 }
 
 export async function GET(req: NextRequest) {
@@ -24,7 +32,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'No hay cuenta de Facebook conectada' }, { status: 400 })
   }
 
-  const token = conn.access_token
+  const token = decryptSecret(conn.access_token)
   const { searchParams } = new URL(req.url)
   const adAccountId = searchParams.get('ad_account_id')
   const pageId      = searchParams.get('page_id')
@@ -124,6 +132,19 @@ export async function GET(req: NextRequest) {
         })
       )
     }
+  }
+
+  // Check if any Meta API response indicates an expired/invalid token
+  const tokenExpired =
+    isTokenExpired(businessesData.error) ||
+    isTokenExpired(pagesData.error) ||
+    (adAccountsError && (() => { try { return isTokenExpired(JSON.parse(adAccountsError)) } catch { return false } })())
+
+  if (tokenExpired) {
+    return NextResponse.json({
+      error: 'token_expired',
+      message: 'Tu conexión con Facebook expiró. Necesitás reconectar tu cuenta.',
+    }, { status: 401 })
   }
 
   // Quitamos access_token de las páginas antes de retornar al cliente

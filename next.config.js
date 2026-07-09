@@ -2,7 +2,10 @@
 const nextConfig = {
   experimental: {
     serverActions: {
-      bodySizeLimit: '50mb',
+      // Reducido de 50mb: las imágenes de anuncios se comprimen en el cliente
+      // antes de enviarse. 12mb cubre varias imágenes sin exponer la función a
+      // payloads gigantes (abuso de memoria/costo).
+      bodySizeLimit: '12mb',
     },
   },
   images: {

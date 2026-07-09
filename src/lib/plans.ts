@@ -1,6 +1,14 @@
 // src/lib/plans.ts — shared plan constants (no server imports, safe for client)
 import type { PlanType } from '@/types'
 
+// Fuente ÚNICA de planes válidos. Debe coincidir con el CHECK de profiles.plan
+// y con los enums de validación (validations.ts). No hardcodear listas sueltas.
+export const VALID_PLANS = ['free', 'starter', 'pro', 'agency'] as const
+
+export function isValidPlan(plan: unknown): plan is PlanType {
+  return typeof plan === 'string' && (VALID_PLANS as readonly string[]).includes(plan)
+}
+
 export const PLAN_CREDITS: Record<string, number> = {
   free:    10,
   starter: 100,

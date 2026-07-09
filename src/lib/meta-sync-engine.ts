@@ -4,6 +4,8 @@
 import { createAdminClient } from '@/lib/supabase/server'
 import { evaluateAchievements } from '@/lib/achievement-engine'
 import { createNotification } from '@/lib/notification-engine'
+import { decryptSecret } from '@/lib/security/crypto'
+import { sendMetaTokenExpiredEmail } from '@/lib/email/transactional'
 
 const GRAPH = 'https://graph.facebook.com/v20.0'
 const INSIGHT_FIELDS = 'spend,impressions,reach,frequency,clicks,ctr,cpc,cpm,actions,action_values,date_start,date_stop,adset_name'
@@ -63,19 +65,25 @@ function extractActions(actions: any[] | undefined, actionValues: any[] | undefi
 }
 
 // ── Fetch daily insights for a campaign or ad set ──────────────────────────
-async function fetchInsights(objectId: string, token: string, datePreset: DatePreset): Promise<any[]> {
+// Devuelve { data, tokenExpired, error } para distinguir "sin datos" de un fallo
+// real. Antes tragaba cualquier error devolviendo [], por lo que un token
+// expirado (código 190) hacía que el sync reportara ÉXITO sin sincronizar nada.
+interface InsightsResult { data: any[]; tokenExpired?: boolean; error?: string }
+
+async function fetchInsights(objectId: string, token: string, datePreset: DatePreset): Promise<InsightsResult> {
   try {
     const url = `${GRAPH}/${objectId}/insights?fields=${INSIGHT_FIELDS}&date_preset=${datePreset}&time_increment=1&access_token=${token}`
     const res = await fetch(url)
     const data = await res.json()
     if (data.error) {
+      const tokenExpired = data.error.code === 190
       console.warn(`[meta-sync] Insights error for ${objectId}: ${data.error.message}`)
-      return []
+      return { data: [], tokenExpired, error: data.error.message }
     }
-    return data.data || []
+    return { data: data.data || [] }
   } catch (err: any) {
     console.warn(`[meta-sync] Fetch exception for ${objectId}: ${err.message}`)
-    return []
+    return { data: [], error: err.message }
   }
 }
 
@@ -100,6 +108,7 @@ export async function syncUserMetrics(
     if (!conn?.access_token) {
       return { userId, status: 'failed', campaignsSynced: 0, adsetsSynced: 0, errors: ['No Facebook token'], durationMs: Date.now() - startTime }
     }
+    const fbToken = decryptSecret(conn.access_token)
 
     // 2) Ad account (prefer business_profile selection)
     const { data: biz } = await db
@@ -126,10 +135,21 @@ export async function syncUserMetrics(
     }
 
     // 4) Loop campaigns
+    let tokenExpired = false
     for (const campaign of campaigns) {
       try {
         const phase = classifyPhase(campaign.name, campaign.strategy_type)
-        const insights = await fetchInsights(campaign.meta_campaign_id as string, conn.access_token, datePreset)
+        const insightsRes = await fetchInsights(campaign.meta_campaign_id as string, fbToken, datePreset)
+        if (insightsRes.tokenExpired) {
+          tokenExpired = true
+          errors.push('Token de Facebook expirado. Reconectá tu cuenta en Configuración.')
+          break // fatal: ninguna campaña se puede sincronizar con un token inválido
+        }
+        if (insightsRes.error) {
+          errors.push(`Campaign ${campaign.name}: ${insightsRes.error}`)
+          continue // no contar como sincronizada
+        }
+        const insights = insightsRes.data
 
         // Per-day upserts
         for (const day of insights) {
@@ -210,7 +230,10 @@ export async function syncUserMetrics(
         const adsetIds = (campaign.meta_adset_ids || []) as string[]
         for (const adsetId of adsetIds) {
           try {
-            const adsetInsights = await fetchInsights(adsetId, conn.access_token, datePreset)
+            const adsetRes = await fetchInsights(adsetId, fbToken, datePreset)
+            if (adsetRes.tokenExpired) { tokenExpired = true; break }
+            if (adsetRes.error) { errors.push(`AdSet ${adsetId}: ${adsetRes.error}`); continue }
+            const adsetInsights = adsetRes.data
             for (const day of adsetInsights) {
               const c = extractActions(day.actions, day.action_values)
               const adsetSpend = parseFloat(day.spend) || 0
@@ -243,6 +266,7 @@ export async function syncUserMetrics(
           // Rate limit: 200ms between ad set calls
           await new Promise(r => setTimeout(r, 200))
         }
+        if (tokenExpired) break // token inválido: cortar el resto de campañas
       } catch (cErr: any) {
         errors.push(`Campaign ${campaign.name}: ${cErr.message}`)
       }
@@ -273,11 +297,19 @@ export async function syncUserMetrics(
         await createNotification({
           userId,
           type: 'sync_failed',
-          title: 'Error al sincronizar métricas',
+          title: tokenExpired ? 'Reconectá tu cuenta de Facebook' : 'Error al sincronizar métricas',
           body: errors[0] || 'Verificá tu conexión con Facebook',
           severity: 'error',
           actionUrl: '/dashboard/settings',
         })
+        // Si el token expiró, avisar también por email (best-effort).
+        if (tokenExpired) {
+          const { data: p } = await db
+            .from('profiles').select('report_email, full_name').eq('id', userId).single()
+          if (p?.report_email) {
+            await sendMetaTokenExpiredEmail(p.report_email as string, (p.full_name as string | null)?.split(' ')[0])
+          }
+        }
       } else if (campaignsSynced > 0) {
         await createNotification({
           userId,

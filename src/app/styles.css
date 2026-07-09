@@ -34,9 +34,9 @@
 
   --ds-color-primary:        #2dd4bf;
   --ds-color-primary-strong: #14b8a6;
-  --ds-color-primary-soft:   rgba(45, 212, 191, 0.10);
-  --ds-color-primary-border: rgba(45, 212, 191, 0.20);
-  --ds-color-primary-glow:   transparent;
+  --ds-color-primary-soft:   rgba(45, 212, 191, 0.12);
+  --ds-color-primary-border: rgba(45, 212, 191, 0.22);
+  --ds-color-primary-glow:   rgba(45, 212, 191, 0.25);
 
   --ds-color-accent:      #62c4b0;
   --ds-color-accent-soft: rgba(98, 196, 176, 0.10);
@@ -63,14 +63,15 @@
   /* ── Container / surface ── */
   --ds-surface-primary: rgba(8, 12, 24, 0.70);
 
-  /* ── Cards — blue-purple gradient glow over space bg ── */
-  --ds-card-bg:           linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%);
-  --ds-card-bg-hover:     linear-gradient(145deg, rgba(30, 42, 95, 0.78) 0%, rgba(25, 30, 75, 0.72) 40%, rgba(35, 25, 80, 0.68) 100%);
-  --ds-card-border:       rgba(100, 120, 255, 0.12);
-  --ds-card-border-hover: rgba(120, 140, 255, 0.22);
-  --ds-card-blur:         20px;
+  /* ── Cards — flat translucent glass (no blue/purple gradient) ── */
+  --ds-card-bg:           rgba(255, 255, 255, 0.04);
+  --ds-card-bg-hover:     rgba(255, 255, 255, 0.06);
+  --ds-card-border:       rgba(255, 255, 255, 0.09);
+  --ds-card-border-hover: rgba(255, 255, 255, 0.16);
+  --ds-card-blur:         14px;
   --ds-card-radius:       16px;
   --ds-card-radius-sm:    10px;
+  --ds-card-highlight:    rgba(255, 255, 255, 0.20);
 
   --ds-card-inner-glow: none;
 
@@ -86,9 +87,9 @@
   --ds-color-completed-soft:   rgba(16, 185, 129, 0.12);
   --ds-color-completed-border: rgba(16, 185, 129, 0.30);
 
-  --ds-color-secondary:        #a78bfa;
-  --ds-color-secondary-soft:   rgba(167, 139, 250, 0.08);
-  --ds-color-secondary-border: rgba(167, 139, 250, 0.18);
+  --ds-color-secondary:        #ec4899;
+  --ds-color-secondary-soft:   rgba(236, 72, 153, 0.10);
+  --ds-color-secondary-border: rgba(236, 72, 153, 0.22);
 
   /* ── Text ── */
   --ds-text-primary:   rgba(255, 255, 255, 0.95);
@@ -110,24 +111,114 @@
   --ds-shadow-md:    0 4px 20px rgba(0, 0, 0, 0.35);
   --ds-shadow-lg:    0 8px 32px rgba(0, 0, 0, 0.40);
   --ds-shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.35);
-  --ds-shadow-glow:  none;
+  --ds-shadow-glow:  0 0 24px rgba(45, 212, 191, 0.12);
 
-  --ds-glow-primary:   none;
-  --ds-glow-accent:    none;
-  --ds-glow-success:   none;
-  --ds-glow-warning:   none;
-  --ds-glow-danger:    none;
-  --ds-glow-secondary: none;
+  --ds-glow-primary:   0 0 20px rgba(45, 212, 191, 0.22);
+  --ds-glow-accent:    0 0 18px rgba(98, 196, 176, 0.20);
+  --ds-glow-success:   0 0 14px rgba(52, 211, 153, 0.30);
+  --ds-glow-warning:   0 0 14px rgba(251, 191, 36, 0.22);
+  --ds-glow-danger:    0 0 14px rgba(248, 113, 113, 0.22);
+  --ds-glow-secondary: 0 0 16px rgba(236, 72, 153, 0.22);
 
-  --ds-color-success-glow: transparent;
-  --ds-color-warning-glow: transparent;
-  --ds-color-danger-glow:  transparent;
+  --ds-color-success-glow: rgba(52, 211, 153, 0.30);
+  --ds-color-warning-glow: rgba(251, 191, 36, 0.22);
+  --ds-color-danger-glow:  rgba(248, 113, 113, 0.22);
 
   /* ── Transitions — all cubic-bezier for smoothness (no ease) ── */
   --ds-transition-fast:    150ms cubic-bezier(0.16, 1, 0.3, 1);
   --ds-transition-normal:  220ms cubic-bezier(0.16, 1, 0.3, 1);
   --ds-transition-slow:    350ms cubic-bezier(0.16, 1, 0.3, 1);
   --ds-transition-tap:     80ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Tema claro ──────────────────────────────────────────────
+   Override de tokens cuando <html data-theme="light">. Misma estructura,
+   superficies claras, acento teal más oscuro para contraste, glows suaves. */
+:root[data-theme="light"] {
+  --ds-bg-deep:     #eef2f8;
+  --ds-bg-surface:  #ffffff;
+  --ds-bg-elevated: #ffffff;
+  --ds-bg-hover:    #f1f5f9;
+
+  --ds-color-primary:        #0d9488;
+  --ds-color-primary-strong: #0f766e;
+  --ds-color-primary-soft:   rgba(20, 184, 166, 0.12);
+  --ds-color-primary-border: rgba(20, 184, 166, 0.28);
+  --ds-color-primary-glow:   rgba(20, 184, 166, 0.20);
+
+  --ds-color-accent:      #0d9488;
+  --ds-color-accent-soft: rgba(13, 148, 136, 0.10);
+
+  --ds-color-success:        #059669;
+  --ds-color-success-strong: #047857;
+  --ds-color-success-soft:   rgba(5, 150, 105, 0.10);
+  --ds-color-success-border: rgba(5, 150, 105, 0.28);
+
+  --ds-color-warning:        #d97706;
+  --ds-color-warning-soft:   rgba(217, 119, 6, 0.10);
+  --ds-color-warning-border: rgba(217, 119, 6, 0.24);
+
+  --ds-color-danger:         #dc2626;
+  --ds-color-danger-strong:  #b91c1c;
+  --ds-color-danger-soft:    rgba(220, 38, 38, 0.08);
+  --ds-color-danger-border:  rgba(220, 38, 38, 0.22);
+
+  --ds-color-locked:        rgba(15, 23, 42, 0.03);
+  --ds-color-locked-border: rgba(15, 23, 42, 0.08);
+  --ds-color-disabled-text: rgba(15, 23, 42, 0.35);
+
+  --ds-surface-primary: rgba(255, 255, 255, 0.85);
+
+  --ds-card-bg:           #ffffff;
+  --ds-card-bg-hover:     #ffffff;
+  --ds-card-border:       rgba(15, 23, 42, 0.08);
+  --ds-card-border-hover: rgba(15, 23, 42, 0.16);
+  --ds-card-highlight:    rgba(15, 23, 42, 0.04);
+
+  --ds-border-soft:    rgba(15, 23, 42, 0.08);
+  --ds-border-active:  rgba(13, 148, 136, 0.30);
+  --ds-border-success: rgba(5, 150, 105, 0.32);
+
+  --ds-surface-glass-blue:  rgba(13, 148, 136, 0.06);
+  --ds-surface-glass-green: rgba(5, 150, 105, 0.08);
+
+  --ds-color-completed:        #059669;
+  --ds-color-completed-soft:   rgba(5, 150, 105, 0.12);
+  --ds-color-completed-border: rgba(5, 150, 105, 0.30);
+
+  --ds-color-secondary:        #db2777;
+  --ds-color-secondary-soft:   rgba(219, 39, 119, 0.10);
+  --ds-color-secondary-border: rgba(219, 39, 119, 0.24);
+
+  --ds-text-primary:   #0f172a;
+  --ds-text-secondary: #475569;
+  --ds-text-muted:     #64748b;
+  --ds-text-label:     #64748b;
+
+  --ds-shadow-sm:    0 1px 3px rgba(15, 23, 42, 0.06);
+  --ds-shadow-md:    0 4px 14px rgba(15, 23, 42, 0.06);
+  --ds-shadow-lg:    0 8px 26px rgba(15, 23, 42, 0.08);
+  --ds-shadow-hover: 0 8px 26px rgba(15, 23, 42, 0.10);
+  --ds-shadow-glow:  0 6px 20px rgba(20, 184, 166, 0.14);
+
+  --ds-glow-primary:   0 6px 18px rgba(20, 184, 166, 0.20);
+  --ds-glow-accent:    0 6px 18px rgba(13, 148, 136, 0.18);
+  --ds-glow-success:   0 4px 14px rgba(5, 150, 105, 0.20);
+  --ds-glow-warning:   0 4px 14px rgba(217, 119, 6, 0.18);
+  --ds-glow-danger:    0 4px 14px rgba(220, 38, 38, 0.18);
+  --ds-glow-secondary: 0 4px 14px rgba(219, 39, 119, 0.18);
+}
+
+:root[data-theme="light"] select { color-scheme: light; }
+:root[data-theme="light"] ::selection { background: rgba(13, 148, 136, 0.22); color: #0f172a; }
+:root[data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(15, 23, 42, 0.14); }
+
+/* Fondo claro del área de dashboard (unlayered → gana al @layer components) */
+:root[data-theme="light"] .dashboard-layout {
+  background-color: #eef2f8;
+  background-image:
+    radial-gradient(620px 380px at 85% -5%, rgba(20, 184, 166, 0.10), transparent 70%),
+    linear-gradient(170deg, #f3f6fb 0%, #eef2f8 100%);
 }
 
 /* ─── Base ───────────────────────────────────────────────────── */
@@ -371,23 +462,23 @@
   ───────────────────────────────────────────────────────────── */
   .card,
   .ds-card {
-    background: linear-gradient(145deg, rgba(25, 35, 80, 0.70) 0%, rgba(20, 25, 65, 0.65) 40%, rgba(30, 20, 70, 0.60) 100%);
-    backdrop-filter: blur(20px) saturate(1.4);
-    -webkit-backdrop-filter: blur(20px) saturate(1.4);
-    border: 1px solid rgba(100, 120, 255, 0.12);
-    border-radius: 18px;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.30), 0 0 1px rgba(100, 120, 255, 0.08);
-    transition: all 250ms ease;
+    background: var(--ds-card-bg);
+    backdrop-filter: blur(var(--ds-card-blur)) saturate(1.2);
+    -webkit-backdrop-filter: blur(var(--ds-card-blur)) saturate(1.2);
+    border: 1px solid var(--ds-card-border);
+    border-radius: var(--ds-card-radius);
+    box-shadow: var(--ds-shadow-md);
+    transition: all 250ms var(--ease-out);
     position: relative;
     overflow: hidden;
   }
-  /* Top-edge glow reflection line */
+  /* Top-edge glass reflection line (neutral, theme-aware) */
   .card::before,
   .ds-card::before {
     content: '';
     position: absolute;
-    top: 0; left: 5%; right: 5%; height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(120, 140, 255, 0.18) 20%, rgba(140, 120, 255, 0.30) 50%, rgba(120, 140, 255, 0.18) 80%, transparent 100%);
+    top: 0; left: 8%; right: 8%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--ds-card-highlight), transparent);
     z-index: 2;
     pointer-events: none;
   }
@@ -397,14 +488,14 @@
   .ds-card:hover,
   .ds-card.ds-card--hover:hover,
   .card-hover:hover {
-    background: linear-gradient(145deg, rgba(30, 42, 95, 0.78) 0%, rgba(25, 30, 75, 0.72) 40%, rgba(35, 25, 80, 0.68) 100%);
-    border-color: rgba(120, 140, 255, 0.22);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), 0 0 20px rgba(100, 120, 255, 0.06);
+    background: var(--ds-card-bg-hover);
+    border-color: var(--ds-card-border-hover);
+    box-shadow: var(--ds-shadow-lg);
     transform: translateY(-2px);
   }
   .card:hover::before,
   .ds-card:hover::before {
-    background: linear-gradient(90deg, transparent 0%, rgba(120, 140, 255, 0.28) 20%, rgba(140, 120, 255, 0.45) 50%, rgba(120, 140, 255, 0.28) 80%, transparent 100%);
+    background: linear-gradient(90deg, transparent, var(--ds-card-highlight), transparent);
   }
   .card-hover:active {
     transform: scale(0.995);
@@ -516,19 +607,19 @@
     @apply rounded-2xl p-5;
     position: relative;
     overflow: hidden;
-    background: linear-gradient(160deg, rgba(14,10,24,0.88) 0%, rgba(8,8,18,0.94) 100%);
-    border: 1px solid rgba(255,255,255,0.07);
-    backdrop-filter: blur(28px);
-    -webkit-backdrop-filter: blur(28px);
+    background: var(--ds-card-bg);
+    border: 1px solid var(--ds-card-border);
+    box-shadow: var(--ds-shadow-md);
+    backdrop-filter: blur(var(--ds-card-blur));
+    -webkit-backdrop-filter: blur(var(--ds-card-blur));
     transition: transform 0.26s cubic-bezier(0.16,1,0.3,1), box-shadow 0.26s ease, border-color 0.26s ease;
   }
   .metric-card::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0; height: 50%;
-    background: linear-gradient(180deg, rgba(255,255,255,0.10) 0%, transparent 100%);
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--ds-card-highlight), transparent);
     pointer-events: none;
-    border-radius: inherit;
     z-index: 1;
   }
   /* Shimmer sweep on hover */
@@ -542,7 +633,8 @@
   }
   .metric-card:hover {
     transform: translateY(-5px);
-    border-color: var(--card-border-hover);
+    border-color: var(--ds-card-border-hover);
+    box-shadow: var(--ds-shadow-lg);
   }
   .metric-card:hover::after {
     animation: shimmerSweep 0.65s ease-out forwards;
@@ -710,7 +802,7 @@
     @apply block w-full px-4 py-3 text-sm;
     min-height: var(--touch-min);
     background: rgba(12, 16, 42, 0.70);
-    border: 1px solid rgba(100, 120, 255, 0.10);
+    border: 1px solid var(--ds-border-soft);
     border-radius: 12px;
     color: var(--ds-text-primary);
     caret-color: var(--ds-color-primary);
@@ -990,7 +1082,7 @@
     background: linear-gradient(90deg, rgba(18, 25, 60, 0.85) 0%, rgba(22, 28, 65, 0.85) 100%);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(100, 120, 255, 0.08);
+    border-bottom: 1px solid var(--ds-border-soft);
     min-height: 64px;
     box-shadow:
       0 4px 20px rgba(0, 0, 0, 0.20),
@@ -1005,7 +1097,7 @@
     background: linear-gradient(180deg, rgba(20, 28, 65, 0.88) 0%, rgba(15, 20, 55, 0.92) 100%);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    border-right: 1px solid rgba(100, 120, 255, 0.08);
+    border-right: 1px solid var(--ds-border-soft);
     box-shadow:
       12px 0 40px rgba(0, 0, 0, 0.25),
       inset -1px 0 0 rgba(45, 212, 168, 0.06);
@@ -1266,11 +1358,11 @@
      The result is sober but never flat — the eye picks up depth and tint
      without any visible "blob" or shape.                              */
   .dashboard-layout {
-    background-color: #080c14;
-    background-image: url('/bg-space.png');
-    background-size: cover;
-    background-position: center bottom;
-    background-repeat: no-repeat;
+    background-color: var(--ds-bg-deep);
+    background-image:
+      radial-gradient(600px 360px at 85% -5%, rgba(45, 212, 191, 0.10), transparent 70%),
+      radial-gradient(560px 360px at -5% 105%, rgba(236, 72, 153, 0.08), transparent 70%),
+      linear-gradient(170deg, #0c1120 0%, #080b12 55%, #0a0e18 100%);
     background-attachment: fixed;
     position: relative;
     min-height: 100vh;
@@ -1297,10 +1389,10 @@
 
   /* Card hover effect for the new Card primitive */
   .ds-card.ds-card--hover:hover {
-    background: linear-gradient(145deg, rgba(30, 42, 95, 0.78) 0%, rgba(25, 30, 75, 0.72) 40%, rgba(35, 25, 80, 0.68) 100%) !important;
-    border-color: rgba(120, 140, 255, 0.22) !important;
+    background: var(--ds-card-bg-hover) !important;
+    border-color: var(--ds-card-border-hover) !important;
     transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), 0 0 20px rgba(100, 120, 255, 0.06) !important;
+    box-shadow: 0 10px 34px rgba(0, 0, 0, 0.40), 0 0 22px rgba(45, 212, 191, 0.08) !important;
   }
 
   /* ─────────────────────────────────────────────────────────────

@@ -1,7 +1,7 @@
 // src/app/api/admin/set-plan/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
-import { PLAN_CREDITS } from '@/lib/plans'
+import { PLAN_CREDITS, VALID_PLANS, isValidPlan } from '@/lib/plans'
 
 export async function POST(req: NextRequest) {
   // Identify caller via session (regular client)
@@ -26,9 +26,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'userId y plan son requeridos' }, { status: 400 })
   }
 
-  const validPlans = ['free', 'starter', 'pro', 'agency']
-  if (!validPlans.includes(plan)) {
-    return NextResponse.json({ error: 'Plan inválido' }, { status: 400 })
+  if (!isValidPlan(plan)) {
+    return NextResponse.json({ error: `Plan inválido. Válidos: ${VALID_PLANS.join(', ')}` }, { status: 400 })
   }
   const { error } = await db
     .from('profiles')

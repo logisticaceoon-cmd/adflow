@@ -11,9 +11,21 @@ export const metadata: Metadata = {
   description: 'Crea campañas de Facebook Ads profesionales en minutos con Inteligencia Artificial',
 }
 
+// Script anti-flash: fija data-theme antes del primer paint (default: oscuro).
+const themeInitScript = `
+(function(){try{
+  var t = localStorage.getItem('adflow-theme');
+  if(!t){t='dark';}
+  document.documentElement.setAttribute('data-theme', t);
+}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();
+`
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${syne.variable} ${dmSans.variable}`}>
+    <html lang="es" data-theme="dark" className={`${syne.variable} ${dmSans.variable}`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body>{children}</body>
     </html>
   )

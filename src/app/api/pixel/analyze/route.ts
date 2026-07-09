@@ -36,7 +36,7 @@ export async function GET() {
   }
 
   try {
-    const analysis = await analyzePixel(biz.pixel_id, conn.access_token)
+    const analysis = await analyzePixel(biz.pixel_id, decryptSecret(conn.access_token))
     await savePixelAnalysis(user.id, analysis)
     return NextResponse.json({ analysis })
   } catch (err: any) {

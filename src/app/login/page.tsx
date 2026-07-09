@@ -154,6 +154,11 @@ export default function LoginPage() {
                 onFocus={e => { e.currentTarget.style.borderColor = 'rgba(233,30,140,0.6)' }}
                 onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)' }}
               />
+              <div style={{ textAlign: 'right', marginTop: 6 }}>
+                <Link href="/forgot-password" style={{ color: '#9a9ab0', fontSize: 12, textDecoration: 'none' }}>
+                  ¿Olvidaste tu contraseña?
+                </Link>
+              </div>
             </div>
             <button
               type="submit" disabled={loading}

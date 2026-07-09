@@ -1,6 +1,7 @@
 // src/app/dashboard/page.tsx — Growth OS dashboard (server component)
 // Clean layout: Hero → Next Action → Month Metrics → Setup → Tip+Objetivo
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { sendWelcomeEmail } from '@/lib/email/transactional'
 import OnboardingWizard from '@/components/dashboard/OnboardingWizard'
 import HeroLevel from '@/components/dashboard/HeroLevel'
 import NextBestAction from '@/components/dashboard/NextBestAction'
@@ -55,7 +56,8 @@ export default async function DashboardPage() {
 
   const now = new Date()
   const monthYear = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
-  const firstDayMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
+  // Fecha (sin hora) del primer día del mes, para filtrar campaign_metrics_daily.date
+  const firstDayMonthDate = `${monthYear}-01`
 
   const [
     { data: profile },
@@ -65,8 +67,9 @@ export default async function DashboardPage() {
     { data: monthlyBudget },
     { data: prevMonthReport },
     { data: fbConnection },
+    { data: monthMetrics },
   ] = await Promise.all([
-    supabase.from('profiles').select('full_name, plan').eq('id', user.id).single(),
+    supabase.from('profiles').select('full_name, plan, report_email, welcome_email_sent').eq('id', user.id).single(),
     supabase.from('campaigns').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
     supabase.from('business_profiles').select('selected_ad_account_id, business_name, currency, pixel_id').eq('user_id', user.id).maybeSingle(),
     supabase.from('pixel_analysis').select('*').eq('user_id', user.id).maybeSingle(),
@@ -78,6 +81,13 @@ export default async function DashboardPage() {
       .limit(1)
       .maybeSingle(),
     supabase.from('facebook_connections').select('access_token').eq('user_id', user.id).maybeSingle(),
+    // Métricas reales del mes en curso desde la tabla diaria (fuente de verdad).
+    // Antes se sumaba campaigns.metrics (ventana variable según el último sync) y
+    // solo campañas creadas este mes → cifras incoherentes. Ahora es gasto MTD real.
+    supabase.from('campaign_metrics_daily')
+      .select('spend, impressions, reach, clicks, purchases, purchase_value')
+      .eq('user_id', user.id)
+      .gte('date', firstDayMonthDate),
   ])
 
   // ── Onboarding status ──────────────────────────────────────────────────
@@ -90,18 +100,37 @@ export default async function DashboardPage() {
     campaignCount: (campaigns || []).length,
   })
 
-  const allCampaigns = (campaigns || []) as any[]
-  const monthCampaigns = allCampaigns.filter(c => new Date(c.created_at) >= new Date(firstDayMonth))
+  // ── Email de bienvenida (una sola vez, best-effort, no bloquea el render) ─
+  if (profile && !(profile as any).welcome_email_sent && (profile as any).report_email) {
+    const admin = createAdminClient()
+    // Claim idempotente: solo un render marca la bandera y envía.
+    const { data: claimed } = await admin
+      .from('profiles')
+      .update({ welcome_email_sent: true })
+      .eq('id', user.id)
+      .eq('welcome_email_sent', false)
+      .select('id')
+    if (claimed && claimed.length > 0) {
+      await sendWelcomeEmail((profile as any).report_email, (profile as any).full_name?.split(' ')[0])
+    }
+  }
 
-  // ── Aggregate metrics ──────────────────────────────────────────────────
-  const totalSpend       = monthCampaigns.reduce((s, c) => s + (c.metrics?.spend       || 0), 0)
-  const totalRevenue     = monthCampaigns.reduce((s, c) => s + ((c.metrics?.roas || 0) * (c.metrics?.spend || 0)), 0)
-  const totalConversions = monthCampaigns.reduce((s, c) => s + (c.metrics?.conversions || 0), 0)
+  const allCampaigns = (campaigns || []) as any[]
+
+  // ── Aggregate metrics — gasto real del mes (MTD) desde la tabla diaria ───
+  // Suma día por día de TODAS las campañas activas en el mes (no solo las
+  // creadas este mes), con ventana fija = mes calendario actual.
+  const dailyRows = (monthMetrics || []) as Array<{
+    spend?: number; impressions?: number; reach?: number
+    clicks?: number; purchases?: number; purchase_value?: number
+  }>
+  const totalSpend       = dailyRows.reduce((s, r) => s + (Number(r.spend)          || 0), 0)
+  const totalRevenue     = dailyRows.reduce((s, r) => s + (Number(r.purchase_value) || 0), 0)
+  const totalConversions = dailyRows.reduce((s, r) => s + (Number(r.purchases)      || 0), 0)
   const avgRoas          = totalSpend > 0 ? totalRevenue / totalSpend : 0
 
-  // Impressions, reach, frequency, CPM — aggregated from campaign metrics
-  const totalImpressions = monthCampaigns.reduce((s, c) => s + (c.metrics?.impressions || 0), 0)
-  const totalReach       = monthCampaigns.reduce((s, c) => s + (c.metrics?.reach       || 0), 0)
+  const totalImpressions = dailyRows.reduce((s, r) => s + (Number(r.impressions) || 0), 0)
+  const totalReach       = dailyRows.reduce((s, r) => s + (Number(r.reach)       || 0), 0)
   const avgCpm           = totalImpressions > 0 ? (totalSpend / totalImpressions) * 1000 : 0
   const avgFrequency     = totalReach > 0 ? totalImpressions / totalReach : 0
 

@@ -8,6 +8,7 @@ import { createNotification } from './notification-engine'
 import type { Recommendation } from './recommendation-engine'
 import type { PixelAnalysis } from './pixel-analyzer'
 import Anthropic from '@anthropic-ai/sdk'
+import { AI_MODELS } from '@/lib/ai/models'
 
 export interface MonthlyReport {
   monthYear: string
@@ -156,7 +157,7 @@ Datos del mes (${targetMonth}):
 Respondé en español, directo y accionable. Sin formato markdown, solo texto plano.`
 
     const msg = await anthropic.messages.create({
-      model: 'claude-haiku-4-5-20251001',
+      model: AI_MODELS.fast,
       max_tokens: 500,
       messages: [{ role: 'user', content: prompt }],
     })

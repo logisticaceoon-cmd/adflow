@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import { encryptSecret } from '@/lib/security/crypto'
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams
@@ -92,7 +93,7 @@ export async function GET(req: NextRequest) {
     //    Ad account selection happens separately in Settings → Meta Assets.
     const payload = {
       user_id:          user.id,
-      access_token:     accessToken,
+      access_token:     encryptSecret(accessToken),
       token_expires_at: expiresAt,
       facebook_user_id: meData.id,
       // Show FB user name as the connection name, not an ad account

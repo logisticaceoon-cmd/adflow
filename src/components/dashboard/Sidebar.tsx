@@ -12,6 +12,7 @@ import type { User } from '@supabase/supabase-js'
 import type { Profile } from '@/types'
 import { PLAN_CREDITS } from '@/lib/plans'
 import { useSidebar } from './SidebarContext'
+import ThemeToggle from './ThemeToggle'
 
 type NavItem = { href: string; icon: any; label: string; badge?: string; badgeColor?: string }
 
@@ -493,6 +494,11 @@ export default function Sidebar({ user, profile }: Props) {
                 <span style={{ fontSize: 13, color: 'var(--ds-color-primary)' }}>Panel Admin</span>
               </Link>
             )}
+
+            <div className="px-3 py-2 flex items-center justify-between">
+              <span style={{ fontSize: 13, color: '#8892b0' }}>Tema</span>
+              <ThemeToggle />
+            </div>
 
             <button onClick={handleLogout} className="nav-item nav-item-inactive text-left">
               <LogOut size={16} strokeWidth={1.75} style={{ color: '#8892b0', flexShrink: 0 }} />

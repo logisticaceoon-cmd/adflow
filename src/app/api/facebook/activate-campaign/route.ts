@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
     const res  = await fetch(`${GRAPH}/${campaign.meta_campaign_id}`, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ status: metaStatus, access_token: conn.access_token }),
+      body:    JSON.stringify({ status: metaStatus, access_token: decryptSecret(conn.access_token) }),
     })
     const data = await res.json()
 

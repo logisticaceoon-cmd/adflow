@@ -2,186 +2,17 @@
 // Publishes a full Meta Ads campaign structure: Campaign → Ad Sets → Ad Creatives → Ads
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { analyzePixel, savePixelAnalysis, type PixelAnalysis } from '@/lib/pixel-analyzer'
-import { searchMetaInterests, findOrCreateRetargetingAudience, findOrCreateLookalike } from '@/lib/audience-engine'
 import { createNotification } from '@/lib/notification-engine'
 import { markActionCompleted } from '@/lib/memory-engine'
-import type { AdSetItem, AdCopyItem, CampaignStructure } from '@/types'
+import type { AdSetItem, CampaignStructure } from '@/types'
+import { META_GRAPH_URL, toCountryCode } from '@/lib/constants'
+import { checkRateLimit } from '@/lib/rate-limit'
+import { publishCampaignSchema, validate } from '@/lib/validations'
+import { uploadImageToMeta } from '@/lib/meta/graph-api'
+import { buildAndPublishCampaign } from '@/lib/meta/campaign-builder'
+import { toMetaDailyBudget } from '@/lib/meta/currency'
 
-const GRAPH = 'https://graph.facebook.com/v20.0'
-
-// ── Valid Meta placement whitelists ───────────────────────────────────────
-const VALID_PUBLISHER_PLATFORMS = new Set([
-  'facebook', 'instagram', 'audience_network', 'messenger',
-])
-const VALID_FACEBOOK_POSITIONS = new Set([
-  'feed', 'right_hand_column', 'marketplace', 'video_feeds',
-  'story', 'search', 'groups_feed', 'profile_feed',
-  'facebook_reels', 'instream_video', 'instant_article',
-])
-const VALID_INSTAGRAM_POSITIONS = new Set([
-  'stream', 'story', 'explore', 'explore_home', 'reels',
-  'profile_feed', 'ig_search', 'profile_reels',
-])
-
-const FB_POSITION_RENAMES: Record<string, string> = {
-  reels: 'facebook_reels',
-  reels_overlay: 'facebook_reels',
-  reel: 'facebook_reels',
-}
-
-function sanitizePlacements(t: {
-  publisher_platforms?: string[]
-  facebook_positions?: string[]
-  instagram_positions?: string[]
-}): {
-  publisher_platforms?: string[]
-  facebook_positions?: string[]
-  instagram_positions?: string[]
-} | null {
-  if (!t.publisher_platforms?.length) return null
-  const platforms = t.publisher_platforms.filter(p => VALID_PUBLISHER_PLATFORMS.has(p))
-  if (!platforms.length) return null
-  const result: { publisher_platforms?: string[]; facebook_positions?: string[]; instagram_positions?: string[] } = { publisher_platforms: platforms }
-  if (t.facebook_positions?.length) {
-    const fbPos = t.facebook_positions.map(p => FB_POSITION_RENAMES[p] ?? p).filter(p => VALID_FACEBOOK_POSITIONS.has(p))
-    if (fbPos.length) result.facebook_positions = fbPos
-  }
-  if (t.instagram_positions?.length) {
-    const igPos = t.instagram_positions.filter(p => VALID_INSTAGRAM_POSITIONS.has(p))
-    if (igPos.length) result.instagram_positions = igPos
-  }
-  return result
-}
-
-// ── Country name → ISO 2-letter code ──────────────────────────────────────
-const COUNTRY_MAP: Record<string, string> = {
-  argentina: 'AR', méxico: 'MX', mexico: 'MX', chile: 'CL',
-  colombia: 'CO', perú: 'PE', peru: 'PE', venezuela: 'VE',
-  ecuador: 'EC', bolivia: 'BO', uruguay: 'UY', paraguay: 'PY',
-  brasil: 'BR', brazil: 'BR', españa: 'ES', spain: 'ES',
-  'estados unidos': 'US', usa: 'US', 'united states': 'US',
-  'costa rica': 'CR', guatemala: 'GT', honduras: 'HN', 'el salvador': 'SV',
-  nicaragua: 'NI', panamá: 'PA', panama: 'PA', cuba: 'CU',
-  'república dominicana': 'DO', 'dominican republic': 'DO',
-  'puerto rico': 'PR',
-}
-
-function toCountryCode(s: string): string {
-  const lower = s.toLowerCase().trim()
-  if (COUNTRY_MAP[lower]) return COUNTRY_MAP[lower]
-  if (/^[a-z]{2}$/i.test(s)) return s.toUpperCase()
-  return s.toUpperCase().slice(0, 2)
-}
-
-// ── CTA label → Meta CTA type ──────────────────────────────────────────────
-const CTA_MAP: Record<string, string> = {
-  'comprar ahora': 'SHOP_NOW', comprar: 'SHOP_NOW', compra: 'SHOP_NOW', 'shop now': 'SHOP_NOW',
-  'finalizar compra': 'SHOP_NOW', 'completar compra': 'SHOP_NOW', 'completa tu compra': 'SHOP_NOW',
-  'agregar al carrito': 'SHOP_NOW', 'añadir al carrito': 'SHOP_NOW',
-  'ver en la tienda': 'SHOP_NOW', 'ir a la tienda': 'SHOP_NOW', 'visitar tienda': 'SHOP_NOW',
-  'ver producto': 'SHOP_NOW', 'ver productos': 'SHOP_NOW',
-  'proteger ahora': 'SHOP_NOW', 'pedir ahora': 'SHOP_NOW', 'ordenar ahora': 'SHOP_NOW',
-  'más información': 'LEARN_MORE', 'mas informacion': 'LEARN_MORE', 'más info': 'LEARN_MORE', 'learn more': 'LEARN_MORE',
-  'saber más': 'LEARN_MORE', 'conocer más': 'LEARN_MORE', 'conocé más': 'LEARN_MORE',
-  contactar: 'CONTACT_US', contactarnos: 'CONTACT_US', 'contact us': 'CONTACT_US',
-  'enviar mensaje': 'MESSAGE_PAGE', mensaje: 'MESSAGE_PAGE',
-  whatsapp: 'WHATSAPP_MESSAGE', escribinos: 'WHATSAPP_MESSAGE',
-  registrarse: 'SIGN_UP', registrarme: 'SIGN_UP', registrarte: 'SIGN_UP', 'sign up': 'SIGN_UP',
-  'obtener oferta': 'GET_OFFER', 'get offer': 'GET_OFFER', 'ver oferta': 'GET_OFFER',
-  'ver más': 'SEE_MORE', 'see more': 'SEE_MORE',
-  descargar: 'DOWNLOAD', download: 'DOWNLOAD',
-  reservar: 'BOOK_TRAVEL', 'reservar ahora': 'BOOK_TRAVEL',
-  solicitar: 'APPLY_NOW', 'solicitar ahora': 'APPLY_NOW', aplicar: 'APPLY_NOW',
-  suscribirse: 'SUBSCRIBE', suscribirme: 'SUBSCRIBE', subscribe: 'SUBSCRIBE',
-}
-
-function toCTAType(label: string, ctaType?: string, objective?: string): string {
-  if (ctaType && /^[A-Z_]+$/.test(ctaType)) return ctaType
-  const lower = (label || '').toLowerCase()
-  for (const [key, val] of Object.entries(CTA_MAP)) {
-    if (lower.includes(key)) return val
-  }
-  if (objective === 'OUTCOME_SALES' || objective === 'CONVERSIONS') return 'SHOP_NOW'
-  if (objective === 'OUTCOME_LEADS' || objective === 'LEAD_GENERATION') return 'SIGN_UP'
-  return 'LEARN_MORE'
-}
-
-// ── Resolve optimization_goal + promoted_object from campaign objective ────
-function resolveOptGoalForObjective(
-  campaignObjective: string,
-  pixelId: string | null,
-): { optimization_goal: string; promoted_object: Record<string, unknown> | null } {
-  switch (campaignObjective) {
-    case 'OUTCOME_AWARENESS':
-    case 'REACH':
-      return { optimization_goal: 'REACH', promoted_object: null }
-    case 'OUTCOME_TRAFFIC':
-    case 'TRAFFIC':
-      return { optimization_goal: 'LINK_CLICKS', promoted_object: null }
-    case 'OUTCOME_ENGAGEMENT':
-      return { optimization_goal: 'LINK_CLICKS', promoted_object: null }
-    case 'OUTCOME_LEADS':
-    case 'LEAD_GENERATION':
-      if (pixelId) return { optimization_goal: 'LEAD_GENERATION', promoted_object: { pixel_id: pixelId, custom_event_type: 'LEAD' } }
-      return { optimization_goal: 'LINK_CLICKS', promoted_object: null }
-    case 'OUTCOME_SALES':
-    case 'CONVERSIONS':
-      if (pixelId) return { optimization_goal: 'OFFSITE_CONVERSIONS', promoted_object: { pixel_id: pixelId, custom_event_type: 'PURCHASE' } }
-      return { optimization_goal: 'LINK_CLICKS', promoted_object: null }
-    default:
-      return { optimization_goal: 'LINK_CLICKS', promoted_object: null }
-  }
-}
-
-// ── Graph API helpers ────────────────────────────────────────────────────────
-async function graphPost(path: string, token: string, body: Record<string, unknown>) {
-  console.log(`[publish-campaign] POST ${path}`, JSON.stringify(body, null, 2))
-  const res = await fetch(`${GRAPH}${path}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ...body, access_token: token }),
-  })
-  const data = await res.json()
-  if (data.error) {
-    console.error(`[publish-campaign] Meta API error on ${path}:`, JSON.stringify(data.error))
-    const parts: string[] = []
-    if (data.error.error_user_msg) parts.push(data.error.error_user_msg)
-    else if (data.error.message) parts.push(data.error.message)
-    if (data.error.error_subcode) parts.push(`(subcode: ${data.error.error_subcode})`)
-    if (data.error.fbtrace_id) parts.push(`[trace: ${data.error.fbtrace_id}]`)
-    throw new Error(parts.join(' ') || JSON.stringify(data.error))
-  }
-  return data
-}
-
-// Tracks every audience attempt for post-mortem debugging (saved in metrics)
-type AudienceLogEntry = {
-  ad_set: string
-  audience_type: string
-  action: string
-  result: 'ok' | 'fail' | 'skip'
-  detail?: string
-  ids?: string[]
-}
-
-async function uploadImageToMeta(adAccountId: string, token: string, imageUrl: string): Promise<string | null> {
-  try {
-    const res = await fetch(`${GRAPH}/${adAccountId}/adimages`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url: imageUrl, access_token: token }),
-    })
-    const data = await res.json()
-    if (data.error) { console.warn(`[publish-campaign] Image upload failed:`, data.error.message); return null }
-    const images = data.images || {}
-    const first = Object.values(images)[0] as any
-    return first?.hash ?? null
-  } catch (err: any) {
-    console.warn(`[publish-campaign] Image upload exception:`, err.message)
-    return null
-  }
-}
+const GRAPH = META_GRAPH_URL
 
 // ── Main handler ───────────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
@@ -189,9 +20,20 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
 
+  // Rate limiting
+  const rl = await checkRateLimit(user.id, 'meta')
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: 'Demasiadas solicitudes. Esperá un momento.' },
+      { status: 429, headers: { 'Retry-After': String(rl.retryAfter) } },
+    )
+  }
+
   const body = await req.json().catch(() => null)
-  const campaign_id: string | undefined = body?.campaign_id
-  if (!campaign_id) return NextResponse.json({ error: 'campaign_id requerido' }, { status: 400 })
+  const v = validate(publishCampaignSchema, body)
+  if (v.error) return NextResponse.json({ error: v.error }, { status: 400 })
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const campaign_id = v.data!.campaign_id
 
   // ── Load campaign ────────────────────────────────────────────────────────
   const { data: campaign, error: campaignErr } = await supabase
@@ -204,21 +46,28 @@ export async function POST(req: NextRequest) {
     .select('selected_ad_account_id, fb_page_id, pixel_id, instagram_account_id, website_url, whatsapp_number')
     .eq('user_id', user.id).maybeSingle()
 
-  const adAccountId = biz?.selected_ad_account_id
-  const pageId = biz?.fb_page_id
+  const adAccountId = (biz as any)?.selected_ad_account_id
+  const pageId = (biz as any)?.fb_page_id
   if (!adAccountId) return NextResponse.json({ error: 'No tenés una cuenta publicitaria configurada. Andá a Configuración → Activos de Meta.', code: 'NO_AD_ACCOUNT' }, { status: 400 })
   if (!pageId) return NextResponse.json({ error: 'No tenés una página de Facebook configurada. Andá a Configuración → Activos de Meta.', code: 'NO_PAGE' }, { status: 400 })
 
   // ── Load Facebook access token ───────────────────────────────────────────
   const { data: conn } = await supabase
     .from('facebook_connections').select('access_token, token_expires_at').eq('user_id', user.id).maybeSingle()
-  if (!conn?.access_token) return NextResponse.json({ error: 'Facebook no está conectado. Conectá tu cuenta en Configuración.', code: 'NO_FB_TOKEN' }, { status: 400 })
-  const token = conn.access_token
+  if (!(conn as any)?.access_token) return NextResponse.json({ error: 'Facebook no está conectado. Conectá tu cuenta en Configuración.', code: 'NO_FB_TOKEN' }, { status: 400 })
+  const token = decryptSecret((conn as any).access_token as string)
+
+  // Moneda de la cuenta publicitaria (autoritativa para convertir presupuestos).
+  // Se resuelve en la verificación de token; default USD si Meta no la devuelve.
+  let accountCurrency = 'USD'
 
   // ── Verify token has permissions on the selected ad account ─────────────
   try {
-    const verifyRes = await fetch(`${GRAPH}/${adAccountId}?fields=name,account_status,currency&access_token=${token}`)
+    const verifyRes = await fetch(`${GRAPH}/${adAccountId}?fields=name,account_status,currency`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
     const verifyData = await verifyRes.json()
+    if (verifyData.currency) accountCurrency = verifyData.currency
     if (verifyData.error) {
       console.error('[publish-campaign] Token verification failed:', JSON.stringify(verifyData.error))
       const errCode = verifyData.error.code
@@ -235,20 +84,21 @@ export async function POST(req: NextRequest) {
   }
 
   // ── Resolve campaign structure ────────────────────────────────────────────
+  const c = campaign as any
   const rawStructure: CampaignStructure | null =
-    campaign.campaign_structure || (campaign.ai_copies as any)?.campaign || null
+    c.campaign_structure || c.ai_copies?.campaign || null
   const structure = rawStructure?.ad_sets?.length ? rawStructure : null
   if (!structure) return NextResponse.json({ error: 'La campaña no tiene estructura de anuncios. Generá los copies con IA antes de publicar.', code: 'NO_STRUCTURE' }, { status: 400 })
 
   // ── Link URL ──────────────────────────────────────────────────────────────
-  let linkUrl = campaign.destination_url?.trim() || ''
-  if (!linkUrl && campaign.whatsapp_number) linkUrl = `https://wa.me/${campaign.whatsapp_number.replace(/\D/g, '')}`
-  if (!linkUrl) linkUrl = biz?.website_url?.trim() || ''
-  if (!linkUrl && biz?.whatsapp_number) linkUrl = `https://wa.me/${biz.whatsapp_number.replace(/\D/g, '')}`
+  let linkUrl = c.destination_url?.trim() || ''
+  if (!linkUrl && c.whatsapp_number) linkUrl = `https://wa.me/${c.whatsapp_number.replace(/\D/g, '')}`
+  if (!linkUrl) linkUrl = (biz as any)?.website_url?.trim() || ''
+  if (!linkUrl && (biz as any)?.whatsapp_number) linkUrl = `https://wa.me/${(biz as any).whatsapp_number.replace(/\D/g, '')}`
   if (!linkUrl) linkUrl = 'https://example.com'
 
-  const pixelId = biz?.pixel_id || null
-  const creativeUrls: string[] = (campaign.creative_urls as string[]) || []
+  const pixelId: string | null = (biz as any)?.pixel_id || null
+  const creativeUrls: string[] = (c.creative_urls as string[]) || []
 
   // ── Pre-upload images to Meta ───────────────────────────────────────────
   const imageHashCache: Record<string, string | null> = {}
@@ -260,378 +110,39 @@ export async function POST(req: NextRequest) {
 
   // ── Meta Ads API publishing ───────────────────────────────────────────────
   try {
-    const campaignObjective = structure.objective || campaign.objective || 'OUTCOME_AWARENESS'
+    const campaignObjective: string = structure.objective || c.objective || 'OUTCOME_AWARENESS'
     const numAdSets = structure.ad_sets.length
 
-    // Budget: campaign.daily_budget is in user currency, Meta wants cents
-    const perAdSetCents = Math.max(Math.round((campaign.daily_budget / numAdSets) * 100), 100)
-    const startTimeISO = new Date().toISOString()
+    const { metaCampaignId, adSetIds, adIds, creativeIds, errors, audienceLog } =
+      await buildAndPublishCampaign({
+        adAccountId,
+        token,
+        pageId,
+        instagramAccountId: (biz as any)?.instagram_account_id,
+        pixelId,
+        structure,
+        campaignObjective,
+        dailyBudget: c.daily_budget,
+        currency: accountCurrency,
+        linkUrl,
+        creativeUrls,
+        imageHashCache,
+        strategyType: c.strategy_type,
+        campaignName: c.name,
+        aiCopies: c.ai_copies,
+        targetCountry: c.target_country,
+        targetAgeMin: c.target_age_min,
+        targetAgeMax: c.target_age_max,
+        targetGender: c.target_gender,
+        userId: user.id,
+      })
 
-    console.log('[publish-campaign] ===== STARTING PUBLISH =====')
-    console.log('[publish-campaign]', JSON.stringify({
-      adAccountId, pageId, pixelId, linkUrl, campaignObjective,
-      numAdSets, perAdSetCents, strategy: campaign.strategy_type,
-      images: creativeUrls.length,
-      adsets: structure.ad_sets.map((s: any) => ({ name: s.name, ads: s.ads?.length })),
-    }))
-
-    // ══════════════════════════════════════════════════════════════════════
-    // 1. CREATE CAMPAIGN
-    //    - ABO mode: each ad set has its own daily_budget
-    //    - is_adset_budget_sharing_enabled: false tells Meta this is ABO
-    //    - NO bid_strategy here (it's not a campaign-level field for ABO)
-    // ══════════════════════════════════════════════════════════════════════
-    const metaCampaign = await graphPost(`/${adAccountId}/campaigns`, token, {
-      name:                            structure.name || campaign.name,
-      objective:                       campaignObjective,
-      status:                          'PAUSED',
-      special_ad_categories:           [],
-      is_adset_budget_sharing_enabled: false,
-    })
-    const metaCampaignId: string = metaCampaign.id
-    console.log('[publish-campaign] ✓ Campaign created:', metaCampaignId)
-
-    const adSetIds: string[] = []
-    const adIds: string[] = []
-    const creativeIds: string[] = []
-    const errors: string[] = []
-    let globalAdIndex = 0
-
-    // Resolve optimization goal once (same for all ad sets)
-    const { optimization_goal, promoted_object } = resolveOptGoalForObjective(campaignObjective, pixelId)
-
-    // Analyze pixel BEFORE the loop so we can gate retargeting/lookalike attempts
-    let pixelData: PixelAnalysis | null = null
-    if (pixelId) {
-      try {
-        pixelData = await analyzePixel(pixelId, token)
-        await savePixelAnalysis(user.id, pixelData)
-        console.log(`[publish-campaign] Pixel level: ${pixelData.level} (${pixelData.levelName}) | VC30=${pixelData.events.ViewContent.count_30d} ATC30=${pixelData.events.AddToCart.count_30d} P30=${pixelData.events.Purchase.count_30d} P180=${pixelData.events.Purchase.count_180d}`)
-        console.log(`[publish-campaign] Capabilities: VC=${pixelData.canRetargetViewContent} ATC=${pixelData.canRetargetAddToCart} P=${pixelData.canRetargetPurchase} LAL=${pixelData.canCreateLookalike}`)
-      } catch (err: any) {
-        console.warn('[publish-campaign] Pixel analysis failed, continuing with broad targeting:', err.message)
-      }
-    }
-
-    // Cache custom audience IDs across ad sets in this run (key → audience id)
-    const audienceCache: Record<string, string> = {}
-    // Per-publish audit trail of what we tried for each ad set's audience
-    const audienceLog: AudienceLogEntry[] = []
-
-    for (let si = 0; si < structure.ad_sets.length; si++) {
-      const adSet = structure.ad_sets[si] as AdSetItem
-
-      // ════════════════════════════════════════════════════════════════════
-      // 2. BUILD TARGETING
-      // ════════════════════════════════════════════════════════════════════
-      const t = adSet.targeting || ({} as AdSetItem['targeting'])
-      const countries = (t.geo_locations?.countries || [campaign.target_country || 'AR'])
-        .map(toCountryCode).filter(Boolean)
-
-      const targetingSpec: Record<string, unknown> = {
-        geo_locations: { countries },
-        age_min: t.age_min || campaign.target_age_min || 18,
-        age_max: t.age_max || campaign.target_age_max || 65,
-        // Meta v20 requires explicit declaration of Advantage Audience.
-        // 0 = off (respect manual targeting), 1 = let Meta expand the audience.
-        targeting_automation: { advantage_audience: 0 },
-      }
-
-      // Gender: use form value as source of truth
-      const formGender = (campaign.target_gender as string || '').toLowerCase()
-      if (formGender === 'female' || formGender === 'femenino' || formGender === 'mujer') {
-        targetingSpec.genders = [2]
-      } else if (formGender === 'male' || formGender === 'masculino' || formGender === 'hombre') {
-        targetingSpec.genders = [1]
-      } else if (t.genders?.length && !t.genders.includes(0)) {
-        targetingSpec.genders = t.genders
-      }
-      // If formGender is "all"/empty/etc, omit genders → Meta targets all
-
-      // Only include interests with valid numeric Meta IDs
-      const validInterests = (t.interests || []).filter(
-        (i: { id?: string }) => i.id && /^\d+$/.test(String(i.id))
-      )
-      if (validInterests.length) targetingSpec.interests = validInterests
-
-      // Placements
-      const placements = sanitizePlacements(t)
-      if (placements) {
-        targetingSpec.publisher_platforms = placements.publisher_platforms
-        if (placements.facebook_positions?.length) targetingSpec.facebook_positions = placements.facebook_positions
-        if (placements.instagram_positions?.length) targetingSpec.instagram_positions = placements.instagram_positions
-      }
-
-      // ════════════════════════════════════════════════════════════════════
-      // 2.b RESOLVE AUDIENCE — gated by pixel level + capabilities
-      //     If pixel can't support the requested type, gracefully degrade
-      //     (e.g. lookalike → interests; retargeting → interests).
-      //     Every attempt is recorded in audienceLog → saved to metrics.
-      // ════════════════════════════════════════════════════════════════════
-      const rawAudienceType = ((adSet as any).audience_type as string | undefined)?.toLowerCase()
-      const isTofu = (campaign.strategy_type || '').toUpperCase() === 'TOFU'
-      const audienceType = rawAudienceType || (isTofu ? 'interest' : 'broad')
-      const primaryCountry = countries[0] || 'US'
-
-      // Helper: extract interest names from every shape the AI may emit
-      const collectInterestNames = (): string[] => {
-        const raw: any[] = [
-          ...(Array.isArray(t.interests) ? t.interests : []),
-          ...((adSet as any).interests || []),
-          ...((campaign.ai_copies as any)?.targeting?.interests || []),
-        ]
-        return raw
-          .map((i: any) => typeof i === 'string' ? i : (i?.name || i?.interest || i?.category || ''))
-          .filter((s: string) => !!s)
-      }
-
-      // Helper: try interest fallback when retargeting/lookalike isn't viable
-      const tryInterestFallback = async (reason: string) => {
-        const names = collectInterestNames()
-        if (!names.length) {
-          audienceLog.push({ ad_set: adSet.name, audience_type: audienceType, action: 'fallback', result: 'skip', detail: `${reason}; no AI interests to fall back on` })
-          return
-        }
-        const resolved = await searchMetaInterests(token, names, 7, 15)
-        if (resolved.length) {
-          targetingSpec.flexible_spec = [{ interests: resolved }]
-          delete (targetingSpec as Record<string, unknown>).interests
-          audienceLog.push({
-            ad_set: adSet.name, audience_type: audienceType, action: 'fallback', result: 'ok',
-            detail: `${reason} → ${resolved.length} interests`,
-            ids: resolved.map(r => `${r.name}(${r.id})`),
-          })
-        } else {
-          audienceLog.push({ ad_set: adSet.name, audience_type: audienceType, action: 'fallback', result: 'fail', detail: `${reason}; Meta returned no interests` })
-        }
-      }
-
-      try {
-        // ── INTEREST or BROAD ─────────────────────────────────────────────
-        if (audienceType === 'interest' || audienceType === 'broad') {
-          const names = collectInterestNames()
-          if (names.length) {
-            const resolved = await searchMetaInterests(token, names, 7, 15)
-            if (resolved.length) {
-              targetingSpec.flexible_spec = [{ interests: resolved }]
-              delete (targetingSpec as Record<string, unknown>).interests
-              audienceLog.push({
-                ad_set: adSet.name, audience_type: audienceType, action: 'search', result: 'ok',
-                detail: `${resolved.length} interests`,
-                ids: resolved.map(r => `${r.name}(${r.id})`),
-              })
-              console.log(`[publish-campaign] ✓ "${adSet.name}": ${resolved.length} interests resolved`)
-            } else {
-              audienceLog.push({ ad_set: adSet.name, audience_type: audienceType, action: 'search', result: 'fail', detail: 'Meta returned no results for AI names' })
-            }
-          } else if ((t as any).advantage_plus === true) {
-            (targetingSpec as Record<string, unknown>).targeting_automation = { advantage_audience: 1 }
-            audienceLog.push({ ad_set: adSet.name, audience_type: audienceType, action: 'attach', result: 'ok', detail: 'Advantage+ broad' })
-          } else {
-            audienceLog.push({ ad_set: adSet.name, audience_type: audienceType, action: 'attach', result: 'ok', detail: 'broad (geo+age+gender)' })
-          }
-        }
-
-        // ── RETARGETING ───────────────────────────────────────────────────
-        else if (audienceType === 'retargeting') {
-          if (!pixelId) {
-            audienceLog.push({ ad_set: adSet.name, audience_type: 'retargeting', action: 'create', result: 'skip', detail: 'no pixel configured' })
-            await tryInterestFallback('no pixel')
-          } else if (pixelData && !pixelData.canRetargetViewContent) {
-            const detail = `pixel insufficient (VC30=${pixelData.events.ViewContent.count_30d}, need 100+)`
-            console.warn(`[publish-campaign] "${adSet.name}": ${detail}`)
-            audienceLog.push({ ad_set: adSet.name, audience_type: 'retargeting', action: 'gate', result: 'skip', detail })
-            await tryInterestFallback('pixel data low')
-          } else {
-            // Parse retention + event from ad set name
-            const lower = adSet.name.toLowerCase()
-            const retentionDays = /(?:^|\D)7(?:\D|$)/.test(lower) || /caliente|hot|carrito|cart/.test(lower) ? 7
-              : /(?:^|\D)14(?:\D|$)/.test(lower) ? 14
-              : 30
-            const eventType: string = /carrito|cart/.test(lower) ? 'AddToCart'
-              : /compra|purchase/.test(lower) ? 'Purchase'
-              : /vista|view/.test(lower) ? 'ViewContent'
-              : 'ViewContent'
-
-            // Per-event capability gating
-            const eventOk = eventType === 'Purchase' ? pixelData?.canRetargetPurchase ?? true
-              : eventType === 'AddToCart' ? pixelData?.canRetargetAddToCart ?? true
-              : pixelData?.canRetargetViewContent ?? true
-            if (!eventOk) {
-              audienceLog.push({ ad_set: adSet.name, audience_type: 'retargeting', action: 'gate', result: 'skip', detail: `pixel can't support ${eventType}` })
-              await tryInterestFallback(`pixel low for ${eventType}`)
-            } else {
-              const audName = `${eventType} ${retentionDays}d`
-              const cacheKey = `${audName}|${pixelId}`
-              let audienceId: string | null = audienceCache[cacheKey] || null
-              if (!audienceId) {
-                audienceId = await findOrCreateRetargetingAudience(
-                  adAccountId, token, pixelId,
-                  { name: audName, retentionDays, eventType },
-                )
-                if (audienceId) audienceCache[cacheKey] = audienceId
-              }
-              if (audienceId) {
-                targetingSpec.custom_audiences = [{ id: audienceId }]
-                audienceLog.push({ ad_set: adSet.name, audience_type: 'retargeting', action: 'attach', result: 'ok', detail: `${audName}`, ids: [audienceId] })
-                console.log(`[publish-campaign] ✓ "${adSet.name}": retargeting → ${audienceId}`)
-              } else {
-                audienceLog.push({ ad_set: adSet.name, audience_type: 'retargeting', action: 'create', result: 'fail', detail: audName })
-                await tryInterestFallback('audience creation failed')
-              }
-            }
-          }
-        }
-
-        // ── LOOKALIKE ─────────────────────────────────────────────────────
-        else if (audienceType === 'lookalike') {
-          if (!pixelId) {
-            audienceLog.push({ ad_set: adSet.name, audience_type: 'lookalike', action: 'create', result: 'skip', detail: 'no pixel configured' })
-            await tryInterestFallback('no pixel')
-          } else if (pixelData && !pixelData.canCreateLookalike) {
-            const detail = `pixel insufficient (P180=${pixelData.events.Purchase.count_180d}, need 100+)`
-            console.warn(`[publish-campaign] "${adSet.name}": ${detail}`)
-            audienceLog.push({ ad_set: adSet.name, audience_type: 'lookalike', action: 'gate', result: 'skip', detail })
-            await tryInterestFallback('pixel purchases too low')
-          } else {
-            const cacheKey = `lal|${primaryCountry}|${pixelId}`
-            let lookalikeId: string | null = audienceCache[cacheKey] || null
-            if (!lookalikeId) {
-              lookalikeId = await findOrCreateLookalike(adAccountId, token, pixelId, {
-                sourceName: 'Compradores 180d',
-                sourceRetentionDays: 180,
-                sourceEventType: 'Purchase',
-                country: primaryCountry,
-                ratio: 0.01,
-              })
-              if (lookalikeId) audienceCache[cacheKey] = lookalikeId
-            }
-            if (lookalikeId) {
-              targetingSpec.custom_audiences = [{ id: lookalikeId }]
-              audienceLog.push({ ad_set: adSet.name, audience_type: 'lookalike', action: 'attach', result: 'ok', detail: `LAL 1% ${primaryCountry}`, ids: [lookalikeId] })
-              console.log(`[publish-campaign] ✓ "${adSet.name}": lookalike → ${lookalikeId}`)
-            } else {
-              audienceLog.push({ ad_set: adSet.name, audience_type: 'lookalike', action: 'create', result: 'fail', detail: `LAL 1% ${primaryCountry}` })
-              await tryInterestFallback('lookalike creation failed')
-            }
-          }
-        }
-      } catch (audErr: any) {
-        // Audience resolution must NEVER block ad set creation
-        audienceLog.push({ ad_set: adSet.name, audience_type: audienceType, action: 'exception', result: 'fail', detail: audErr.message })
-        console.error(`[publish-campaign] "${adSet.name}": audience exception → broad. ${audErr.message}`)
-      }
-
-      // ════════════════════════════════════════════════════════════════════
-      // 3. CREATE AD SET
-      //    Meta API v20 requires bid_strategy on ad sets for ABO mode.
-      //    LOWEST_COST_WITHOUT_CAP = Meta optimizes for lowest cost per result.
-      // ════════════════════════════════════════════════════════════════════
-      const adSetPayload: Record<string, unknown> = {
-        name:              adSet.name,
-        campaign_id:       metaCampaignId,
-        daily_budget:      perAdSetCents,
-        billing_event:     'IMPRESSIONS',
-        optimization_goal: optimization_goal,
-        bid_strategy:      'LOWEST_COST_WITHOUT_CAP',
-        targeting:         targetingSpec,
-        status:            'PAUSED',
-        start_time:        startTimeISO,
-      }
-      if (promoted_object) adSetPayload.promoted_object = promoted_object
-
-      let adSetId: string
-      try {
-        const metaAdSet = await graphPost(`/${adAccountId}/adsets`, token, adSetPayload)
-        adSetId = metaAdSet.id
-        adSetIds.push(adSetId)
-        console.log(`[publish-campaign] ✓ Ad set [${si + 1}/${numAdSets}] created: ${adSetId}`)
-      } catch (err: any) {
-        console.error(`[publish-campaign] ✗ Ad set "${adSet.name}" FAILED:`, err.message)
-        errors.push(`Ad set "${adSet.name}": ${err.message}`)
-        globalAdIndex += (adSet.ads as AdCopyItem[]).length
-        continue
-      }
-
-      // ════════════════════════════════════════════════════════════════════
-      // 4. CREATE CREATIVES + ADS
-      // ════════════════════════════════════════════════════════════════════
-      const adsInSet = adSet.ads as AdCopyItem[]
-      for (let ai = 0; ai < adsInSet.length; ai++) {
-        const ad = adsInSet[ai]
-        try {
-          const ctaType = toCTAType(ad.call_to_action || '', ad.cta_type, campaignObjective)
-          const linkData: Record<string, unknown> = {
-            message:     ad.primary_text || 'Conocé más',
-            name:        ad.headline || 'Ver ahora',
-            description: ad.description || '',
-            link:        linkUrl,
-            call_to_action: { type: ctaType, value: { link: linkUrl } },
-          }
-
-          // Assign image (round-robin)
-          if (creativeUrls.length > 0) {
-            const imageUrl = creativeUrls[globalAdIndex % creativeUrls.length]
-            if (imageUrl.match(/\.(jpg|jpeg|png|gif|webp)(\?|$)/i)) {
-              const hash = imageHashCache[imageUrl]
-              if (hash) linkData.image_hash = hash
-              else linkData.picture = imageUrl
-            }
-          }
-
-          const uniqueName = `${adSet.name} | ${ad.name || `Ad ${ai + 1}`}`
-          const objectStorySpec: Record<string, unknown> = { page_id: pageId, link_data: linkData }
-
-          // Only include instagram_actor_id if configured AND a numeric ID
-          const igActorId = biz?.instagram_account_id
-          const useInstagram = igActorId && /^\d+$/.test(String(igActorId))
-          if (useInstagram) objectStorySpec.instagram_actor_id = igActorId
-
-          let creative: any
-          try {
-            creative = await graphPost(`/${adAccountId}/adcreatives`, token, {
-              name: uniqueName,
-              object_story_spec: objectStorySpec,
-            })
-          } catch (creativeErr: any) {
-            // If Meta rejects instagram_actor_id, retry without it (FB-only)
-            if (creativeErr.message?.includes('instagram_actor_id') && objectStorySpec.instagram_actor_id) {
-              console.warn(`[publish-campaign] Retrying creative without instagram_actor_id`)
-              delete objectStorySpec.instagram_actor_id
-              creative = await graphPost(`/${adAccountId}/adcreatives`, token, {
-                name: uniqueName,
-                object_story_spec: objectStorySpec,
-              })
-            } else {
-              throw creativeErr
-            }
-          }
-          creativeIds.push(creative.id)
-
-          const metaAd = await graphPost(`/${adAccountId}/ads`, token, {
-            name:        uniqueName,
-            campaign_id: metaCampaignId,
-            adset_id:    adSetId,
-            creative:    { creative_id: creative.id },
-            status:      'PAUSED',
-          })
-          adIds.push(metaAd.id)
-          console.log(`[publish-campaign]   ✓ Ad "${uniqueName}" created: ${metaAd.id}`)
-        } catch (err: any) {
-          console.error(`[publish-campaign]   ✗ Ad "${ad.name}" FAILED:`, err.message)
-          errors.push(`"${adSet.name}" → "${ad.name}": ${err.message}`)
-        }
-        globalAdIndex++
-      }
-    }
-
-    // ══════════════════════════════════════════════════════════════════════
-    // 5. SAVE RESULTS TO DB
-    // ══════════════════════════════════════════════════════════════════════
+    // ── Save results to DB ──────────────────────────────────────────────────
     const isShellOnly = adSetIds.length === 0
     const isPartial = errors.length > 0 && adSetIds.length > 0
 
     // Save results + errors in metrics JSON for debugging (survives Vercel log truncation)
+    const perAdSetCents = toMetaDailyBudget(c.daily_budget / numAdSets, accountCurrency)
     await supabase.from('campaigns').update({
       meta_campaign_id:  metaCampaignId,
       meta_adset_ids:    adSetIds,
@@ -640,7 +151,7 @@ export async function POST(req: NextRequest) {
       meta_status:       isShellOnly ? 'ERROR' : isPartial ? 'PARTIAL' : 'PAUSED',
       status:            isShellOnly ? 'error' : 'active',
       metrics:           { publish_errors: errors, publish_date: new Date().toISOString(), adsets_attempted: numAdSets, adsets_created: adSetIds.length, ads_created: adIds.length, audience_log: audienceLog },
-    }).eq('id', campaign_id)
+    } as any).eq('id', campaign_id)
 
     console.log('[publish-campaign] ✓ DONE:', { adSets: adSetIds.length, ads: adIds.length, errors: errors.length })
 
@@ -655,7 +166,7 @@ export async function POST(req: NextRequest) {
         await createNotification({
           userId: user.id,
           type: 'campaign_published',
-          title: `🚀 Campaña "${structure.name || campaign.name}" publicada en Meta`,
+          title: `🚀 Campaña "${structure.name || c.name}" publicada en Meta`,
           body: `${adSetIds.length} conjuntos y ${adIds.length} anuncios creados`,
           severity: 'success',
           actionUrl: `/dashboard/campaigns/${campaign_id}`,
@@ -676,18 +187,18 @@ export async function POST(req: NextRequest) {
       creative_ids:     creativeIds,
       partial_errors:   errors.length ? errors : undefined,
       summary: {
-        campaign_name:   structure.name || campaign.name,
+        campaign_name:   structure.name || c.name,
         ad_sets_created: adSetIds.length,
         ads_created:     adIds.length,
         total_budget_day: `$${(totalCents / 100).toFixed(2)}/día`,
-        targeting:       structure.ad_sets.flatMap((s: AdSetItem) => s.targeting?.geo_locations?.countries || [campaign.target_country || 'AR']).map(toCountryCode).filter((v, i, a) => a.indexOf(v) === i).join(', '),
+        targeting:       structure.ad_sets.flatMap((s: AdSetItem) => s.targeting?.geo_locations?.countries || [c.target_country || 'AR']).map(toCountryCode).filter((v: string, i: number, a: string[]) => a.indexOf(v) === i).join(', '),
         status:          'PAUSED — activá desde Meta Ads Manager',
         meta_url:        `https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=${adAccountId}`,
       },
     })
   } catch (err: any) {
     console.error('[publish-campaign] Fatal error:', err)
-    await supabase.from('campaigns').update({ meta_status: 'ERROR', status: 'error' }).eq('id', campaign_id)
+    await supabase.from('campaigns').update({ meta_status: 'ERROR', status: 'error' } as any).eq('id', campaign_id)
     return NextResponse.json({ error: err.message || 'Error al publicar en Meta Ads', code: 'META_API_ERROR' }, { status: 500 })
   }
 }

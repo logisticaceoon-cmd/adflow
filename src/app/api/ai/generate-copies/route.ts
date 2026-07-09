@@ -4,6 +4,8 @@ import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@/lib/supabase/server'
 import { checkCredits, resetCreditsIfNeeded, consumeCredits } from '@/lib/credits'
 import { ACTION_COSTS } from '@/lib/credit-costs'
+import { checkRateLimit } from '@/lib/rate-limit'
+import { validate, generateCopiesSchema } from '@/lib/validations'
 import type { StrategyType } from '@/types'
 
 const SUPPORTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'] as const
@@ -247,6 +249,15 @@ export async function POST(req: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
 
+    // Rate limit: la generación con IA es cara; 10/min por usuario (tier 'ai')
+    const rl = await checkRateLimit(user.id, 'ai')
+    if (!rl.success) {
+      return NextResponse.json(
+        { error: 'Estás generando demasiado rápido. Esperá unos segundos.', code: 'RATE_LIMITED', retryAfter: rl.retryAfter },
+        { status: 429 }
+      )
+    }
+
     let body: any
     try {
       body = await req.json()
@@ -257,6 +268,13 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       )
     }
+
+    // Validación de payload (evita abuso de costo/memoria y prompt-injection por campos libres)
+    const parsed = validate(generateCopiesSchema, body)
+    if (parsed.error) {
+      return NextResponse.json({ error: `Datos inválidos: ${parsed.error}` }, { status: 400 })
+    }
+    body = parsed.data
 
     const {
       product_description,
@@ -400,7 +418,7 @@ export async function POST(req: NextRequest) {
     }
 
     const message = await anthropic.messages.create({
-      model:      'claude-haiku-4-5-20251001',
+      model:      AI_MODELS.fast,
       max_tokens: 8000,
       messages:   [{ role: 'user', content: messageContent }],
     })

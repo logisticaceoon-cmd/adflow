@@ -7,6 +7,10 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
+  // Destino tras el intercambio (p. ej. recuperación de contraseña).
+  // Solo se permiten rutas internas para evitar open redirects.
+  const nextParam = searchParams.get('next')
+  const nextPath = nextParam && nextParam.startsWith('/') ? nextParam : '/dashboard'
 
   if (code) {
     const cookieStore = cookies()
@@ -40,7 +44,7 @@ export async function GET(request: NextRequest) {
         { onConflict: 'id', ignoreDuplicates: true }
       )
 
-      return NextResponse.redirect(new URL('/dashboard', origin))
+      return NextResponse.redirect(new URL(nextPath, origin))
     }
   }
 

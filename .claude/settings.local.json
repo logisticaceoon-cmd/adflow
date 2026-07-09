@@ -40,7 +40,13 @@
       "Bash(find . -iname \"bg-space*\")",
       "Bash(find . -iname \"Public\" -type d)",
       "Bash(cat)",
-      "Bash(bash /tmp/search_files.sh)"
+      "Bash(bash /tmp/search_files.sh)",
+      "mcp__claude_ai_Supabase__generate_typescript_types",
+      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); print\\(data[0]['text']\\)\")",
+      "mcp__claude_ai_Vercel__deploy_to_vercel",
+      "mcp__claude_ai_Vercel__get_deployment_build_logs",
+      "Read(//home/rafael_b/.claude/**)",
+      "Skill(gstack)"
     ]
   }
 }

@@ -68,24 +68,38 @@ export function RuleToggle({
 // ── Approve / Reject buttons ───────────────────────────────────
 export function ApproveRejectBtns({ executionId }: { executionId: string }) {
   const [isPending, startTransition] = useTransition()
+  const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const router = useRouter()
 
   const callApi = async (action: 'approve' | 'reject') => {
+    // Guard contra doble click: si ya hay una request en curso, ignorar.
+    // Antes solo se deshabilitaba durante router.refresh (isPending), no durante
+    // el fetch → dos clicks rápidos ejecutaban la acción (y el escalado) dos veces.
+    if (loading) return
+    setLoading(true)
     setMessage(null)
-    const res = await fetch('/api/automation/executions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action, execution_id: executionId }),
-    })
-    const data = await res.json().catch(() => ({}))
-    if (res.ok && data?.success !== false) {
-      setMessage(action === 'approve' ? '✓ Aprobada y ejecutada' : '✓ Rechazada')
-      startTransition(() => router.refresh())
-    } else {
-      setMessage(`⚠️ ${data?.message || 'Error'}`)
+    try {
+      const res = await fetch('/api/automation/executions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, execution_id: executionId }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (res.ok && data?.success !== false) {
+        setMessage(action === 'approve' ? '✓ Aprobada y ejecutada' : '✓ Rechazada')
+        startTransition(() => router.refresh())
+      } else {
+        setMessage(`⚠️ ${data?.message || 'Error'}`)
+        setLoading(false) // permitir reintento ante error
+      }
+    } catch {
+      setMessage('⚠️ Error de conexión')
+      setLoading(false)
     }
   }
+
+  const disabled = loading || isPending
 
   if (message) {
     return (
@@ -99,15 +113,15 @@ export function ApproveRejectBtns({ executionId }: { executionId: string }) {
     <div style={{ display: 'flex', gap: 8 }}>
       <button
         onClick={() => callApi('approve')}
-        disabled={isPending}
+        disabled={disabled}
         className="btn-success"
-        style={{ fontSize: 11, padding: '7px 14px' }}
+        style={{ fontSize: 11, padding: '7px 14px', opacity: disabled ? 0.6 : 1, cursor: disabled ? 'wait' : 'pointer' }}
       >
-        Aprobar
+        {loading ? 'Procesando…' : 'Aprobar'}
       </button>
       <button
         onClick={() => callApi('reject')}
-        disabled={isPending}
+        disabled={disabled}
         style={{
           fontSize: 11, fontWeight: 600,
           padding: '7px 14px', borderRadius: 99,
