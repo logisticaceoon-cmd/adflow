@@ -3,6 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
+import { refreshExpiringTokens } from '@/lib/meta/token-refresh'
 
 function isAuthorized(req: NextRequest) {
   const authHeader = req.headers.get('authorization')
@@ -12,6 +13,15 @@ function isAuthorized(req: NextRequest) {
 export async function GET(req: NextRequest) {
   if (!isAuthorized(req)) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  }
+
+  // 0. Refresh Meta tokens that are about to expire (before anything else)
+  let tokenRefreshResults: any[] = []
+  try {
+    tokenRefreshResults = await refreshExpiringTokens()
+    console.log('[cron] Token refresh:', tokenRefreshResults.map(r => `${r.userId}: ${r.status}`).join(', '))
+  } catch (err: any) {
+    console.error('[cron] Token refresh error:', err.message)
   }
 
   const supabase = createAdminClient()
@@ -50,5 +60,5 @@ export async function GET(req: NextRequest) {
     }
   })
 
-  return NextResponse.json({ dispatched: uniqueUserIds.length, summary })
+  return NextResponse.json({ dispatched: uniqueUserIds.length, tokenRefresh: tokenRefreshResults, summary })
 }
