@@ -6,6 +6,7 @@ import { checkCredits, resetCreditsIfNeeded, consumeCredits } from '@/lib/credit
 import { ACTION_COSTS } from '@/lib/credit-costs'
 import { checkRateLimit } from '@/lib/rate-limit'
 import { validate, generateCopiesSchema } from '@/lib/validations'
+import { AI_MODELS } from '@/lib/ai/models'
 import type { StrategyType } from '@/types'
 
 const SUPPORTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'] as const
@@ -274,7 +275,7 @@ export async function POST(req: NextRequest) {
     if (parsed.error) {
       return NextResponse.json({ error: `Datos inválidos: ${parsed.error}` }, { status: 400 })
     }
-    body = parsed.data
+    body = parsed.data!
 
     const {
       product_description,

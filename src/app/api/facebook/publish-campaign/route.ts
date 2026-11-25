@@ -2,6 +2,7 @@
 // Publishes a full Meta Ads campaign structure: Campaign → Ad Sets → Ad Creatives → Ads
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { decryptSecret } from '@/lib/security/crypto'
 import { createNotification } from '@/lib/notification-engine'
 import { markActionCompleted } from '@/lib/memory-engine'
 import type { AdSetItem, CampaignStructure } from '@/types'

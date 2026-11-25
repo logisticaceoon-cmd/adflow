@@ -2,6 +2,7 @@
 // Activate or pause a Meta Ads campaign, with action logging.
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { decryptSecret } from '@/lib/security/crypto'
 import { createNotification } from '@/lib/notification-engine'
 
 const GRAPH = 'https://graph.facebook.com/v20.0'

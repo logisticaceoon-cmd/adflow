@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json().catch(() => ({}))
     const parsed = validate(emailSendSchema, body)
     if (parsed.error) return NextResponse.json({ error: parsed.error }, { status: 400 })
-    const { to, subject, html } = parsed.data
+    const { to, subject, html } = parsed.data!
 
     // 5) Envío
     const { data, error } = await resend.emails.send({ from: FROM, to, subject, html })

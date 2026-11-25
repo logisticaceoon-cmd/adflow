@@ -2,6 +2,7 @@
 // GET → analyzes the user's Meta pixel and returns level + capabilities.
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { decryptSecret } from '@/lib/security/crypto'
 import { analyzePixel, savePixelAnalysis } from '@/lib/pixel-analyzer'
 
 export async function GET() {
