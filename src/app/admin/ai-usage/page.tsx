@@ -31,7 +31,7 @@ export default async function AdminAiUsagePage() {
             La tabla <code className="px-1.5 py-0.5 rounded text-xs" style={{ background: '#1a1a2e' }}>ai_requests</code> aún no fue creada en Supabase.
           </p>
           <div className="text-left max-w-2xl mx-auto p-4 rounded-xl text-xs font-mono overflow-auto"
-               style={{ background: 'rgba(14,4,8,0.97)', border: '1px solid rgba(98,196,176,0.18)', color: '#62c4b0' }}>
+               style={{ background: 'rgba(14,4,8,0.97)', border: '1px solid rgba(98,196,176,0.18)', color: '#60a5fa' }}>
             {`CREATE TABLE IF NOT EXISTS ai_requests (
   id            UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id       UUID REFERENCES auth.users(id) ON DELETE SET NULL,
@@ -46,7 +46,7 @@ ALTER TABLE ai_requests ENABLE ROW LEVEL SECURITY;`}
           </div>
           <p className="text-xs mt-4" style={{ color: '#b0b0d0' }}>
             Ejecutar en:{' '}
-            <span style={{ color: '#62c4b0' }}>
+            <span style={{ color: '#60a5fa' }}>
               supabase.com/dashboard/project/vnjgzmbzvlobttubjysw/sql/new
             </span>
           </p>
@@ -76,7 +76,7 @@ ALTER TABLE ai_requests ENABLE ROW LEVEL SECURITY;`}
 
       <div className="grid grid-cols-3 gap-4 mb-8">
         {[
-          { label: 'Requests totales', value: totalRequests ?? 0, color: '#2dd4bf' },
+          { label: 'Requests totales', value: totalRequests ?? 0, color: '#3b82f6' },
           { label: 'Tokens (últimos 50)', value: totalTokens.toLocaleString(), color: '#a855f7' },
           { label: 'Costo estimado', value: `$${totalCost.toFixed(4)}`, color: '#f59e0b' },
         ].map(({ label, value, color }) => (

@@ -30,7 +30,7 @@ export default function ScoreCard({ totalScore, breakdown, monthStars }: Props) 
     }}>
       <div style={{ marginBottom: 20 }}>
         <h2 style={{
-          fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 600,
+          fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 600,
           color: 'var(--ds-text-primary)', letterSpacing: '-0.01em', marginBottom: 4,
         }}>
           ⭐ Tu Growth Score
@@ -50,7 +50,7 @@ export default function ScoreCard({ totalScore, breakdown, monthStars }: Props) 
             <Star size={22} style={{ color: 'var(--ds-color-warning)', fill: 'var(--ds-color-warning)' }} />
           </div>
           <p style={{
-            fontFamily: 'Syne, sans-serif',
+            fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
             fontSize: 44, fontWeight: 700, color: 'var(--ds-color-warning)',
             letterSpacing: '-0.04em', lineHeight: 1,
           }}>

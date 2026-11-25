@@ -135,7 +135,7 @@ export default function LabsPage() {
 
         <h1
           style={{
-            fontFamily: 'Syne, sans-serif',
+            fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
             fontSize: 28, fontWeight: 700,
             color: 'var(--ds-text-primary)',
             letterSpacing: '-0.02em',
@@ -211,7 +211,7 @@ export default function LabsPage() {
                 <div>
                   <h3
                     style={{
-                      fontFamily: 'Syne, sans-serif',
+                      fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
                       fontSize: 18, fontWeight: 700,
                       color: 'var(--ds-text-primary)',
                       letterSpacing: '-0.01em',

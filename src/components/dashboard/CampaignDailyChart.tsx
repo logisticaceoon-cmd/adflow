@@ -23,7 +23,7 @@ type MetricKey = 'spend' | 'roas' | 'clicks' | 'purchases'
 const METRICS: Array<{ key: MetricKey; label: string; color: string; format: (v: number) => string }> = [
   { key: 'spend',     label: 'Inversión', color: 'var(--ds-color-primary)', format: v => `$${Math.round(v).toLocaleString('es')}` },
   { key: 'roas',      label: 'ROAS',      color: 'var(--ds-color-primary)', format: v => `${v.toFixed(2)}x` },
-  { key: 'clicks',    label: 'Clicks',    color: '#2dd4bf', format: v => Math.round(v).toLocaleString('es') },
+  { key: 'clicks',    label: 'Clicks',    color: '#3b82f6', format: v => Math.round(v).toLocaleString('es') },
   { key: 'purchases', label: 'Ventas',    color: 'var(--ds-color-warning)', format: v => Math.round(v).toLocaleString('es') },
 ]
 
@@ -40,7 +40,7 @@ function CustomTooltip({ active, payload, label, formatter, color }: any) {
       background: 'rgba(10, 15, 13, 0.95)',
       border: `1px solid ${color}40`,
     }}>
-      <p style={{ fontSize: 11, color: '#8892b0', marginBottom: 4 }}>{label}</p>
+      <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', marginBottom: 4 }}>{label}</p>
       <p style={{ fontSize: 18, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>
         {formatter(payload[0].value || 0)}
       </p>

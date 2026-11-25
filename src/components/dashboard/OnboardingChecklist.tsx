@@ -28,7 +28,7 @@ export default function OnboardingChecklist({ status }: Props) {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <h3 style={{
-            fontFamily: 'Syne, sans-serif',
+            fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
             fontSize: 14, fontWeight: 600, color: 'var(--ds-text-primary)',
           }}>
             Setup

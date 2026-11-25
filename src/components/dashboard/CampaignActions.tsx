@@ -159,7 +159,7 @@ export default function CampaignActions({
       border: '1px solid rgba(255,255,255,0.08)',
     }}>
       <div className="flex items-center justify-between mb-4">
-        <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff' }}>
+        <h3 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff' }}>
           ⚙️ Acciones de campaña
         </h3>
       </div>
@@ -228,7 +228,7 @@ export default function CampaignActions({
         }}>
           <span style={{
             width: 6, height: 6, borderRadius: '50%',
-            background: status === 'active' ? 'var(--ds-color-success)' : status === 'paused' ? 'var(--ds-color-warning)' : status === 'error' ? 'var(--ds-color-danger)' : '#8892b0',
+            background: status === 'active' ? 'var(--ds-color-success)' : status === 'paused' ? 'var(--ds-color-warning)' : status === 'error' ? 'var(--ds-color-danger)' : 'rgba(255,255,255,0.45)',
             boxShadow: status === 'active' ? '0 0 8px rgba(45, 212, 191,0.60)' : undefined,
           }} />
           {status === 'active' ? 'Activa' : status === 'paused' ? 'Pausada' : status === 'draft' ? 'Borrador' : status}

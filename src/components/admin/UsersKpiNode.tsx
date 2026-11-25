@@ -38,7 +38,7 @@ export default function UsersKpiNode({ count }: { count: number }) {
           position: 'absolute',
           inset: -70,
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(233,30,140,0.18) 0%, rgba(233,30,140,0.06) 50%, transparent 72%)',
+          background: 'radial-gradient(circle, rgba(37,99,235,0.18) 0%, rgba(37,99,235,0.06) 50%, transparent 72%)',
           animation: 'kpiGlowPulse 3.5s ease-in-out infinite',
           pointerEvents: 'none',
           opacity: hovered ? 1 : 0.7,
@@ -50,7 +50,7 @@ export default function UsersKpiNode({ count }: { count: number }) {
           position: 'absolute',
           inset: -20,
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(233,30,140,0.22) 0%, transparent 60%)',
+          background: 'radial-gradient(circle, rgba(37,99,235,0.22) 0%, transparent 60%)',
           filter: 'blur(12px)',
           animation: 'kpiGlowPulse 2.6s ease-in-out infinite 0.8s',
           pointerEvents: 'none',
@@ -63,10 +63,10 @@ export default function UsersKpiNode({ count }: { count: number }) {
           position: 'absolute',
           inset: 0,
           borderRadius: '50%',
-          border: '2px solid #2dd4bf',
+          border: '2px solid #3b82f6',
           boxShadow: hovered
-            ? 'inset 0 0 40px rgba(233,30,140,0.40), 0 0 50px rgba(233,30,140,0.55), 0 0 100px rgba(233,30,140,0.30), 0 0 160px rgba(233,30,140,0.12)'
-            : 'inset 0 0 30px rgba(233,30,140,0.20), 0 0 40px rgba(233,30,140,0.40), 0 0 80px rgba(233,30,140,0.20), 0 0 120px rgba(233,30,140,0.10)',
+            ? 'inset 0 0 40px rgba(37,99,235,0.40), 0 0 50px rgba(37,99,235,0.55), 0 0 100px rgba(37,99,235,0.30), 0 0 160px rgba(37,99,235,0.12)'
+            : 'inset 0 0 30px rgba(37,99,235,0.20), 0 0 40px rgba(37,99,235,0.40), 0 0 80px rgba(37,99,235,0.20), 0 0 120px rgba(37,99,235,0.10)',
           transition: 'box-shadow 0.5s ease',
         }}>
           {/* Inner fill — semi-transparent so background bleeds through */}
@@ -84,7 +84,7 @@ export default function UsersKpiNode({ count }: { count: number }) {
           position: 'absolute',
           inset: -3,
           borderRadius: '50%',
-          background: 'conic-gradient(from 0deg, transparent 0%, transparent 72%, rgba(233,30,140,0.9) 82%, #f472b6 89%, transparent 95%, transparent 100%)',
+          background: 'conic-gradient(from 0deg, transparent 0%, transparent 72%, rgba(37,99,235,0.9) 82%, #f472b6 89%, transparent 95%, transparent 100%)',
           animation: 'kpiRingSpin 3.5s linear infinite',
           pointerEvents: 'none',
           opacity: hovered ? 1 : 0.8,
@@ -108,7 +108,7 @@ export default function UsersKpiNode({ count }: { count: number }) {
           position: 'absolute',
           inset: 14,
           borderRadius: '50%',
-          border: `1px solid rgba(233,30,140,${hovered ? 0.35 : 0.15})`,
+          border: `1px solid rgba(37,99,235,${hovered ? 0.35 : 0.15})`,
           transition: 'border-color 0.4s ease',
           pointerEvents: 'none',
         }} />
@@ -118,7 +118,7 @@ export default function UsersKpiNode({ count }: { count: number }) {
           position: 'absolute',
           inset: 24,
           borderRadius: '50%',
-          border: `1px dashed rgba(233,30,140,${hovered ? 0.25 : 0.10})`,
+          border: `1px dashed rgba(37,99,235,${hovered ? 0.25 : 0.10})`,
           transition: 'border-color 0.4s ease',
           animation: 'kpiRingSpin 20s linear infinite reverse',
           pointerEvents: 'none',
@@ -145,8 +145,8 @@ export default function UsersKpiNode({ count }: { count: number }) {
             letterSpacing: '-3px',
             fontFamily: "system-ui, -apple-system, 'Segoe UI', sans-serif",
             textShadow: hovered
-              ? '0 0 24px rgba(233,30,140,0.6)'
-              : '0 0 16px rgba(233,30,140,0.35)',
+              ? '0 0 24px rgba(37,99,235,0.6)'
+              : '0 0 16px rgba(37,99,235,0.35)',
             transition: 'text-shadow 0.4s ease',
           }}>
             {displayCount.toLocaleString()}
@@ -159,7 +159,7 @@ export default function UsersKpiNode({ count }: { count: number }) {
             fontWeight: 700,
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
-            color: '#2dd4bf',
+            color: '#3b82f6',
           }}>
             Usuarios totales
           </div>
@@ -167,7 +167,7 @@ export default function UsersKpiNode({ count }: { count: number }) {
       </div>
 
       {/* Sub caption */}
-      <p style={{ color: '#94a3b8', fontSize: 12, marginTop: 10, letterSpacing: '0.04em' }}>
+      <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 12, marginTop: 10, letterSpacing: '0.04em' }}>
         Cuentas registradas en la plataforma
       </p>
 

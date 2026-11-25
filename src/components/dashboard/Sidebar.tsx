@@ -20,8 +20,8 @@ interface Props { user: User; profile: Profile | null }
 
 // Level color mapping
 const LEVEL_COLORS: Record<number, string> = {
-  0: '#8892b0', 1: '#ef4444', 2: '#ef4444', 3: '#f59e0b', 4: '#f59e0b',
-  5: '#2dd4bf', 6: '#2dd4bf', 7: '#2dd4bf', 8: '#8b5cf6',
+  0: 'rgba(255,255,255,0.45)', 1: '#ef4444', 2: '#ef4444', 3: '#f59e0b', 4: '#f59e0b',
+  5: '#3b82f6', 6: '#3b82f6', 7: '#3b82f6', 8: '#8b5cf6',
 }
 
 const LEVEL_ICONS: Record<number, string> = {
@@ -216,7 +216,7 @@ export default function Sidebar({ user, profile }: Props) {
             <Zap size={14} color="var(--ds-color-primary)" strokeWidth={2.5} />
           </div>
           <div>
-            <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 17, fontWeight: 700, letterSpacing: '-0.03em', color: 'var(--ds-text-primary)' }}>
+            <span style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 17, fontWeight: 700, letterSpacing: '-0.03em', color: 'var(--ds-text-primary)' }}>
               AdFlow
             </span>
           </div>
@@ -432,13 +432,13 @@ export default function Sidebar({ user, profile }: Props) {
 
                 <div className="flex items-baseline gap-1.5 mb-2">
                   <span style={{
-                    fontFamily: 'Syne, sans-serif',
+                    fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
                     fontSize: 24, fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1,
                     color: creditsLow ? '#fca5a5' : '#ffffff',
                   }}>
                     {creditsRemaining}
                   </span>
-                  <span style={{ fontSize: 11, color: '#8892b0', fontWeight: 500 }}>
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', fontWeight: 500 }}>
                     / {creditsTotal}
                   </span>
                 </div>
@@ -480,7 +480,7 @@ export default function Sidebar({ user, profile }: Props) {
                 >
                   <Icon size={16} strokeWidth={active ? 2.2 : 1.75}
                     style={{
-                      color: active ? 'var(--ds-color-primary)' : '#8892b0',
+                      color: active ? 'var(--ds-color-primary)' : 'rgba(255,255,255,0.45)',
                       flexShrink: 0,
                     }} />
                   <span style={{ fontSize: 13, color: active ? '#ffffff' : '#a0a8c0' }}>{label}</span>
@@ -496,13 +496,13 @@ export default function Sidebar({ user, profile }: Props) {
             )}
 
             <div className="px-3 py-2 flex items-center justify-between">
-              <span style={{ fontSize: 13, color: '#8892b0' }}>Tema</span>
+              <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>Tema</span>
               <ThemeToggle />
             </div>
 
             <button onClick={handleLogout} className="nav-item nav-item-inactive text-left">
-              <LogOut size={16} strokeWidth={1.75} style={{ color: '#8892b0', flexShrink: 0 }} />
-              <span style={{ fontSize: 13, color: '#8892b0' }}>Cerrar sesión</span>
+              <LogOut size={16} strokeWidth={1.75} style={{ color: 'rgba(255,255,255,0.45)', flexShrink: 0 }} />
+              <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>Cerrar sesión</span>
             </button>
           </div>
         </nav>

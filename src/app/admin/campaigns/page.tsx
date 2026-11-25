@@ -3,8 +3,8 @@ import { createAdminClient } from '@/lib/supabase/server'
 import type { Campaign } from '@/types'
 
 const STATUS_COLORS: Record<string, string> = {
-  active: '#2dd4bf', draft: '#8892b0', paused: '#f59e0b',
-  completed: '#62c4b0', error: '#ef4444',
+  active: '#3b82f6', draft: 'rgba(255,255,255,0.45)', paused: '#f59e0b',
+  completed: '#60a5fa', error: '#ef4444',
 }
 
 const OBJ_LABELS: Record<string, string> = {
@@ -78,14 +78,14 @@ export default async function AdminCampaignsPage() {
                 <td className="px-4 py-3.5">
                   <span className="text-xs px-2 py-0.5 rounded-full capitalize"
                         style={{ background: `${STATUS_COLORS[c.status] ?? 'rgba(255,255,255,0.12)'}20`,
-                                 color: STATUS_COLORS[c.status] ?? '#8892b0' }}>
+                                 color: STATUS_COLORS[c.status] ?? 'rgba(255,255,255,0.45)' }}>
                     {c.status}
                   </span>
                 </td>
                 <td className="px-4 py-3.5 text-sm">${c.daily_budget}</td>
                 <td className="px-4 py-3.5 text-sm">${(c.metrics?.spend || 0).toFixed(0)}</td>
                 <td className="px-4 py-3.5 text-sm font-semibold"
-                    style={{ color: (c.metrics?.roas || 0) >= 3 ? '#2dd4bf' : (c.metrics?.roas || 0) > 0 ? '#f59e0b' : '#8892b0' }}>
+                    style={{ color: (c.metrics?.roas || 0) >= 3 ? '#3b82f6' : (c.metrics?.roas || 0) > 0 ? '#f59e0b' : 'rgba(255,255,255,0.45)' }}>
                   {c.metrics?.roas ? `${c.metrics.roas.toFixed(1)}x` : '—'}
                 </td>
                 <td className="px-4 py-3.5 text-xs" style={{ color: '#b0b0d0' }}>

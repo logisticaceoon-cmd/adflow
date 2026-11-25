@@ -65,7 +65,7 @@ export default function AchievementsWall() {
     <div className="card" style={{ padding: 24, marginBottom: 32 }}>
       <div className="flex items-center justify-between mb-3">
         <div>
-          <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 2 }}>
+          <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 2 }}>
             🏆 Muro de logros
           </h2>
           <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
@@ -73,7 +73,7 @@ export default function AchievementsWall() {
           </p>
         </div>
         <div style={{ textAlign: 'right' }}>
-          <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 22, fontWeight: 900, color: 'var(--ds-color-warning)', letterSpacing: '-0.02em' }}>
+          <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 22, fontWeight: 900, color: 'var(--ds-color-warning)', letterSpacing: '-0.02em' }}>
             {unlockedCount} <span style={{ fontSize: 14, color: 'var(--ds-text-secondary)', fontWeight: 600 }}>/ {achievements.length}</span>
           </p>
           <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)' }}>{pct}% completado</p>
@@ -150,7 +150,7 @@ export default function AchievementsWall() {
               {a.icon}
             </div>
             <p style={{
-              fontFamily: 'Syne, sans-serif',
+              fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
               fontSize: 12, fontWeight: 700,
               color: a.unlocked ? '#fff' : '#5a6478',
               lineHeight: 1.3, marginBottom: 4,

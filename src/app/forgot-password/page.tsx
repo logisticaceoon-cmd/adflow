@@ -93,7 +93,7 @@ export default function ForgotPasswordPage() {
                   type="submit" disabled={loading}
                   style={{
                     width: '100%', padding: '13px', borderRadius: 12, border: 'none', minHeight: 44,
-                    background: loading ? 'rgba(233,30,140,0.6)' : 'var(--ds-color-primary)',
+                    background: loading ? 'rgba(37,99,235,0.6)' : 'var(--ds-color-primary)',
                     color: '#fff', fontSize: 14, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer',
                   }}
                 >

@@ -58,7 +58,7 @@ export default function DiagnosticBadge({ diagnosticType, ruleId, ruleLabel, roa
       }}>
         <span style={{ fontSize: 20, lineHeight: 1 }}>{cfg.icon}</span>
         <span style={{
-          fontFamily: 'Syne, sans-serif',
+          fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
           fontSize: 15, fontWeight: 700, color: cfg.color,
           letterSpacing: '-0.01em',
         }}>

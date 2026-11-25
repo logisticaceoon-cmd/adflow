@@ -9,7 +9,7 @@ const section = (title: string, children: React.ReactNode) => (
       marginBottom: 12, paddingBottom: 10,
       borderBottom: '1px solid rgba(255,255,255,0.08)',
     }}>{title}</h2>
-    <div style={{ color: '#94a3b8', fontSize: 14, lineHeight: 1.8 }}>{children}</div>
+    <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14, lineHeight: 1.8 }}>{children}</div>
   </section>
 )
 
@@ -21,7 +21,7 @@ export default function TermsPage() {
     }}>
       {/* Orbs */}
       <div style={{ position: 'fixed', top: '-10%', right: '-8%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(98,196,176,0.12) 0%, transparent 68%)', filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0 }} />
-      <div style={{ position: 'fixed', bottom: '-8%', left: '-8%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(233,30,140,0.12) 0%, transparent 68%)', filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0 }} />
+      <div style={{ position: 'fixed', bottom: '-8%', left: '-8%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 68%)', filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0 }} />
 
       {/* Navbar */}
       <nav style={{
@@ -37,7 +37,7 @@ export default function TermsPage() {
             </div>
             <span style={{ fontSize: 17, fontWeight: 700, color: '#fff' }}>AdFlow</span>
           </Link>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#64748b', textDecoration: 'none' }}>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>
             <ArrowLeft size={14} /> Volver al inicio
           </Link>
         </div>
@@ -60,7 +60,7 @@ export default function TermsPage() {
           <h1 style={{ fontSize: 34, fontWeight: 800, color: '#fff', marginBottom: 12, letterSpacing: '-0.5px' }}>
             Condiciones de uso
           </h1>
-          <p style={{ color: '#64748b', fontSize: 14 }}>
+          <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14 }}>
             Última actualización: Enero 2026 · AdFlow — Logisticaceoon
           </p>
         </div>
@@ -170,11 +170,11 @@ export default function TermsPage() {
 
         {/* Bottom links */}
         <div style={{ textAlign: 'center', marginTop: 32, display: 'flex', gap: 24, justifyContent: 'center', alignItems: 'center' }}>
-          <Link href="/privacy" style={{ fontSize: 13, color: '#64748b', textDecoration: 'none' }}>
+          <Link href="/privacy" style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>
             Política de Privacidad →
           </Link>
           <span style={{ color: '#2a2a4a' }}>·</span>
-          <Link href="/" style={{ fontSize: 13, color: '#64748b', textDecoration: 'none' }}>
+          <Link href="/" style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>
             Volver al inicio
           </Link>
         </div>

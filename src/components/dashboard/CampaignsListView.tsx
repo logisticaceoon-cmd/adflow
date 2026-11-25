@@ -30,7 +30,7 @@ const OBJ_LABELS: Record<string, string> = {
 }
 
 const PHASES: Array<{ key: PhaseKey; label: string; icon: string; color: string }> = [
-  { key: 'all', label: 'Todas',      icon: '🎯', color: '#8892b0' },
+  { key: 'all', label: 'Todas',      icon: '🎯', color: 'rgba(255,255,255,0.45)' },
   { key: 'F1',  label: 'F1 Reconocim.', icon: '📢', color: 'var(--ds-color-primary)' },
   { key: 'F2',  label: 'F2 Ventas',     icon: '💰', color: 'var(--ds-color-primary)' },
   { key: 'F3',  label: 'F3 Remarketing', icon: '🎯', color: 'var(--ds-color-warning)' },

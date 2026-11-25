@@ -55,7 +55,7 @@ export default async function Image() {
         <div
           style={{
             fontSize: 24,
-            color: '#94a3b8',
+            color: 'rgba(255,255,255,0.55)',
             textAlign: 'center',
             maxWidth: 800,
           }}

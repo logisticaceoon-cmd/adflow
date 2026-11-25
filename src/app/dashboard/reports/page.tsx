@@ -75,7 +75,7 @@ export default async function ReportsHubPage() {
               Reportes · AdFlow
             </p>
             <h1 style={{
-              fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 700,
+              fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 28, fontWeight: 700,
               color: 'var(--ds-text-primary)', marginBottom: 10, letterSpacing: '-0.02em',
             }}>
               Cómo viene tu negocio 📊
@@ -124,7 +124,7 @@ export default async function ReportsHubPage() {
                 <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ds-color-primary)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
                   Reporte del mes actual
                 </p>
-                <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 22, fontWeight: 800, color: '#fff' }}>
+                <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 22, fontWeight: 800, color: '#fff' }}>
                   {fmtMonthYear(monthYear)}
                 </h2>
               </div>
@@ -148,7 +148,7 @@ export default async function ReportsHubPage() {
                   <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 4 }}>
                     {m.label}
                   </p>
-                  <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 20, fontWeight: 800, color: m.color, lineHeight: 1.2 }}>
+                  <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 20, fontWeight: 800, color: m.color, lineHeight: 1.2 }}>
                     {m.value}
                   </p>
                 </div>
@@ -177,7 +177,7 @@ export default async function ReportsHubPage() {
 
       {/* ── SECTION C: PREVIOUS MONTHS GRID ──────────────────────────── */}
       <div className="module-enter module-enter-3" style={{ marginBottom: 32 }}>
-        <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+        <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Historial de meses
         </h2>
         <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 18 }}>
@@ -187,7 +187,7 @@ export default async function ReportsHubPage() {
         {priorMonths.length === 0 ? (
           <div className="card p-10 text-center">
             <div style={{ fontSize: 42, marginBottom: 14 }}>🌱</div>
-            <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 6 }}>
+            <h3 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 6 }}>
               Este es tu primer mes con AdFlow
             </h3>
             <p style={{ fontSize: 12.5, color: 'var(--ds-text-secondary)', maxWidth: 400, margin: '0 auto' }}>
@@ -197,12 +197,12 @@ export default async function ReportsHubPage() {
         ) : (
           <div className="grid grid-cols-3 gap-4">
             {priorMonths.map((r: any) => {
-              const roasColor = r.avg_roas >= 3 ? 'var(--ds-color-success)' : r.avg_roas >= 1.5 ? 'var(--ds-color-warning)' : r.avg_roas > 0 ? 'var(--ds-color-danger)' : '#8892b0'
+              const roasColor = r.avg_roas >= 3 ? 'var(--ds-color-success)' : r.avg_roas >= 1.5 ? 'var(--ds-color-warning)' : r.avg_roas > 0 ? 'var(--ds-color-danger)' : 'rgba(255,255,255,0.45)'
               return (
                 <Link key={r.month_year} href={`/dashboard/reports/monthly?month=${r.month_year}`} className="block" style={{ textDecoration: 'none' }}>
                   <div className="card p-5 transition-all hover:-translate-y-0.5">
                     <div className="flex items-center justify-between mb-3">
-                      <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 700, color: '#fff' }}>
+                      <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 14, fontWeight: 700, color: '#fff' }}>
                         {fmtMonthYear(r.month_year)}
                       </p>
                       <ArrowRight size={14} style={{ color: 'var(--ds-text-secondary)' }} />
@@ -218,7 +218,7 @@ export default async function ReportsHubPage() {
                       </div>
                       <div className="flex items-center justify-between">
                         <span style={{ fontSize: 10, color: 'var(--ds-text-secondary)' }}>ROAS</span>
-                        <span style={{ fontSize: 13, fontWeight: 800, color: roasColor, fontFamily: 'Syne, sans-serif' }}>
+                        <span style={{ fontSize: 13, fontWeight: 800, color: roasColor, fontFamily: 'var(--font-display), Space Grotesk, sans-serif' }}>
                           {r.avg_roas > 0 ? `${r.avg_roas.toFixed(1)}x` : '—'}
                         </span>
                       </div>
@@ -249,7 +249,7 @@ export default async function ReportsHubPage() {
             <Clock size={20} style={{ color: 'var(--ds-color-primary)' }} />
           </div>
           <div style={{ flex: 1 }}>
-            <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+            <h3 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
               Reporte automático cada mañana
             </h3>
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.72)', lineHeight: 1.6, marginBottom: 8 }}>

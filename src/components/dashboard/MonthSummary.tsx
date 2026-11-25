@@ -69,7 +69,7 @@ function Kpi({ label, value, trend, Icon, iconColor, iconSoftBg, iconSoftBorder,
         </div>
       </div>
       <p style={{
-        fontFamily: 'Syne, sans-serif',
+        fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
         fontSize: 24, fontWeight: 600,
         color: STATUS_VALUE_COLOR[valueStatus],
         letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 4,

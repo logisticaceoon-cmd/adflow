@@ -18,7 +18,7 @@ const DEFAULT: Settings = {
   plan_credits:     { free: 100, pro: 400, agency: 1000 },
 }
 
-const TEAL    = '#62c4b0'
+const TEAL    = '#60a5fa'
 const TEAL_BG = 'rgba(98,196,176,0.15)'
 const TEAL_BD = 'rgba(98,196,176,0.30)'
 
@@ -44,7 +44,7 @@ function NumInput({ label, value, onChange, hint }: {
     <div className="flex items-center justify-between gap-4">
       <div>
         <label className="text-sm text-white">{label}</label>
-        {hint && <p className="text-xs mt-0.5" style={{ color: '#94a3b8' }}>{hint}</p>}
+        {hint && <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.55)' }}>{hint}</p>}
       </div>
       <input
         type="number"
@@ -150,7 +150,7 @@ export default function AdminSettingsPage() {
     <div className="max-w-2xl">
       <div className="mb-8">
         <h1 className="text-2xl font-extrabold tracking-tight mb-1 text-white">Configuración</h1>
-        <p className="text-sm" style={{ color: '#94a3b8' }}>Gestión global de la plataforma</p>
+        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.55)' }}>Gestión global de la plataforma</p>
       </div>
 
       {toast && (
@@ -158,7 +158,7 @@ export default function AdminSettingsPage() {
           style={{
             background: toast.ok ? 'rgba(45, 212, 191,0.15)' : 'rgba(239,68,68,0.15)',
             border: `1px solid ${toast.ok ? 'rgba(45, 212, 191,0.4)' : 'rgba(239,68,68,0.4)'}`,
-            color: toast.ok ? '#2dd4bf' : '#ef4444',
+            color: toast.ok ? '#3b82f6' : '#ef4444',
           }}>
           {toast.msg}
         </div>
@@ -198,7 +198,7 @@ export default function AdminSettingsPage() {
 
         {/* AI Credits per plan */}
         <Section title="Créditos de IA por plan" icon={Zap}>
-          <p className="text-sm mb-4" style={{ color: '#94a3b8' }}>
+          <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.55)' }}>
             1 crédito = 1 generación de copies con IA · Costo real: ~$0.001 por crédito (Claude Haiku)
           </p>
           <div className="flex flex-col gap-3 mb-4">
@@ -228,7 +228,7 @@ export default function AdminSettingsPage() {
               <Zap size={11} style={{ color: TEAL }} />
               <span className="font-semibold" style={{ color: TEAL }}>Referencia de costos Claude Haiku</span>
             </div>
-            <div className="flex flex-col gap-0.5" style={{ color: '#94a3b8' }}>
+            <div className="flex flex-col gap-0.5" style={{ color: 'rgba(255,255,255,0.55)' }}>
               <span>Free ($0): 100 créditos → ~$0.10/mes en IA</span>
               <span>Pro ($49): 400 créditos → ~$0.40/mes en IA</span>
               <span>Agency ($99): 1000 créditos → ~$1.00/mes en IA</span>
@@ -241,7 +241,7 @@ export default function AdminSettingsPage() {
 
         {/* Maintenance mode */}
         <Section title="Modo mantenimiento" icon={AlertTriangle}>
-          <p className="text-sm mb-4" style={{ color: '#94a3b8' }}>
+          <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.55)' }}>
             Cuando está activo, los usuarios ven una pantalla de mantenimiento en lugar del dashboard.
           </p>
           <div className="flex items-center justify-between">
@@ -267,7 +267,7 @@ export default function AdminSettingsPage() {
         <Section title="Cambiar contraseña de administrador" icon={Shield}>
           <form onSubmit={handlePasswordChange} className="flex flex-col gap-3">
             <div>
-              <label className="text-xs font-semibold mb-1 block" style={{ color: '#94a3b8' }}>
+              <label className="text-xs font-semibold mb-1 block" style={{ color: 'rgba(255,255,255,0.55)' }}>
                 Nueva contraseña
               </label>
               <input type="password" value={newPassword}
@@ -276,7 +276,7 @@ export default function AdminSettingsPage() {
                 style={inputStyle} />
             </div>
             <div>
-              <label className="text-xs font-semibold mb-1 block" style={{ color: '#94a3b8' }}>
+              <label className="text-xs font-semibold mb-1 block" style={{ color: 'rgba(255,255,255,0.55)' }}>
                 Confirmar contraseña
               </label>
               <input type="password" value={confirmPassword}

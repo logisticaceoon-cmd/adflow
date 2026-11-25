@@ -134,7 +134,7 @@ function ToastCard({ toast, onDismiss }: { toast: ToastItem; onDismiss: () => vo
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <p style={{
-          fontFamily: 'Syne, sans-serif',
+          fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
           fontSize: 13, fontWeight: 700, color: '#fff',
           lineHeight: 1.3, marginBottom: toast.description ? 3 : 0,
         }}>

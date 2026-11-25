@@ -38,7 +38,7 @@ export default function CapabilitiesCard({ level }: Props) {
         borderLeft: '3px solid var(--ds-color-success)',
       }}>
         <div className="flex items-center justify-between mb-3">
-          <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff' }}>
+          <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff' }}>
             ✨ Lo que ya podés hacer
           </h2>
           <span style={{
@@ -82,7 +82,7 @@ export default function CapabilitiesCard({ level }: Props) {
         borderLeft: '3px solid var(--ds-color-warning)',
       }}>
         <div className="flex items-center justify-between mb-3">
-          <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff' }}>
+          <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff' }}>
             🔒 Lo que viene
           </h2>
           <span style={{

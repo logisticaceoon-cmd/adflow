@@ -30,14 +30,14 @@ const STATUS_GRADIENTS: Record<string, { from: string; to: string; main: string;
 }
 
 const PHASE_COLORS: Record<string, { color: string; label: string }> = {
-  F1: { color: '#2dd4bf', label: 'F1 · Reconocimiento' },
+  F1: { color: '#3b82f6', label: 'F1 · Reconocimiento' },
   F2: { color: 'var(--ds-color-success)', label: 'F2 · Conversión' },
   F3: { color: '#a855f7', label: 'F3 · Remarketing' },
   F4: { color: '#06b6d4', label: 'F4 · WhatsApp' },
 }
 
 const STRATEGY_COLORS: Record<string, string> = {
-  TOFU: '#2dd4bf', MOFU: '#a855f7', BOFU: 'var(--ds-color-success)',
+  TOFU: '#3b82f6', MOFU: '#a855f7', BOFU: 'var(--ds-color-success)',
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -69,7 +69,7 @@ function generateCampaignInsight(metrics: CampaignMetrics | null | undefined): {
   if (!metrics || !metrics.spend) {
     return {
       msg: 'Esta campaña aún no tiene datos de rendimiento. Activala y esperá 24-48h para ver resultados.',
-      color: '#94a3b8', icon: '⏳',
+      color: 'rgba(255,255,255,0.55)', icon: '⏳',
     }
   }
   const roas = metrics.roas || 0
@@ -77,7 +77,7 @@ function generateCampaignInsight(metrics: CampaignMetrics | null | undefined): {
   if (roas >= 2) return { msg: `Buen rendimiento con ROAS de ${roas.toFixed(1)}x. Los números son saludables. Monitoreá los próximos días antes de escalar.`, color: 'var(--ds-color-success)', icon: '✅' }
   if (roas >= 1) return { msg: `La campaña está en punto de equilibrio (ROAS ${roas.toFixed(1)}x). Probá cambiar creativos o ajustar la audiencia para mejorar.`, color: 'var(--ds-color-warning)', icon: '⚠️' }
   if (roas > 0)  return { msg: `ROAS por debajo del equilibrio (${roas.toFixed(1)}x). Evaluá pausar esta campaña y redistribuir el presupuesto a las que mejor funcionan.`, color: 'var(--ds-color-danger)', icon: '🔴' }
-  return { msg: 'Sin datos de ROAS todavía. Dale tiempo al algoritmo de Meta para optimizar.', color: '#94a3b8', icon: '⏳' }
+  return { msg: 'Sin datos de ROAS todavía. Dale tiempo al algoritmo de Meta para optimizar.', color: 'rgba(255,255,255,0.55)', icon: '⏳' }
 }
 
 function getCampaignRecommendations(metrics: CampaignMetrics | null | undefined): Array<{ icon: string; title: string; desc: string; color: string }> {
@@ -278,7 +278,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
         overflow: 'hidden',
       }}>
         <h1 style={{
-          fontFamily: 'Syne, sans-serif',
+          fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
           fontSize: 28, fontWeight: 700, color: 'var(--ds-text-primary)',
           letterSpacing: '-0.02em', marginBottom: 14, lineHeight: 1.15,
         }}>
@@ -330,7 +330,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
           {kpiPills.map(k => (
             <div key={k.label}>
               <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 2 }}>{k.label}</p>
-              <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 800, color: '#fff' }}>{k.value}</p>
+              <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 800, color: '#fff' }}>{k.value}</p>
             </div>
           ))}
         </div>
@@ -449,7 +449,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
                 : intelligence.nextBestAction.urgency === 'medium' ? 'Importante' : 'Baja'}
             </p>
             <p style={{
-              fontFamily: 'Syne, sans-serif',
+              fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
               fontSize: 15, fontWeight: 600,
               color: 'var(--ds-text-primary)', marginBottom: 4, lineHeight: 1.3,
             }}>
@@ -464,7 +464,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
 
       {/* ─── SECCIÓN C: RENDIMIENTO DETALLADO ─────────────────────────── */}
       <div className="module-enter module-enter-3 card p-6 mb-6">
-        <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+        <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Rendimiento detallado
         </h2>
         <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 20 }}>
@@ -492,7 +492,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
                   {m.label}
                 </p>
                 <p style={{
-                  fontFamily: 'Syne, sans-serif', fontSize: 20, fontWeight: 800,
+                  fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 20, fontWeight: 800,
                   color: valueColor, lineHeight: 1.1,
                 }}>
                   {m.value}
@@ -509,7 +509,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
           border: '1px solid rgba(255,255,255,0.06)',
         }}>
           <p style={{
-            fontFamily: 'Syne, sans-serif', fontSize: 13, fontWeight: 700,
+            fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 13, fontWeight: 700,
             color: '#fff', marginBottom: 12,
           }}>
             Evolución diaria
@@ -520,7 +520,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
 
       {/* ─── SECCIÓN D: ESTRUCTURA INTERNA ─────────────────────────────── */}
       <div className="module-enter module-enter-4 card p-6 mb-6">
-        <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+        <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Estructura de la campaña
         </h2>
         <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 20 }}>
@@ -540,7 +540,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
                     <span style={{ fontSize: 16 }}>🎯</span>
-                    <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 700, color: '#fff' }}>
+                    <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 14, fontWeight: 700, color: '#fff' }}>
                       Conjunto {i + 1}: {s.name}
                     </p>
                   </div>
@@ -595,7 +595,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
                 background: 'rgba(45, 212, 191,0.06)',
                 border: '1px solid rgba(45, 212, 191,0.20)',
               }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: '#2dd4bf', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: '#3b82f6', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
                   Decisiones de audiencia
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -614,7 +614,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
       {/* ─── SECCIÓN E: PREVIEWS DE CREATIVOS ─────────────────────────── */}
       {allAds.length > 0 && (
         <div className="module-enter module-enter-5 card p-6 mb-6">
-          <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+          <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
             Creativos de la campaña
           </h2>
           <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 20 }}>
@@ -688,7 +688,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
 
       {/* ─── SECCIÓN F: HISTORIAL DE ACCIONES ─────────────────────────── */}
       <div className="module-enter module-enter-6 card p-6 mb-6">
-        <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+        <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Historial de la campaña
         </h2>
         <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 20 }}>
@@ -739,7 +739,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
       {/* ─── SECCIÓN H: AUTOMATIZACIONES ACTIVAS ─────────────────────── */}
       <div className="module-enter module-enter-7 card p-6 mb-6">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-          <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff' }}>
+          <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff' }}>
             ⚡ Automatizaciones
           </h2>
           <Link href="/dashboard/automation" style={{
@@ -842,7 +842,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
 
       {/* ─── SECCIÓN G: RECOMENDACIONES ─────────────────────────────── */}
       <div className="module-enter module-enter-7 card p-6 mb-6">
-        <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+        <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Recomendaciones para esta campaña
         </h2>
         <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 20 }}>
@@ -869,7 +869,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
                 {r.icon}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>
+                <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>
                   {r.title}
                 </p>
                 <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', lineHeight: 1.4 }}>{r.desc}</p>

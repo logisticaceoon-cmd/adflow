@@ -48,7 +48,7 @@ export default function SectionHeader({ title, subtitle, action }: SectionHeader
     }}>
       <div style={{ flex: 1, minWidth: 0 }}>
         <h2 style={{
-          fontFamily: 'Syne, sans-serif',
+          fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
           fontSize: 18, fontWeight: 600,
           color: 'var(--ds-text-primary)',
           letterSpacing: '-0.01em',

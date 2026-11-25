@@ -50,8 +50,8 @@ export default function AdminCreditsModal({
 
   const newAvailable = Math.max(0, total - creditsUsed)
   const usedPct      = total > 0 ? Math.min(100, Math.round((creditsUsed / total) * 100)) : 0
-  const barColor     = newAvailable === 0 ? '#ef4444' : usedPct >= 80 ? '#f59e0b' : '#2dd4bf'
-  const planColor    = PLAN_COLOR[plan] ?? '#62c4b0'
+  const barColor     = newAvailable === 0 ? '#ef4444' : usedPct >= 80 ? '#f59e0b' : '#3b82f6'
+  const planColor    = PLAN_COLOR[plan] ?? '#60a5fa'
 
   function handleOpen() {
     setPlan(currentPlan)
@@ -201,7 +201,7 @@ export default function AdminCreditsModal({
               border: '1px solid rgba(255,255,255,0.10)',
               borderRadius: 9,
               cursor: 'pointer',
-              color: '#8892b0',
+              color: 'rgba(255,255,255,0.45)',
               padding: '5px 7px',
               lineHeight: 1,
               transition: 'all 0.15s',
@@ -209,7 +209,7 @@ export default function AdminCreditsModal({
               marginTop: 2,
             }}
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.10)'; (e.currentTarget as HTMLElement).style.color = '#b0b8d0' }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)'; (e.currentTarget as HTMLElement).style.color = '#8892b0' }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)'; (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.45)' }}
           >
             <X size={16} />
           </button>
@@ -334,7 +334,7 @@ export default function AdminCreditsModal({
               style={{
                 flex: 1, padding: '7px 0', borderRadius: 9, cursor: 'pointer',
                 background: 'rgba(98,196,176,0.08)',
-                color: '#62c4b0',
+                color: '#60a5fa',
                 border: '1px solid rgba(98,196,176,0.20)',
                 fontSize: 12, fontWeight: 700,
                 transition: 'all 0.15s',
@@ -375,7 +375,7 @@ export default function AdminCreditsModal({
               style={{
                 padding: '7px 10px', borderRadius: 9, cursor: 'pointer',
                 background: 'rgba(98,196,176,0.10)',
-                color: '#62c4b0',
+                color: '#60a5fa',
                 border: '1px solid rgba(98,196,176,0.22)',
                 display: 'flex', alignItems: 'center',
                 transition: 'all 0.15s',
@@ -405,7 +405,7 @@ export default function AdminCreditsModal({
           <span style={{ fontSize: 12, color: '#6a6a9a' }}>Disponibles al guardar</span>
           <span style={{
             fontSize: 18, fontWeight: 800, letterSpacing: '-0.02em',
-            color: newAvailable > 0 ? '#62c4b0' : '#ef4444',
+            color: newAvailable > 0 ? '#60a5fa' : '#ef4444',
             textShadow: newAvailable > 0 ? '0 0 12px rgba(98,196,176,0.60)' : '0 0 12px rgba(239,68,68,0.60)',
           }}>
             {newAvailable}
@@ -434,7 +434,7 @@ export default function AdminCreditsModal({
               flex: 1, padding: '11px 0', borderRadius: 12,
               cursor: loading ? 'not-allowed' : 'pointer',
               background: 'rgba(255,255,255,0.05)',
-              color: '#8892b0',
+              color: 'rgba(255,255,255,0.45)',
               border: '1px solid rgba(255,255,255,0.10)',
               fontSize: 13, fontWeight: 600,
               transition: 'all 0.15s',
@@ -448,7 +448,7 @@ export default function AdminCreditsModal({
             }}
             onMouseLeave={e => {
               (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)'
-              ;(e.currentTarget as HTMLElement).style.color = '#8892b0'
+              ;(e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.45)'
             }}
           >
             Cancelar
@@ -505,7 +505,7 @@ export default function AdminCreditsModal({
       {mounted && toast && createPortal(
         <div style={{
           position: 'fixed', bottom: 28, right: 28, zIndex: 10000,
-          background: 'linear-gradient(135deg, #2dd4bf, #059669)',
+          background: 'linear-gradient(135deg, #3b82f6, #059669)',
           color: '#ffffff', borderRadius: 12, padding: '12px 20px',
           fontSize: 14, fontWeight: 600,
           boxShadow: '0 8px 32px rgba(45, 212, 191,0.36)',
@@ -523,7 +523,7 @@ export default function AdminCreditsModal({
         style={{
           fontSize: 11, padding: '4px 11px', borderRadius: 8, cursor: 'pointer',
           background: 'rgba(98,196,176,0.10)',
-          color: '#62c4b0',
+          color: '#60a5fa',
           border: '1px solid rgba(98,196,176,0.28)',
           fontWeight: 600, whiteSpace: 'nowrap',
           transition: 'all 0.15s',

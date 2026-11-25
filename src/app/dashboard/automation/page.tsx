@@ -91,7 +91,7 @@ export default async function AutomationPage() {
           Control · AdFlow
         </p>
         <h1 style={{
-          fontFamily: 'Syne, system-ui, sans-serif',
+          fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
           fontSize: 28, fontWeight: 600, letterSpacing: '-0.02em',
           color: 'var(--ds-text-primary)', marginBottom: 10,
         }}>
@@ -129,7 +129,7 @@ export default async function AutomationPage() {
                         💡 Sugerencia automática
                       </p>
                       <h3 style={{
-                        fontFamily: 'Syne, sans-serif',
+                        fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
                         fontSize: 16, fontWeight: 600,
                         color: 'var(--ds-text-primary)', marginBottom: 4,
                       }}>
@@ -207,7 +207,7 @@ export default async function AutomationPage() {
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
                       <h3 style={{
-                        fontFamily: 'Syne, sans-serif',
+                        fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
                         fontSize: 14, fontWeight: 600,
                         color: 'var(--ds-text-primary)',
                       }}>
@@ -360,7 +360,7 @@ export default async function AutomationPage() {
                 </div>
 
                 <p style={{
-                  fontFamily: 'Syne, sans-serif',
+                  fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
                   fontSize: 13, fontWeight: 600,
                   color: 'var(--ds-text-primary)',
                   marginBottom: 8, lineHeight: 1.4,

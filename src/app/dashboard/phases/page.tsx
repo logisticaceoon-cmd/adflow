@@ -38,7 +38,7 @@ function deriveStatus(ph: Phase, acc: PhaseAccum, level: number): {
   label: string
   color: string
 } {
-  if (level < PHASE_MIN_LEVEL[ph]) return { key: 'locked', label: '🔒 No disponible', color: '#8892b0' }
+  if (level < PHASE_MIN_LEVEL[ph]) return { key: 'locked', label: '🔒 No disponible', color: 'rgba(255,255,255,0.45)' }
   const roas = acc.count > 0 ? acc.revenue / acc.spend : 0
   const overspent = acc.assigned > 0 && acc.spend > acc.assigned * 1.20
   if (acc.count === 0) return { key: 'optimize', label: '🔧 Por activar', color: 'var(--ds-color-primary)' }
@@ -220,7 +220,7 @@ export default async function PhasesPage() {
           Phase Performance · AdFlow
         </p>
         <h1 style={{
-          fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 700,
+          fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 28, fontWeight: 700,
           color: 'var(--ds-text-primary)', marginBottom: 10, letterSpacing: '-0.02em',
         }}>
           Rendimiento por fases 🎯
@@ -239,7 +239,7 @@ export default async function PhasesPage() {
       {!hasAnyData ? (
         <div className="card p-12 text-center">
           <div style={{ fontSize: 48, marginBottom: 18 }}>📊</div>
-          <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: 8 }}>
+          <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: 8 }}>
             Aún no tenés datos por fases este mes
           </h2>
           <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', marginBottom: 22, maxWidth: 420, margin: '0 auto 22px' }}>
@@ -253,7 +253,7 @@ export default async function PhasesPage() {
         <>
           {/* ── SECTION B: 4 PHASE CARDS ──────────────────────────────── */}
           <div className="mb-6">
-            <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+            <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
               Resumen ejecutivo por fase
             </h2>
             <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 18 }}>
@@ -287,7 +287,7 @@ export default async function PhasesPage() {
                           display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22,
                         }}>{p.icon}</div>
                         <div>
-                          <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 700, color: p.color }}>
+                          <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 14, fontWeight: 700, color: p.color }}>
                             {p.fullName}
                           </p>
                           <p style={{ fontSize: 10.5, color: 'var(--ds-text-secondary)' }}>{p.objective}</p>
@@ -328,28 +328,28 @@ export default async function PhasesPage() {
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       <div>
                         <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)' }} title="Ingresos generados">Ventas</p>
-                        <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 800, color: '#fff' }}>
+                        <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 16, fontWeight: 800, color: '#fff' }}>
                           {currency}{acc.revenue.toFixed(0)}
                         </p>
                       </div>
                       <div>
                         <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)' }} title="Retorno por cada peso invertido">ROAS</p>
                         <p style={{
-                          fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 800,
-                          color: phaseRoas >= 3 ? 'var(--ds-color-success)' : phaseRoas >= 1.5 ? 'var(--ds-color-warning)' : phaseRoas > 0 ? 'var(--ds-color-danger)' : '#8892b0',
+                          fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 16, fontWeight: 800,
+                          color: phaseRoas >= 3 ? 'var(--ds-color-success)' : phaseRoas >= 1.5 ? 'var(--ds-color-warning)' : phaseRoas > 0 ? 'var(--ds-color-danger)' : 'rgba(255,255,255,0.45)',
                         }}>
                           {phaseRoas > 0 ? `${phaseRoas.toFixed(1)}x` : '—'}
                         </p>
                       </div>
                       <div>
                         <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)' }}>Conversiones</p>
-                        <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 800, color: '#fff' }}>
+                        <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 16, fontWeight: 800, color: '#fff' }}>
                           {acc.conversions || 0}
                         </p>
                       </div>
                       <div>
                         <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)' }} title="Costo por adquisición">CPA</p>
-                        <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 800, color: '#fff' }}>
+                        <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 16, fontWeight: 800, color: '#fff' }}>
                           {cpa > 0 ? `${currency}${cpa.toFixed(0)}` : '—'}
                         </p>
                       </div>
@@ -373,7 +373,7 @@ export default async function PhasesPage() {
           {/* ── SECTION C: COMPARISON GRID ────────────────────────────── */}
           <div className="card module-enter module-enter-3" style={{ padding: 24, marginBottom: 32 }}>
             <div className="mb-4">
-              <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+              <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
                 Comparativa detallada
               </h2>
               <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
@@ -451,13 +451,13 @@ export default async function PhasesPage() {
               borderRadius: 8,
               alignItems: 'center',
             }}>
-              <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 13, fontWeight: 800, color: '#fff' }}>TOTAL</span>
+              <span style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 13, fontWeight: 800, color: '#fff' }}>TOTAL</span>
               <span style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>{currency}{totals.recommended.toLocaleString()}</span>
               <span style={{ fontSize: 12, color: '#a0a8c0' }}>{currency}{totals.assigned.toLocaleString()}</span>
-              <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 800, color: '#fff' }}>{currency}{totals.spend.toFixed(0)}</span>
-              <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 800, color: 'var(--ds-color-success)' }}>{currency}{totals.revenue.toFixed(0)}</span>
+              <span style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 14, fontWeight: 800, color: '#fff' }}>{currency}{totals.spend.toFixed(0)}</span>
+              <span style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 14, fontWeight: 800, color: 'var(--ds-color-success)' }}>{currency}{totals.revenue.toFixed(0)}</span>
               <span style={{
-                fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 800,
+                fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 14, fontWeight: 800,
                 color: totalRoas >= 3 ? 'var(--ds-color-success)' : totalRoas >= 1.5 ? 'var(--ds-color-warning)' : totalRoas > 0 ? 'var(--ds-color-danger)' : 'var(--ds-text-secondary)',
               }}>{totalRoas > 0 ? `${totalRoas.toFixed(1)}x` : '—'}</span>
               <span style={{ fontSize: 12 }}>—</span>
@@ -469,7 +469,7 @@ export default async function PhasesPage() {
           {insights.length > 0 && (
             <div className="card module-enter module-enter-4" style={{ padding: 24, marginBottom: 32 }}>
               <div className="mb-4">
-                <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+                <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
                   💡 Insights del sistema
                 </h2>
                 <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
@@ -499,7 +499,7 @@ export default async function PhasesPage() {
           {/* ── SECTION E: COMPARISON CHART ───────────────────────────── */}
           <div className="card module-enter module-enter-5" style={{ padding: 24, marginBottom: 32 }}>
             <div className="mb-4">
-              <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+              <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
                 Comparativa visual por fase
               </h2>
               <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
@@ -532,7 +532,7 @@ export default async function PhasesPage() {
             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
           }}>📚</div>
           <div style={{ flex: 1 }}>
-            <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 12 }}>
+            <h3 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 12 }}>
               Las 4 fases trabajan juntas como un sistema
             </h3>
             <div className="space-y-3 mb-4">
@@ -545,7 +545,7 @@ export default async function PhasesPage() {
                 <div key={s.p}>
                   <div className="flex items-center gap-3" style={{ fontSize: 13 }}>
                     <span style={{ fontSize: 18 }}>{s.icon}</span>
-                    <span style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, color: '#fff' }}>{s.p} {s.name}</span>
+                    <span style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontWeight: 700, color: '#fff' }}>{s.p} {s.name}</span>
                     <span style={{ color: 'var(--ds-text-secondary)' }}>—</span>
                     <span style={{ color: 'var(--ds-text-secondary)' }}>{s.text}</span>
                   </div>

@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 const PLANS = ['free', 'starter', 'pro', 'agency']
 const PLAN_COLORS: Record<string, string> = {
-  free: '#62c4b0', starter: '#f472b6', pro: '#2dd4bf', agency: '#f59e0b',
+  free: '#60a5fa', starter: '#f472b6', pro: '#3b82f6', agency: '#f59e0b',
 }
 
 interface Props {
@@ -34,7 +34,7 @@ export default function AdminPlanSelect({ userId, currentPlan }: Props) {
     }
   }
 
-  const color = PLAN_COLORS[plan] ?? '#8892b0'
+  const color = PLAN_COLORS[plan] ?? 'rgba(255,255,255,0.45)'
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -57,8 +57,8 @@ export default function AdminPlanSelect({ userId, currentPlan }: Props) {
           </option>
         ))}
       </select>
-      {loading && <span style={{ fontSize: 10, color: '#8892b0' }}>...</span>}
-      {saved   && <span style={{ fontSize: 10, color: '#2dd4bf' }}>✓</span>}
+      {loading && <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)' }}>...</span>}
+      {saved   && <span style={{ fontSize: 10, color: '#3b82f6' }}>✓</span>}
     </div>
   )
 }

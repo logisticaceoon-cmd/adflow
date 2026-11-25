@@ -35,7 +35,7 @@ export default function CreateCampaignPage() {
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 8 }}>
           Tu agencia de IA · AdFlow
         </p>
-        <h1 style={{ fontFamily: 'Syne, sans-serif', fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.03em', lineHeight: 1.1 }}>
+        <h1 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.03em', lineHeight: 1.1 }}>
           Creá tu campaña ✨
         </h1>
         <p style={{ fontSize: 14, color: 'var(--ds-text-secondary)', maxWidth: 500, lineHeight: 1.55 }}>

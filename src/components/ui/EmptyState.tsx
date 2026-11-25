@@ -66,7 +66,7 @@ export default function EmptyState({
         {icon}
       </div>
       <h3 style={{
-        fontFamily: 'Syne, sans-serif',
+        fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
         fontSize: titleSize, fontWeight: 800, color: '#fff',
         letterSpacing: '-0.01em',
         marginBottom: 6,

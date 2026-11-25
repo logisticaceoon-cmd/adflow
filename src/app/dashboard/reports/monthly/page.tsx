@@ -115,7 +115,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
               Reporte mensual
             </p>
             <h1 style={{
-              fontFamily: 'Syne, sans-serif', fontSize: 32, fontWeight: 700,
+              fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 32, fontWeight: 700,
               color: 'var(--ds-text-primary)', letterSpacing: '-0.03em',
             }}>
               {fmtMonthYear(targetMonth)} 📊
@@ -146,7 +146,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
         /* ── EMPTY STATE ────────────────────────────────────────────── */
         <div className="card p-12 text-center">
           <div style={{ fontSize: 48, marginBottom: 18 }}>📭</div>
-          <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: 8 }}>
+          <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: 8 }}>
             No hay datos para {fmtMonthYear(targetMonth)}
           </h2>
           <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', marginBottom: 22, maxWidth: 420, margin: '0 auto 22px' }}>
@@ -171,7 +171,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
                 <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-label)', textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 8 }}>
                   {m.label}
                 </p>
-                <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 24, fontWeight: 600, color: 'var(--ds-text-primary)', lineHeight: 1, letterSpacing: '-0.02em', marginBottom: 8 }}>
+                <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 24, fontWeight: 600, color: 'var(--ds-text-primary)', lineHeight: 1, letterSpacing: '-0.02em', marginBottom: 8 }}>
                   {m.value}
                 </p>
                 <ChangeIndicator value={m.trend} />
@@ -196,7 +196,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
                   <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ds-color-primary)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6 }}>
                     Análisis ejecutivo · Tu consultor IA
                   </p>
-                  <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 14 }}>
+                  <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 14 }}>
                     Qué pasó este mes y qué hacer ahora
                   </h2>
                   <p style={{
@@ -238,7 +238,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
               <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8 }}>
                 Eficiencia de presupuesto
               </p>
-              <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', lineHeight: 1, marginBottom: 10 }}>
+              <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', lineHeight: 1, marginBottom: 10 }}>
                 {budgetEffic.toFixed(0)}%
               </p>
               <div className="progress-bar" style={{ height: 6, marginBottom: 8 }}>
@@ -265,7 +265,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
                 Crecimiento vs mes anterior
               </p>
               <p style={{
-                fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800,
+                fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 28, fontWeight: 800,
                 color: (report.growth_rate ?? 0) > 0 ? 'var(--ds-color-success)' : (report.growth_rate ?? 0) < 0 ? 'var(--ds-color-danger)' : '#a0a8c0',
                 lineHeight: 1, marginBottom: 10,
               }}>
@@ -285,7 +285,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
           {/* ── SECTION E: PHASE METRICS BREAKDOWN ──────────────────── */}
           <div className="card p-6 mb-6 dash-anim-5">
             <div className="mb-4">
-              <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+              <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
                 Rendimiento por fase
               </h2>
               <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
@@ -308,7 +308,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                       <span style={{ fontSize: 22 }}>{p.icon}</span>
                       <div>
-                        <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 13, fontWeight: 700, color: p.color }}>{p.fullName}</p>
+                        <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 13, fontWeight: 700, color: p.color }}>{p.fullName}</p>
                         <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)' }}>{p.objective}</p>
                       </div>
                     </div>
@@ -333,13 +333,13 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
                         display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
                       }}>{p.icon}</div>
                       <div>
-                        <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 13, fontWeight: 700, color: p.color }}>{p.fullName}</p>
+                        <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 13, fontWeight: 700, color: p.color }}>{p.fullName}</p>
                         <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)' }}>{p.objective}</p>
                       </div>
                     </div>
                     <div>
                       <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', marginBottom: 2 }}>Inversión</p>
-                      <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 800, color: '#fff' }}>
+                      <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 15, fontWeight: 800, color: '#fff' }}>
                         ${m.spend.toFixed(0)}
                       </p>
                     </div>
@@ -350,7 +350,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
                     <div>
                       <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', marginBottom: 2 }}>ROAS</p>
                       <p style={{
-                        fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 800,
+                        fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 15, fontWeight: 800,
                         color: m.roas >= 3 ? 'var(--ds-color-success)' : m.roas >= 1.5 ? 'var(--ds-color-warning)' : m.roas > 0 ? 'var(--ds-color-danger)' : 'var(--ds-text-secondary)',
                       }}>
                         {m.roas > 0 ? `${m.roas.toFixed(1)}x` : '—'}
@@ -370,7 +370,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
           {report.recommendations && (report.recommendations as any[]).length > 0 && (
             <div className="card p-6 mb-6 dash-anim-6">
               <div className="mb-4">
-                <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+                <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
                   🎯 Próximas acciones recomendadas
                 </h2>
                 <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
@@ -379,14 +379,14 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
               </div>
               <div className="space-y-3">
                 {(report.recommendations as any[]).slice(0, 6).map((r, i) => {
-                  const color  = r.priority === 'high' ? 'var(--ds-color-primary)' : r.priority === 'medium' ? 'var(--ds-color-warning)' : '#8892b0'
+                  const color  = r.priority === 'high' ? 'var(--ds-color-primary)' : r.priority === 'medium' ? 'var(--ds-color-warning)' : 'rgba(255,255,255,0.45)'
                   const bg     = r.priority === 'high' ? 'var(--ds-color-primary-soft)' : r.priority === 'medium' ? 'rgba(245,158,11,0.06)' : undefined
                   const border = r.priority === 'high' ? 'var(--ds-color-primary-border)' : r.priority === 'medium' ? 'var(--ds-color-warning-border)' : 'rgba(255,255,255,0.08)'
                   return (
                     <div key={i} className="p-4 rounded-xl flex items-start gap-3" style={{ background: bg, border: `1px solid ${border}` }}>
                       <span style={{ fontSize: 18, flexShrink: 0 }}>{r.icon}</span>
                       <div style={{ flex: 1 }}>
-                        <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 13, fontWeight: 700, color, marginBottom: 4 }}>
+                        <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 13, fontWeight: 700, color, marginBottom: 4 }}>
                           {r.title}
                         </p>
                         <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', lineHeight: 1.55, marginBottom: r.action?.href ? 8 : 0 }}>
@@ -412,7 +412,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
                 <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ds-color-primary)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 6 }}>
                   🎬 Campañas creadas este mes
                 </p>
-                <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', lineHeight: 1 }}>
+                <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', lineHeight: 1 }}>
                   {report.campaigns_created ?? 0}
                 </p>
                 <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', marginTop: 6 }}>
@@ -423,7 +423,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
                 <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ds-color-primary)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 6 }}>
                   📊 CPA promedio
                 </p>
-                <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', lineHeight: 1 }}>
+                <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', lineHeight: 1 }}>
                   ${(report.avg_cpa ?? 0).toFixed(0)}
                 </p>
                 <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', marginTop: 6 }}>

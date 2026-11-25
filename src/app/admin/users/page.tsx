@@ -6,10 +6,10 @@ import AdminPlanSelect from '@/components/admin/AdminPlanSelect'
 import AdminCreditsModal from '@/components/admin/AdminCreditsModal'
 
 const PLAN_COLORS: Record<string, string> = {
-  free: '#62c4b0', starter: '#f472b6', pro: '#2dd4bf', agency: '#f59e0b',
+  free: '#60a5fa', starter: '#f472b6', pro: '#3b82f6', agency: '#f59e0b',
 }
 const ROLE_COLORS: Record<string, string> = {
-  user: '#8892b0', admin: '#f59e0b', super_admin: '#ef4444',
+  user: 'rgba(255,255,255,0.45)', admin: '#f59e0b', super_admin: '#ef4444',
 }
 
 export default async function AdminUsersPage() {
@@ -87,14 +87,14 @@ export default async function AdminUsersPage() {
                       const used      = u.credits_used  ?? 0
                       const remaining = Math.max(0, total - used)
                       const pct       = total > 0 ? Math.round((used / total) * 100) : 0
-                      const barColor  = remaining === 0 ? '#ef4444' : pct >= 80 ? '#f59e0b' : '#2dd4bf'
+                      const barColor  = remaining === 0 ? '#ef4444' : pct >= 80 ? '#f59e0b' : '#3b82f6'
                       return (
                         <div style={{ minWidth: 110 }}>
                           <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
                             <span title="Disponibles" style={{ fontSize: 13, fontWeight: 700, color: barColor }}>{remaining}</span>
-                            <span style={{ fontSize: 10, color: '#8892b0' }}>/</span>
-                            <span title="Total" style={{ fontSize: 11, color: '#8892b0' }}>{total}</span>
-                            <span title="Usados" style={{ fontSize: 10, color: '#8892b0' }}>({used} us.)</span>
+                            <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)' }}>/</span>
+                            <span title="Total" style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>{total}</span>
+                            <span title="Usados" style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)' }}>({used} us.)</span>
                           </div>
                           <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 99, height: 3, overflow: 'hidden', width: 72 }}>
                             <div style={{ height: '100%', width: `${Math.min(100, pct)}%`, background: barColor, borderRadius: 99 }} />
@@ -106,7 +106,7 @@ export default async function AdminUsersPage() {
                   <td className="px-4 py-3.5">
                     <span className="text-xs px-2 py-0.5 rounded-full capitalize"
                           style={{ background: `${ROLE_COLORS[u.role as UserRole] ?? 'rgba(255,255,255,0.12)'}20`,
-                                   color: ROLE_COLORS[u.role as UserRole] ?? '#8892b0' }}>
+                                   color: ROLE_COLORS[u.role as UserRole] ?? 'rgba(255,255,255,0.45)' }}>
 
                       {u.role}
                     </span>

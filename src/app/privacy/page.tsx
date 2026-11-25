@@ -9,7 +9,7 @@ const section = (title: string, children: React.ReactNode) => (
       marginBottom: 12, paddingBottom: 10,
       borderBottom: '1px solid rgba(255,255,255,0.08)',
     }}>{title}</h2>
-    <div style={{ color: '#94a3b8', fontSize: 14, lineHeight: 1.8 }}>{children}</div>
+    <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14, lineHeight: 1.8 }}>{children}</div>
   </section>
 )
 
@@ -20,7 +20,7 @@ export default function PrivacyPage() {
       minHeight: '100vh', color: '#fff',
     }}>
       {/* Orbs */}
-      <div style={{ position: 'fixed', top: '-10%', right: '-8%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(233,30,140,0.15) 0%, transparent 68%)', filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0 }} />
+      <div style={{ position: 'fixed', top: '-10%', right: '-8%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 68%)', filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0 }} />
       <div style={{ position: 'fixed', bottom: '-8%', left: '-8%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(234,27,126,0.12) 0%, transparent 68%)', filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0 }} />
 
       {/* Navbar */}
@@ -37,7 +37,7 @@ export default function PrivacyPage() {
             </div>
             <span style={{ fontSize: 17, fontWeight: 700, color: '#fff' }}>AdFlow</span>
           </Link>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#64748b', textDecoration: 'none' }}
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}
             onMouseEnter={undefined}>
             <ArrowLeft size={14} /> Volver al inicio
           </Link>
@@ -51,17 +51,17 @@ export default function PrivacyPage() {
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             padding: '6px 16px', borderRadius: 99, marginBottom: 20,
-            background: 'rgba(233,30,140,0.10)', border: '1px solid rgba(233,30,140,0.25)',
+            background: 'rgba(37,99,235,0.10)', border: '1px solid rgba(37,99,235,0.25)',
           }}>
-            <Shield size={13} color="#f9a8d4" />
-            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: '#f9a8d4' }}>
+            <Shield size={13} color="#93c5fd" />
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: '#93c5fd' }}>
               Política de Privacidad
             </span>
           </div>
           <h1 style={{ fontSize: 34, fontWeight: 800, color: '#fff', marginBottom: 12, letterSpacing: '-0.5px' }}>
             Tu privacidad importa
           </h1>
-          <p style={{ color: '#64748b', fontSize: 14 }}>
+          <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14 }}>
             Fecha efectiva: Enero 2026 · AdFlow — Logisticaceoon
           </p>
         </div>
@@ -116,7 +116,7 @@ export default function PrivacyPage() {
 
           {section('5. No vendemos tus datos', (
             <p>
-              <strong style={{ color: '#2dd4bf' }}>AdFlow no vende, alquila ni comparte tus datos personales ni los de tus campañas con terceros con fines comerciales.</strong>{' '}
+              <strong style={{ color: '#3b82f6' }}>AdFlow no vende, alquila ni comparte tus datos personales ni los de tus campañas con terceros con fines comerciales.</strong>{' '}
               Solo compartimos información con proveedores de infraestructura necesarios para operar el servicio (Supabase para base de datos, Vercel para hosting, Anthropic para procesamiento de IA) bajo contratos de confidencialidad y procesamiento de datos.
             </p>
           ))}
@@ -172,11 +172,11 @@ export default function PrivacyPage() {
 
         {/* Bottom links */}
         <div style={{ textAlign: 'center', marginTop: 32, display: 'flex', gap: 24, justifyContent: 'center', alignItems: 'center' }}>
-          <Link href="/terms" style={{ fontSize: 13, color: '#64748b', textDecoration: 'none' }}>
+          <Link href="/terms" style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>
             Términos de Servicio →
           </Link>
           <span style={{ color: '#2a2a4a' }}>·</span>
-          <Link href="/" style={{ fontSize: 13, color: '#64748b', textDecoration: 'none' }}>
+          <Link href="/" style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>
             Volver al inicio
           </Link>
         </div>

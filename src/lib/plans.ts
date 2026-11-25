@@ -31,7 +31,7 @@ export const PLAN_LABEL: Record<string, string> = {
 }
 
 export const PLAN_COLOR: Record<string, string> = {
-  free:    '#62c4b0',
+  free:    '#60a5fa',
   starter: '#a78bfa',
   pro:     'var(--ds-color-primary)',
   agency:  '#f59e0b',

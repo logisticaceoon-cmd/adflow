@@ -68,7 +68,7 @@ export default function FunnelHealthCard({
           Salud del embudo
         </p>
         <p style={{
-          fontFamily: 'Syne, sans-serif', fontSize: 12, fontWeight: 600,
+          fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 12, fontWeight: 600,
           color: allOk ? 'var(--ds-color-success)' : 'var(--ds-color-warning)',
         }}>
           {allOk ? 'OK' : 'Revisar'}
@@ -82,7 +82,7 @@ export default function FunnelHealthCard({
             Ratio Pago
           </span>
           <span style={{
-            fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700,
+            fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 16, fontWeight: 700,
             color: payOk ? 'var(--ds-color-success)' : 'var(--ds-color-danger)',
           }}>
             {(ratioPago * 100).toFixed(0)}%
@@ -124,7 +124,7 @@ export default function FunnelHealthCard({
             Ratio Compra
           </span>
           <span style={{
-            fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700,
+            fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 16, fontWeight: 700,
             color: buyOk ? 'var(--ds-color-success)' : 'var(--ds-color-danger)',
           }}>
             {(ratioCompra * 100).toFixed(0)}%

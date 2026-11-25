@@ -102,7 +102,7 @@ export default function AchievementToast({ achievements, onAllDismissed }: Props
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
           <span style={{ fontSize: 16 }}>🏆</span>
           <p style={{
-            fontFamily: 'Syne, sans-serif',
+            fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
             fontSize: 12, fontWeight: 700, color: 'var(--ds-color-warning)',
             textTransform: 'uppercase', letterSpacing: '0.08em',
             margin: 0,
@@ -126,7 +126,7 @@ export default function AchievementToast({ achievements, onAllDismissed }: Props
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <p style={{
-              fontFamily: 'Syne, sans-serif',
+              fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
               fontSize: 16, fontWeight: 800, color: '#fff',
               margin: '0 0 4px',
               lineHeight: 1.2,

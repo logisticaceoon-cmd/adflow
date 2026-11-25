@@ -51,7 +51,7 @@ export default function StepPublish({
             <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 6 }}>
               Tu campaña está lista
             </p>
-            <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 20, fontWeight: 800, color: '#fff', lineHeight: 1.2 }}>
+            <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 20, fontWeight: 800, color: '#fff', lineHeight: 1.2 }}>
               {campaign?.name || 'Campaña generada por IA'}
             </h2>
           </div>

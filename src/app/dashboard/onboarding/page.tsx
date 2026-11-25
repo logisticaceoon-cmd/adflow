@@ -35,7 +35,7 @@ export default async function OnboardingPage() {
       {/* ── Header ─────────────────────────────────────────────────────── */}
       <div className="module-enter module-enter-1 mb-8" style={{ paddingTop: 4 }}>
         <h1 style={{
-          fontFamily: 'Syne, sans-serif',
+          fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
           fontSize: 32, fontWeight: 700, color: 'var(--ds-text-primary)',
           letterSpacing: '-0.02em', marginBottom: 8, lineHeight: 1.1,
         }}>
@@ -70,13 +70,13 @@ export default async function OnboardingPage() {
       <div className="card module-enter module-enter-2 mb-8" style={{ padding: '18px 20px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
           <span style={{
-            fontFamily: 'Syne, sans-serif', fontSize: 12, fontWeight: 700,
+            fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 12, fontWeight: 700,
             color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em',
           }}>
             Progreso general
           </span>
           <span style={{
-            fontFamily: 'Syne, sans-serif', fontSize: 22, fontWeight: 900, color: '#fff',
+            fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 22, fontWeight: 900, color: '#fff',
             letterSpacing: '-0.02em',
           }}>
             {status.completionScore}%
@@ -159,21 +159,21 @@ export default async function OnboardingPage() {
                       ? '1.5px solid transparent'
                       : '1px solid rgba(255,255,255,0.10)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontFamily: 'Syne, sans-serif',
+                  fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
                   fontSize: 15, fontWeight: 800,
-                  color: isDone ? 'var(--ds-color-success)' : isCurrent ? 'var(--ds-color-primary)' : '#8892b0',
+                  color: isDone ? 'var(--ds-color-success)' : isCurrent ? 'var(--ds-color-primary)' : 'rgba(255,255,255,0.45)',
                 }}>
                   {isDone
                     ? <Check size={18} strokeWidth={3} color="var(--ds-color-success)" />
                     : isLocked
-                      ? <Lock size={14} color="#8892b0" />
+                      ? <Lock size={14} color="rgba(255,255,255,0.45)" />
                       : idx + 1}
                 </div>
 
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 4 }}>
                     <h3 style={{
-                      fontFamily: 'Syne, sans-serif',
+                      fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
                       fontSize: isCurrent ? 17 : 15, fontWeight: 700,
                       color: '#fff', letterSpacing: '-0.01em',
                     }}>
@@ -259,7 +259,7 @@ export default async function OnboardingPage() {
         }}>
           <p style={{ fontSize: 44, marginBottom: 12 }}>🎉</p>
           <h2 style={{
-            fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff',
+            fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff',
             letterSpacing: '-0.02em', marginBottom: 10,
           }}>
             ¡Tu sistema de crecimiento está listo!

@@ -111,7 +111,7 @@ export default function PixelDashboardPage() {
       <div className="max-w-2xl mx-auto">
         <div className="card p-10 text-center">
           <div style={{ fontSize: 48, marginBottom: 16 }}>🔌</div>
-          <h1 style={{ fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 10 }}>
+          <h1 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 10 }}>
             No tenés pixel configurado
           </h1>
           <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', marginBottom: 24, maxWidth: 380, margin: '0 auto 24px' }}>
@@ -210,7 +210,7 @@ export default function PixelDashboardPage() {
             Nivel {level} de 8
           </p>
           <h1 style={{
-            fontFamily: 'Syne, sans-serif', fontSize: 38, fontWeight: 700,
+            fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 38, fontWeight: 700,
             color: 'var(--ds-text-primary)', letterSpacing: '-0.03em', marginBottom: 16,
           }}>
             {pa?.level_name}
@@ -222,7 +222,7 @@ export default function PixelDashboardPage() {
             fontSize: 13,
           }}>
             <span style={{ fontSize: 14 }}>⭐</span>
-            <span style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, letterSpacing: '0.02em' }}>
+            <span style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontWeight: 700, letterSpacing: '0.02em' }}>
               {totalScore.toLocaleString()} puntos de crecimiento
             </span>
           </div>
@@ -263,7 +263,7 @@ export default function PixelDashboardPage() {
         <ScoreCard
           totalScore={totalScore}
           breakdown={[
-            { label: `Nivel ${level}`,    points: scoreLevel,   color: '#2dd4bf' },
+            { label: `Nivel ${level}`,    points: scoreLevel,   color: '#3b82f6' },
             { label: 'Tráfico web',       points: scoreTraffic, color: '#9d90ff' },
             { label: 'Compras (180d)',    points: scoreSales,   color: '#34d399' },
             { label: `Campañas (${campaignsCount})`, points: scoreCamps, color: '#fbbf24' },
@@ -284,7 +284,7 @@ export default function PixelDashboardPage() {
       {/* ── SECTION G: GROWTH TIMELINE ────────────────────────────────── */}
       <div className="card module-enter module-enter-7" style={{ padding: 24, marginBottom: 32 }}>
         <h2 style={{
-          fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 600,
+          fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 600,
           color: 'var(--ds-text-primary)', letterSpacing: '-0.01em', marginBottom: 4,
         }}>
           Tu viaje de crecimiento

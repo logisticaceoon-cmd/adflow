@@ -63,13 +63,13 @@ export default function AdminLoginPage() {
         {/* Logo */}
         <div className="flex items-center justify-center gap-3 mb-8">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-               style={{ background: 'linear-gradient(135deg, #2dd4bf, #c5006a)' }}>
+               style={{ background: 'linear-gradient(135deg, #3b82f6, #c5006a)' }}>
             <Shield size={18} color="#fff" strokeWidth={2} />
           </div>
           <div>
             <span className="font-display text-xl font-bold block leading-none">AdFlow</span>
             <span className="text-[10px] font-bold tracking-widest uppercase block"
-                  style={{ color: '#2dd4bf' }}>Admin Panel</span>
+                  style={{ color: '#3b82f6' }}>Admin Panel</span>
           </div>
         </div>
 
@@ -77,7 +77,7 @@ export default function AdminLoginPage() {
         <div className="rounded-2xl p-8"
              style={{ background: 'rgba(18,4,10,0.97)', border: '1px solid rgba(98,196,176,0.16)' }}>
           <h1 className="font-display text-xl font-bold mb-1">Acceso administrador</h1>
-          <p className="text-sm mb-6" style={{ color: '#8892b0' }}>
+          <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.45)' }}>
             Área restringida · Solo personal autorizado
           </p>
 
@@ -118,7 +118,7 @@ export default function AdminLoginPage() {
               disabled={loading}
               className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm transition-all"
               style={{
-                background: loading ? 'rgba(233,30,140,0.5)' : 'linear-gradient(135deg, #2dd4bf, #c5006a)',
+                background: loading ? 'rgba(37,99,235,0.5)' : 'linear-gradient(135deg, #3b82f6, #c5006a)',
                 color: '#fff',
                 opacity: loading ? 0.8 : 1,
               }}
@@ -138,8 +138,8 @@ export default function AdminLoginPage() {
           </form>
         </div>
 
-        <p className="text-center text-xs mt-4" style={{ color: '#8892b0' }}>
-          ¿Sos usuario? <a href="/login" style={{ color: '#8892b0' }} className="hover:underline">Ir al login de usuarios</a>
+        <p className="text-center text-xs mt-4" style={{ color: 'rgba(255,255,255,0.45)' }}>
+          ¿Sos usuario? <a href="/login" style={{ color: 'rgba(255,255,255,0.45)' }} className="hover:underline">Ir al login de usuarios</a>
         </p>
       </div>
     </div>

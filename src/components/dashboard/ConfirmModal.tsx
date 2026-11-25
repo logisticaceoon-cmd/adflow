@@ -101,7 +101,7 @@ export default function ConfirmModal({
         )}
 
         <h2 style={{
-          fontFamily: 'Syne, sans-serif',
+          fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
           fontSize: 20, fontWeight: 800, color: '#fff',
           marginBottom: 8, letterSpacing: '-0.02em',
         }}>

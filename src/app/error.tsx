@@ -8,7 +8,7 @@ export default function RootError({ error, reset }: { error: Error; reset: () =>
       <div>
         <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Algo salió mal</h2>
         <p style={{ color: '#9ca3af', marginBottom: '1.5rem' }}>Ocurrió un error inesperado. Por favor intenta de nuevo.</p>
-        <button onClick={reset} style={{ padding: '0.5rem 1.5rem', backgroundColor: '#2dd4bf', color: '#000', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>
+        <button onClick={reset} style={{ padding: '0.5rem 1.5rem', backgroundColor: '#3b82f6', color: '#000', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>
           Reintentar
         </button>
       </div>

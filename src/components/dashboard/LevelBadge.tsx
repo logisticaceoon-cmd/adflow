@@ -9,11 +9,11 @@ interface Props {
 }
 
 const LEVEL_COLORS: Record<number, string> = {
-  0: '#8892b0',
+  0: 'rgba(255,255,255,0.45)',
   1: 'var(--ds-color-danger)', 2: 'var(--ds-color-danger)',
   3: 'var(--ds-color-warning)', 4: 'var(--ds-color-warning)',
   5: 'var(--ds-color-success)', 6: 'var(--ds-color-success)',
-  7: '#2dd4bf',
+  7: '#3b82f6',
   8: '#8b5cf6',
 }
 
@@ -24,7 +24,7 @@ const SIZE_PX: Record<'sm' | 'md' | 'lg', { box: number; num: number; name: numb
 }
 
 export default function LevelBadge({ level, levelName, size = 'md', showName = true }: Props) {
-  const color = LEVEL_COLORS[level] ?? '#8892b0'
+  const color = LEVEL_COLORS[level] ?? 'rgba(255,255,255,0.45)'
   const dim = SIZE_PX[size]
   const isMax = level === 8
 

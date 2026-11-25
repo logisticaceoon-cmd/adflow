@@ -262,7 +262,7 @@ export default function TopBar() {
                }}>
             <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: 'var(--ds-card-border)' }}>
               <div className="flex items-center gap-2">
-                <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 700 }}>🔔 Notificaciones</h3>
+                <h3 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 14, fontWeight: 700 }}>🔔 Notificaciones</h3>
                 {unreadCount > 0 && (
                   <span style={{
                     fontSize: 10, fontWeight: 800,

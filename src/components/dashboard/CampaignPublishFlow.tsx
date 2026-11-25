@@ -149,7 +149,7 @@ export default function CampaignPublishFlow({ campaignId, isAlreadyPublished, me
                 <span
                   className="text-sm"
                   style={{
-                    color: done ? '#8892b0' : active ? '#ffffff' : '#8892b0',
+                    color: done ? 'rgba(255,255,255,0.45)' : active ? '#ffffff' : 'rgba(255,255,255,0.45)',
                     fontWeight: active ? 600 : 400,
                     textDecoration: done ? 'none' : undefined,
                   }}
@@ -212,7 +212,7 @@ export default function CampaignPublishFlow({ campaignId, isAlreadyPublished, me
           className="p-4 rounded-xl"
           style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.09)' }}
         >
-          <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: '#8892b0', letterSpacing: '0.10em' }}>
+          <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: 'rgba(255,255,255,0.45)', letterSpacing: '0.10em' }}>
             Resumen de publicación
           </p>
           <div className="grid grid-cols-2 gap-x-6 gap-y-2">
@@ -224,7 +224,7 @@ export default function CampaignPublishFlow({ campaignId, isAlreadyPublished, me
               { label: 'Estado',           value: 'PAUSADA' },
             ].map(({ label, value }) => (
               <div key={label}>
-                <p className="text-[10px] uppercase tracking-wider" style={{ color: '#8892b0' }}>{label}</p>
+                <p className="text-[10px] uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.45)' }}>{label}</p>
                 <p className="text-xs font-semibold mt-0.5" style={{ color: 'rgba(255,255,255,0.75)' }}>{value}</p>
               </div>
             ))}

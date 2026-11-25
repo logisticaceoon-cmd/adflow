@@ -72,7 +72,7 @@ export default function HeroLevel(p: Props) {
           </p>
 
           <h1 style={{
-            fontFamily: 'Syne, system-ui, sans-serif',
+            fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
             fontSize: 28, fontWeight: 600, letterSpacing: '-0.02em',
             color: 'var(--ds-text-primary)', marginBottom: 12, lineHeight: 1.2,
           }}>
@@ -128,7 +128,7 @@ export default function HeroLevel(p: Props) {
                 {k.label}
               </p>
               <p style={{
-                fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 600,
+                fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 600,
                 color: k.color || 'var(--ds-text-primary)',
                 letterSpacing: '-0.01em', lineHeight: 1.1,
               }}>

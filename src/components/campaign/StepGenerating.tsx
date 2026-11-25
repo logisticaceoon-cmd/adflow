@@ -28,7 +28,7 @@ export default function StepGenerating({ genStep, businessName }: Props) {
         <span style={{ fontSize: 48 }}>🤖</span>
       </div>
 
-      <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 24, fontWeight: 800, color: '#fff', marginBottom: 8, textAlign: 'center' }}>
+      <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 24, fontWeight: 800, color: '#fff', marginBottom: 8, textAlign: 'center' }}>
         La IA está armando tu campaña
       </h2>
       <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', marginBottom: 40, textAlign: 'center', maxWidth: 400 }}>

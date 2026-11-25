@@ -87,7 +87,7 @@ export default function CreativesPage() {
           <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 8 }}>
             Biblioteca de creativos · AdFlow
           </p>
-          <h1 style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.03em' }}>
+          <h1 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.03em' }}>
             Tus creativos 🖼
           </h1>
           <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)' }}>
@@ -116,7 +116,7 @@ export default function CreativesPage() {
           display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
         }}>🎨</div>
         <div style={{ flex: 1 }}>
-          <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+          <h3 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
             Tus creativos son la cara de tus anuncios
           </h3>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.72)', lineHeight: 1.6, marginBottom: 6 }}>
@@ -193,7 +193,7 @@ export default function CreativesPage() {
                 </button>
                 <div>
                   <p className="text-xs font-medium text-white truncate">{f.name}</p>
-                  {f.size > 0 && <p className="text-[10px]" style={{ color: '#8892b0' }}>{formatSize(f.size)}</p>}
+                  {f.size > 0 && <p className="text-[10px]" style={{ color: 'rgba(255,255,255,0.45)' }}>{formatSize(f.size)}</p>}
                 </div>
               </div>
 

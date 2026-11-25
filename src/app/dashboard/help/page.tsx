@@ -53,7 +53,7 @@ export default function HelpPage() {
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 8 }}>
           Centro de ayuda · AdFlow
         </p>
-        <h1 style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.03em' }}>
+        <h1 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.03em' }}>
           Cómo sacarle el máximo a AdFlow 📚
         </h1>
         <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)' }}>
@@ -82,7 +82,7 @@ export default function HelpPage() {
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 18, marginBottom: 12,
             }}>{card.icon}</div>
-            <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 6, lineHeight: 1.3 }}>
+            <h3 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 6, lineHeight: 1.3 }}>
               {card.title}
             </h3>
             <p style={{ fontSize: 11.5, color: 'var(--ds-text-secondary)', lineHeight: 1.55 }}>

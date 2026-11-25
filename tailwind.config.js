@@ -8,10 +8,12 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          pink: '#e91e8c',
-          teal: '#62c4b0',
-          dark: '#0f0f17',
-          surface: '#141420',
+          blue: '#2563eb',
+          'blue-light': '#3b82f6',
+          'blue-soft': '#60a5fa',
+          dark: '#080c18',
+          surface: '#0f1420',
+          elevated: '#141c2a',
         },
       },
       fontFamily: {

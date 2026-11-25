@@ -65,19 +65,19 @@ export default function AdminSidebar({
           style={{ height: 64, borderBottom: '1px solid rgba(255,255,255,0.08)', flexShrink: 0 }}>
           <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-              style={{ background: 'linear-gradient(135deg, #2dd4bf, #c5006a)' }}>
+              style={{ background: 'linear-gradient(135deg, #3b82f6, #c5006a)' }}>
               <Shield size={14} color="#fff" strokeWidth={2.5} />
             </div>
             <div>
               <span className="font-display text-[15px] font-bold tracking-tight text-white">AdFlow</span>
               <span className="block text-[9px] font-bold tracking-widest uppercase"
-                style={{ color: '#62c4b0', marginTop: -2 }}>Admin</span>
+                style={{ color: '#60a5fa', marginTop: -2 }}>Admin</span>
             </div>
           </div>
           {/* Collapse button */}
           <button onClick={onToggle}
             className="flex items-center justify-center rounded-lg transition-all duration-150 hover:bg-white/10"
-            style={{ width: 28, height: 28, color: '#62c4b0', flexShrink: 0 }}>
+            style={{ width: 28, height: 28, color: '#60a5fa', flexShrink: 0 }}>
             <ChevronLeft size={16} strokeWidth={2} />
           </button>
         </div>
@@ -93,13 +93,13 @@ export default function AdminSidebar({
               <Link key={href} href={href}
                 className={`nav-item ${active ? 'nav-item-active' : 'nav-item-inactive'}`}
                 style={active ? {
-                  background: 'rgba(233,30,140,0.20)',
+                  background: 'rgba(37,99,235,0.20)',
                   color: '#ffffff',
-                  boxShadow: 'inset 3px 0 0 #2dd4bf',
+                  boxShadow: 'inset 3px 0 0 #3b82f6',
                 } : {}}>
                 <Icon
                   size={16}
-                  style={{ color: active ? '#ffffff' : '#2dd4bf', opacity: active ? 1 : 0.7 }}
+                  style={{ color: active ? '#ffffff' : '#3b82f6', opacity: active ? 1 : 0.7 }}
                   strokeWidth={active ? 2 : 1.75}
                 />
                 <span className="text-[13px] font-medium whitespace-nowrap"
@@ -116,13 +116,13 @@ export default function AdminSidebar({
             <Link href="/dashboard"
               className="nav-item nav-item-inactive"
               style={{ color: '#6b8a8a' }}>
-              <Eye size={16} strokeWidth={1.75} style={{ color: '#2dd4bf', opacity: 0.5 }} />
+              <Eye size={16} strokeWidth={1.75} style={{ color: '#3b82f6', opacity: 0.5 }} />
               <span className="text-[13px] whitespace-nowrap">Ver panel usuario</span>
             </Link>
             <button onClick={handleLogout}
               className="nav-item nav-item-inactive text-left"
               style={{ color: '#6b8a8a' }}>
-              <LogOut size={16} strokeWidth={1.75} style={{ color: '#2dd4bf', opacity: 0.5 }} />
+              <LogOut size={16} strokeWidth={1.75} style={{ color: '#3b82f6', opacity: 0.5 }} />
               <span className="text-[13px] whitespace-nowrap">Cerrar sesión</span>
             </button>
           </div>
@@ -132,11 +132,11 @@ export default function AdminSidebar({
         <div className="px-4 py-3 flex items-center gap-2"
           style={{ borderTop: '1px solid rgba(255,255,255,0.07)', flexShrink: 0 }}>
           <div className="w-2 h-2 rounded-full flex-shrink-0"
-            style={{ background: '#62c4b0', boxShadow: '0 0 8px rgba(98,196,176,0.8)' }} />
-          <span className="text-[11px] font-semibold whitespace-nowrap" style={{ color: '#62c4b0' }}>
+            style={{ background: '#60a5fa', boxShadow: '0 0 8px rgba(98,196,176,0.8)' }} />
+          <span className="text-[11px] font-semibold whitespace-nowrap" style={{ color: '#60a5fa' }}>
             Modo administrador
           </span>
-          <Zap size={11} style={{ color: '#62c4b0', marginLeft: 'auto', flexShrink: 0, opacity: 0.7 }} />
+          <Zap size={11} style={{ color: '#60a5fa', marginLeft: 'auto', flexShrink: 0, opacity: 0.7 }} />
         </div>
       </div>
     </aside>

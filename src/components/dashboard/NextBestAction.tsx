@@ -75,9 +75,9 @@ export default function NextBestAction({ primaryAction, secondaryActions }: Prop
             {cfg.overline}
           </p>
 
-          {/* Main title — Syne 16px, clamp to 2 lines */}
+          {/* Main title — Space Grotesk 16px, clamp to 2 lines */}
           <p style={{
-            fontFamily: 'Syne, sans-serif',
+            fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
             fontSize: 16, fontWeight: 600, color: 'var(--ds-text-primary)',
             letterSpacing: '-0.01em',
             lineHeight: 1.4, marginBottom: 8,

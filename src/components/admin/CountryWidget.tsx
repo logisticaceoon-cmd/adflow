@@ -3,7 +3,7 @@
 
 export type CountryData = { country: string; count: number; pct: number }
 
-const COLORS = ['#2dd4bf', '#62c4b0', '#f472b6', '#f59e0b', '#2dd4bf', '#8892b0']
+const COLORS = ['#3b82f6', '#60a5fa', '#f472b6', '#f59e0b', '#3b82f6', 'rgba(255,255,255,0.45)']
 
 const FLAG: Record<string, string> = {
   AR: '🇦🇷', CO: '🇨🇴', CL: '🇨🇱', MX: '🇲🇽', PE: '🇵🇪',
@@ -40,7 +40,7 @@ export default function CountryWidget({ data }: { data: CountryData[] }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{
             width: 6, height: 6, borderRadius: '50%',
-            background: '#62c4b0',
+            background: '#60a5fa',
             boxShadow: '0 0 8px rgba(98,196,176,0.7)',
             animation: 'kpiGlowPulse 2.5s ease-in-out infinite',
           }} />
@@ -55,7 +55,7 @@ export default function CountryWidget({ data }: { data: CountryData[] }) {
         <span style={{
           fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase',
           background: hasData ? 'rgba(98,196,176,0.12)' : 'rgba(90,90,122,0.15)',
-          color: hasData ? '#62c4b0' : '#8892b0',
+          color: hasData ? '#60a5fa' : 'rgba(255,255,255,0.45)',
           border: `1px solid ${hasData ? 'rgba(98,196,176,0.3)' : 'rgba(255,255,255,0.12)'}`,
           padding: '3px 10px', borderRadius: 20,
         }}>
@@ -90,7 +90,7 @@ export default function CountryWidget({ data }: { data: CountryData[] }) {
                 {d.pct}%
               </span>
               <span style={{
-                fontSize: 11, color: '#8892b0',
+                fontSize: 11, color: 'rgba(255,255,255,0.45)',
                 width: 32, textAlign: 'right', flexShrink: 0,
               }}>
                 {d.count}
@@ -101,10 +101,10 @@ export default function CountryWidget({ data }: { data: CountryData[] }) {
       ) : (
         <div style={{ padding: '36px 24px', textAlign: 'center' }}>
           <div style={{ fontSize: 36, marginBottom: 14 }}>🌎</div>
-          <p style={{ color: '#8892b0', fontSize: 13, fontWeight: 600, marginBottom: 8 }}>
+          <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 13, fontWeight: 600, marginBottom: 8 }}>
             Datos geográficos no configurados
           </p>
-          <p style={{ color: '#8892b0', fontSize: 12, maxWidth: 420, margin: '0 auto', lineHeight: 1.7 }}>
+          <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 12, maxWidth: 420, margin: '0 auto', lineHeight: 1.7 }}>
             Para activar esta métrica, ejecutá en Supabase SQL Editor:
           </p>
           <div style={{
@@ -117,14 +117,14 @@ export default function CountryWidget({ data }: { data: CountryData[] }) {
             textAlign: 'left',
           }}>
             <code style={{
-              fontFamily: 'monospace', fontSize: 11, color: '#62c4b0',
+              fontFamily: 'monospace', fontSize: 11, color: '#60a5fa',
               lineHeight: 1.8, display: 'block', whiteSpace: 'pre-wrap',
             }}>
               {`ALTER TABLE profiles
   ADD COLUMN IF NOT EXISTS country_code TEXT;`}
             </code>
           </div>
-          <p style={{ color: '#8892b0', fontSize: 11, marginTop: 10, lineHeight: 1.6 }}>
+          <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 11, marginTop: 10, lineHeight: 1.6 }}>
             Luego poblá la columna al registrar usuarios (por IP, timezone o preferencia).
           </p>
         </div>

@@ -99,7 +99,7 @@ export default function ScaleBudgetModal({ open, onClose, onConfirm, campaignNam
             <TrendingUp size={26} style={{ color: 'var(--ds-color-primary)', filter: 'drop-shadow(0 0 6px transparent)' }} />
           </div>
           <div>
-            <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 20, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>
+            <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 20, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>
               Escalar presupuesto
             </h2>
             <p style={{ fontSize: 11, color: 'var(--ds-color-primary)', fontWeight: 600 }}>
@@ -121,7 +121,7 @@ export default function ScaleBudgetModal({ open, onClose, onConfirm, campaignNam
           <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 4 }}>
             Presupuesto actual
           </p>
-          <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>
+          <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>
             {currency}{currentBudget.toFixed(0)}<span style={{ fontSize: 12, color: 'var(--ds-text-secondary)', fontWeight: 500 }}>/día</span>
           </p>
         </div>
@@ -179,7 +179,7 @@ export default function ScaleBudgetModal({ open, onClose, onConfirm, campaignNam
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid var(--ds-color-primary-border)',
                   color: '#fff', fontSize: 14, fontWeight: 700,
-                  fontFamily: 'Syne, sans-serif',
+                  fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
                 }}
               />
               <span style={{
@@ -199,7 +199,7 @@ export default function ScaleBudgetModal({ open, onClose, onConfirm, campaignNam
           <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-color-success)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 6 }}>
             Nuevo presupuesto
           </p>
-          <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 900, color: 'var(--ds-color-success)', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 10 }}>
+          <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 28, fontWeight: 900, color: 'var(--ds-color-success)', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 10 }}>
             {currency}{newBudget.toFixed(0)}<span style={{ fontSize: 13, color: 'rgba(45, 212, 191,0.70)', fontWeight: 600 }}>/día</span>
             <span style={{ fontSize: 13, marginLeft: 10, color: pct >= 0 ? 'var(--ds-color-success)' : 'var(--ds-color-danger)' }}>
               ({pct >= 0 ? '+' : ''}{pct}%)

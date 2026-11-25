@@ -41,7 +41,7 @@ export default function ErrorState({
       </div>
 
       <h2 style={{
-        fontFamily: 'Syne, sans-serif',
+        fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
         fontSize: 22, fontWeight: 800, color: '#fff',
         letterSpacing: '-0.01em', marginBottom: 8,
       }}>

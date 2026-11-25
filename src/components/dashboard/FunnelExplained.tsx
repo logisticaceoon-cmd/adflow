@@ -78,7 +78,7 @@ export default function FunnelExplained({ events }: Props) {
     return (
       <div className="card" style={{ padding: 24, marginBottom: 32 }}>
         <h2 style={{
-          fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 600,
+          fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 600,
           color: 'var(--ds-text-primary)', letterSpacing: '-0.01em', marginBottom: 4,
         }}>
           Tu embudo de conversión
@@ -103,7 +103,7 @@ export default function FunnelExplained({ events }: Props) {
     <div className="card" style={{ padding: 24, marginBottom: 32 }}>
       <div style={{ marginBottom: 20 }}>
         <h2 style={{
-          fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 600,
+          fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 600,
           color: 'var(--ds-text-primary)', letterSpacing: '-0.01em', marginBottom: 4,
         }}>
           Tu embudo de conversión
@@ -142,7 +142,7 @@ export default function FunnelExplained({ events }: Props) {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div className="flex items-center justify-between mb-1 gap-2">
                     <p style={{
-                      fontFamily: 'Syne, sans-serif',
+                      fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
                       fontSize: 12, fontWeight: 700,
                       color: 'var(--ds-text-label)',
                       textTransform: 'uppercase', letterSpacing: '0.08em',
@@ -150,7 +150,7 @@ export default function FunnelExplained({ events }: Props) {
                       {step.label}
                     </p>
                     <p style={{
-                      fontFamily: 'Syne, sans-serif',
+                      fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
                       fontSize: 22, fontWeight: 800,
                       color: 'var(--ds-text-primary)',
                       letterSpacing: '-0.02em',

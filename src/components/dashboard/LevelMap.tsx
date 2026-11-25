@@ -13,14 +13,14 @@ interface LevelDef {
 
 // Hex so alpha suffixes (`${lv.color}40`) produce valid rgba strings.
 const LEVELS: LevelDef[] = [
-  { level: 0, name: 'Sin Data',     emoji: '🌑', color: '#8892b0', requirement: 'Instalá tu pixel',                    unlocks: ['Medición básica de visitantes'] },
+  { level: 0, name: 'Sin Data',     emoji: '🌑', color: 'rgba(255,255,255,0.45)', requirement: 'Instalá tu pixel',                    unlocks: ['Medición básica de visitantes'] },
   { level: 1, name: 'Explorador',   emoji: '🌱', color: '#f87171', requirement: '100+ PageView en 30 días',            unlocks: ['Audiencias por intereses'] },
   { level: 2, name: 'Aprendiz',     emoji: '📚', color: '#f87171', requirement: '500+ PageView en 30 días',            unlocks: ['Mejor optimización del pixel'] },
   { level: 3, name: 'Estratega',    emoji: '🧠', color: '#fbbf24', requirement: '1.000+ ViewContent en 30 días',       unlocks: ['Retargeting de visitantes', 'Estrategia MOFU'] },
   { level: 4, name: 'Vendedor',     emoji: '🛒', color: '#fbbf24', requirement: '100+ AddToCart en 30 días',           unlocks: ['Retargeting de carrito abandonado'] },
   { level: 5, name: 'Profesional',  emoji: '💼', color: '#34d399', requirement: '50+ Purchases en 30 días',            unlocks: ['Retargeting de compradores', 'Estrategia BOFU'] },
   { level: 6, name: 'Escalador',    emoji: '🚀', color: '#34d399', requirement: '100+ Purchases en 30 días',           unlocks: ['Lookalike Audiences'] },
-  { level: 7, name: 'Maestro',      emoji: '👑', color: '#2dd4bf', requirement: '500+ Purchases en 180 días',          unlocks: ['Lookalikes ampliados', 'Audiencias premium'] },
+  { level: 7, name: 'Maestro',      emoji: '👑', color: '#3b82f6', requirement: '500+ Purchases en 180 días',          unlocks: ['Lookalikes ampliados', 'Audiencias premium'] },
   { level: 8, name: 'Imperio',      emoji: '🏰', color: '#a78bfa', requirement: '1.000+ Purchases en 180 días',        unlocks: ['Expansión global', 'Nivel máximo'] },
 ]
 
@@ -35,7 +35,7 @@ export default function LevelMap({ currentLevel }: Props) {
     <div className="card" style={{ padding: 24, marginBottom: 32 }}>
       <div style={{ marginBottom: 20 }}>
         <h2 style={{
-          fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 600,
+          fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 600,
           color: 'var(--ds-text-primary)', letterSpacing: '-0.01em', marginBottom: 4,
         }}>
           Tu camino de crecimiento
@@ -152,7 +152,7 @@ export default function LevelMap({ currentLevel }: Props) {
               fontSize: 22,
             }}>{lv.emoji}</div>
             <div style={{ flex: 1 }}>
-              <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 14, fontWeight: 700, color: lv.color, marginBottom: 2 }}>
+              <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 14, fontWeight: 700, color: lv.color, marginBottom: 2 }}>
                 Nivel {lv.level}: {lv.name}
               </p>
               <p style={{ fontSize: 12, color: 'var(--ds-text-primary)', marginBottom: 8 }}>

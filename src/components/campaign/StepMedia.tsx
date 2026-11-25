@@ -26,7 +26,7 @@ export default function StepMedia({ mediaFiles, mediaPreviews, onFilesAdded, onR
   return (
     <div className="space-y-6">
       <div className="card" style={{ padding: 32 }}>
-        <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: 6 }}>
+        <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: 6 }}>
           Subí tu material
         </h2>
         <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', marginBottom: 28, lineHeight: 1.6 }}>

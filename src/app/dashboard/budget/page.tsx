@@ -14,8 +14,8 @@ interface MonthlyBudgetRow {
 }
 
 const LEVEL_COLORS: Record<number, string> = {
-  0: '#8892b0', 1: '#f87171', 2: '#f87171', 3: '#fbbf24', 4: '#fbbf24',
-  5: '#34d399', 6: '#34d399', 7: '#2dd4bf', 8: '#a78bfa',
+  0: 'rgba(255,255,255,0.45)', 1: '#f87171', 2: '#f87171', 3: '#fbbf24', 4: '#fbbf24',
+  5: '#34d399', 6: '#34d399', 7: '#3b82f6', 8: '#a78bfa',
 }
 
 // Minimum pixel level to unlock each phase
@@ -86,7 +86,7 @@ function InputCard({ icon, label, helper, value, onChange, prefix, suffix, requi
             paddingLeft: prefix ? (big ? 36 : 30) : (big ? 14 : 14),
             paddingRight: suffix ? 36 : 14,
             fontSize: big ? 28 : 14,
-            fontFamily: big ? 'Syne, sans-serif' : undefined,
+            fontFamily: big ? 'var(--font-display), Space Grotesk, sans-serif' : undefined,
             fontWeight: big ? 600 : 500,
             letterSpacing: big ? '-0.02em' : undefined,
           }}
@@ -248,7 +248,7 @@ export default function BudgetPage() {
           Budget Engine · AdFlow
         </p>
         <h1 style={{
-          fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 700,
+          fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 28, fontWeight: 700,
           color: 'var(--ds-text-primary)', marginBottom: 10, letterSpacing: '-0.02em',
         }}>
           Planificá tu inversión del mes 💰
@@ -278,7 +278,7 @@ export default function BudgetPage() {
 
       {/* ── SECTION B: 5 INPUT CARDS ──────────────────────────────────── */}
       <div className="mb-6">
-        <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+        <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
           Datos de tu negocio este mes
         </h2>
         <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 18 }}>
@@ -357,7 +357,7 @@ export default function BudgetPage() {
         <div className="card module-enter module-enter-3" style={{ padding: 24, marginBottom: 32 }}>
           <div className="mb-4">
             <h2 style={{
-              fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 600,
+              fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 600,
               color: 'var(--ds-text-primary)', letterSpacing: '-0.01em', marginBottom: 4,
             }}>
               Distribución de presupuesto por fases
@@ -392,7 +392,7 @@ export default function BudgetPage() {
                         display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22,
                       }}>{p.icon}</div>
                       <div>
-                        <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: p.color }}>
+                        <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 15, fontWeight: 700, color: p.color }}>
                           {p.fullName}
                         </p>
                         <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>{p.objective}</p>
@@ -441,7 +441,7 @@ export default function BudgetPage() {
                           background: isLocked ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.06)',
                           border: `1px solid ${p.color}40`,
                           color: '#fff', fontSize: 16, fontWeight: 700,
-                          fontFamily: 'Syne, sans-serif',
+                          fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
                           cursor: isLocked ? 'not-allowed' : 'text',
                         }}
                       />
@@ -487,7 +487,7 @@ export default function BudgetPage() {
               <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--ds-text-label)', textTransform: 'uppercase', letterSpacing: '0.10em' }}>
                 Total asignado
               </span>
-              <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 600, color: 'var(--ds-text-primary)' }}>
+              <span style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 16, fontWeight: 600, color: 'var(--ds-text-primary)' }}>
                 {currency} {totalAssigned.toLocaleString()}{' '}
                 <span style={{ fontSize: 12, color: 'var(--ds-text-muted)', fontWeight: 500 }}>
                   / {currency} {totalNum.toLocaleString()} disponible
@@ -522,7 +522,7 @@ export default function BudgetPage() {
       {recommendation && (
         <div className="card module-enter module-enter-4" style={{ padding: 24, marginBottom: 32 }}>
           <h2 style={{
-            fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 600,
+            fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 600,
             color: 'var(--ds-text-primary)', letterSpacing: '-0.01em', marginBottom: 4,
           }}>
             Proyecciones estimadas
@@ -550,7 +550,7 @@ export default function BudgetPage() {
                     {p.label}
                   </p>
                 </div>
-                <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 20, fontWeight: 800, color: p.color, lineHeight: 1.2 }}>
+                <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 20, fontWeight: 800, color: p.color, lineHeight: 1.2 }}>
                   {p.value}
                 </p>
                 <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)', marginTop: 4 }}>
@@ -586,7 +586,7 @@ export default function BudgetPage() {
           className="w-full flex items-center justify-between"
           style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
           <div style={{ textAlign: 'left' }}>
-            <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff' }}>
+            <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff' }}>
               📅 Historial de meses anteriores
             </h2>
             <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>
@@ -606,7 +606,7 @@ export default function BudgetPage() {
                     F1 {(h.phase_budgets?.F1 ?? 0).toLocaleString()} · F2 {(h.phase_budgets?.F2 ?? 0).toLocaleString()} · F3 {(h.phase_budgets?.F3 ?? 0).toLocaleString()} · F4 {(h.phase_budgets?.F4 ?? 0).toLocaleString()}
                   </p>
                 </div>
-                <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 800, color: 'var(--ds-color-success)' }}>
+                <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 16, fontWeight: 800, color: 'var(--ds-color-success)' }}>
                   {h.currency} {h.total_budget?.toLocaleString()}
                 </p>
               </div>
@@ -628,7 +628,7 @@ export default function BudgetPage() {
             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
           }}>💡</div>
           <div style={{ flex: 1 }}>
-            <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 8 }}>
+            <h3 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 8 }}>
               ¿Cómo funciona la distribución por fases?
             </h3>
             <p style={{ fontSize: 12.5, color: 'var(--ds-text-secondary)', lineHeight: 1.7, marginBottom: 12 }}>

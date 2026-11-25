@@ -91,16 +91,16 @@ export default function LoginPage() {
       padding: '1rem', position: 'relative', overflow: 'hidden',
     }}>
       {/* Background orbs */}
-      <div style={{ position: 'fixed', top: '-12%', right: '-10%', width: 700, height: 700, borderRadius: '50%', background: 'radial-gradient(circle, rgba(233,30,140,0.26) 0%, transparent 68%)', filter: 'blur(88px)', pointerEvents: 'none' }} />
+      <div style={{ position: 'fixed', top: '-12%', right: '-10%', width: 700, height: 700, borderRadius: '50%', background: 'radial-gradient(circle, rgba(37,99,235,0.26) 0%, transparent 68%)', filter: 'blur(88px)', pointerEvents: 'none' }} />
       <div style={{ position: 'fixed', bottom: '-10%', left: '-10%', width: 650, height: 650, borderRadius: '50%', background: 'radial-gradient(circle, rgba(98,196,176,0.20) 0%, transparent 68%)', filter: 'blur(88px)', pointerEvents: 'none' }} />
-      <div style={{ position: 'fixed', top: '42%', left: '40%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(233,30,140,0.12) 0%, transparent 68%)', filter: 'blur(80px)', pointerEvents: 'none' }} />
+      <div style={{ position: 'fixed', top: '42%', left: '40%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 68%)', filter: 'blur(80px)', pointerEvents: 'none' }} />
       {/* Grid overlay */}
       <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', backgroundImage: 'linear-gradient(rgba(255,255,255,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.022) 1px,transparent 1px)', backgroundSize: '72px 72px', maskImage: 'radial-gradient(ellipse 90% 90% at 50% 50%, black 30%, transparent 100%)' }} />
 
       <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 400 }}>
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 32 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 13, background: 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, boxShadow: '0 0 32px rgba(233,30,140,0.55), 0 0 64px rgba(233,30,140,0.20)' }}>⚡</div>
+          <div style={{ width: 44, height: 44, borderRadius: 13, background: 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, boxShadow: '0 0 32px rgba(37,99,235,0.55), 0 0 64px rgba(37,99,235,0.20)' }}>⚡</div>
           <span style={{ fontSize: 26, fontWeight: 800, color: '#f0f0ff', letterSpacing: '-0.5px', textShadow: '0 0 20px rgba(255,255,255,0.12)' }}>AdFlow</span>
         </div>
 
@@ -110,11 +110,11 @@ export default function LoginPage() {
           border: '1px solid rgba(255,255,255,0.08)',
           borderRadius: 22, padding: '2rem',
           backdropFilter: 'blur(28px)', WebkitBackdropFilter: 'blur(28px)',
-          boxShadow: '0 0 0 1px rgba(255,255,255,0.05) inset, 0 24px 72px rgba(0,0,0,0.55), 0 0 60px rgba(233,30,140,0.08)',
+          boxShadow: '0 0 0 1px rgba(255,255,255,0.05) inset, 0 24px 72px rgba(0,0,0,0.55), 0 0 60px rgba(37,99,235,0.08)',
           position: 'relative', overflow: 'hidden',
         }}>
           {/* Top glow line */}
-          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg, transparent, rgba(233,30,140,0.55), rgba(98,196,176,0.35), transparent)', pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg, transparent, rgba(37,99,235,0.55), rgba(98,196,176,0.35), transparent)', pointerEvents: 'none' }} />
           {/* Top gloss */}
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '45%', background: 'linear-gradient(180deg, rgba(255,255,255,0.07) 0%, transparent 100%)', pointerEvents: 'none', borderRadius: 'inherit' }} />
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#fff', marginBottom: 4, textAlign: 'center' }}>
@@ -141,7 +141,7 @@ export default function LoginPage() {
                 type="email" value={email} onChange={e => setEmail(e.target.value)}
                 placeholder="tu@email.com" required autoComplete="email"
                 style={inputStyle}
-                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(233,30,140,0.6)' }}
+                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(37,99,235,0.6)' }}
                 onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)' }}
               />
             </div>
@@ -151,7 +151,7 @@ export default function LoginPage() {
                 type="password" value={password} onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••" required autoComplete="current-password"
                 style={inputStyle}
-                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(233,30,140,0.6)' }}
+                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(37,99,235,0.6)' }}
                 onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)' }}
               />
               <div style={{ textAlign: 'right', marginTop: 6 }}>
@@ -164,15 +164,15 @@ export default function LoginPage() {
               type="submit" disabled={loading}
               style={{
                 width: '100%', padding: '13px', borderRadius: 12, border: 'none', minHeight: 44,
-                background: loading ? 'rgba(233,30,140,0.6)' : 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))',
+                background: loading ? 'rgba(37,99,235,0.6)' : 'linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary))',
                 color: '#fff', fontSize: 14, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                boxShadow: loading ? 'none' : '0 0 32px rgba(233,30,140,0.50), 0 0 64px rgba(233,30,140,0.18)',
+                boxShadow: loading ? 'none' : '0 0 32px rgba(37,99,235,0.50), 0 0 64px rgba(37,99,235,0.18)',
                 transition: 'all 0.2s ease',
                 position: 'relative', overflow: 'hidden',
               }}
-              onMouseEnter={e => { if (!loading) { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 48px rgba(233,30,140,0.70), 0 0 96px rgba(233,30,140,0.25)' } }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 32px rgba(233,30,140,0.50), 0 0 64px rgba(233,30,140,0.18)' }}
+              onMouseEnter={e => { if (!loading) { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 48px rgba(37,99,235,0.70), 0 0 96px rgba(37,99,235,0.25)' } }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 32px rgba(37,99,235,0.50), 0 0 64px rgba(37,99,235,0.18)' }}
             >
               {loading ? (
                 <><div style={{ width: 16, height: 16, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.3)', borderTopColor: '#fff', animation: 'spin 0.7s linear infinite' }} />Ingresando...</>
@@ -183,7 +183,7 @@ export default function LoginPage() {
           {/* Divider */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '20px 0' }}>
             <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.08)' }} />
-            <span style={{ color: '#8892b0', fontSize: 12 }}>o continuá con</span>
+            <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 12 }}>o continuá con</span>
             <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.08)' }} />
           </div>
 
@@ -210,15 +210,15 @@ export default function LoginPage() {
           </button>
         </div>
 
-        <p style={{ color: '#8892b0', fontSize: 12, textAlign: 'center', marginTop: 14 }}>
+        <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 12, textAlign: 'center', marginTop: 14 }}>
           Al continuar aceptás nuestros{' '}
-          <Link href="/terms" style={{ color: '#8892b0', textDecoration: 'none' }}>Términos de Servicio</Link>
+          <Link href="/terms" style={{ color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>Términos de Servicio</Link>
           {' '}y{' '}
-          <Link href="/privacy" style={{ color: '#8892b0', textDecoration: 'none' }}>Política de Privacidad</Link>
+          <Link href="/privacy" style={{ color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>Política de Privacidad</Link>
         </p>
-        <p style={{ color: '#8892b0', fontSize: 12, textAlign: 'center', marginTop: 6 }}>
+        <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 12, textAlign: 'center', marginTop: 6 }}>
           ¿Sos admin?{' '}
-          <a href="/admin/login" style={{ color: '#8892b0' }}>Acceso administrador</a>
+          <a href="/admin/login" style={{ color: 'rgba(255,255,255,0.45)' }}>Acceso administrador</a>
         </p>
       </div>
 

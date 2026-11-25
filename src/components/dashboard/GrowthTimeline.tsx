@@ -13,11 +13,11 @@ interface LevelHistoryRow {
 
 // Hex so we can concat alpha suffixes (`${color}40`) safely.
 const LEVEL_COLORS: Record<number, string> = {
-  0: '#8892b0',
+  0: 'rgba(255,255,255,0.45)',
   1: '#f87171', 2: '#f87171',
   3: '#fbbf24', 4: '#fbbf24',
   5: '#34d399', 6: '#34d399',
-  7: '#2dd4bf',
+  7: '#3b82f6',
   8: '#a78bfa',
 }
 
@@ -64,7 +64,7 @@ export default function GrowthTimeline() {
         background: 'var(--ds-card-border)',
       }} />
       {history.map((h, i) => {
-        const color = LEVEL_COLORS[h.new_level] ?? '#8892b0'
+        const color = LEVEL_COLORS[h.new_level] ?? 'rgba(255,255,255,0.45)'
         return (
           <div key={i} style={{ position: 'relative', marginBottom: 14 }}>
             <div style={{

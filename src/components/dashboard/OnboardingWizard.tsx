@@ -129,7 +129,7 @@ export default function OnboardingWizard({ show }: Props) {
 
           <button onClick={dismiss}
             className="w-full mt-3 text-xs text-center py-1 transition-opacity hover:opacity-80"
-            style={{ color: '#8892b0' }}>
+            style={{ color: 'rgba(255,255,255,0.45)' }}>
             Recordarme después
           </button>
         </div>

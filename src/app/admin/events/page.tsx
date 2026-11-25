@@ -2,12 +2,12 @@
 import { createAdminClient } from '@/lib/supabase/server'
 
 const EVENT_COLORS: Record<string, string> = {
-  signup:             '#2dd4bf',
-  login:              '#62c4b0',
-  campaign_created:   '#2dd4bf',
+  signup:             '#3b82f6',
+  login:              '#60a5fa',
+  campaign_created:   '#3b82f6',
   campaign_published: '#f59e0b',
   fb_connected:       '#1877f2',
-  ai_generated:       '#62c4b0',
+  ai_generated:       '#60a5fa',
 }
 
 export default async function AdminEventsPage() {
@@ -39,7 +39,7 @@ export default async function AdminEventsPage() {
             La tabla <code className="px-1.5 py-0.5 rounded text-xs" style={{ background: 'rgba(14,4,8,0.97)' }}>user_events</code> aún no fue creada en Supabase.
           </p>
           <div className="text-left max-w-2xl mx-auto p-4 rounded-xl text-xs font-mono overflow-auto"
-               style={{ background: 'rgba(14,4,8,0.97)', border: '1px solid rgba(233,30,140,0.2)', color: '#f472b6' }}>
+               style={{ background: 'rgba(14,4,8,0.97)', border: '1px solid rgba(37,99,235,0.2)', color: '#f472b6' }}>
             {`CREATE TABLE IF NOT EXISTS user_events (
   id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id    UUID REFERENCES auth.users(id) ON DELETE SET NULL,
@@ -51,7 +51,7 @@ ALTER TABLE user_events ENABLE ROW LEVEL SECURITY;`}
           </div>
           <p className="text-xs mt-4" style={{ color: '#b0b0d0' }}>
             Ejecutar en:{' '}
-            <span style={{ color: '#2dd4bf' }}>
+            <span style={{ color: '#3b82f6' }}>
               supabase.com/dashboard/project/vnjgzmbzvlobttubjysw/sql/new
             </span>
           </p>
@@ -84,8 +84,8 @@ ALTER TABLE user_events ENABLE ROW LEVEL SECURITY;`}
             <div key={event} className="px-3 py-1.5 rounded-xl flex items-center gap-2"
                  style={{ background: `${EVENT_COLORS[event] ?? 'rgba(255,255,255,0.35)'}15`,
                           border: `1px solid ${EVENT_COLORS[event] ?? 'rgba(255,255,255,0.35)'}30` }}>
-              <span className="text-xs font-mono" style={{ color: EVENT_COLORS[event] ?? '#8892b0' }}>{event}</span>
-              <span className="text-xs font-bold" style={{ color: EVENT_COLORS[event] ?? '#8892b0' }}>×{count}</span>
+              <span className="text-xs font-mono" style={{ color: EVENT_COLORS[event] ?? 'rgba(255,255,255,0.45)' }}>{event}</span>
+              <span className="text-xs font-bold" style={{ color: EVENT_COLORS[event] ?? 'rgba(255,255,255,0.45)' }}>×{count}</span>
             </div>
           ))}
         </div>
@@ -113,7 +113,7 @@ ALTER TABLE user_events ENABLE ROW LEVEL SECURITY;`}
                   <td className="px-5 py-3">
                     <span className="text-xs px-2 py-0.5 rounded-full font-mono"
                           style={{ background: `${EVENT_COLORS[e.event] ?? 'rgba(255,255,255,0.35)'}15`,
-                                   color: EVENT_COLORS[e.event] ?? '#8892b0' }}>
+                                   color: EVENT_COLORS[e.event] ?? 'rgba(255,255,255,0.45)' }}>
                       {e.event}
                     </span>
                   </td>

@@ -27,7 +27,7 @@ export default async function CampaignsPage() {
           <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ds-text-label)', marginBottom: 8 }}>
             Mis campañas · AdFlow
           </p>
-          <h1 style={{ fontFamily: 'Syne, sans-serif', fontSize: 28, fontWeight: 700, color: 'var(--ds-text-primary)', marginBottom: 8, letterSpacing: '-0.02em' }}>
+          <h1 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 28, fontWeight: 700, color: 'var(--ds-text-primary)', marginBottom: 8, letterSpacing: '-0.02em' }}>
             Gestión de campañas 📣
           </h1>
           <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', marginBottom: 10 }}>
@@ -65,7 +65,7 @@ export default async function CampaignsPage() {
               <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'var(--ds-text-label)' }}>{label}</p>
               <Icon size={14} style={{ color }} strokeWidth={1.75} />
             </div>
-            <p style={{ fontFamily: 'Syne, sans-serif', fontSize: 26, fontWeight: 600, letterSpacing: '-0.02em', color: 'var(--ds-text-primary)' }}>{value}</p>
+            <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 26, fontWeight: 600, letterSpacing: '-0.02em', color: 'var(--ds-text-primary)' }}>{value}</p>
           </div>
         ))}
       </div>
@@ -80,7 +80,7 @@ export default async function CampaignsPage() {
           }}>
             📣
           </div>
-          <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 20, fontWeight: 800, color: '#e0e0f0', marginBottom: 10 }}>
+          <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 20, fontWeight: 800, color: '#e0e0f0', marginBottom: 10 }}>
             Sin campañas todavía
           </h2>
           <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', marginBottom: 24, lineHeight: 1.7 }}>
