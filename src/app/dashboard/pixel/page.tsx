@@ -1,9 +1,9 @@
 'use client'
-// src/app/dashboard/pixel/page.tsx — Mi Pixel: funnel de conversión
+// src/app/dashboard/pixel/page.tsx — Mi Pixel: estado del pixel + embudo
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { RefreshCw } from 'lucide-react'
+import { RefreshCw, CheckCircle, AlertCircle } from 'lucide-react'
 import FunnelExplained from '@/components/dashboard/FunnelExplained'
 
 interface PixelEvents {
@@ -60,12 +60,13 @@ export default function PixelDashboardPage() {
     return (
       <div style={{ maxWidth: 480, margin: '60px auto', textAlign: 'center' }}>
         <div className="card p-10">
-          <div style={{ fontSize: 48, marginBottom: 16 }}>🔌</div>
-          <h1 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 10 }}>
-            No tenés pixel configurado
+          <AlertCircle size={40} style={{ color: 'var(--ds-color-warning)', margin: '0 auto 16px', display: 'block' }} />
+          <h1 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 22, fontWeight: 700, color: '#fff', marginBottom: 8 }}>
+            Tu pixel no está configurado
           </h1>
-          <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', marginBottom: 24 }}>
-            Sin pixel no podemos medir conversiones ni recomendarte estrategias.
+          <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', marginBottom: 24, lineHeight: 1.6 }}>
+            El pixel de Meta es el código que mide las acciones en tu web: visitas, carritos y compras.
+            Sin él no podemos trackear resultados ni optimizar tus campañas.
           </p>
           <Link href="/dashboard/settings" className="btn-primary">Configurar pixel →</Link>
         </div>
@@ -74,37 +75,54 @@ export default function PixelDashboardPage() {
   }
 
   const events = pa?.events_data
+  const hasData = events && (events.PageView.count_30d > 0 || events.Purchase.count_30d > 0)
+  const lastUpdate = pa?.analyzed_at ? new Date(pa.analyzed_at) : null
 
   return (
     <div>
-      {/* ── HEADER ── */}
-      <div className="flex items-center justify-between mb-6 module-enter module-enter-1">
-        <div>
-          <h1 style={{
-            fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
-            fontSize: 24, fontWeight: 700, color: 'var(--ds-text-primary)',
-            letterSpacing: '-0.02em', marginBottom: 4,
-          }}>
-            Tu embudo de conversión
-          </h1>
-          <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)' }}>
-            Así fluyen tus visitantes desde que llegan hasta que compran
-            {pa?.pixel_id && (
-              <span style={{ fontSize: 11, color: 'var(--ds-text-muted)', marginLeft: 12 }}>
-                Pixel: {pa.pixel_id}
-              </span>
-            )}
-          </p>
+      {/* ── PIXEL STATUS CARD ── */}
+      <div className="card module-enter module-enter-1" style={{ padding: 20, marginBottom: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{
+              width: 40, height: 40, borderRadius: 10,
+              background: hasData ? 'rgba(34, 197, 94, 0.08)' : 'rgba(245, 158, 11, 0.08)',
+              border: `1px solid ${hasData ? 'rgba(34, 197, 94, 0.25)' : 'rgba(245, 158, 11, 0.25)'}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              {hasData
+                ? <CheckCircle size={18} style={{ color: 'var(--ds-color-success)' }} />
+                : <AlertCircle size={18} style={{ color: 'var(--ds-color-warning)' }} />
+              }
+            </div>
+            <div>
+              <h1 style={{
+                fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
+                fontSize: 18, fontWeight: 700, color: 'var(--ds-text-primary)',
+                letterSpacing: '-0.01em', marginBottom: 2,
+              }}>
+                {hasData ? 'Pixel activo y recibiendo datos' : 'Pixel conectado — esperando datos'}
+              </h1>
+              <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
+                ID: <code style={{ fontSize: 11, color: 'var(--ds-text-muted)' }}>{pa?.pixel_id}</code>
+                {lastUpdate && (
+                  <span style={{ marginLeft: 12, color: 'var(--ds-text-muted)' }}>
+                    Última actualización: {lastUpdate.toLocaleDateString('es', { day: '2-digit', month: 'short' })} {lastUpdate.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                )}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="btn-ghost"
+            style={{ padding: '8px 14px', fontSize: 12, minHeight: 34, gap: 6 }}
+          >
+            <RefreshCw size={13} className={refreshing ? 'animate-spin' : ''} style={{ color: 'var(--ds-color-primary)' }} />
+            {refreshing ? 'Actualizando...' : 'Actualizar'}
+          </button>
         </div>
-        <button
-          onClick={handleRefresh}
-          disabled={refreshing}
-          className="btn-ghost"
-          style={{ padding: '8px 14px', fontSize: 12, minHeight: 34, gap: 6 }}
-        >
-          <RefreshCw size={13} className={refreshing ? 'animate-spin' : ''} style={{ color: 'var(--ds-color-primary)' }} />
-          {refreshing ? 'Actualizando...' : 'Actualizar análisis'}
-        </button>
       </div>
 
       {/* ── FUNNEL ── */}

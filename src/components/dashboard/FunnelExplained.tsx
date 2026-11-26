@@ -78,13 +78,14 @@ export default function FunnelExplained({ events }: Props) {
     return (
       <div className="card" style={{ padding: 20, marginBottom: 16 }}>
         <h2 style={{
-          fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 600,
+          fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 16, fontWeight: 600,
           color: 'var(--ds-text-primary)', letterSpacing: '-0.01em', marginBottom: 4,
         }}>
-          Tu embudo de conversión
+          Embudo de conversión
         </h2>
-        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
-          Cuando el pixel empiece a recolectar datos, vas a ver acá cómo fluyen tus visitantes.
+        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', lineHeight: 1.6 }}>
+          Cuando tu pixel empiece a registrar visitas y compras, acá vas a ver cada paso del embudo:
+          quién entra a tu web, quién mira un producto, quién agrega al carrito y quién compra.
         </p>
       </div>
     )
@@ -101,15 +102,15 @@ export default function FunnelExplained({ events }: Props) {
 
   return (
     <div className="card" style={{ padding: 20, marginBottom: 16 }}>
-      <div style={{ marginBottom: 20 }}>
+      <div style={{ marginBottom: 16 }}>
         <h2 style={{
-          fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 600,
+          fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 16, fontWeight: 600,
           color: 'var(--ds-text-primary)', letterSpacing: '-0.01em', marginBottom: 4,
         }}>
-          Tu embudo de conversión
+          Embudo de conversión
         </h2>
         <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)' }}>
-          Así fluyen tus visitantes desde que llegan hasta que compran (últimos 30 días)
+          Cómo fluyen tus visitantes desde que llegan hasta que compran · últimos 30 días
         </p>
       </div>
 
