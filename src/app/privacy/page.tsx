@@ -21,7 +21,7 @@ export default function PrivacyPage() {
     }}>
       {/* Orbs */}
       <div style={{ position: 'fixed', top: '-10%', right: '-8%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 68%)', filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0 }} />
-      <div style={{ position: 'fixed', bottom: '-8%', left: '-8%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(234,27,126,0.12) 0%, transparent 68%)', filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0 }} />
+      <div style={{ position: 'fixed', bottom: '-8%', left: '-8%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 68%)', filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0 }} />
 
       {/* Navbar */}
       <nav style={{
@@ -69,7 +69,7 @@ export default function PrivacyPage() {
         {/* Card */}
         <div style={{
           background: 'linear-gradient(180deg, rgba(28,4,14,0.92) 0%, rgba(18,3,9,0.96) 100%)',
-          border: '1px solid rgba(98,196,176,0.22)',
+          border: '1px solid rgba(37,99,235,0.22)',
           borderRadius: 20,
           padding: '40px 40px',
           boxShadow: '0 0 0 1px rgba(255,255,255,0.05) inset, 0 20px 60px rgba(0,0,0,0.50)',

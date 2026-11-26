@@ -18,8 +18,8 @@ const LEVELS: LevelDef[] = [
   { level: 2, name: 'Aprendiz',     emoji: '📚', color: '#f87171', requirement: '500+ PageView en 30 días',            unlocks: ['Mejor optimización del pixel'] },
   { level: 3, name: 'Estratega',    emoji: '🧠', color: '#fbbf24', requirement: '1.000+ ViewContent en 30 días',       unlocks: ['Retargeting de visitantes', 'Estrategia MOFU'] },
   { level: 4, name: 'Vendedor',     emoji: '🛒', color: '#fbbf24', requirement: '100+ AddToCart en 30 días',           unlocks: ['Retargeting de carrito abandonado'] },
-  { level: 5, name: 'Profesional',  emoji: '💼', color: '#34d399', requirement: '50+ Purchases en 30 días',            unlocks: ['Retargeting de compradores', 'Estrategia BOFU'] },
-  { level: 6, name: 'Escalador',    emoji: '🚀', color: '#34d399', requirement: '100+ Purchases en 30 días',           unlocks: ['Lookalike Audiences'] },
+  { level: 5, name: 'Profesional',  emoji: '💼', color: '#3b82f6', requirement: '50+ Purchases en 30 días',            unlocks: ['Retargeting de compradores', 'Estrategia BOFU'] },
+  { level: 6, name: 'Escalador',    emoji: '🚀', color: '#3b82f6', requirement: '100+ Purchases en 30 días',           unlocks: ['Lookalike Audiences'] },
   { level: 7, name: 'Maestro',      emoji: '👑', color: '#3b82f6', requirement: '500+ Purchases en 180 días',          unlocks: ['Lookalikes ampliados', 'Audiencias premium'] },
   { level: 8, name: 'Imperio',      emoji: '🏰', color: '#a78bfa', requirement: '1.000+ Purchases en 180 días',        unlocks: ['Expansión global', 'Nivel máximo'] },
 ]

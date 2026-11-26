@@ -39,7 +39,7 @@ export default async function AdminEventsPage() {
             La tabla <code className="px-1.5 py-0.5 rounded text-xs" style={{ background: 'rgba(14,4,8,0.97)' }}>user_events</code> aún no fue creada en Supabase.
           </p>
           <div className="text-left max-w-2xl mx-auto p-4 rounded-xl text-xs font-mono overflow-auto"
-               style={{ background: 'rgba(14,4,8,0.97)', border: '1px solid rgba(37,99,235,0.2)', color: '#f472b6' }}>
+               style={{ background: 'rgba(14,4,8,0.97)', border: '1px solid rgba(37,99,235,0.2)', color: '#60a5fa' }}>
             {`CREATE TABLE IF NOT EXISTS user_events (
   id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id    UUID REFERENCES auth.users(id) ON DELETE SET NULL,
@@ -99,7 +99,7 @@ ALTER TABLE user_events ENABLE ROW LEVEL SECURITY;`}
         ) : (
           <table className="w-full">
             <thead>
-              <tr style={{ background: 'rgba(98,196,176,0.05)', borderBottom: '1px solid rgba(98,196,176,0.15)' }}>
+              <tr style={{ background: 'rgba(37,99,235,0.05)', borderBottom: '1px solid rgba(37,99,235,0.15)' }}>
                 {['Evento', 'Usuario', 'Propiedades', 'Fecha'].map(h => (
                   <th key={h} className="px-5 py-3 text-left text-xs font-semibold tracking-wider uppercase"
                       style={{ color: '#ffffff' }}>{h}</th>

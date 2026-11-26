@@ -335,7 +335,7 @@
     padding: 10px 24px;
     border-radius: 12px;
     background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
-    border: 1px solid rgba(52, 211, 153, 0.40);
+    border: 1px solid rgba(34, 197, 94, 0.40);
     color: #080c14;
     font-weight: 700;
     font-size: 14px;
@@ -343,13 +343,13 @@
     transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
     box-shadow:
       0 4px 16px rgba(0, 0, 0, 0.25),
-      0 0 18px rgba(52, 211, 153, 0.18),
+      0 0 18px rgba(34, 197, 94, 0.18),
       inset 0 1px 0 rgba(255, 255, 255, 0.22);
   }
   .btn-success:hover {
     background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
     transform: translateY(-2px);
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.30), 0 0 32px rgba(52, 211, 153, 0.28);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.30), 0 0 32px rgba(34, 197, 94, 0.28);
   }
   .btn-success:active {
     transform: scale(0.97);
@@ -472,7 +472,7 @@
 
   /* ── Variants ── */
   /* Cards de variante selected con glow verde */
-  .ds-card--selected { background: var(--ds-color-success-soft) !important; border-color: var(--ds-color-success-border) !important; box-shadow: 0 4px 20px rgba(0,0,0,0.25), 0 0 20px rgba(52, 211, 153, 0.10); }
+  .ds-card--selected { background: var(--ds-color-success-soft) !important; border-color: var(--ds-color-success-border) !important; box-shadow: 0 4px 20px rgba(0,0,0,0.25), 0 0 20px rgba(34, 197, 94, 0.10); }
   /* Cards de variante info con glow dorado */
   .ds-card--info     { background: var(--ds-color-primary-soft) !important; border-color: var(--ds-color-primary-border) !important; box-shadow: 0 4px 20px rgba(0,0,0,0.25), 0 0 20px rgba(251, 191, 36, 0.10); }
   /* Cards de variante danger con glow rojo */
@@ -678,8 +678,8 @@
   }
   .admin-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(233,30,140,0.42);
-    box-shadow: 0 22px 52px rgba(0,0,0,0.48), 0 0 36px rgba(233,30,140,0.14), 0 0 0 1px rgba(255,255,255,0.06) inset;
+    border-color: rgba(37,99,235,0.42);
+    box-shadow: 0 22px 52px rgba(0,0,0,0.48), 0 0 36px rgba(37,99,235,0.14), 0 0 0 1px rgba(255,255,255,0.06) inset;
   }
   .admin-card:hover::after {
     animation: shimmerSweep 0.65s ease-out forwards;
@@ -706,12 +706,12 @@
     position: relative;
     border-radius: 20px;
     padding: 1px;
-    background: linear-gradient(135deg, rgba(233,30,140,0.55) 0%, rgba(98,196,176,0.35) 50%, rgba(233,30,140,0.20) 100%);
+    background: linear-gradient(135deg, rgba(37,99,235,0.55) 0%, rgba(37,99,235,0.35) 50%, rgba(37,99,235,0.20) 100%);
     transition: all 0.26s ease;
   }
   .gradient-border-card:hover {
-    background: linear-gradient(135deg, rgba(233,30,140,0.75) 0%, rgba(98,196,176,0.55) 50%, rgba(233,30,140,0.40) 100%);
-    box-shadow: 0 0 40px rgba(233,30,140,0.20), 0 0 20px rgba(98,196,176,0.15);
+    background: linear-gradient(135deg, rgba(37,99,235,0.75) 0%, rgba(37,99,235,0.55) 50%, rgba(37,99,235,0.40) 100%);
+    box-shadow: 0 0 40px rgba(37,99,235,0.20), 0 0 20px rgba(37,99,235,0.15);
   }
   .gradient-border-card > * {
     border-radius: 19px;
@@ -726,7 +726,7 @@
   .badge-paused   { @apply badge; color: #fbbf24; background: rgba(245,158,11,0.12);  border: 1px solid rgba(245,158,11,0.28); }
   .badge-draft    { @apply badge; color: #c0c8d8; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.16); }
   .badge-error    { @apply badge; color: #fca5a5; background: rgba(239,68,68,0.12);   border: 1px solid rgba(239,68,68,0.28); }
-  .badge-plan-free { @apply badge; color: #f9a8d4; background: rgba(233,30,140,0.14); border: 1px solid rgba(233,30,140,0.30); }
+  .badge-plan-free { @apply badge; color: #f9a8d4; background: rgba(37,99,235,0.14); border: 1px solid rgba(37,99,235,0.30); }
 
   /* ── Global semantic badges — premium glass with colored glow ── */
   .ds-badge {
@@ -752,7 +752,7 @@
     color: var(--ds-color-success);
     background: var(--ds-color-success-soft);
     border-color: var(--ds-color-success-border);
-    box-shadow: 0 0 12px rgba(52, 211, 153, 0.10);
+    box-shadow: 0 0 12px rgba(34, 197, 94, 0.10);
   }
   .ds-badge--warning {
     color: var(--ds-color-warning);
@@ -776,14 +776,14 @@
   /* Animated badge with pulsing glow */
   .badge-glow {
     @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold;
-    background: rgba(233,30,140,0.10);
-    border: 1px solid rgba(233,30,140,0.32);
+    background: rgba(37,99,235,0.10);
+    border: 1px solid rgba(37,99,235,0.32);
     color: #f9a8d4;
     animation: badgePulse 3s ease-in-out infinite;
   }
   @keyframes badgePulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(233,30,140,0); border-color: rgba(233,30,140,0.32); }
-    50%       { box-shadow: 0 0 16px 2px transparent; border-color: rgba(233,30,140,0.55); }
+    0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0); border-color: rgba(37,99,235,0.32); }
+    50%       { box-shadow: 0 0 16px 2px transparent; border-color: rgba(37,99,235,0.55); }
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -863,7 +863,7 @@
      TABLES
   ───────────────────────────────────────────────────────────── */
   .table-head {
-    border-bottom: 1px solid rgba(98,196,176,0.14);
+    border-bottom: 1px solid rgba(37,99,235,0.14);
     background: rgba(15,15,23,0.80);
   }
   .table-head th {
@@ -874,8 +874,8 @@
     border-bottom: 1px solid rgba(255,255,255,0.06);
     transition: background var(--duration-fast) ease;
   }
-  .table-row:hover { background: rgba(233,30,140,0.06); }
-  .table-row:focus-within { background: rgba(98,196,176,0.06); }
+  .table-row:hover { background: rgba(37,99,235,0.06); }
+  .table-row:focus-within { background: rgba(37,99,235,0.06); }
 
   /* ─────────────────────────────────────────────────────────────
      TYPOGRAPHY
@@ -942,7 +942,7 @@
     @apply sticky top-0 z-50 flex items-center justify-between px-14 py-5 border-b backdrop-blur-md;
     background: rgba(8,8,20,0.94);
     border-color: rgba(255,255,255,0.06);
-    box-shadow: 0 1px 0 rgba(233,30,140,0.06);
+    box-shadow: 0 1px 0 rgba(37,99,235,0.06);
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -951,7 +951,7 @@
   .hero-bg {
     background:
       radial-gradient(ellipse 65% 55% at 72% 20%, transparent 0%, transparent 60%),
-      radial-gradient(ellipse 45% 45% at 18% 82%, rgba(98,196,176,0.16) 0%, transparent 60%),
+      radial-gradient(ellipse 45% 45% at 18% 82%, rgba(37,99,235,0.16) 0%, transparent 60%),
       radial-gradient(ellipse 50% 60% at 50% 50%, rgba(120,40,200,0.08) 0%, transparent 70%);
   }
 
@@ -979,28 +979,28 @@
   .admin-blob-fucsia {
     position: fixed; top: -10%; right: -8%;
     width: 750px; height: 750px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(233,30,140,0.26) 0%, transparent 68%);
+    background: radial-gradient(circle, rgba(37,99,235,0.26) 0%, transparent 68%);
     filter: blur(88px); pointer-events: none; z-index: 0;
     animation: blobDrift 14s ease-in-out infinite reverse;
   }
   .admin-blob-rosa {
     position: fixed; bottom: -8%; left: -8%;
     width: 750px; height: 750px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(98,196,176,0.22) 0%, transparent 68%);
+    background: radial-gradient(circle, rgba(37,99,235,0.22) 0%, transparent 68%);
     filter: blur(88px); pointer-events: none; z-index: 0;
     animation: blobDrift 11s ease-in-out infinite;
   }
   .admin-blob-violet {
     position: fixed; top: 35%; left: 35%;
     width: 650px; height: 650px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(233,30,140,0.14) 0%, transparent 68%);
+    background: radial-gradient(circle, rgba(37,99,235,0.14) 0%, transparent 68%);
     filter: blur(88px); pointer-events: none; z-index: 0;
     animation: blobDrift 20s ease-in-out infinite 3s;
   }
   .admin-blob-indigo {
     position: fixed; top: 60%; right: 18%;
     width: 550px; height: 550px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(98,196,176,0.12) 0%, transparent 68%);
+    background: radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 68%);
     filter: blur(88px); pointer-events: none; z-index: 0;
     animation: blobDrift 24s ease-in-out infinite 6s reverse;
   }
@@ -1017,7 +1017,7 @@
   .aurora-bg {
     position: absolute; inset: 0; pointer-events: none;
     background:
-      conic-gradient(from 180deg at 50% 50%, rgba(233,30,140,0.12) 0deg, rgba(98,196,176,0.10) 90deg, rgba(120,40,200,0.08) 180deg, rgba(233,30,140,0.10) 270deg, rgba(98,196,176,0.12) 360deg);
+      conic-gradient(from 180deg at 50% 50%, rgba(37,99,235,0.12) 0deg, rgba(37,99,235,0.10) 90deg, rgba(120,40,200,0.08) 180deg, rgba(37,99,235,0.10) 270deg, rgba(37,99,235,0.12) 360deg);
     filter: blur(80px);
     animation: auroraShift 16s ease-in-out infinite;
     opacity: 0.6;
@@ -1120,7 +1120,7 @@
   ───────────────────────────────────────────────────────────── */
   .metric-card--good {
     border-color: var(--ds-color-success-border) !important;
-    box-shadow: 0 0 18px rgba(52, 211, 153, 0.08) !important;
+    box-shadow: 0 0 18px rgba(34, 197, 94, 0.08) !important;
   }
   .metric-card--warning {
     border-color: var(--ds-color-warning-border) !important;
@@ -1430,7 +1430,7 @@
     border: 1px solid var(--ds-border-success) !important;
     color: var(--ds-text-primary) !important;
     box-shadow:
-      0 0 0 1px rgba(52, 211, 153, 0.25),
+      0 0 0 1px rgba(34, 197, 94, 0.25),
       0 8px 28px rgba(16, 185, 129, 0.22),
       0 0 56px rgba(16, 185, 129, 0.14),
       0 1px 0 rgba(255, 255, 255, 0.10) inset !important;
@@ -1556,7 +1556,7 @@
   ───────────────────────────────────────────────────────────── */
   @keyframes borderGlow {
     0%, 100% { box-shadow: 0 0 0 0 transparent; }
-    50%       { box-shadow: 0 0 20px 3px rgba(233,30,140,0.36); }
+    50%       { box-shadow: 0 0 20px 3px rgba(37,99,235,0.36); }
   }
   .border-glow-pulse { animation: borderGlow 3s ease-in-out infinite; }
 
@@ -1592,7 +1592,7 @@
   .scan-line {
     position: absolute;
     left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent 0%, transparent 30%, rgba(98,196,176,0.45) 70%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, transparent 30%, rgba(37,99,235,0.45) 70%, transparent 100%);
     pointer-events: none;
     animation: scanLine 5s ease-in-out infinite;
     z-index: 10;
@@ -1623,7 +1623,7 @@
   ───────────────────────────────────────────────────────────── */
   .ambient-line {
     height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(233,30,140,0.65) 30%, rgba(98,196,176,0.50) 70%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, rgba(37,99,235,0.65) 30%, rgba(37,99,235,0.50) 70%, transparent 100%);
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -1633,13 +1633,13 @@
     @apply rounded-2xl;
     position: relative;
     background: linear-gradient(180deg, rgba(28,8,18,0.96) 0%, rgba(16,5,12,0.99) 100%);
-    border: 1px solid rgba(233,30,140,0.34);
+    border: 1px solid rgba(37,99,235,0.34);
     backdrop-filter: blur(28px);
     box-shadow:
       0 0 0 1px rgba(255,255,255,0.05) inset,
       0 12px 48px rgba(0,0,0,0.45),
-      0 0 48px rgba(233,30,140,0.14),
-      0 0 30px rgba(98,196,176,0.08);
+      0 0 48px rgba(37,99,235,0.14),
+      0 0 30px rgba(37,99,235,0.08);
   }
   .panel-glow::before {
     content: '';
@@ -1658,12 +1658,12 @@
     height: 1px;
     background: linear-gradient(90deg,
       transparent 0%,
-      rgba(233,30,140,0.50) 25%,
-      rgba(233,30,140,0.80) 50%,
-      rgba(98,196,176,0.60) 75%,
+      rgba(37,99,235,0.50) 25%,
+      rgba(37,99,235,0.80) 50%,
+      rgba(37,99,235,0.60) 75%,
       transparent 100%
     );
-    box-shadow: 0 0 12px rgba(233,30,140,0.40), 0 0 6px rgba(98,196,176,0.25);
+    box-shadow: 0 0 12px rgba(37,99,235,0.40), 0 0 6px rgba(37,99,235,0.25);
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -1673,13 +1673,13 @@
     position: relative;
     overflow: hidden;
     background: linear-gradient(135deg,
-      rgba(233,30,140,0.15) 0%,
+      rgba(37,99,235,0.15) 0%,
       rgba(120,40,200,0.10) 35%,
-      rgba(98,196,176,0.12) 70%,
-      rgba(233,30,140,0.08) 100%
+      rgba(37,99,235,0.12) 70%,
+      rgba(37,99,235,0.08) 100%
     );
-    border-top: 1px solid rgba(233,30,140,0.18);
-    border-bottom: 1px solid rgba(98,196,176,0.12);
+    border-top: 1px solid rgba(37,99,235,0.18);
+    border-bottom: 1px solid rgba(37,99,235,0.12);
   }
 
   /* ─────────────────────────────────────────────────────────────

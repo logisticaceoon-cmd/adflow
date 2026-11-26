@@ -486,7 +486,7 @@ function FeaturesSection() {
     { icon: BarChart3, title: 'Reportes diarios automáticos', desc: 'Recibí cada mañana un resumen con métricas clave y recomendaciones de IA para optimizar tu inversión.', color: '#3b82f6' },
     { icon: Target, title: 'Públicos sugeridos por IA', desc: 'Describí tu producto y la IA crea audiencias precisas: intereses, comportamientos y lookalikes.', color: '#60a5fa' },
     { icon: RefreshCw, title: 'A/B testing automático', desc: 'La IA genera variantes y las prueba automáticamente, escalando el presupuesto hacia lo que convierte.', color: '#f59e0b' },
-    { icon: MessageSquare, title: 'CTAs con WhatsApp', desc: 'Conectá tus ads directamente con WhatsApp Business para cerrar ventas en el momento.', color: '#34d399' },
+    { icon: MessageSquare, title: 'CTAs con WhatsApp', desc: 'Conectá tus ads directamente con WhatsApp Business para cerrar ventas en el momento.', color: '#3b82f6' },
   ]
 
   return (
@@ -627,7 +627,7 @@ function DemoSection() {
             <div className="text-xs mb-1.5 font-semibold" style={{ color: '#c4b5fd' }}>Audiencia sugerida</div>
             <p className="text-sm" style={{ color: '#e2e8f0' }}>Fotografía, Diseño, Arte · 25-45 años · LATAM</p>
           </div>
-          <div className="p-3 rounded-lg border-l-2" style={{ background: 'rgba(45, 212, 191,0.10)', borderColor: '#3b82f6' }}>
+          <div className="p-3 rounded-lg border-l-2" style={{ background: 'rgba(37, 99, 235,0.10)', borderColor: '#3b82f6' }}>
             <div className="text-xs mb-1.5 font-semibold" style={{ color: '#6ee7b7' }}>Variante A/B lista</div>
             <p className="text-sm" style={{ color: '#e2e8f0' }}>2 versiones del copy para testear automáticamente</p>
           </div>
@@ -641,7 +641,7 @@ function DemoSection() {
         <div className="space-y-3">
           <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(37,99,235,0.20)' }}>
             <span className="text-sm" style={{ color: '#e2e8f0' }}>Campaña &quot;Curso Fotografía&quot;</span>
-            <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: 'rgba(45, 212, 191,0.18)', color: '#6ee7b7' }}>Lista ✓</span>
+            <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: 'rgba(37, 99, 235,0.18)', color: '#6ee7b7' }}>Lista ✓</span>
           </div>
           <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(37,99,235,0.20)' }}>
             <span className="text-sm" style={{ color: '#e2e8f0' }}>Presupuesto: $20/día</span>
@@ -747,7 +747,7 @@ function TestimonialsSection() {
   const testimonials = [
     { name: 'Valentina R.', role: 'Directora de Marketing · Agencia Nube', text: 'Pasamos de gastar 12 horas semanales en ads a menos de 2. Los copies de la IA superan los nuestros. Nuestro ROAS mejoró un 280% en el primer mes.', result: 'ROAS 4.2x', avatar: 'VR', color: 'var(--ds-color-primary)' },
     { name: 'Carlos M.', role: 'Emprendedor · E-commerce de ropa', text: 'Probé muchas herramientas pero ninguna tan completa. En mi primera semana ya tenía campaña activa con resultados reales. Lo recomiendo al 100%.', result: '+180% ventas', avatar: 'CM', color: '#60a5fa' },
-    { name: 'Lucía F.', role: 'CEO · Academia Online', text: 'El A/B testing automático es increíble. AdFlow descubrió copies que yo jamás hubiera probado y triplicó mis conversiones sin aumentar el presupuesto.', result: '3x conversiones', avatar: 'LF', color: '#059669' },
+    { name: 'Lucía F.', role: 'CEO · Academia Online', text: 'El A/B testing automático es increíble. AdFlow descubrió copies que yo jamás hubiera probado y triplicó mis conversiones sin aumentar el presupuesto.', result: '3x conversiones', avatar: 'LF', color: '#2563eb' },
   ]
 
   return (
@@ -1112,7 +1112,7 @@ function Footer() {
               onMouseEnter={e => (e.currentTarget.style.color = '#a8b0c0')}
               onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}>Privacidad</Link>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
               <span className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>Todos los sistemas operativos</span>
             </div>
           </div>

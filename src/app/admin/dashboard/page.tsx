@@ -211,12 +211,12 @@ export default async function AdminDashboardPage() {
           </div>
           <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl"
             style={{
-              background: 'linear-gradient(135deg, rgba(234,27,126,0.15), rgba(98,196,176,0.08))',
+              background: 'linear-gradient(135deg, rgba(37,99,235,0.15), rgba(37,99,235,0.08))',
               border: '1px solid rgba(37,99,235,0.35)',
               boxShadow: '0 0 20px rgba(37,99,235,0.1)',
             }}>
-            <Activity size={13} style={{ color: '#f472b6' }} />
-            <span className="text-xs font-semibold" style={{ color: '#f472b6' }}>Vista de plataforma</span>
+            <Activity size={13} style={{ color: '#60a5fa' }} />
+            <span className="text-xs font-semibold" style={{ color: '#60a5fa' }}>Vista de plataforma</span>
           </div>
         </div>
 
@@ -299,7 +299,7 @@ export default async function AdminDashboardPage() {
                       <td className="px-5 py-3">
                         <span className="text-[11px] px-2 py-0.5 rounded-full capitalize"
                           style={{
-                            background: u.plan === 'pro' ? 'rgba(234,27,126,0.15)'
+                            background: u.plan === 'pro' ? 'rgba(37,99,235,0.15)'
                               : u.plan === 'agency' ? 'rgba(245,158,11,0.15)'
                               : 'rgba(255,255,255,0.05)',
                             color: u.plan === 'pro' ? '#3b82f6'
@@ -313,7 +313,7 @@ export default async function AdminDashboardPage() {
                         <span className="text-[11px] px-2 py-0.5 rounded-full capitalize"
                           style={{
                             background: u.role !== 'user' ? 'rgba(37,99,235,0.15)' : 'transparent',
-                            color: u.role !== 'user' ? '#f472b6' : 'rgba(255,255,255,0.45)',
+                            color: u.role !== 'user' ? '#60a5fa' : 'rgba(255,255,255,0.45)',
                           }}>
                           {u.role}
                         </span>

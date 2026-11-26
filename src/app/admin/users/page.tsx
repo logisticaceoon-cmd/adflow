@@ -6,7 +6,7 @@ import AdminPlanSelect from '@/components/admin/AdminPlanSelect'
 import AdminCreditsModal from '@/components/admin/AdminCreditsModal'
 
 const PLAN_COLORS: Record<string, string> = {
-  free: '#60a5fa', starter: '#f472b6', pro: '#3b82f6', agency: '#f59e0b',
+  free: '#60a5fa', starter: '#60a5fa', pro: '#3b82f6', agency: '#f59e0b',
 }
 const ROLE_COLORS: Record<string, string> = {
   user: 'rgba(255,255,255,0.45)', admin: '#f59e0b', super_admin: '#ef4444',
@@ -55,7 +55,7 @@ export default async function AdminUsersPage() {
       <div className="admin-card overflow-hidden">
         <table className="w-full">
           <thead>
-            <tr style={{ background: 'rgba(98,196,176,0.05)', borderBottom: '1px solid rgba(98,196,176,0.15)' }}>
+            <tr style={{ background: 'rgba(37,99,235,0.05)', borderBottom: '1px solid rgba(37,99,235,0.15)' }}>
               {['Usuario', 'Email', 'Plan', 'Créditos', 'Rol', 'Campañas', 'Último acceso', 'Registro', 'Acciones'].map(h => (
                 <th key={h} className="px-4 py-3 text-left text-xs font-semibold tracking-wider uppercase"
                     style={{ color: '#ffffff' }}>{h}</th>
@@ -111,7 +111,7 @@ export default async function AdminUsersPage() {
                       {u.role}
                     </span>
                   </td>
-                  <td className="px-4 py-3.5 text-sm font-semibold" style={{ color: '#f472b6' }}>
+                  <td className="px-4 py-3.5 text-sm font-semibold" style={{ color: '#60a5fa' }}>
                     {countMap[u.id] ?? 0}
                   </td>
                   <td className="px-4 py-3.5 text-xs" style={{ color: '#b0b0d0' }}>

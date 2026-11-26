@@ -84,7 +84,7 @@ export default function UsersKpiNode({ count }: { count: number }) {
           position: 'absolute',
           inset: -3,
           borderRadius: '50%',
-          background: 'conic-gradient(from 0deg, transparent 0%, transparent 72%, rgba(37,99,235,0.9) 82%, #f472b6 89%, transparent 95%, transparent 100%)',
+          background: 'conic-gradient(from 0deg, transparent 0%, transparent 72%, rgba(37,99,235,0.9) 82%, #60a5fa 89%, transparent 95%, transparent 100%)',
           animation: 'kpiRingSpin 3.5s linear infinite',
           pointerEvents: 'none',
           opacity: hovered ? 1 : 0.8,

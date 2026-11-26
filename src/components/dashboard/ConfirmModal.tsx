@@ -20,7 +20,7 @@ interface ConfirmModalProps {
 
 const COLORS: Record<ConfirmColor, { bg: string; border: string; glow: string; text: string }> = {
   fucsia: { bg: 'var(--ds-color-primary)',  border: 'var(--ds-color-primary-border)', glow: 'transparent', text: '#fff' },
-  green:  { bg: 'linear-gradient(135deg, var(--ds-color-success), #059669)',  border: 'var(--ds-color-success-border)',  glow: 'var(--ds-color-success-border)',  text: '#fff' },
+  green:  { bg: 'linear-gradient(135deg, var(--ds-color-success), #2563eb)',  border: 'var(--ds-color-success-border)',  glow: 'var(--ds-color-success-border)',  text: '#fff' },
   red:    { bg: 'linear-gradient(135deg, var(--ds-color-danger), var(--ds-color-danger))',  border: 'var(--ds-color-danger-border)',  glow: 'var(--ds-color-danger-border)',  text: '#fff' },
   amber:  { bg: 'linear-gradient(135deg, var(--ds-color-warning), var(--ds-color-warning))',  border: 'var(--ds-color-warning-border)', glow: 'var(--ds-color-warning-border)', text: '#fff' },
   teal:   { bg: 'linear-gradient(135deg, var(--ds-color-primary), #3a9a8a)',  border: 'var(--ds-card-border)', glow: 'var(--ds-card-border)', text: '#fff' },

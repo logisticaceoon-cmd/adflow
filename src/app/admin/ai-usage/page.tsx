@@ -31,7 +31,7 @@ export default async function AdminAiUsagePage() {
             La tabla <code className="px-1.5 py-0.5 rounded text-xs" style={{ background: '#1a1a2e' }}>ai_requests</code> aún no fue creada en Supabase.
           </p>
           <div className="text-left max-w-2xl mx-auto p-4 rounded-xl text-xs font-mono overflow-auto"
-               style={{ background: 'rgba(14,4,8,0.97)', border: '1px solid rgba(98,196,176,0.18)', color: '#60a5fa' }}>
+               style={{ background: 'rgba(14,4,8,0.97)', border: '1px solid rgba(37,99,235,0.18)', color: '#60a5fa' }}>
             {`CREATE TABLE IF NOT EXISTS ai_requests (
   id            UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id       UUID REFERENCES auth.users(id) ON DELETE SET NULL,
@@ -99,7 +99,7 @@ ALTER TABLE ai_requests ENABLE ROW LEVEL SECURITY;`}
         ) : (
           <table className="w-full">
             <thead>
-              <tr style={{ background: 'rgba(98,196,176,0.05)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+              <tr style={{ background: 'rgba(37,99,235,0.05)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
                 {['Usuario', 'Modelo', 'Endpoint', 'Tokens in', 'Tokens out', 'Costo', 'Fecha'].map(h => (
                   <th key={h} className="px-5 py-3 text-left text-xs font-semibold tracking-wider uppercase"
                       style={{ color: '#ffffff' }}>{h}</th>
@@ -113,7 +113,7 @@ ALTER TABLE ai_requests ENABLE ROW LEVEL SECURITY;`}
                   <td className="px-5 py-3 text-xs" style={{ color: '#c8c8e0' }}>
                     {profileMap[r.user_id] || r.user_id?.slice(0, 8) || '—'}
                   </td>
-                  <td className="px-5 py-3 text-xs" style={{ color: '#f472b6' }}>{r.model}</td>
+                  <td className="px-5 py-3 text-xs" style={{ color: '#60a5fa' }}>{r.model}</td>
                   <td className="px-5 py-3 text-xs" style={{ color: '#c8c8e0' }}>{r.endpoint}</td>
                   <td className="px-5 py-3 text-xs">{r.input_tokens ?? 0}</td>
                   <td className="px-5 py-3 text-xs">{r.output_tokens ?? 0}</td>

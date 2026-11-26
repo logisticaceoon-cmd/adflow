@@ -132,7 +132,7 @@ export default function AdminSidebar({
         <div className="px-4 py-3 flex items-center gap-2"
           style={{ borderTop: '1px solid rgba(255,255,255,0.07)', flexShrink: 0 }}>
           <div className="w-2 h-2 rounded-full flex-shrink-0"
-            style={{ background: '#60a5fa', boxShadow: '0 0 8px rgba(98,196,176,0.8)' }} />
+            style={{ background: '#60a5fa', boxShadow: '0 0 8px rgba(37,99,235,0.8)' }} />
           <span className="text-[11px] font-semibold whitespace-nowrap" style={{ color: '#60a5fa' }}>
             Modo administrador
           </span>

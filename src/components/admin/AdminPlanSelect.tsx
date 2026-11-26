@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 const PLANS = ['free', 'starter', 'pro', 'agency']
 const PLAN_COLORS: Record<string, string> = {
-  free: '#60a5fa', starter: '#f472b6', pro: '#3b82f6', agency: '#f59e0b',
+  free: '#60a5fa', starter: '#60a5fa', pro: '#3b82f6', agency: '#f59e0b',
 }
 
 interface Props {

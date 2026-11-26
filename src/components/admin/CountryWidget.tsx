@@ -3,7 +3,7 @@
 
 export type CountryData = { country: string; count: number; pct: number }
 
-const COLORS = ['#3b82f6', '#60a5fa', '#f472b6', '#f59e0b', '#3b82f6', 'rgba(255,255,255,0.45)']
+const COLORS = ['#3b82f6', '#60a5fa', '#60a5fa', '#f59e0b', '#3b82f6', 'rgba(255,255,255,0.45)']
 
 const FLAG: Record<string, string> = {
   AR: '🇦🇷', CO: '🇨🇴', CL: '🇨🇱', MX: '🇲🇽', PE: '🇵🇪',
@@ -23,7 +23,7 @@ export default function CountryWidget({ data }: { data: CountryData[] }) {
   return (
     <div style={{
       background: 'rgba(18,4,10,0.96)',
-      border: '1px solid rgba(98,196,176,0.14)',
+      border: '1px solid rgba(37,99,235,0.14)',
       borderRadius: 16,
       overflow: 'hidden',
       marginTop: 24,
@@ -32,7 +32,7 @@ export default function CountryWidget({ data }: { data: CountryData[] }) {
       {/* Header */}
       <div style={{
         padding: '14px 20px',
-        borderBottom: '1px solid rgba(98,196,176,0.10)',
+        borderBottom: '1px solid rgba(37,99,235,0.10)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -41,7 +41,7 @@ export default function CountryWidget({ data }: { data: CountryData[] }) {
           <div style={{
             width: 6, height: 6, borderRadius: '50%',
             background: '#60a5fa',
-            boxShadow: '0 0 8px rgba(98,196,176,0.7)',
+            boxShadow: '0 0 8px rgba(37,99,235,0.7)',
             animation: 'kpiGlowPulse 2.5s ease-in-out infinite',
           }} />
           <h2 style={{
@@ -54,9 +54,9 @@ export default function CountryWidget({ data }: { data: CountryData[] }) {
 
         <span style={{
           fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase',
-          background: hasData ? 'rgba(98,196,176,0.12)' : 'rgba(90,90,122,0.15)',
+          background: hasData ? 'rgba(37,99,235,0.12)' : 'rgba(90,90,122,0.15)',
           color: hasData ? '#60a5fa' : 'rgba(255,255,255,0.45)',
-          border: `1px solid ${hasData ? 'rgba(98,196,176,0.3)' : 'rgba(255,255,255,0.12)'}`,
+          border: `1px solid ${hasData ? 'rgba(37,99,235,0.3)' : 'rgba(255,255,255,0.12)'}`,
           padding: '3px 10px', borderRadius: 20,
         }}>
           {hasData ? `${data.length} países` : 'Sin datos'}
@@ -69,7 +69,7 @@ export default function CountryWidget({ data }: { data: CountryData[] }) {
           {data.map((d, i) => (
             <div key={d.country} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <span style={{ fontSize: 18, flexShrink: 0 }}>{FLAG[d.country] ?? '🌍'}</span>
-              <span style={{ fontSize: 13, color: '#9ca3af', width: 130, flexShrink: 0 }}>
+              <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.50)', width: 130, flexShrink: 0 }}>
                 {COUNTRY_NAMES[d.country] ?? d.country}
               </span>
               <div style={{ flex: 1, height: 6, borderRadius: 3, background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
@@ -111,7 +111,7 @@ export default function CountryWidget({ data }: { data: CountryData[] }) {
             margin: '12px auto 0',
             maxWidth: 480,
             background: 'rgba(14,4,8,0.97)',
-            border: '1px solid rgba(98,196,176,0.16)',
+            border: '1px solid rgba(37,99,235,0.16)',
             borderRadius: 10,
             padding: '10px 16px',
             textAlign: 'left',

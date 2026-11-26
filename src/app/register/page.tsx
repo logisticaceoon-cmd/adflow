@@ -100,7 +100,7 @@ export default function RegisterPage() {
       }}>
         {/* Background orbs */}
         <div style={{ position: 'fixed', top: '-12%', right: '-10%', width: 700, height: 700, borderRadius: '50%', background: 'radial-gradient(circle, rgba(37,99,235,0.26) 0%, transparent 68%)', filter: 'blur(88px)', pointerEvents: 'none' }} />
-        <div style={{ position: 'fixed', bottom: '-10%', left: '-10%', width: 650, height: 650, borderRadius: '50%', background: 'radial-gradient(circle, rgba(98,196,176,0.20) 0%, transparent 68%)', filter: 'blur(88px)', pointerEvents: 'none' }} />
+        <div style={{ position: 'fixed', bottom: '-10%', left: '-10%', width: 650, height: 650, borderRadius: '50%', background: 'radial-gradient(circle, rgba(37,99,235,0.20) 0%, transparent 68%)', filter: 'blur(88px)', pointerEvents: 'none' }} />
 
         <div style={{ position: 'relative', zIndex: 10 }}>
           <div style={{
@@ -111,7 +111,7 @@ export default function RegisterPage() {
             boxShadow: '0 0 0 1px rgba(255,255,255,0.05) inset, 0 24px 72px rgba(0,0,0,0.55), 0 0 60px rgba(37,99,235,0.08)',
             position: 'relative', overflow: 'hidden',
           }}>
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg, transparent, rgba(37,99,235,0.55), rgba(98,196,176,0.35), transparent)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg, transparent, rgba(37,99,235,0.55), rgba(37,99,235,0.35), transparent)', pointerEvents: 'none' }} />
             <div style={{ fontSize: 44, marginBottom: 16 }}>📬</div>
             <h2 style={{ fontSize: 20, fontWeight: 700, color: '#fff', marginBottom: 10 }}>Revisá tu email</h2>
             <p style={{ color: '#7a7a9a', fontSize: 14, lineHeight: 1.6, marginBottom: 24 }}>
@@ -137,7 +137,7 @@ export default function RegisterPage() {
     }}>
       {/* Background orbs — matching login */}
       <div style={{ position: 'fixed', top: '-12%', right: '-10%', width: 700, height: 700, borderRadius: '50%', background: 'radial-gradient(circle, rgba(37,99,235,0.26) 0%, transparent 68%)', filter: 'blur(88px)', pointerEvents: 'none' }} />
-      <div style={{ position: 'fixed', bottom: '-10%', left: '-10%', width: 650, height: 650, borderRadius: '50%', background: 'radial-gradient(circle, rgba(98,196,176,0.20) 0%, transparent 68%)', filter: 'blur(88px)', pointerEvents: 'none' }} />
+      <div style={{ position: 'fixed', bottom: '-10%', left: '-10%', width: 650, height: 650, borderRadius: '50%', background: 'radial-gradient(circle, rgba(37,99,235,0.20) 0%, transparent 68%)', filter: 'blur(88px)', pointerEvents: 'none' }} />
       <div style={{ position: 'fixed', top: '42%', left: '40%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 68%)', filter: 'blur(80px)', pointerEvents: 'none' }} />
       {/* Grid overlay */}
       <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', backgroundImage: 'linear-gradient(rgba(255,255,255,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.022) 1px,transparent 1px)', backgroundSize: '72px 72px', maskImage: 'radial-gradient(ellipse 90% 90% at 50% 50%, black 30%, transparent 100%)' }} />
@@ -159,7 +159,7 @@ export default function RegisterPage() {
           position: 'relative', overflow: 'hidden',
         }}>
           {/* Top glow line */}
-          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg, transparent, rgba(37,99,235,0.55), rgba(98,196,176,0.35), transparent)', pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg, transparent, rgba(37,99,235,0.55), rgba(37,99,235,0.35), transparent)', pointerEvents: 'none' }} />
           {/* Top gloss */}
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '45%', background: 'linear-gradient(180deg, rgba(255,255,255,0.07) 0%, transparent 100%)', pointerEvents: 'none', borderRadius: 'inherit' }} />
 

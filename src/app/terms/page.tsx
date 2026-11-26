@@ -20,7 +20,7 @@ export default function TermsPage() {
       minHeight: '100vh', color: '#fff',
     }}>
       {/* Orbs */}
-      <div style={{ position: 'fixed', top: '-10%', right: '-8%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(98,196,176,0.12) 0%, transparent 68%)', filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0 }} />
+      <div style={{ position: 'fixed', top: '-10%', right: '-8%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 68%)', filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0 }} />
       <div style={{ position: 'fixed', bottom: '-8%', left: '-8%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 68%)', filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0 }} />
 
       {/* Navbar */}
@@ -50,7 +50,7 @@ export default function TermsPage() {
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             padding: '6px 16px', borderRadius: 99, marginBottom: 20,
-            background: 'rgba(98,196,176,0.10)', border: '1px solid rgba(98,196,176,0.25)',
+            background: 'rgba(37,99,235,0.10)', border: '1px solid rgba(37,99,235,0.25)',
           }}>
             <FileText size={13} color="#c4b5fd" />
             <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: '#c4b5fd' }}>
@@ -68,7 +68,7 @@ export default function TermsPage() {
         {/* Card */}
         <div style={{
           background: 'linear-gradient(180deg, rgba(28,4,14,0.92) 0%, rgba(18,3,9,0.96) 100%)',
-          border: '1px solid rgba(98,196,176,0.22)',
+          border: '1px solid rgba(37,99,235,0.22)',
           borderRadius: 20,
           padding: '40px 40px',
           boxShadow: '0 0 0 1px rgba(255,255,255,0.05) inset, 0 20px 60px rgba(0,0,0,0.50)',

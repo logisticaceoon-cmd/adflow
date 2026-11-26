@@ -592,8 +592,8 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
               <div style={{
                 padding: '14px 18px',
                 borderRadius: 12,
-                background: 'rgba(45, 212, 191,0.06)',
-                border: '1px solid rgba(45, 212, 191,0.20)',
+                background: 'rgba(37, 99, 235,0.06)',
+                border: '1px solid rgba(37, 99, 235,0.20)',
               }}>
                 <p style={{ fontSize: 11, fontWeight: 700, color: '#3b82f6', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
                   Decisiones de audiencia

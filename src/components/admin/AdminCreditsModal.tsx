@@ -164,15 +164,15 @@ export default function AdminCreditsModal({
           boxShadow:
             '0 0 0 1px rgba(255,255,255,0.05) inset,' +
             '0 32px 80px rgba(0,0,0,0.80),' +
-            '0 0 60px rgba(234,27,126,0.10),' +
-            '0 0 30px rgba(98,196,176,0.06)',
+            '0 0 60px rgba(37,99,235,0.10),' +
+            '0 0 30px rgba(37,99,235,0.06)',
           animation: 'slideUpModal 0.22s cubic-bezier(0.16,1,0.3,1) both',
         }}
       >
         {/* Top glow line */}
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-          background: 'linear-gradient(90deg, transparent, rgba(234,27,126,0.60), rgba(98,196,176,0.40), transparent)',
+          background: 'linear-gradient(90deg, transparent, rgba(37,99,235,0.60), rgba(37,99,235,0.40), transparent)',
           borderRadius: '22px 22px 0 0',
           pointerEvents: 'none',
         }} />
@@ -316,8 +316,8 @@ export default function AdminCreditsModal({
             letterSpacing: '-0.02em',
           }}
           onFocus={e => {
-            e.currentTarget.style.borderColor = 'rgba(234,27,126,0.60)'
-            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(234,27,126,0.12), 0 0 20px rgba(234,27,126,0.15)'
+            e.currentTarget.style.borderColor = 'rgba(37,99,235,0.60)'
+            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(37,99,235,0.12), 0 0 20px rgba(37,99,235,0.15)'
           }}
           onBlur={e => {
             e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'
@@ -333,20 +333,20 @@ export default function AdminCreditsModal({
               onClick={() => handleQuickAdd(n)}
               style={{
                 flex: 1, padding: '7px 0', borderRadius: 9, cursor: 'pointer',
-                background: 'rgba(98,196,176,0.08)',
+                background: 'rgba(37,99,235,0.08)',
                 color: '#60a5fa',
-                border: '1px solid rgba(98,196,176,0.20)',
+                border: '1px solid rgba(37,99,235,0.20)',
                 fontSize: 12, fontWeight: 700,
                 transition: 'all 0.15s',
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.background = 'rgba(98,196,176,0.16)'
-                ;(e.currentTarget as HTMLElement).style.borderColor = 'rgba(98,196,176,0.40)'
+                (e.currentTarget as HTMLElement).style.background = 'rgba(37,99,235,0.16)'
+                ;(e.currentTarget as HTMLElement).style.borderColor = 'rgba(37,99,235,0.40)'
                 ;(e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'
               }}
               onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.background = 'rgba(98,196,176,0.08)'
-                ;(e.currentTarget as HTMLElement).style.borderColor = 'rgba(98,196,176,0.20)'
+                (e.currentTarget as HTMLElement).style.background = 'rgba(37,99,235,0.08)'
+                ;(e.currentTarget as HTMLElement).style.borderColor = 'rgba(37,99,235,0.20)'
                 ;(e.currentTarget as HTMLElement).style.transform = 'translateY(0)'
               }}
             >
@@ -374,18 +374,18 @@ export default function AdminCreditsModal({
               onClick={handleCustomAdd}
               style={{
                 padding: '7px 10px', borderRadius: 9, cursor: 'pointer',
-                background: 'rgba(98,196,176,0.10)',
+                background: 'rgba(37,99,235,0.10)',
                 color: '#60a5fa',
-                border: '1px solid rgba(98,196,176,0.22)',
+                border: '1px solid rgba(37,99,235,0.22)',
                 display: 'flex', alignItems: 'center',
                 transition: 'all 0.15s',
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.background = 'rgba(98,196,176,0.20)'
+                (e.currentTarget as HTMLElement).style.background = 'rgba(37,99,235,0.20)'
                 ;(e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'
               }}
               onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.background = 'rgba(98,196,176,0.10)'
+                (e.currentTarget as HTMLElement).style.background = 'rgba(37,99,235,0.10)'
                 ;(e.currentTarget as HTMLElement).style.transform = 'translateY(0)'
               }}
             >
@@ -398,15 +398,15 @@ export default function AdminCreditsModal({
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           padding: '10px 14px', borderRadius: 11, marginBottom: 20,
-          background: 'rgba(98,196,176,0.05)',
-          border: '1px solid rgba(98,196,176,0.14)',
+          background: 'rgba(37,99,235,0.05)',
+          border: '1px solid rgba(37,99,235,0.14)',
           position: 'relative', zIndex: 1,
         }}>
           <span style={{ fontSize: 12, color: '#6a6a9a' }}>Disponibles al guardar</span>
           <span style={{
             fontSize: 18, fontWeight: 800, letterSpacing: '-0.02em',
             color: newAvailable > 0 ? '#60a5fa' : '#ef4444',
-            textShadow: newAvailable > 0 ? '0 0 12px rgba(98,196,176,0.60)' : '0 0 12px rgba(239,68,68,0.60)',
+            textShadow: newAvailable > 0 ? '0 0 12px rgba(37,99,235,0.60)' : '0 0 12px rgba(239,68,68,0.60)',
           }}>
             {newAvailable}
           </span>
@@ -461,12 +461,12 @@ export default function AdminCreditsModal({
               flex: 2, padding: '11px 0', borderRadius: 12,
               cursor: loading ? 'wait' : 'pointer',
               background: loading
-                ? 'rgba(234,27,126,0.55)'
+                ? 'rgba(37,99,235,0.55)'
                 : 'linear-gradient(135deg, #ea1b7e, #c5006a)',
               color: '#ffffff',
               fontSize: 13, fontWeight: 700,
               border: 'none',
-              boxShadow: loading ? 'none' : '0 0 28px rgba(234,27,126,0.45), 0 0 56px rgba(234,27,126,0.16)',
+              boxShadow: loading ? 'none' : '0 0 28px rgba(37,99,235,0.45), 0 0 56px rgba(37,99,235,0.16)',
               opacity: loading ? 0.8 : 1,
               transition: 'all 0.2s',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
@@ -474,12 +474,12 @@ export default function AdminCreditsModal({
             onMouseEnter={e => {
               if (!loading) {
                 (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'
-                ;(e.currentTarget as HTMLElement).style.boxShadow = '0 0 40px rgba(234,27,126,0.65), 0 0 80px rgba(234,27,126,0.22)'
+                ;(e.currentTarget as HTMLElement).style.boxShadow = '0 0 40px rgba(37,99,235,0.65), 0 0 80px rgba(37,99,235,0.22)'
               }
             }}
             onMouseLeave={e => {
               (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'
-              ;(e.currentTarget as HTMLElement).style.boxShadow = '0 0 28px rgba(234,27,126,0.45), 0 0 56px rgba(234,27,126,0.16)'
+              ;(e.currentTarget as HTMLElement).style.boxShadow = '0 0 28px rgba(37,99,235,0.45), 0 0 56px rgba(37,99,235,0.16)'
             }}
           >
             {loading ? (
@@ -505,10 +505,10 @@ export default function AdminCreditsModal({
       {mounted && toast && createPortal(
         <div style={{
           position: 'fixed', bottom: 28, right: 28, zIndex: 10000,
-          background: 'linear-gradient(135deg, #3b82f6, #059669)',
+          background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
           color: '#ffffff', borderRadius: 12, padding: '12px 20px',
           fontSize: 14, fontWeight: 600,
-          boxShadow: '0 8px 32px rgba(45, 212, 191,0.36)',
+          boxShadow: '0 8px 32px rgba(37, 99, 235,0.36)',
           animation: 'fadeInUp 0.25s ease both',
           display: 'flex', alignItems: 'center', gap: 8,
         }}>
@@ -522,19 +522,19 @@ export default function AdminCreditsModal({
         onClick={handleOpen}
         style={{
           fontSize: 11, padding: '4px 11px', borderRadius: 8, cursor: 'pointer',
-          background: 'rgba(98,196,176,0.10)',
+          background: 'rgba(37,99,235,0.10)',
           color: '#60a5fa',
-          border: '1px solid rgba(98,196,176,0.28)',
+          border: '1px solid rgba(37,99,235,0.28)',
           fontWeight: 600, whiteSpace: 'nowrap',
           transition: 'all 0.15s',
         }}
         onMouseEnter={e => {
-          (e.currentTarget as HTMLElement).style.background = 'rgba(98,196,176,0.18)'
-          ;(e.currentTarget as HTMLElement).style.borderColor = 'rgba(98,196,176,0.50)'
+          (e.currentTarget as HTMLElement).style.background = 'rgba(37,99,235,0.18)'
+          ;(e.currentTarget as HTMLElement).style.borderColor = 'rgba(37,99,235,0.50)'
         }}
         onMouseLeave={e => {
-          (e.currentTarget as HTMLElement).style.background = 'rgba(98,196,176,0.10)'
-          ;(e.currentTarget as HTMLElement).style.borderColor = 'rgba(98,196,176,0.28)'
+          (e.currentTarget as HTMLElement).style.background = 'rgba(37,99,235,0.10)'
+          ;(e.currentTarget as HTMLElement).style.borderColor = 'rgba(37,99,235,0.28)'
         }}
       >
         Editar créditos

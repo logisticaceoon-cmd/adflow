@@ -55,7 +55,7 @@ export default async function AdminCampaignsPage() {
       <div className="admin-card overflow-hidden">
         <table className="w-full">
           <thead>
-            <tr style={{ background: 'rgba(98,196,176,0.05)', borderBottom: '1px solid rgba(98,196,176,0.15)' }}>
+            <tr style={{ background: 'rgba(37,99,235,0.05)', borderBottom: '1px solid rgba(37,99,235,0.15)' }}>
               {['Campaña', 'Usuario', 'Objetivo', 'Estado', 'Budget/día', 'Gasto', 'ROAS', 'Fecha'].map(h => (
                 <th key={h} className="px-4 py-3 text-left text-xs font-semibold tracking-wider uppercase"
                     style={{ color: '#ffffff' }}>{h}</th>

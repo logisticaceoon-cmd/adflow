@@ -19,8 +19,8 @@ const DEFAULT: Settings = {
 }
 
 const TEAL    = '#60a5fa'
-const TEAL_BG = 'rgba(98,196,176,0.15)'
-const TEAL_BD = 'rgba(98,196,176,0.30)'
+const TEAL_BG = 'rgba(37,99,235,0.15)'
+const TEAL_BD = 'rgba(37,99,235,0.30)'
 
 function Section({ title, icon: Icon, children }: {
   title: string; icon: React.ElementType; children: React.ReactNode
@@ -28,7 +28,7 @@ function Section({ title, icon: Icon, children }: {
   return (
     <div className="admin-card rounded-2xl overflow-hidden">
       <div className="px-6 py-4 border-b flex items-center gap-2.5"
-        style={{ borderColor: 'rgba(98,196,176,0.15)' }}>
+        style={{ borderColor: 'rgba(37,99,235,0.15)' }}>
         <Icon size={15} style={{ color: TEAL }} strokeWidth={1.75} />
         <h2 className="text-sm font-bold text-white">{title}</h2>
       </div>
@@ -134,7 +134,7 @@ export default function AdminSettingsPage() {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="w-6 h-6 rounded-full border-2 animate-spin"
-          style={{ borderColor: 'rgba(98,196,176,0.3)', borderTopColor: TEAL }} />
+          style={{ borderColor: 'rgba(37,99,235,0.3)', borderTopColor: TEAL }} />
       </div>
     )
   }
@@ -156,8 +156,8 @@ export default function AdminSettingsPage() {
       {toast && (
         <div className="fixed top-6 right-6 z-50 px-4 py-3 rounded-xl text-sm font-semibold shadow-xl"
           style={{
-            background: toast.ok ? 'rgba(45, 212, 191,0.15)' : 'rgba(239,68,68,0.15)',
-            border: `1px solid ${toast.ok ? 'rgba(45, 212, 191,0.4)' : 'rgba(239,68,68,0.4)'}`,
+            background: toast.ok ? 'rgba(37, 99, 235,0.15)' : 'rgba(239,68,68,0.15)',
+            border: `1px solid ${toast.ok ? 'rgba(37, 99, 235,0.4)' : 'rgba(239,68,68,0.4)'}`,
             color: toast.ok ? '#3b82f6' : '#ef4444',
           }}>
           {toast.msg}
@@ -223,7 +223,7 @@ export default function AdminSettingsPage() {
           </div>
           {/* Cost reference */}
           <div className="rounded-xl p-3 mb-4 text-xs"
-            style={{ background: 'rgba(98,196,176,0.08)', border: '1px solid rgba(98,196,176,0.20)' }}>
+            style={{ background: 'rgba(37,99,235,0.08)', border: '1px solid rgba(37,99,235,0.20)' }}>
             <div className="flex items-center gap-1.5 mb-1">
               <Zap size={11} style={{ color: TEAL }} />
               <span className="font-semibold" style={{ color: TEAL }}>Referencia de costos Claude Haiku</span>

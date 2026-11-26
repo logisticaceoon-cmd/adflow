@@ -265,7 +265,7 @@ export default function PixelDashboardPage() {
           breakdown={[
             { label: `Nivel ${level}`,    points: scoreLevel,   color: '#3b82f6' },
             { label: 'Tráfico web',       points: scoreTraffic, color: '#9d90ff' },
-            { label: 'Compras (180d)',    points: scoreSales,   color: '#34d399' },
+            { label: 'Compras (180d)',    points: scoreSales,   color: '#3b82f6' },
             { label: `Campañas (${campaignsCount})`, points: scoreCamps, color: '#fbbf24' },
           ]}
           monthStars={monthStars}

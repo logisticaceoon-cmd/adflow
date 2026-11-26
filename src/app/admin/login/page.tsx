@@ -57,7 +57,7 @@ export default function AdminLoginPage() {
          style={{ background: '#0a0408' }}>
       {/* Background glow */}
       <div className="fixed inset-0 pointer-events-none"
-           style={{ background: 'radial-gradient(ellipse 50% 50% at 50% 40%, rgba(234,27,126,0.10) 0%, transparent 70%)' }} />
+           style={{ background: 'radial-gradient(ellipse 50% 50% at 50% 40%, rgba(37,99,235,0.10) 0%, transparent 70%)' }} />
 
       <div className="relative z-10 w-full max-w-sm">
         {/* Logo */}
@@ -75,7 +75,7 @@ export default function AdminLoginPage() {
 
         {/* Card */}
         <div className="rounded-2xl p-8"
-             style={{ background: 'rgba(18,4,10,0.97)', border: '1px solid rgba(98,196,176,0.16)' }}>
+             style={{ background: 'rgba(18,4,10,0.97)', border: '1px solid rgba(37,99,235,0.16)' }}>
           <h1 className="font-display text-xl font-bold mb-1">Acceso administrador</h1>
           <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.45)' }}>
             Área restringida · Solo personal autorizado
