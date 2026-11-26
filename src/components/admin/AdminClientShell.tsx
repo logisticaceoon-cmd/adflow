@@ -73,7 +73,7 @@ export default function AdminClientShell({ children }: { children: React.ReactNo
           </div>
         </div>
 
-        <main style={{ flex: 1, padding: 32 }}>
+        <main style={{ flex: 1, padding: 24, overflowX: 'hidden' }}>
           {children}
         </main>
       </div>

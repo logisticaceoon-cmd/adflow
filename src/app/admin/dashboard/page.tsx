@@ -186,7 +186,7 @@ export default async function AdminDashboardPage() {
 
       <div>
         {/* ── Header ─────────────────────────────────────────────────── */}
-        <div className="mb-8 flex items-start justify-between"
+        <div className="mb-5 flex items-start justify-between"
           style={{ animation: 'adminFadeUp 0.4s ease-out both' }}>
           <div>
             <p className="text-[10px] font-bold tracking-widest uppercase mb-1.5"
@@ -223,8 +223,13 @@ export default async function AdminDashboardPage() {
         {/* ── Central KPI Node ───────────────────────────────────────── */}
         <UsersKpiNode count={totalUsers ?? 0} />
 
-        {/* ── KPI row: 3 cards ────────────────────────────────────────── */}
-        <div className="grid grid-cols-3 gap-4 mb-4">
+        {/* ── KPI grid: 5 cards uniform ──────────────────────────────── */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(5, 1fr)',
+          gap: 12,
+          marginBottom: 20,
+        }}>
           <KpiCard
             href="/admin/users"
             label="Nuevos este mes"
@@ -238,8 +243,8 @@ export default async function AdminDashboardPage() {
             href="/admin/campaigns"
             label="Campañas activas"
             value={activeCampaigns ?? 0}
-            sub={`de ${totalCampaigns ?? 0} totales en la plataforma`}
-            color="#7dd3c8"
+            sub={`de ${totalCampaigns ?? 0} totales`}
+            color="#3b82f6"
             Icon={Megaphone}
             delay={200}
           />
@@ -247,35 +252,31 @@ export default async function AdminDashboardPage() {
             href="/admin/ai-usage"
             label="Requests de IA"
             value={aiRequests ?? 0}
-            sub={`~$${aiCost} costo estimado`}
-            color="#4db6a9"
+            sub={`~$${aiCost} costo`}
+            color="#60a5fa"
             Icon={Sparkles}
             delay={300}
           />
-        </div>
-
-        {/* ── Secondary metrics row ────────────────────────────────────── */}
-        <div className="grid grid-cols-2 gap-4 mb-8">
           <MetricBand
             label="MRR estimado"
             value={`$${mrr.toLocaleString()}`}
-            sub="Basado en distribución de planes actuales"
-            color="#60a5fa"
+            sub="Distribución de planes"
+            color="#3b82f6"
             Icon={DollarSign}
             delay={400}
           />
           <MetricBand
-            label="Costo IA acumulado"
+            label="Costo IA"
             value={`$${aiCost}`}
-            sub="~$0.001 por request · Claude Haiku"
-            color="#7dd3c8"
+            sub="~$0.001/request"
+            color="#60a5fa"
             Icon={Sparkles}
             delay={500}
           />
         </div>
 
         {/* ── Two-column: Users + right sidebar ───────────────────────── */}
-        <div className="grid grid-cols-5 gap-6">
+        <div className="grid grid-cols-5 gap-4">
 
           {/* Recent users table */}
           <div className="col-span-3">
@@ -337,7 +338,7 @@ export default async function AdminDashboardPage() {
           </div>
 
           {/* Right column */}
-          <div className="col-span-2 flex flex-col gap-4">
+          <div className="col-span-2 flex flex-col gap-3">
 
             {/* Recent campaigns */}
             <SectionCard title="Campañas recientes" accentColor="#3b82f6" delay={700}>
