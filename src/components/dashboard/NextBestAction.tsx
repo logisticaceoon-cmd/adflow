@@ -50,8 +50,8 @@ export default function NextBestAction({ primaryAction, secondaryActions }: Prop
 
   return (
     <div className="card module-enter module-enter-2" style={{
-      padding: 24,
-      marginBottom: 32,
+      padding: 20,
+      marginBottom: 16,
     }}>
       <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
         {/* Icon inside a colored soft circle */}

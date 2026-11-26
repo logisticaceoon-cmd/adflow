@@ -222,14 +222,12 @@ export default async function DashboardPage() {
     <>
       <OnboardingWizard show={showOnboarding} />
 
-      {/* Sync control */}
-      <div className="flex justify-end mb-4 dash-anim-1">
-        <SyncButton variant="full" />
-      </div>
-
-      {/* ═══ BLOQUE 1 — HERO: Bienvenida + Nivel + Progress ═══ */}
-      <div className="module-enter module-enter-1">
+      {/* ═══ BLOQUE 1 — HERO: Bienvenida + Sync ═══ */}
+      <div className="module-enter module-enter-1" style={{ position: 'relative' }}>
         <HeroLevel fullName={fullName} />
+        <div style={{ position: 'absolute', top: 24, right: 28 }}>
+          <SyncButton variant="full" />
+        </div>
       </div>
 
       {/* ═══ BLOQUE 2 — SIGUIENTE ACCIÓN ═══ */}

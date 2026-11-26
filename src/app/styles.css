@@ -69,8 +69,8 @@
   --ds-card-border:       rgba(255, 255, 255, 0.08);
   --ds-card-border-hover: rgba(255, 255, 255, 0.16);
   --ds-card-blur:         24px;
-  --ds-card-radius:       20px;
-  --ds-card-radius-sm:    14px;
+  --ds-card-radius:       16px;
+  --ds-card-radius-sm:    12px;
   --ds-card-highlight:    rgba(255, 255, 255, 0.12);
 
   /* Gradient border colors (top → bottom fade) */
@@ -1307,7 +1307,7 @@
   .dashboard-content {
     max-width: 100%;
     margin: 0;
-    padding: var(--ds-space-xl) var(--ds-space-2xl);
+    padding: var(--ds-space-lg) var(--ds-space-lg);
     overflow-x: hidden;
     animation: dashboardContentFade 300ms ease-out;
     position: relative;

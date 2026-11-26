@@ -76,7 +76,7 @@ const STEPS: StepDef[] = [
 export default function FunnelExplained({ events }: Props) {
   if (!events) {
     return (
-      <div className="card" style={{ padding: 24, marginBottom: 32 }}>
+      <div className="card" style={{ padding: 20, marginBottom: 16 }}>
         <h2 style={{
           fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 600,
           color: 'var(--ds-text-primary)', letterSpacing: '-0.01em', marginBottom: 4,
@@ -100,7 +100,7 @@ export default function FunnelExplained({ events }: Props) {
   const max = Math.max(...values, 1)
 
   return (
-    <div className="card" style={{ padding: 24, marginBottom: 32 }}>
+    <div className="card" style={{ padding: 20, marginBottom: 16 }}>
       <div style={{ marginBottom: 20 }}>
         <h2 style={{
           fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 600,

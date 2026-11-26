@@ -50,8 +50,8 @@ function Kpi({ label, value, trend, Icon, iconColor, iconSoftBg, iconSoftBorder,
         : 'var(--ds-text-muted)'
 
   return (
-    <div className="card" style={{ padding: 16 }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+    <div className="card" style={{ padding: 14 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
         <p style={{
           fontSize: 10, fontWeight: 700, letterSpacing: '0.10em',
           textTransform: 'uppercase', color: 'var(--ds-text-label)',
@@ -59,18 +59,18 @@ function Kpi({ label, value, trend, Icon, iconColor, iconSoftBg, iconSoftBorder,
           {label}
         </p>
         <div style={{
-          width: 28, height: 28, borderRadius: 8,
+          width: 26, height: 26, borderRadius: 7,
           background: iconSoftBg || 'var(--ds-color-primary-soft)',
           border: `1px solid ${iconSoftBorder || 'var(--ds-color-primary-border)'}`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           flexShrink: 0,
         }}>
-          <Icon size={13} style={{ color: iconColor || 'var(--ds-color-primary)', opacity: 0.85 }} strokeWidth={2} />
+          <Icon size={12} style={{ color: iconColor || 'var(--ds-color-primary)', opacity: 0.85 }} strokeWidth={2} />
         </div>
       </div>
       <p style={{
         fontFamily: 'var(--font-display), Space Grotesk, sans-serif',
-        fontSize: 24, fontWeight: 600,
+        fontSize: 22, fontWeight: 600,
         color: STATUS_VALUE_COLOR[valueStatus],
         letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 4,
       }}>
@@ -101,7 +101,7 @@ export default function MonthSummary(p: Props) {
   const cur = p.currency || '$'
 
   return (
-    <div style={{ marginBottom: 40 }}>
+    <div style={{ marginBottom: 16 }}>
       <SectionHeader
         title="Métricas del mes"
         subtitle="Últimos 30 días — solo negocio"
@@ -109,8 +109,8 @@ export default function MonthSummary(p: Props) {
 
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-        gap: 'var(--ds-space-md)',
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        gap: 12,
       }}>
         <Kpi label="Inversión"    value={`${cur}${p.totalSpend.toFixed(0)}`}    trend={p.trendSpend}   Icon={DollarSign}
              iconColor="var(--ds-color-primary)" iconSoftBg="var(--ds-color-primary-soft)"  iconSoftBorder="var(--ds-color-primary-border)" />
