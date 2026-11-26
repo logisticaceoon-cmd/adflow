@@ -98,7 +98,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
   const budgetEffic   = budgetPlanned > 0 ? ((report?.total_spend ?? 0) / budgetPlanned) * 100 : 0
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div>
       {/* ── SECTION A: HERO ───────────────────────────────────────────── */}
       <div className="card module-enter module-enter-1" style={{
         position: 'relative',

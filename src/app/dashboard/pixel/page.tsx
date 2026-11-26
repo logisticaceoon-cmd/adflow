@@ -61,8 +61,6 @@ const LEVEL_NAMES = ['Sin Data', 'Explorador', 'Aprendiz', 'Estratega', 'Vendedo
 
 export default function PixelDashboardPage() {
   const [pa, setPa] = useState<PixelAnalysisRow | null>(null)
-  const [campaignsCount, setCampaignsCount] = useState(0)
-  const [hasAnyProfitable, setHasAnyProfitable] = useState(false)
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [hasPixel, setHasPixel] = useState(true)
@@ -72,17 +70,12 @@ export default function PixelDashboardPage() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { setLoading(false); return }
 
-    const [{ data: biz }, { data: row }, { data: camps }] = await Promise.all([
+    const [{ data: biz }, { data: row }] = await Promise.all([
       supabase.from('business_profiles').select('pixel_id').eq('user_id', user.id).maybeSingle(),
       supabase.from('pixel_analysis').select('*').eq('user_id', user.id).maybeSingle(),
-      supabase.from('campaigns').select('metrics').eq('user_id', user.id),
     ])
     if (!biz?.pixel_id) setHasPixel(false)
     if (row) setPa(row as PixelAnalysisRow)
-    if (camps) {
-      setCampaignsCount(camps.length)
-      setHasAnyProfitable(camps.some((c: any) => (c.metrics?.roas ?? 0) >= 2))
-    }
     setLoading(false)
   }
 

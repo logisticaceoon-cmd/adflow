@@ -61,7 +61,7 @@ export default async function ReportsHubPage() {
     ? Math.round(((currentReport.avg_roas - prev.avg_roas) / prev.avg_roas) * 100) : 0
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div>
       {/* ── SECTION A: HERO ───────────────────────────────────────────── */}
       <div className="card module-enter module-enter-1" style={{
         position: 'relative',
