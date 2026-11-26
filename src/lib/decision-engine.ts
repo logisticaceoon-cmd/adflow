@@ -323,7 +323,7 @@ export function generateStrategicDecisions(input: DecisionInput): StrategicDecis
       reason: 'Las automatizaciones esperan tu decisión para ejecutarse.',
       priority: 'important',
       impact: 'medium',
-      cta: { label: 'Ver automatizaciones →', href: '/dashboard/automation' },
+      cta: { label: 'Ver campañas →', href: '/dashboard/campaigns' },
       icon: '⚡',
     })
   }

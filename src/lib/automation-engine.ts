@@ -479,7 +479,7 @@ export async function evaluateAutomationRules(userId: string): Promise<Automatio
               title: `💡 Sugerencia: ${rule.name}`,
               body: `"${campaign.name}" cumple las condiciones. Revisá y aprobá la acción.`,
               severity: 'info',
-              actionUrl: '/dashboard/automation',
+              actionUrl: '/dashboard/campaigns',
             })
           } catch { /* ignore */ }
 

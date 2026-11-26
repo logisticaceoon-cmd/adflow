@@ -317,7 +317,7 @@ export async function syncUserMetrics(
           title: 'Métricas sincronizadas',
           body: `Se sincronizaron ${campaignsSynced} campañas y ${adsetsSynced} ad sets`,
           severity: 'success',
-          actionUrl: '/dashboard/phases',
+          actionUrl: '/dashboard/reports',
         })
       }
     } catch (err) {

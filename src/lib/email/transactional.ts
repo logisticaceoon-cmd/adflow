@@ -74,7 +74,7 @@ export function sendCreditsWarningEmail(
        ${agotado
          ? 'Para seguir generando campañas con IA necesitás más créditos.'
          : 'Cuando llegues al 100% no vas a poder generar nuevas campañas hasta el próximo reinicio o hasta mejorar tu plan.'}</p>`,
-      { label: 'Ver planes', url: `${APP_URL}/dashboard/billing` },
+      { label: 'Ver planes', url: `${APP_URL}/dashboard/settings` },
     ),
   )
 }

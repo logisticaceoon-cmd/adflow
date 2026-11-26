@@ -165,7 +165,7 @@ export default function CreateCampaignPage() {
       <NoCreditsModal
         open={w.noCreditsModal}
         onClose={() => w.setNoCreditsModal(false)}
-        onUpgrade={() => w.router.push('/dashboard/billing')}
+        onUpgrade={() => w.router.push('/dashboard/settings')}
       />
     </div>
   )

@@ -742,12 +742,9 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
           <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff' }}>
             ⚡ Automatizaciones
           </h2>
-          <Link href="/dashboard/automation" style={{
-            fontSize: 12, fontWeight: 600, color: 'var(--ds-color-primary)',
-            textDecoration: 'none',
-          }}>
-            Gestionar →
-          </Link>
+          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--ds-text-muted)' }}>
+            Automático
+          </span>
         </div>
         <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 20 }}>
           Reglas que aplican a esta campaña y ejecuciones recientes
