@@ -1,6 +1,7 @@
 // src/app/dashboard/settings/page.tsx
 import { createClient } from '@/lib/supabase/server'
 import type { Profile, BusinessProfile } from '@/types'
+import { PLAN_CREDITS, PLAN_PRICE, PLAN_LABEL, PLAN_COLOR } from '@/lib/plans'
 import FacebookConnectButton from '@/components/dashboard/FacebookConnectButton'
 import SettingsProfileForm from '@/components/dashboard/SettingsProfileForm'
 import SetupChecklist, { type ChecklistItem } from '@/components/dashboard/settings/SetupChecklist'
@@ -88,6 +89,89 @@ export default async function SettingsPage() {
         profile={profile}
         userEmail={user!.email ?? ''}
       />
+
+      {/* 7. Plan y créditos */}
+      <div id="plan" className="card p-6 mb-5">
+        <h2 className="section-title mb-4">💳 Tu plan y créditos</h2>
+
+        {(() => {
+          const plan = profile?.plan ?? 'free'
+          const label = PLAN_LABEL[plan] || 'Free'
+          const price = PLAN_PRICE[plan] || 'Gratis'
+          const color = PLAN_COLOR[plan] || 'var(--ds-color-primary)'
+          const totalCredits = profile?.credits_total ?? PLAN_CREDITS[plan] ?? 10
+          const usedCredits = profile?.credits_used ?? 0
+          const remaining = Math.max(0, totalCredits - usedCredits)
+          const pct = totalCredits > 0 ? (usedCredits / totalCredits) * 100 : 0
+
+          return (
+            <div>
+              {/* Plan actual */}
+              <div style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '16px 20px', borderRadius: 14, marginBottom: 16,
+                background: `${color}0d`,
+                border: `1px solid ${color}25`,
+              }}>
+                <div>
+                  <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'var(--ds-text-muted)', marginBottom: 4 }}>
+                    Plan actual
+                  </p>
+                  <p style={{ fontSize: 20, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>
+                    {label} <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--ds-text-secondary)' }}>· {price}</span>
+                  </p>
+                </div>
+                <div style={{
+                  padding: '6px 14px', borderRadius: 99,
+                  background: `${color}1a`, color, fontSize: 11, fontWeight: 700,
+                  border: `1px solid ${color}40`,
+                }}>
+                  Plan activo ✓
+                </div>
+              </div>
+
+              {/* Créditos */}
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
+                  <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)' }}>
+                    Créditos IA usados
+                  </p>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: remaining === 0 ? 'var(--ds-color-danger)' : '#fff' }}>
+                    {usedCredits} / {totalCredits}
+                  </p>
+                </div>
+                <div className="progress-bar" style={{ height: 8 }}>
+                  <div
+                    className="progress-bar-fill"
+                    style={{
+                      width: `${Math.min(100, pct)}%`,
+                      background: remaining === 0 ? '#ef4444' : pct >= 80 ? '#f59e0b' : 'var(--ds-color-primary)',
+                    }}
+                  />
+                </div>
+                <p style={{ fontSize: 11, color: 'var(--ds-text-muted)', marginTop: 6 }}>
+                  {remaining > 0
+                    ? `Te quedan ${remaining} créditos este período.`
+                    : 'Sin créditos. Mejorá tu plan para seguir generando con IA.'}
+                </p>
+              </div>
+
+              {/* CTA mejorar plan */}
+              {plan !== 'agency' && (
+                <a
+                  href="https://wa.me/5491162311970?text=Quiero+mejorar+mi+plan+AdFlow"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}
+                >
+                  Mejorar plan →
+                </a>
+              )}
+            </div>
+          )
+        })()}
+      </div>
     </div>
   )
 }

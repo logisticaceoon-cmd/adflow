@@ -85,8 +85,12 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
         try {
           const parsed = JSON.parse(data.adAccountsError)
           if (parsed.code === 190) { setTokenExpired(true); return }
+          if (parsed.code === 100 || parsed.type === 'OAuthException') {
+            setBaseError('Tu token de Facebook no tiene permisos para acceder a las cuentas publicitarias. Intentá reconectar tu cuenta.')
+            return
+          }
         } catch { /* not JSON, show as-is */ }
-        setBaseError(`Error al cargar cuentas publicitarias: ${data.adAccountsError}`)
+        setBaseError('No pudimos cargar tus cuentas publicitarias. Intentá reconectar Facebook o contactá soporte.')
       }
 
       // Surface igDebugError
@@ -122,8 +126,12 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
         try {
           const parsed = JSON.parse(data.adAccountsError)
           if (parsed.code === 190) { setTokenExpired(true); return }
+          if (parsed.code === 100 || parsed.type === 'OAuthException') {
+            setBaseError('Tu token no tiene permisos para este Business Portfolio. Probá reconectar Facebook.')
+            return
+          }
         } catch { /* not JSON */ }
-        setBaseError(`Meta API: ${data.adAccountsError}`)
+        setBaseError('Error al cargar las cuentas de este portfolio. Intentá con otro o reconectá Facebook.')
         return
       }
       setAdAccounts(data.adAccounts || [])
