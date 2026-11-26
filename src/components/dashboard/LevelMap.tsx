@@ -163,7 +163,7 @@ export default function LevelMap({ currentLevel }: Props) {
               </p>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                 {lv.unlocks.map((u, idx) => (
-                  <li key={idx} style={{ fontSize: 12, color: '#a0a8c0', display: 'flex', gap: 6, marginBottom: 2 }}>
+                  <li key={idx} style={{ fontSize: 12, color: 'rgba(255,255,255,0.50)', display: 'flex', gap: 6, marginBottom: 2 }}>
                     <span style={{ color: lv.color }}>→</span> {u}
                   </li>
                 ))}

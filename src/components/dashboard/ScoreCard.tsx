@@ -73,7 +73,7 @@ export default function ScoreCard({ totalScore, breakdown, monthStars }: Props) 
               return (
                 <div key={b.label}>
                   <div className="flex items-center justify-between mb-1">
-                    <span style={{ fontSize: 11, color: '#a0a8c0' }}>{b.label}</span>
+                    <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.50)' }}>{b.label}</span>
                     <span style={{ fontSize: 11, fontWeight: 700, color: b.color }}>+{Math.round(b.points)} pts</span>
                   </div>
                   <div className="progress-bar" style={{ height: 6 }}>

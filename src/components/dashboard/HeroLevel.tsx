@@ -51,7 +51,6 @@ export default function HeroLevel(p: Props) {
       position: 'relative',
       marginBottom: 8,
       padding: '36px 40px',
-      overflow: 'hidden',
     }}>
       {/* ── Top row: greeting (left) + KPIs strip (right) ─────────────── */}
       <div style={{

@@ -26,7 +26,7 @@ export default function LevelProgress({
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <span style={{ fontSize: 11, color: '#a0a8c0' }}>
+        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.50)' }}>
           {current.toLocaleString()} de {required.toLocaleString()} <b style={{ color: '#fff' }}>{metric}</b> para nivel {nextLevel}
         </span>
         <span style={{ fontSize: 11, fontWeight: 700, color: nextColor }}>{pct}%</span>

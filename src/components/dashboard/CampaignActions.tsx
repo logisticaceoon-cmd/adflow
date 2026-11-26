@@ -234,7 +234,7 @@ export default function CampaignActions({
           {status === 'active' ? 'Activa' : status === 'paused' ? 'Pausada' : status === 'draft' ? 'Borrador' : status}
         </span>
         <span style={{ color: 'rgba(255,255,255,0.15)' }}>·</span>
-        <span>Última sync: <b style={{ color: '#a0a8c0' }}>{formatRelative(lastSync)}</b></span>
+        <span>Última sync: <b style={{ color: 'rgba(255,255,255,0.50)' }}>{formatRelative(lastSync)}</b></span>
       </div>
 
       {/* ── Confirm modals ── */}

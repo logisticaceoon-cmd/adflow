@@ -86,7 +86,7 @@ export default function ConfirmModal({
             cursor: loading ? 'not-allowed' : 'pointer',
             opacity: loading ? 0.3 : 1,
           }}>
-          <X size={14} style={{ color: '#a0a8c0' }} />
+          <X size={14} style={{ color: 'rgba(255,255,255,0.50)' }} />
         </button>
 
         {icon && (
@@ -119,7 +119,7 @@ export default function ConfirmModal({
               padding: '10px 18px', borderRadius: 10,
               background: 'rgba(255,255,255,0.04)',
               border: '1px solid rgba(255,255,255,0.10)',
-              color: '#a0a8c0', fontSize: 13, fontWeight: 600,
+              color: 'rgba(255,255,255,0.50)', fontSize: 13, fontWeight: 600,
               cursor: loading ? 'not-allowed' : 'pointer',
             }}>
             {cancelLabel}

@@ -35,12 +35,12 @@ const PRIORITY_CONFIG: Record<PrimaryAction['priority'], {
     softBorder: 'var(--ds-color-primary-border)',
   },
   opportunity: {
-    border: 'var(--ds-color-success)',
+    border: 'var(--ds-color-primary)',
     overline: 'Oportunidad',
-    overlineColor: 'var(--ds-color-success)',
-    glowColor: 'rgba(52, 211, 153, 0.12)',
-    softBg: 'var(--ds-color-success-soft)',
-    softBorder: 'var(--ds-color-success-border)',
+    overlineColor: 'var(--ds-color-primary)',
+    glowColor: 'rgba(37, 99, 235, 0.12)',
+    softBg: 'var(--ds-color-primary-soft)',
+    softBorder: 'var(--ds-color-primary-border)',
   },
 }
 
