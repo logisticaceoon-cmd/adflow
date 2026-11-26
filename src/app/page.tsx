@@ -231,22 +231,22 @@ function HeroSection() {
       <div className="relative z-10 max-w-5xl mx-auto w-full">
         <div className="badge-glow mb-7">
           <Sparkles className="w-3.5 h-3.5" />
-          ✨ Potenciado por IA — Claude + Meta API
+          Meta Ads con IA · Próximamente Google Ads y TikTok Ads
         </div>
 
         <h1 className="font-display font-extrabold leading-none mb-6 px-2"
           style={{ fontSize: 'clamp(34px, 6vw, 82px)', letterSpacing: '-2px' }}>
-          Crea campañas de{' '}
-          <span className="gradient-text-hero">Facebook Ads</span>
-          {' '}que convierten,{' '}
+          Lanzá tus{' '}
+          <span className="gradient-text-hero">Meta Ads</span>
+          {' '}y vendé más,{' '}
           <span style={{ background: 'linear-gradient(135deg,#93c5fd,#c4b5fd)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
             en minutos
           </span>
         </h1>
 
         <p className="text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed px-2" style={{ color: 'rgba(255,255,255,0.55)' }}>
-          Describí tu producto, conectá tu cuenta de Meta y dejá que la IA genere copies, segmentaciones y publique por vos.
-          Sin agencias, sin costos exorbitantes.
+          Conectá tu cuenta de Meta, describí qué vendés y la IA crea copies, audiencias y publica tu campaña.
+          Para e-commerce y ventas por WhatsApp. Sin agencias.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-16 px-4">
@@ -278,7 +278,7 @@ function HeroSection() {
               <div className="w-3 h-3 rounded-full" style={{ background: '#ff5f57', boxShadow: '0 0 6px rgba(255,95,87,0.5)' }} />
               <div className="w-3 h-3 rounded-full" style={{ background: '#ffbd2e', boxShadow: '0 0 6px rgba(255,189,46,0.4)' }} />
               <div className="w-3 h-3 rounded-full" style={{ background: '#28c840', boxShadow: '0 0 6px rgba(40,200,64,0.4)' }} />
-              <div className="flex-1 mx-4 py-1.5 px-3 rounded-lg text-xs text-center" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.06)' }}>app.adflow.ai/dashboard</div>
+              <div className="flex-1 mx-4 py-1.5 px-3 rounded-lg text-xs text-center" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.06)' }}>adflow-brown.vercel.app</div>
             </div>
             <div className="p-5 grid grid-cols-4 gap-4">
               <div className="flex flex-col gap-1.5">
@@ -321,7 +321,7 @@ function HeroSection() {
 
         {/* Mobile stats */}
         <div className="sm:hidden flex justify-center gap-8 mt-4">
-          {[{ num: '4.2x', label: 'ROAS', color: '#3b82f6' }, { num: '8 min', label: 'Primera campaña', color: 'var(--ds-color-primary)' }, { num: '+500', label: 'Empresas', color: '#60a5fa' }].map(({ num, label, color }) => (
+          {[{ num: '5-15x', label: 'ROAS', color: '#3b82f6' }, { num: '8 min', label: 'Primera campaña', color: 'var(--ds-color-primary)' }, { num: '84+', label: 'Emprendedores', color: '#60a5fa' }].map(({ num, label, color }) => (
             <div key={label} className="text-center">
               <div className="font-display font-extrabold text-2xl" style={{ color }}>{num}</div>
               <div className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.55)' }}>{label}</div>
@@ -339,20 +339,64 @@ function HeroSection() {
   )
 }
 
+// ─── Animated counter hook ───────────────────────────────────────────────────
+function useCounter(target: number, duration = 2000) {
+  const [count, setCount] = useState(0)
+  const [started, setStarted] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { setStarted(true); obs.disconnect() }
+    }, { threshold: 0.3 })
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [])
+  useEffect(() => {
+    if (!started) return
+    const start = performance.now()
+    const step = (now: number) => {
+      const progress = Math.min((now - start) / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3) // ease-out cubic
+      setCount(Math.round(eased * target))
+      if (progress < 1) requestAnimationFrame(step)
+    }
+    requestAnimationFrame(step)
+  }, [started, target, duration])
+  return { ref, count }
+}
+
 // ─── 2. Trust bar (OSCURO vibrante) ───────────────────────────────────────────
 function TrustSection() {
-  const { ref, visible } = useFadeIn()
+  const { ref: fadeRef, visible } = useFadeIn()
+  const { ref: counterRef, count } = useCounter(84, 2200)
   return (
     <section className="relative overflow-hidden" style={{ background: '#0f0f1f' }}>
       <div className="absolute inset-0 pointer-events-none">
-        <Orb color="var(--ds-color-primary)" size={400} top="-30%" left="-5%" opacity={0.18} blur={80} />
-        <Orb color="#60a5fa" size={350} top="-20%" right="-5%" opacity={0.15} blur={80} />
+        <Orb color="var(--ds-color-primary)" size={500} top="-30%" left="30%" opacity={0.12} blur={90} />
       </div>
-      <div ref={ref} className={`relative z-10 max-w-5xl mx-auto px-5 sm:px-8 py-14 text-center ${fi(visible)}`}>
-        <p className="text-xs font-bold tracking-widest uppercase mb-9" style={{ color: 'rgba(255,255,255,0.45)' }}>
-          Usado por agencias en más de 10 países · Integrado con
-        </p>
-        <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14">
+      <div ref={fadeRef} className={`relative z-10 max-w-5xl mx-auto px-5 sm:px-8 py-16 ${fi(visible)}`}>
+        {/* Big counter — SaleAds style */}
+        <div ref={counterRef} className="text-center mb-10">
+          <div className="font-display font-black" style={{
+            fontSize: 'clamp(72px, 12vw, 140px)',
+            letterSpacing: '-0.04em',
+            lineHeight: 1,
+            background: 'linear-gradient(180deg, var(--ds-color-primary) 0%, rgba(37,99,235,0.35) 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}>
+            {count}+
+          </div>
+          <p className="text-sm font-bold tracking-widest uppercase mt-2" style={{ color: 'rgba(255,255,255,0.40)' }}>
+            Emprendedores usan AdFlow
+          </p>
+        </div>
+
+        {/* Integration logos + stats */}
+        <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
           <div className="flex items-center gap-2.5 transition-opacity duration-200" style={{ opacity: 0.65 }}
             onMouseEnter={e => (e.currentTarget.style.opacity = '1')} onMouseLeave={e => (e.currentTarget.style.opacity = '0.65')}>
             <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-base"
@@ -376,9 +420,9 @@ function TrustSection() {
             <span className="font-semibold text-lg text-white">WhatsApp</span>
           </div>
 
-          <div className="hidden md:block w-px h-8" style={{ background: 'transparent' }} />
+          <div className="hidden md:block w-px h-8" style={{ background: 'rgba(255,255,255,0.08)' }} />
 
-          {[{ num: '+340%', label: 'ROI promedio' }, { num: '8 min', label: 'Primera campaña' }, { num: '+500', label: 'Empresas activas' }].map(({ num, label }) => (
+          {[{ num: '5-15x', label: 'ROAS promedio' }, { num: '8 min', label: 'Primera campaña' }].map(({ num, label }) => (
             <div key={label} className="text-center">
               <div className="font-bold text-xl" style={gradientText}>{num}</div>
               <div className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>{label}</div>
@@ -405,19 +449,19 @@ function ProblemSection() {
         <div className="text-center mb-14">
           <Badge color="var(--ds-color-primary)">El problema</Badge>
           <h2 className="font-display font-extrabold text-fluid-3xl mb-5 text-white" style={{ letterSpacing: '-1.5px' }}>
-            ¿Cuánto tiempo perdés creando{' '}
-            <span style={gradientText}>ads manualmente?</span>
+            Pasás horas armando campañas{' '}
+            <span style={gradientText}>sin saber si van a funcionar</span>
           </h2>
           <p className="text-base sm:text-lg max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.55)' }}>
-            La mayoría de los negocios pierde más de 8 horas semanales en publicidad sin ver resultados consistentes.
+            Vendés por e-commerce o WhatsApp y sabés que necesitás ads, pero no sabés qué estrategia usar, qué escribir ni cuánto invertir.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
           {[
-            { icon: Clock, title: 'Demasiado tiempo', desc: 'Escribís copies durante horas que terminan sin convertir, sin saber por qué.', color: 'var(--ds-color-primary)' },
-            { icon: DollarSign, title: 'Costos de agencia', desc: 'Pagás fortunas a agencias que no conocen tu negocio y no rinden cuentas.', color: '#f59e0b' },
-            { icon: BarChart3, title: 'Sin visibilidad', desc: 'No sabés qué campañas fallan hasta que ya gastaste todo tu presupuesto.', color: '#60a5fa' },
+            { icon: Clock, title: 'Horas para armar una campaña', desc: 'Pensás el copy, elegís la audiencia, ajustás el presupuesto… y cuando publicás ya pasaron 3 horas y no sabés si va a funcionar.', color: 'var(--ds-color-primary)' },
+            { icon: Target, title: 'No sabés qué estrategia usar', desc: '¿TOFU? ¿Retargeting? ¿Lookalike? Hay decenas de estrategias y nadie te dice cuál es la correcta para tu negocio ahora.', color: '#f59e0b' },
+            { icon: DollarSign, title: 'Gastás sin ver resultados', desc: 'Invertís en Meta Ads pero los leads no llegan, nadie escribe al WhatsApp y no sabés por qué. El presupuesto se evapora.', color: '#60a5fa' },
           ].map(({ icon: Icon, title, desc, color }) => (
             <div key={title} className="feature-card p-6">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform duration-200 hover:scale-110"
@@ -701,7 +745,7 @@ function DemoSection() {
             <div className="w-3 h-3 rounded-full" style={{ background: '#28c840' }} />
             <div className="flex-1 mx-4 py-1 px-3 rounded text-xs text-center"
               style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.08)' }}>
-              app.adflow.ai/create
+              adflow-brown.vercel.app/create
             </div>
           </div>
           <div className="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8" style={{ background: 'rgba(255,255,255,0.02)' }}>
@@ -745,9 +789,9 @@ function DemoSection() {
 function TestimonialsSection() {
   const { ref, visible } = useFadeIn()
   const testimonials = [
-    { name: 'Valentina R.', role: 'Directora de Marketing · Agencia Nube', text: 'Pasamos de gastar 12 horas semanales en ads a menos de 2. Los copies de la IA superan los nuestros. Nuestro ROAS mejoró un 280% en el primer mes.', result: 'ROAS 4.2x', avatar: 'VR', color: 'var(--ds-color-primary)' },
-    { name: 'Carlos M.', role: 'Emprendedor · E-commerce de ropa', text: 'Probé muchas herramientas pero ninguna tan completa. En mi primera semana ya tenía campaña activa con resultados reales. Lo recomiendo al 100%.', result: '+180% ventas', avatar: 'CM', color: '#60a5fa' },
-    { name: 'Lucía F.', role: 'CEO · Academia Online', text: 'El A/B testing automático es increíble. AdFlow descubrió copies que yo jamás hubiera probado y triplicó mis conversiones sin aumentar el presupuesto.', result: '3x conversiones', avatar: 'LF', color: '#2563eb' },
+    { name: 'Mariana G.', role: 'Tienda online de accesorios · Colombia', text: 'Antes tardaba toda la tarde armando una campaña. Con AdFlow en 10 minutos ya tengo todo: copies, audiencia y publicada. Me cambió la vida.', result: 'ROAS 5.8x', avatar: 'MG', color: 'var(--ds-color-primary)' },
+    { name: 'Diego P.', role: 'Vende por WhatsApp · Suplementos · Argentina', text: 'Yo no sabía nada de Meta Ads. Conecté mi cuenta, le dije qué vendo y la IA hizo todo. A la semana ya tenía gente escribiéndome al WhatsApp.', result: '+23 leads/semana', avatar: 'DP', color: '#60a5fa' },
+    { name: 'Andrea S.', role: 'E-commerce de ropa · México', text: 'Pagaba $800 USD al mes a una agencia y el ROAS era 1.5x. Con AdFlow gasto $49 y mi ROAS subió a 7x. No tiene comparación.', result: 'ROAS 7.1x', avatar: 'AS', color: '#2563eb' },
   ]
 
   return (
