@@ -15,31 +15,7 @@ import { countPendingExecutions } from '@/lib/automation-engine'
 
 // AI_TIPS removed — was static array, not actionable. Tips belong in contextual help.
 
-const LEVEL_NAMES = ['Sin Data', 'Explorador', 'Aprendiz', 'Estratega', 'Vendedor', 'Profesional', 'Escalador', 'Maestro', 'Imperio']
-const UNLOCK_TEASERS: Record<number, string> = {
-  0: 'búsqueda de intereses reales en Meta',
-  1: 'audiencias por intereses específicos',
-  2: 'retargeting de visitantes web (estrategia MOFU)',
-  3: 'retargeting de carrito abandonado',
-  4: 'retargeting de compradores y BOFU',
-  5: 'lookalike audiences inteligentes',
-  6: 'audiencias maestras y escalado avanzado',
-  7: 'expansión global a nuevas audiencias',
-}
-
-function nextLevelMetric(level: number, events: any) {
-  const map: Record<number, { current: number; required: number; label: string }> = {
-    0: { current: events?.PageView?.count_30d    ?? 0, required: 100,  label: 'PageView (30d)' },
-    1: { current: events?.PageView?.count_30d    ?? 0, required: 500,  label: 'PageView (30d)' },
-    2: { current: events?.ViewContent?.count_30d ?? 0, required: 1000, label: 'ViewContent (30d)' },
-    3: { current: events?.AddToCart?.count_30d   ?? 0, required: 100,  label: 'AddToCart (30d)' },
-    4: { current: events?.Purchase?.count_30d    ?? 0, required: 50,   label: 'Purchase (30d)' },
-    5: { current: events?.Purchase?.count_30d    ?? 0, required: 100,  label: 'Purchase (30d)' },
-    6: { current: events?.Purchase?.count_180d   ?? 0, required: 500,  label: 'Purchase (180d)' },
-    7: { current: events?.Purchase?.count_180d   ?? 0, required: 1000, label: 'Purchase (180d)' },
-  }
-  return map[level] || { current: 0, required: 0, label: '' }
-}
+// Level system removed — gamification eliminated from UI
 
 export default async function DashboardPage() {
   const supabase = createClient()
@@ -136,12 +112,6 @@ export default async function DashboardPage() {
   const trendRevenue = calcTrend(totalRevenue,     (prevMonthReport?.total_revenue     as number) || 0)
   const trendConv    = calcTrend(totalConversions, (prevMonthReport?.total_conversions as number) || 0)
   const trendRoas    = calcTrend(avgRoas,          (prevMonthReport?.avg_roas          as number) || 0)
-
-  // ── Pixel level + next milestone ───────────────────────────────────────
-  const level     = pixelAnalysis?.level ?? 0
-  const levelName = pixelAnalysis?.level_name ?? 'Sin Data'
-  const nextMetric = nextLevelMetric(level, events)
-  const nextLevel = Math.min(level + 1, 8)
 
   // ── Days remaining in the month ───────────────────────────────────────
   const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
@@ -259,18 +229,7 @@ export default async function DashboardPage() {
 
       {/* ═══ BLOQUE 1 — HERO: Bienvenida + Nivel + Progress ═══ */}
       <div className="module-enter module-enter-1">
-        <HeroLevel
-          fullName={fullName}
-          level={level}
-          levelName={levelName}
-          metricCurrent={nextMetric.current}
-          metricRequired={nextMetric.required}
-          metricLabel={nextMetric.label}
-          nextLevel={nextLevel}
-          nextLevelName={LEVEL_NAMES[nextLevel]}
-          unlockTeaser={UNLOCK_TEASERS[level] || 'nuevas estrategias y audiencias'}
-          hasPixel={!!pixelAnalysis}
-        />
+        <HeroLevel fullName={fullName} />
       </div>
 
       {/* ═══ BLOQUE 2 — SIGUIENTE ACCIÓN ═══ */}
