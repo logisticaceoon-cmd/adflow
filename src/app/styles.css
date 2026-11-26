@@ -1305,9 +1305,9 @@
      between the page background (Layer 1+2) and the cards (Layer 4).
   ───────────────────────────────────────────────────────────── */
   .dashboard-content {
-    max-width: 1240px;
-    margin: 0 auto;
-    padding: var(--ds-space-2xl) var(--ds-space-xl);
+    max-width: 100%;
+    margin: 0;
+    padding: var(--ds-space-xl) var(--ds-space-2xl);
     overflow-x: hidden;
     animation: dashboardContentFade 300ms ease-out;
     position: relative;
@@ -1317,33 +1317,14 @@
   .dashboard-panel {
     position: relative;
     overflow: hidden;
-    background: rgba(8, 14, 28, 0.28);
-    border: 1px solid rgba(37, 99, 235, 0.10);
-    border-radius: 22px;
-    backdrop-filter: blur(24px) saturate(1.3);
-    -webkit-backdrop-filter: blur(24px) saturate(1.3);
-    padding: var(--ds-space-2xl);
-    box-shadow:
-      0 8px 32px rgba(0, 0, 0, 0.25),
-      0 0 1px rgba(37, 99, 235, 0.06),
-      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
   }
-  .dashboard-panel::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 6%; right: 6%; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.25), transparent);
-    pointer-events: none;
-    z-index: 2;
-  }
+  .dashboard-panel::before,
   .dashboard-panel::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 40%;
-    background: linear-gradient(165deg, rgba(255, 255, 255, 0.04) 0%, transparent 50%);
-    pointer-events: none;
-    border-radius: inherit;
-    z-index: 1;
+    display: none;
   }
   /* Children handle their own margin-bottom; the panel just contains them. */
 

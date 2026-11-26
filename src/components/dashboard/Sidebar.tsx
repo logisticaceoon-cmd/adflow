@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import {
   LayoutDashboard, Megaphone, Sparkles, Images,
   BarChart2, Settings, HelpCircle, LogOut, Zap, Shield, CreditCard,
-  Activity, DollarSign, Brain, Cpu, FlaskConical,
+  Activity, DollarSign,
 } from 'lucide-react'
 import type { User } from '@supabase/supabase-js'
 import type { Profile } from '@/types'
@@ -56,7 +56,7 @@ export default function Sidebar({ user, profile }: Props) {
   const [campaignCount,  setCampaignCount]  = useState<number>(0)
   const [hasPixel,       setHasPixel]       = useState<boolean>(false)
   const [onboarding,     setOnboarding]     = useState<{ isComplete: boolean; completedSteps: number; totalSteps: number; completionScore: number } | null>(null)
-  const [pendingAutomations, setPendingAutomations] = useState<number>(0)
+  // pendingAutomations removed — Automation page eliminated
 
   useEffect(() => {
     let active = true
@@ -102,16 +102,6 @@ export default function Sidebar({ user, profile }: Props) {
             totalSteps: data.totalSteps,
             completionScore: data.completionScore,
           })
-        }
-      })
-      .catch(() => { /* ignore */ })
-
-    // Pending automation executions count
-    fetch('/api/automation/executions?status=pending')
-      .then(r => r.ok ? r.json() : null)
-      .then(data => {
-        if (active && data?.executions) {
-          setPendingAutomations(data.executions.length)
         }
       })
       .catch(() => { /* ignore */ })
@@ -170,20 +160,15 @@ export default function Sidebar({ user, profile }: Props) {
     { href: '/dashboard/create',    icon: Sparkles,        label: 'Crear campaña', badge: 'IA' },
     { href: '/dashboard/campaigns', icon: Megaphone,       label: 'Mis campañas', badge: campaignCount > 0 ? String(campaignCount) : undefined },
     { href: '/dashboard/creatives', icon: Images,          label: 'Creativos' },
-    { href: '/dashboard/labs',       icon: FlaskConical,   label: 'Labs', badge: 'Nuevo', badgeColor: 'var(--ds-color-primary)' },
   ]
 
   const managementItems: NavItem[] = [
     { href: '/dashboard/budget',     icon: DollarSign, label: 'Presupuesto' },
-    { href: '/dashboard/phases',     icon: BarChart2,  label: 'Fases' },
-    { href: '/dashboard/automation', icon: Cpu,        label: 'Automatización', badge: pendingAutomations > 0 ? String(pendingAutomations) : undefined, badgeColor: 'var(--ds-color-primary)' },
     { href: '/dashboard/reports',    icon: BarChart2,  label: 'Reportes' },
   ]
 
   const accountItems: NavItem[] = [
-    { href: '/dashboard/billing',  icon: CreditCard, label: 'Plan y créditos' },
     { href: '/dashboard/settings', icon: Settings,   label: 'Configuración' },
-    { href: '/dashboard/help',     icon: HelpCircle, label: 'Ayuda' },
   ]
 
   return (
@@ -403,7 +388,7 @@ export default function Sidebar({ user, profile }: Props) {
 
           {/* ── CREDITS WIDGET ── */}
           <div style={{ marginTop: 14, marginBottom: 4 }}>
-            <Link href="/dashboard/billing" onClick={close} style={{ textDecoration: 'none', display: 'block' }}>
+            <Link href="/dashboard/settings#plan" onClick={close} style={{ textDecoration: 'none', display: 'block' }}>
               <div style={{
                 borderRadius: 14,
                 padding: '14px 14px 12px',
@@ -538,6 +523,16 @@ export default function Sidebar({ user, profile }: Props) {
               Plan {planLabel}
             </p>
           </div>
+          <Link href="/dashboard/help" onClick={close} title="Ayuda" style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            width: 30, height: 30, borderRadius: 8, flexShrink: 0,
+            background: 'rgba(255,255,255,0.04)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            color: 'rgba(255,255,255,0.45)',
+            transition: 'all 0.2s',
+          }}>
+            <HelpCircle size={14} strokeWidth={1.75} />
+          </Link>
         </div>
       </aside>
     </>

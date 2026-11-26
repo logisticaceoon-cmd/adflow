@@ -6,11 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { RefreshCw } from 'lucide-react'
 import LevelBadge from '@/components/dashboard/LevelBadge'
 import LevelMap from '@/components/dashboard/LevelMap'
-import ScoreCard from '@/components/dashboard/ScoreCard'
 import FunnelExplained from '@/components/dashboard/FunnelExplained'
-import CapabilitiesCard from '@/components/dashboard/CapabilitiesCard'
-import AchievementsWall from '@/components/dashboard/AchievementsWall'
-import GrowthTimeline from '@/components/dashboard/GrowthTimeline'
 
 interface PixelEvents {
   PageView:         { count_7d: number; count_30d: number; count_180d: number }
@@ -140,24 +136,8 @@ export default function PixelDashboardPage() {
   else if (progressPct < 75) motivation = '¡Más de la mitad! El siguiente nivel está cerca.'
   else                       motivation = `🔥 ¡Casi! Falta muy poco para desbloquear ${LEVEL_NAMES[nextLevel]}!`
 
-  // Growth Score breakdown
-  const scoreLevel    = level * 100
-  const scoreTraffic  = Math.min(200, (events?.PageView.count_30d  ?? 0) / 5)
-  const scoreSales    = Math.min(150, (events?.Purchase.count_180d ?? 0) * 2)
-  const scoreCamps    = campaignsCount * 10
-  const totalScore    = Math.round(scoreLevel + scoreTraffic + scoreSales + scoreCamps)
-
-  // Monthly stars
-  const monthStars = [
-    { label: 'Crear una campaña este mes',          earned: campaignsCount > 0 },
-    { label: 'ROAS positivo en alguna campaña',     earned: hasAnyProfitable },
-    { label: 'Subir de nivel del pixel',            earned: false /* would need monthly delta */ },
-    { label: '100+ visitantes web',                 earned: (events?.PageView.count_30d ?? 0) >= 100 },
-    { label: 'Tener al menos una compra registrada', earned: (events?.Purchase.count_30d ?? 0) >= 1 },
-  ]
-
   return (
-    <div className="max-w-6xl mx-auto">
+    <div>
       {/* ── SECTION A: HERO ───────────────────────────────────────────── */}
       <div className="card module-enter module-enter-1" style={{
         position: 'relative',
@@ -216,17 +196,6 @@ export default function PixelDashboardPage() {
             {pa?.level_name}
           </h1>
 
-          <div className="ds-badge ds-badge--warning" style={{
-            marginBottom: 28,
-            padding: '8px 18px',
-            fontSize: 13,
-          }}>
-            <span style={{ fontSize: 14 }}>⭐</span>
-            <span style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontWeight: 700, letterSpacing: '0.02em' }}>
-              {totalScore.toLocaleString()} puntos de crecimiento
-            </span>
-          </div>
-
           {level < 8 && nextMetric.required > 0 && (
             <>
               <div className="progress-bar" style={{ height: 12, marginBottom: 14 }}>
@@ -258,42 +227,8 @@ export default function PixelDashboardPage() {
       {/* ── SECTION B: LEVEL MAP ──────────────────────────────────────── */}
       <div className="module-enter module-enter-2"><LevelMap currentLevel={level} /></div>
 
-      {/* ── SECTION C: SCORE CARD ─────────────────────────────────────── */}
-      <div className="module-enter module-enter-3">
-        <ScoreCard
-          totalScore={totalScore}
-          breakdown={[
-            { label: `Nivel ${level}`,    points: scoreLevel,   color: '#3b82f6' },
-            { label: 'Tráfico web',       points: scoreTraffic, color: '#9d90ff' },
-            { label: 'Compras (180d)',    points: scoreSales,   color: '#3b82f6' },
-            { label: `Campañas (${campaignsCount})`, points: scoreCamps, color: '#fbbf24' },
-          ]}
-          monthStars={monthStars}
-        />
-      </div>
-
-      {/* ── SECTION D: FUNNEL EXPLAINED ───────────────────────────────── */}
-      <div className="module-enter module-enter-4"><FunnelExplained events={events ?? null} /></div>
-
-      {/* ── SECTION E: CAPABILITIES ───────────────────────────────────── */}
-      <div className="module-enter module-enter-5"><CapabilitiesCard level={level} /></div>
-
-      {/* ── SECTION F: ACHIEVEMENTS WALL ──────────────────────────────── */}
-      <div className="module-enter module-enter-6"><AchievementsWall /></div>
-
-      {/* ── SECTION G: GROWTH TIMELINE ────────────────────────────────── */}
-      <div className="card module-enter module-enter-7" style={{ padding: 24, marginBottom: 32 }}>
-        <h2 style={{
-          fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 600,
-          color: 'var(--ds-text-primary)', letterSpacing: '-0.01em', marginBottom: 4,
-        }}>
-          Tu viaje de crecimiento
-        </h2>
-        <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', marginBottom: 18 }}>
-          Cada vez que subiste de nivel queda registrado acá
-        </p>
-        <GrowthTimeline />
-      </div>
+      {/* ── SECTION C: FUNNEL EXPLAINED ───────────────────────────────── */}
+      <div className="module-enter module-enter-3"><FunnelExplained events={events ?? null} /></div>
     </div>
   )
 }
