@@ -13,15 +13,7 @@ import { generateStrategicDecisions, type DecisionInput } from '@/lib/decision-e
 import { getDecisionMemory, saveDecision, detectCompletedActions } from '@/lib/memory-engine'
 import { countPendingExecutions } from '@/lib/automation-engine'
 
-const AI_TIPS = [
-  'Los anuncios con video generan 3x más engagement que las imágenes estáticas en Instagram.',
-  'El mejor horario para publicar en Argentina es entre 7-9 AM y 8-10 PM.',
-  'Usar emojis en el texto puede aumentar el CTR hasta un 25% en ciertos rubros.',
-  'Las audiencias de retargeting tienen 70% mayor tasa de conversión que las de prospección.',
-  'Un ROAS de 3x o más indica una campaña rentable para la mayoría de los negocios.',
-  'Los anuncios con precio explícito tienen mayor CTR y menor coste por lead calificado.',
-  'El Pixel tarda 7 días en optimizarse. No hagas cambios bruscos antes de ese período.',
-]
+// AI_TIPS removed — was static array, not actionable. Tips belong in contextual help.
 
 const LEVEL_NAMES = ['Sin Data', 'Explorador', 'Aprendiz', 'Estratega', 'Vendedor', 'Profesional', 'Escalador', 'Maestro', 'Imperio']
 const UNLOCK_TEASERS: Record<number, string> = {
@@ -156,13 +148,8 @@ export default async function DashboardPage() {
   const daysRemaining  = Math.max(0, lastDayOfMonth - now.getDate())
 
   const showOnboarding = !allCampaigns.length && !businessProfile?.selected_ad_account_id
-  const todayTip = AI_TIPS[new Date().getDay()]
   const fullName = profile?.full_name?.split(' ')[0] || 'crecedor'
   const currency = businessProfile?.currency === 'USD' ? '$' : (businessProfile?.currency || '$')
-
-  // ── Budget goal ────────────────────────────────────────────────────────
-  const budgetTotal = (monthlyBudget?.total_budget as number) || 0
-  const budgetPct   = budgetTotal > 0 ? Math.min(100, Math.round((totalSpend / budgetTotal) * 100)) : 0
 
   // ── Strategic decision engine ───────────────────────────────────────────
   const bestRoasCampaign = allCampaigns.reduce<{ name: string; roas: number; id: string } | undefined>((best, c) => {
@@ -227,7 +214,7 @@ export default async function DashboardPage() {
     worstRoasCampaign,
 
     hasBudget:   !!monthlyBudget,
-    budgetTotal,
+    budgetTotal: (monthlyBudget?.total_budget as number) || 0,
     budgetSpent,
 
     metaConnected: !!fbConnection?.access_token,
@@ -270,7 +257,7 @@ export default async function DashboardPage() {
         <SyncButton variant="full" />
       </div>
 
-      {/* ═══ BLOQUE 1 — HERO: Bienvenida + Estado + 4 KPIs ═══ */}
+      {/* ═══ BLOQUE 1 — HERO: Bienvenida + Nivel + Progress ═══ */}
       <div className="module-enter module-enter-1">
         <HeroLevel
           fullName={fullName}
@@ -282,10 +269,6 @@ export default async function DashboardPage() {
           nextLevel={nextLevel}
           nextLevelName={LEVEL_NAMES[nextLevel]}
           unlockTeaser={UNLOCK_TEASERS[level] || 'nuevas estrategias y audiencias'}
-          monthSpend={totalSpend}
-          monthSales={totalConversions}
-          monthRoas={avgRoas}
-          daysRemaining={daysRemaining}
           hasPixel={!!pixelAnalysis}
         />
       </div>
@@ -323,68 +306,7 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {/* ═══ BLOQUE 5 — TIP + OBJETIVO DEL MES ═══ */}
-      <div className="module-enter module-enter-5 grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Tip del día */}
-        <div className="card" style={{ padding: 'var(--ds-space-lg)' }}>
-          <div style={{
-            width: 36, height: 36, borderRadius: 10, marginBottom: 12,
-            background: 'var(--ds-color-primary-soft)',
-            border: '1px solid var(--ds-color-primary-border)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16,
-          }}>
-            💡
-          </div>
-          <p style={{
-            fontSize: 10, fontWeight: 600, color: 'var(--ds-color-primary)',
-            textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 6,
-          }}>
-            Tip del día
-          </p>
-          <p style={{ fontSize: 13, color: 'var(--ds-text-primary)', lineHeight: 1.6 }}>
-            {todayTip}
-          </p>
-        </div>
-
-        {/* Objetivo del mes */}
-        <div className="card" style={{ padding: 'var(--ds-space-lg)' }}>
-          <div style={{
-            width: 36, height: 36, borderRadius: 10, marginBottom: 12,
-            background: budgetTotal > 0 ? 'var(--ds-color-success-soft)' : 'var(--ds-color-primary-soft)',
-            border: `1px solid ${budgetTotal > 0 ? 'var(--ds-color-success-border)' : 'var(--ds-color-primary-border)'}`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16,
-          }}>
-            🎯
-          </div>
-          <p style={{
-            fontSize: 10, fontWeight: 600,
-            color: budgetTotal > 0 ? 'var(--ds-color-success)' : 'var(--ds-color-primary)',
-            textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 6,
-          }}>
-            Objetivo del mes
-          </p>
-          {budgetTotal > 0 ? (
-            <>
-              <p style={{ fontSize: 13, color: 'var(--ds-text-primary)', lineHeight: 1.6, marginBottom: 10 }}>
-                Presupuesto: <strong>{currency}{budgetTotal.toLocaleString()}</strong> — {budgetPct}% ejecutado
-              </p>
-              <div className="progress-bar" style={{ height: 6 }}>
-                <div
-                  className="progress-bar-fill"
-                  style={{ width: `${budgetPct}%` }}
-                />
-              </div>
-            </>
-          ) : (
-            <p style={{ fontSize: 13, color: 'var(--ds-text-secondary)', lineHeight: 1.6 }}>
-              Todavía no configuraste un presupuesto mensual.{' '}
-              <a href="/dashboard/budget" style={{ color: 'var(--ds-color-primary)', textDecoration: 'underline' }}>
-                Configurar →
-              </a>
-            </p>
-          )}
-        </div>
-      </div>
+      {/* Tip + Objetivo removidos — información no accionable / duplicada con /budget */}
     </>
   )
 }
