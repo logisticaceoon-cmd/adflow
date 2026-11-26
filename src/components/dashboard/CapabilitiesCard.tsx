@@ -35,7 +35,6 @@ export default function CapabilitiesCard({ level }: Props) {
       {/* ── Unlocked ── */}
       <div className="card" style={{
         padding: 20,
-        borderLeft: '3px solid var(--ds-color-success)',
       }}>
         <div className="flex items-center justify-between mb-3">
           <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff' }}>
@@ -79,7 +78,6 @@ export default function CapabilitiesCard({ level }: Props) {
       {/* ── Locked / next ── */}
       <div className="card" style={{
         padding: 20,
-        borderLeft: '3px solid var(--ds-color-warning)',
       }}>
         <div className="flex items-center justify-between mb-3">
           <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff' }}>

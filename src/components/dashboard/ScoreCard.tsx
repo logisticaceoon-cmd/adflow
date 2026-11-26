@@ -26,7 +26,6 @@ export default function ScoreCard({ totalScore, breakdown, monthStars }: Props) 
   return (
     <div className="card" style={{
       padding: 24, marginBottom: 32,
-      borderColor: 'rgba(245, 197, 66, 0.20)',
     }}>
       <div style={{ marginBottom: 20 }}>
         <h2 style={{

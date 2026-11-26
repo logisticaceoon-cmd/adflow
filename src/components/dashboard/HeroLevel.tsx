@@ -116,8 +116,8 @@ export default function HeroLevel(p: Props) {
             <div key={k.label} style={{
               padding: '12px 14px',
               borderRadius: 12,
-              background: 'var(--ds-bg-elevated)',
-              border: '1px solid var(--ds-card-border)',
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid rgba(255,255,255,0.06)',
               minWidth: 92,
             }}>
               <p style={{

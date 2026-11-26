@@ -155,8 +155,6 @@ export default function CampaignActions({
 
   return (
     <div className="card p-5 mb-5" style={{
-      background: 'linear-gradient(160deg, rgba(18,4,10,0.95), rgba(12,3,7,0.98))',
-      border: '1px solid rgba(255,255,255,0.08)',
     }}>
       <div className="flex items-center justify-between mb-4">
         <h3 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff' }}>

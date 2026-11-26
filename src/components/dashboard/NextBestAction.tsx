@@ -51,7 +51,6 @@ export default function NextBestAction({ primaryAction, secondaryActions }: Prop
   return (
     <div className="card module-enter module-enter-2" style={{
       padding: 24,
-      borderLeft: `3px solid ${cfg.border}`,
       marginBottom: 32,
     }}>
       <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
