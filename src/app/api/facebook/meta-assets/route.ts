@@ -63,7 +63,6 @@ export async function GET(req: NextRequest) {
     if (!bizData.error && Array.isArray(bizData.data)) {
       adAccounts = bizData.data
     } else {
-      adAccountsError = bizData.error ? JSON.stringify(bizData.error) : null
       // Fallback: todas las cuentas del usuario
       console.log('[meta-assets] Fallback a /me/adaccounts')
       const meData = await graphFetch(
@@ -71,7 +70,8 @@ export async function GET(req: NextRequest) {
         '/me/adaccounts (fallback)'
       )
       adAccounts = meData.data || []
-      adAccountsError = meData.error ? JSON.stringify(meData.error) : adAccountsError
+      // Only keep error if fallback also failed
+      adAccountsError = meData.error ? JSON.stringify(meData.error) : null
     }
   } else {
     // Sin business_id: cuentas personales del usuario
