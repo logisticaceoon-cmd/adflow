@@ -86,6 +86,11 @@ export interface EstimatedResults {
   estimated_roas: string
 }
 
+export interface CopyVariant {
+  primary_text: string
+  headline: string
+}
+
 export interface AdCopyItem {
   name: string
   headline: string
@@ -95,6 +100,13 @@ export interface AdCopyItem {
   cta_type?: string
   copy_angle: 'emocional' | 'informativo' | 'urgencia' | 'social_proof'
   creative_suggestion?: string
+  image_analysis?: string
+  variants: {
+    short: CopyVariant
+    medium: CopyVariant
+    long: CopyVariant
+  }
+  // Legacy support
   variant_b?: {
     headline: string
     primary_text: string

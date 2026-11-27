@@ -2,7 +2,7 @@
 // Step 4: "Revisá y publicá" — Meta Ad preview cards with copy variant selection
 import { useState } from 'react'
 import { ChevronDown, ChevronUp, Check } from 'lucide-react'
-import type { AIStrategy, AdCopyItem } from '@/types'
+import type { AIStrategy, AdCopyItem, CopyVariant } from '@/types'
 
 interface Props {
   aiStrategy: AIStrategy | null
@@ -27,7 +27,7 @@ function AdPreviewCard({
   pageName: string
   selected: boolean
   onSelect: () => void
-  variant: 'A' | 'B'
+  variant: string
 }) {
   return (
     <button
@@ -130,8 +130,8 @@ function AdPreviewCard({
         borderTop: '1px solid rgba(255,255,255,0.04)',
         textAlign: 'center',
       }}>
-        <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', color: 'var(--ds-text-muted)', textTransform: 'uppercase' }}>
-          Variante {variant}
+        <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', color: selected ? 'var(--ds-color-primary)' : 'var(--ds-text-muted)', textTransform: 'uppercase' }}>
+          {variant}
         </span>
       </div>
     </button>
@@ -145,8 +145,8 @@ export default function StepPublish({
   onAdjust, onSaveDraft, onPublish,
 }: Props) {
   const [expandedSet, setExpandedSet] = useState(0)
-  // Track selected variant per ad: key = "setIdx-adIdx", value = 0 (A) or 1 (B)
-  const [selectedVariant, setSelectedVariant] = useState<Record<string, number>>({})
+  // Track selected variant per ad: key = "setIdx-adIdx", value = 'short' | 'medium' | 'long'
+  const [selectedVariant, setSelectedVariant] = useState<Record<string, string>>({})
 
   const campaign = aiStrategy?.campaign
   const adSets   = campaign?.ad_sets || []
@@ -162,19 +162,14 @@ export default function StepPublish({
     return { ...base, ...edits }
   }
 
-  function selectVariant(setIdx: number, adIdx: number, variant: number) {
+  function selectVariant(setIdx: number, adIdx: number, variant: string) {
     setSelectedVariant(prev => ({ ...prev, [`${setIdx}-${adIdx}`]: variant }))
-    // If variant B is selected, copy its fields into the ad via onPatchAd
     const ad = adSets[setIdx]?.ads?.[adIdx]
-    if (!ad) return
-    if (variant === 1 && ad.variant_b) {
-      const vb = ad.variant_b as any
-      if (vb.headline)     onPatchAd(setIdx, adIdx, 'headline', vb.headline)
-      if (vb.primary_text) onPatchAd(setIdx, adIdx, 'primary_text', vb.primary_text)
-    } else if (variant === 0) {
-      // Revert to original A copy
-      onPatchAd(setIdx, adIdx, 'headline', ad.headline || '')
-      onPatchAd(setIdx, adIdx, 'primary_text', ad.primary_text || '')
+    if (!ad?.variants) return
+    const v = (ad.variants as any)[variant] as CopyVariant | undefined
+    if (v) {
+      onPatchAd(setIdx, adIdx, 'headline', v.headline)
+      onPatchAd(setIdx, adIdx, 'primary_text', v.primary_text)
     }
   }
 
@@ -261,14 +256,24 @@ export default function StepPublish({
               <div style={{ padding: '0 18px 18px' }}>
                 {adSet.ads?.map((ad: any, adIdx: number) => {
                   const editedAd = getAd(setIdx, adIdx)
-                  const sel = selectedVariant[`${setIdx}-${adIdx}`] ?? 0
-                  const hasVariantB = !!ad.variant_b
+                  const sel = selectedVariant[`${setIdx}-${adIdx}`] || 'medium'
                   const imageForAd = validPreviews[adIdx % validPreviews.length] || null
+                  const hasVariants = !!ad.variants?.short
 
-                  // Build variant B ad object
-                  const variantB: AdCopyItem = hasVariantB
-                    ? { ...ad, ...ad.variant_b }
-                    : ad
+                  const VARIANT_LABELS: Record<string, { label: string; tag: string }> = {
+                    short:  { label: 'Corta',   tag: '~60 chars' },
+                    medium: { label: 'Mediana', tag: '~125 chars' },
+                    long:   { label: 'Larga',   tag: '~250 chars' },
+                  }
+
+                  // Build ad object for each variant
+                  function adForVariant(key: string): AdCopyItem {
+                    if (key === sel) return editedAd
+                    if (key === 'medium') return ad
+                    const v = ad.variants?.[key]
+                    if (!v) return ad
+                    return { ...ad, headline: v.headline, primary_text: v.primary_text }
+                  }
 
                   return (
                     <div key={adIdx} style={{
@@ -282,31 +287,21 @@ export default function StepPublish({
 
                       <div style={{
                         display: 'grid',
-                        gridTemplateColumns: hasVariantB ? '1fr 1fr' : '1fr',
-                        gap: 12,
-                        maxWidth: hasVariantB ? 440 : 220,
+                        gridTemplateColumns: hasVariants ? '1fr 1fr 1fr' : '1fr',
+                        gap: 10,
+                        maxWidth: hasVariants ? 620 : 200,
                       }}>
-                        {/* Variant A */}
-                        <AdPreviewCard
-                          ad={sel === 0 ? editedAd : ad}
-                          imageUrl={imageForAd}
-                          pageName={pageName}
-                          selected={sel === 0}
-                          onSelect={() => selectVariant(setIdx, adIdx, 0)}
-                          variant="A"
-                        />
-
-                        {/* Variant B */}
-                        {hasVariantB && (
+                        {(hasVariants ? ['short', 'medium', 'long'] : ['medium']).map(vKey => (
                           <AdPreviewCard
-                            ad={sel === 1 ? editedAd : variantB}
+                            key={vKey}
+                            ad={adForVariant(vKey)}
                             imageUrl={imageForAd}
                             pageName={pageName}
-                            selected={sel === 1}
-                            onSelect={() => selectVariant(setIdx, adIdx, 1)}
-                            variant="B"
+                            selected={sel === vKey}
+                            onSelect={() => selectVariant(setIdx, adIdx, vKey)}
+                            variant={VARIANT_LABELS[vKey]?.label || vKey}
                           />
-                        )}
+                        ))}
                       </div>
                     </div>
                   )

@@ -199,12 +199,14 @@ REGLAS ABSOLUTAS:
 ESTRUCTURA A GENERAR (${strategyType}):
 ${cfg.structure}
 
-REGLAS DE COPY:
-- Headlines: MÁXIMO 40 caracteres (impactante, con emoji opcional)
-- Textos principales: MÁXIMO 125 caracteres (persuasivo, con 1-2 emojis naturales)
-- Descripciones: MÁXIMO 30 caracteres
-- Copy en el idioma/dialecto de ${targetCountry}
-- Para CADA anuncio, generá un "variant_b" con headline y primary_text alternativos. La variante B debe tener un enfoque diferente: si A es emocional, B puede ser más directo; si A usa urgencia, B puede usar prueba social. El usuario elige cuál publicar.
+REGLAS DE COPY CRÍTICAS:
+- ANALISIS DE IMAGEN OBLIGATORIO: Si hay imágenes, PRIMERO describí en "image_analysis" exactamente qué ves (producto, persona, texto superpuesto, colores, contexto). Después escribí los copies referenciando esos detalles. NUNCA escribas copies genéricos que podrían ser de cualquier producto.
+- EMOJIS: Usá 1-3 emojis por copy, relevantes al contenido (no decorativos). Elegí emojis que refuercen el mensaje: fuego para urgencia, check para prueba, flecha para CTA, etc.
+- 3 VARIANTES POR ANUNCIO en "variants": short (1 frase, máx 60 chars), medium (2-3 frases, 60-125 chars), long (3-5 frases, 125-250 chars). El headline y primary_text base deben ser la versión medium. Cada variante debe funcionar sola.
+- ESPECIFICIDAD: NO uses "calidad premium", "resultados increíbles", "lo mejor". SÍ usa lo que ves: nombre del producto, ingredientes visibles, beneficios concretos, números reales.
+- Headlines: MÁXIMO 40 chars, con 1 emoji. Condensá la promesa, no repitas el texto principal.
+- Descripciones: MÁXIMO 30 chars, complementan la oferta.
+- Copy en el dialecto de ${targetCountry}
 ${destinationUrl ? `- Incluir referencias a ${new URL(destinationUrl).hostname} en copies donde sea natural` : ''}
 
 Respondé ÚNICAMENTE con JSON válido, sin texto extra, sin backticks, sin markdown.
@@ -253,15 +255,26 @@ Respondé ÚNICAMENTE con JSON válido, sin texto extra, sin backticks, sin mark
           {
             "name": "Ad — Ángulo 1",
             "copy_angle": "emocional|informativo|urgencia|social_proof",
-            "headline": "máx 40 chars impactante",
-            "primary_text": "máx 125 chars persuasivo con emoji natural",
-            "description": "máx 30 chars",
+            "image_analysis": "OBLIGATORIO si hay imágenes: describí en detalle qué ves en la imagen (producto, persona, texto en la imagen, colores, contexto, emociones). Usá esta información para escribir copies ESPECÍFICOS a lo que se ve.",
+            "headline": "máx 40 chars — condensá la promesa principal, con 1 emoji relevante",
+            "primary_text": "versión MEDIANA del copy (60-125 chars) — usá lo que ves en la imagen, sé específico, no genérico. Incluí 1-2 emojis naturales.",
+            "description": "máx 30 chars — complemento de la oferta",
             "call_to_action": "Texto del botón en español",
             "cta_type": "LEARN_MORE|SHOP_NOW|CONTACT_US|GET_QUOTE|SUBSCRIBE|MESSAGE_PAGE|SEND_MESSAGE|WHATSAPP_MESSAGE",
-            "creative_suggestion": "descripción de qué imagen/video usar para este anuncio específico",
-            "variant_b": {
-              "headline": "alternativa de headline con ángulo diferente, máx 40 chars",
-              "primary_text": "alternativa de texto principal con enfoque diferente, máx 125 chars"
+            "creative_suggestion": "qué tipo de imagen complementa este copy (lifestyle, demo, testimonio, etc.)",
+            "variants": {
+              "short": {
+                "primary_text": "versión CORTA: 1 frase directa, máx 60 chars. Hook potente + beneficio. Con emoji.",
+                "headline": "máx 40 chars con emoji"
+              },
+              "medium": {
+                "primary_text": "versión MEDIANA: 2-3 frases, 60-125 chars. Hook + argumento + prueba social o beneficio. Con emojis.",
+                "headline": "máx 40 chars con emoji"
+              },
+              "long": {
+                "primary_text": "versión LARGA: 3-5 frases, 125-250 chars. Hook + dolor/deseo + mecanismo + prueba + CTA suave. Con emojis estratégicos.",
+                "headline": "máx 40 chars con emoji"
+              }
             }
           }
         ]

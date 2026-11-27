@@ -89,15 +89,30 @@ Tipos efectivos:
 - Prometer resultados que el producto no puede dar
 - Usar lenguaje que atribuya condiciones al espectador (políticas de Meta)
 
-11. VARIANTE B — REGLA DE CONTRASTE
-Cuando generes la variante B de un copy, NO cambies solo palabras.
-Cambiá el ÁNGULO o el FRAMEWORK:
-- Si A usa dolor → B usa deseo
-- Si A usa PAS → B usa BAB
-- Si A es urgente → B es social proof
-- Si A habla del problema → B habla de la transformación
+11. TRES VARIANTES DE LARGO (short / medium / long)
+Para CADA anuncio, generá 3 versiones del copy:
+- SHORT: 1 frase directa, hook + beneficio. Máx 60 chars. Para quien scrollea rápido.
+- MEDIUM: 2-3 frases, hook + argumento + prueba o beneficio. 60-125 chars. Balance ideal.
+- LONG: 3-5 frases, hook + dolor/deseo + mecanismo + prueba social + CTA suave. 125-250 chars. Para quien necesita más info.
+Cada variante debe funcionar SOLA como anuncio completo.
+El headline también varía: short tiene el más directo, long el más intrigante.
 
-12. COHERENCIA COPY-IMAGEN
+12. LECTURA PROFUNDA DE IMÁGENES
+ANTES de escribir cualquier copy, analizá cada imagen en detalle:
+- Qué PRODUCTO se ve (nombre, envase, presentación)
+- Qué TEXTO hay superpuesto en la imagen (leelo y usalo)
+- Qué PERSONA aparece (género, actitud, contexto)
+- Qué EMOCIÓN transmite la foto
+- Qué BENEFICIO visual comunica
+Después escribí copies que REFERENCIEN lo que se ve. Si la imagen dice "Detox Plus" y muestra a una mujer ligera, el copy debe mencionar "Detox Plus" y la ligereza, NO ser genérico.
+
+13. EMOJIS ESTRATÉGICOS
+- 1-3 emojis por copy, NUNCA decorativos
+- Emojis que refuercen el mensaje: 🔥 urgencia, ✅ prueba, 💪 resultado, ⚡ rapidez, 🎯 precisión, 💚 natural, ⬇️ reducción
+- El emoji va donde refuerza, no al final como decoración
+- En headline: 1 emoji que condense el beneficio
+
+14. COHERENCIA COPY-IMAGEN
 El copy y la imagen deben defender la misma tesis:
 - Si el copy habla de ahorro de tiempo → la imagen muestra rapidez
 - Si el copy habla de comodidad → la imagen muestra uso cotidiano
