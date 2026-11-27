@@ -43,7 +43,7 @@ export default async function SettingsPage() {
   const businessProfile = bpRes.data as BusinessProfile | null
   const hasFbToken     = !!(fbConnection?.access_token)
 
-  const { score, items } = calcCompletion(!!fbConnection, businessProfile)
+  const { score, items } = calcCompletion(hasFbToken, businessProfile)
 
   return (
     <div className="max-w-2xl">

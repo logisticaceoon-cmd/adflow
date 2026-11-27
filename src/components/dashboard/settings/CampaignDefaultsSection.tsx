@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { BusinessProfile } from '@/types'
 
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export default function CampaignDefaultsSection({ initialData }: Props) {
+  const router = useRouter()
   const [saving, setSaving] = useState(false)
   const [saved, setSaved]   = useState(false)
   const [form, setForm] = useState({
@@ -36,6 +38,7 @@ export default function CampaignDefaultsSection({ initialData }: Props) {
     )
     setSaving(false)
     setSaved(true)
+    router.refresh()
     setTimeout(() => setSaved(false), 2500)
   }
 

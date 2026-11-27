@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface Props {
   initialConnected: boolean
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export default function FacebookConnectButton({ initialConnected, accountName }: Props) {
+  const router = useRouter()
   const [connected, setConnected] = useState(initialConnected)
   const [currentName] = useState(accountName)
   const [disconnecting, setDisconnecting] = useState(false)
@@ -16,7 +18,7 @@ export default function FacebookConnectButton({ initialConnected, accountName }:
     setDisconnecting(true)
     try {
       const res = await fetch('/api/facebook/disconnect', { method: 'POST' })
-      if (res.ok) setConnected(false)
+      if (res.ok) { setConnected(false); router.refresh() }
     } finally {
       setDisconnecting(false)
     }

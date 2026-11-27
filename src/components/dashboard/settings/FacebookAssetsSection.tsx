@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { BusinessProfile } from '@/types'
 
@@ -17,6 +18,7 @@ function Spinner() {
 }
 
 export default function FacebookAssetsSection({ hasFbToken, initialData }: Props) {
+  const router = useRouter()
   // Listas de opciones
   const [businesses,  setBusinesses]  = useState<MetaAsset[]>([])
   const [adAccounts,  setAdAccounts]  = useState<MetaAsset[]>([])
@@ -277,6 +279,7 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
       )
       if (error) { setSaveError(`Error al guardar: ${error.message}`); return }
       setSaved(true)
+      router.refresh()
       setTimeout(() => setSaved(false), 2500)
     } catch {
       setSaveError('Error inesperado al guardar. Intentá de nuevo.')

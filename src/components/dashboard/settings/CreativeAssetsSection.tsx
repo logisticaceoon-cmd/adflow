@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { BusinessProfile } from '@/types'
 
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export default function CreativeAssetsSection({ initialData }: Props) {
+  const router = useRouter()
   const fileRef = useRef<HTMLInputElement>(null)
   const [saving, setSaving]       = useState(false)
   const [saved, setSaved]         = useState(false)
@@ -68,6 +70,7 @@ export default function CreativeAssetsSection({ initialData }: Props) {
     )
     setSaving(false)
     setSaved(true)
+    router.refresh()
     setTimeout(() => setSaved(false), 2500)
   }
 
