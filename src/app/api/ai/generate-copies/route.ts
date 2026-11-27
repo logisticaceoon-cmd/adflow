@@ -201,6 +201,7 @@ REGLAS DE COPY:
 - Textos principales: MÁXIMO 125 caracteres (persuasivo, con 1-2 emojis naturales)
 - Descripciones: MÁXIMO 30 caracteres
 - Copy en el idioma/dialecto de ${targetCountry}
+- Para CADA anuncio, generá un "variant_b" con headline y primary_text alternativos. La variante B debe tener un enfoque diferente: si A es emocional, B puede ser más directo; si A usa urgencia, B puede usar prueba social. El usuario elige cuál publicar.
 ${destinationUrl ? `- Incluir referencias a ${new URL(destinationUrl).hostname} en copies donde sea natural` : ''}
 
 Respondé ÚNICAMENTE con JSON válido, sin texto extra, sin backticks, sin markdown.
@@ -254,7 +255,11 @@ Respondé ÚNICAMENTE con JSON válido, sin texto extra, sin backticks, sin mark
             "description": "máx 30 chars",
             "call_to_action": "Texto del botón en español",
             "cta_type": "LEARN_MORE|SHOP_NOW|CONTACT_US|GET_QUOTE|SUBSCRIBE|MESSAGE_PAGE|SEND_MESSAGE|WHATSAPP_MESSAGE",
-            "creative_suggestion": "descripción de qué imagen/video usar para este anuncio específico"
+            "creative_suggestion": "descripción de qué imagen/video usar para este anuncio específico",
+            "variant_b": {
+              "headline": "alternativa de headline con ángulo diferente, máx 40 chars",
+              "primary_text": "alternativa de texto principal con enfoque diferente, máx 125 chars"
+            }
           }
         ]
       }

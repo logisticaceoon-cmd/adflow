@@ -94,6 +94,11 @@ export interface AdCopyItem {
   call_to_action: string
   cta_type?: string
   copy_angle: 'emocional' | 'informativo' | 'urgencia' | 'social_proof'
+  creative_suggestion?: string
+  variant_b?: {
+    headline: string
+    primary_text: string
+  }
 }
 
 export interface AdSetItem {
