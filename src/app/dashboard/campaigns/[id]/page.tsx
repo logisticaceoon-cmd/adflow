@@ -135,7 +135,8 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
   const dailyMetrics = dailyRes.data || []
   const campaignActions = actionsRes.data || []
   const pixelAnalysis = pixelRes.data
-  const currencySym = businessRes.data?.currency === 'USD' ? '$' : (businessRes.data?.currency || '$')
+  const CURR_SYM: Record<string, string> = { USD:'$',ARS:'$',MXN:'$',CLP:'$',COP:'$',PEN:'S/',BRL:'R$',EUR:'€',GBP:'£',UYU:'$U' }
+  const currencySym = CURR_SYM[businessRes.data?.currency || 'USD'] || '$'
   const automationRules = (automationRulesRes.data || []) as unknown as Array<{
     id: string; name: string; description: string | null; rule_type: string; is_enabled: boolean;
     conditions: any; actions: any

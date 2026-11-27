@@ -115,7 +115,11 @@ export default async function DashboardPage() {
 
   const showOnboarding = !allCampaigns.length && !businessProfile?.selected_ad_account_id
   const fullName = profile?.full_name?.split(' ')[0] || 'crecedor'
-  const currency = businessProfile?.currency === 'USD' ? '$' : (businessProfile?.currency || '$')
+  const CURRENCY_SYMBOLS: Record<string, string> = {
+    USD: '$', ARS: '$', MXN: '$', CLP: '$', COP: '$',
+    PEN: 'S/', BRL: 'R$', EUR: '€', GBP: '£', UYU: '$U', PYG: '₲', BOB: 'Bs',
+  }
+  const currency = CURRENCY_SYMBOLS[businessProfile?.currency || 'USD'] || '$'
 
   // ── Strategic decision engine ───────────────────────────────────────────
   const bestRoasCampaign = allCampaigns.reduce<{ name: string; roas: number; id: string } | undefined>((best, c) => {

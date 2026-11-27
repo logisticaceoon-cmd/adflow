@@ -106,6 +106,8 @@ function InputCard({ icon, label, helper, value, onChange, prefix, suffix, requi
 export default function BudgetPage() {
   const [totalBudget, setTotalBudget] = useState<string>('')
   const [currency,    setCurrency]    = useState('USD')
+  const CURR_SYM: Record<string, string> = { USD:'$',ARS:'$',MXN:'$',CLP:'$',COP:'$',PEN:'S/',BRL:'R$',EUR:'€',GBP:'£',UYU:'$U' }
+  const currSym = CURR_SYM[currency] || '$'
   const [avgTicket,   setAvgTicket]   = useState<string>('')
   const [marginPct,   setMarginPct]   = useState<string>('')
   const [targetRoas,  setTargetRoas]  = useState<string>('3')
@@ -270,7 +272,7 @@ export default function BudgetPage() {
           </span>
           {activeBudget && (
             <span className="ds-badge ds-badge--warning">
-              💼 Presupuesto activo: {currency} {activeBudget.total_budget.toLocaleString()}
+              💼 Presupuesto activo: {currSym}{activeBudget.total_budget.toLocaleString()}
             </span>
           )}
         </div>
@@ -292,7 +294,7 @@ export default function BudgetPage() {
             helper="¿Cuánto querés invertir en publicidad este mes?"
             value={totalBudget}
             onChange={setTotalBudget}
-            prefix={currency === 'USD' ? '$' : currency}
+            prefix={currSym}
             required
             big
           />
@@ -302,7 +304,7 @@ export default function BudgetPage() {
             helper="¿Cuánto cobra tu cliente en promedio por compra? Si vendés productos de $50 y de $100, poné $75."
             value={avgTicket}
             onChange={setAvgTicket}
-            prefix={currency === 'USD' ? '$' : currency}
+            prefix={currSym}
           />
           <InputCard
             icon="📊"

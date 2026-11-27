@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
       userId: user.id,
       type: 'budget_saved',
       title: `Presupuesto de ${monthYear} guardado`,
-      body: `${currency === 'USD' ? '$' : currency} ${totalBudget.toLocaleString('es')} distribuido en ${phaseCount || Object.keys(phaseBudgets).length} fases`,
+      body: `$${totalBudget.toLocaleString('es')} ${currency} distribuido en ${phaseCount || Object.keys(phaseBudgets).length} fases`,
       severity: 'success',
       actionUrl: '/dashboard/budget',
     })
