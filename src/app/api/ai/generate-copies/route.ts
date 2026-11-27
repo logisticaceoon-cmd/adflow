@@ -7,6 +7,7 @@ import { ACTION_COSTS } from '@/lib/credit-costs'
 import { checkRateLimit } from '@/lib/rate-limit'
 import { validate, generateCopiesSchema } from '@/lib/validations'
 import { AI_MODELS } from '@/lib/ai/models'
+import { COPYWRITING_SYSTEM_RULES } from '@/lib/ai/copywriting-rules'
 import type { StrategyType } from '@/types'
 
 const SUPPORTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'] as const
@@ -164,6 +165,8 @@ Usá lo que ves para adaptar el copy a lo que realmente muestra la imagen, refer
   const durationContext = duration ? (duration > 0 ? `${duration} días` : 'campaña continua') : 'no especificada'
 
   return `Sos el mejor estratega de Meta Ads del mundo hispanohablante, con experiencia en más de 500 negocios de Latinoamérica y España.
+
+${COPYWRITING_SYSTEM_RULES}
 ${pixelBlock}
 ${businessName ? `MARCA: ${businessName}${fbPageName ? ` (Página: ${fbPageName})` : ''}${instagramAccountName ? ` · @${instagramAccountName}` : ''}` : ''}
 ${toneBlock}
