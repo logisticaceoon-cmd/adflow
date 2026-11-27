@@ -37,25 +37,25 @@ export default function CreativeAssetsSection({ initialData }: Props) {
 
     setUploading(true)
     setUploadError('')
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { setUploading(false); return }
-    const ext  = file.name.split('.').pop()
-    const path = `${user.id}/logo.${ext}`
 
-    const { error } = await supabase.storage
-      .from('brand-assets')
-      .upload(path, file, { upsert: true })
+    try {
+      const body = new FormData()
+      body.append('file', file)
+      const res = await fetch('/api/upload/logo', { method: 'POST', body })
+      const data = await res.json()
 
-    if (error) {
-      setUploadError(`Error al subir el logo: ${error.message}`)
+      if (!res.ok) {
+        setUploadError(data.error || 'Error al subir el logo')
+        return
+      }
+
+      setForm(p => ({ ...p, logo_url: data.url }))
+      router.refresh()
+    } catch {
+      setUploadError('Error de conexión al subir el logo. Intentá de nuevo.')
+    } finally {
       setUploading(false)
-      return
     }
-
-    const { data: { publicUrl } } = supabase.storage.from('brand-assets').getPublicUrl(path)
-    setForm(p => ({ ...p, logo_url: publicUrl }))
-    setUploading(false)
   }
 
   async function save(e: React.FormEvent) {
