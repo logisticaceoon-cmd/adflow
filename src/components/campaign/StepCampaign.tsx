@@ -1,6 +1,8 @@
 'use client'
 // Step 1 (unified): Promo + Objective + Budget + Duration
 import type { WizardState, AdFlowObjective } from '@/hooks/useCampaignWizard'
+import { ShoppingCart, MessageCircle, Instagram } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
 interface Props {
   form: WizardState
@@ -11,10 +13,10 @@ interface Props {
   onNext: () => void
 }
 
-const OBJECTIVES: { value: AdFlowObjective; icon: string; label: string; desc: string }[] = [
-  { value: 'sales_web',          icon: '💰', label: 'Vender por mi web',      desc: 'Enviar personas a tu tienda online para comprar' },
-  { value: 'sales_whatsapp',     icon: '💬', label: 'Vender por WhatsApp',    desc: 'Que te escriban al WhatsApp para comprar' },
-  { value: 'instagram_traffic',  icon: '📸', label: 'Tráfico a Instagram',    desc: 'Llevar personas a tu perfil de Instagram' },
+const OBJECTIVES: { value: AdFlowObjective; Icon: LucideIcon; label: string; desc: string; color: string }[] = [
+  { value: 'sales_web',          Icon: ShoppingCart,  label: 'Vender por mi web',      desc: 'Enviar personas a tu tienda online para comprar', color: 'var(--ds-color-success)' },
+  { value: 'sales_whatsapp',     Icon: MessageCircle, label: 'Vender por WhatsApp',    desc: 'Que te escriban al WhatsApp para comprar',        color: '#25D366' },
+  { value: 'instagram_traffic',  Icon: Instagram,     label: 'Tráfico a Instagram',    desc: 'Llevar personas a tu perfil de Instagram',        color: '#E1306C' },
 ]
 
 const DURATIONS: { value: 7 | 14 | 30 | 0; label: string; desc: string }[] = [
@@ -66,17 +68,24 @@ export default function StepCampaign({ form, setField, currSymbol, budgetUSD, er
                 onClick={() => setField('campaign_objective', obj.value)}
                 className="text-left transition-all"
                 style={{
-                  padding: '18px 16px', borderRadius: 14, cursor: 'pointer',
+                  padding: '20px 18px', borderRadius: 14, cursor: 'pointer',
                   border: active
-                    ? '2px solid var(--ds-color-primary)'
+                    ? `2px solid ${obj.color}`
                     : '2px solid var(--ds-card-border)',
                   background: active
-                    ? 'rgba(79,110,247,0.08)'
+                    ? `${obj.color}0D`
                     : 'var(--ds-bg-elevated)',
                 }}
               >
-                <span style={{ fontSize: 28, display: 'block', marginBottom: 8 }}>{obj.icon}</span>
-                <p style={{ fontSize: 13, fontWeight: 700, color: active ? 'var(--ds-color-primary)' : '#fff', marginBottom: 4 }}>
+                <div style={{
+                  width: 36, height: 36, borderRadius: 10, marginBottom: 12,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  background: active ? `${obj.color}18` : 'rgba(255,255,255,0.05)',
+                  border: `1px solid ${active ? `${obj.color}30` : 'rgba(255,255,255,0.08)'}`,
+                }}>
+                  <obj.Icon size={18} style={{ color: active ? obj.color : 'var(--ds-text-secondary)' }} strokeWidth={1.8} />
+                </div>
+                <p style={{ fontSize: 13, fontWeight: 700, color: active ? '#fff' : 'var(--ds-text-primary)', marginBottom: 4 }}>
                   {obj.label}
                 </p>
                 <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', lineHeight: 1.4 }}>
@@ -165,7 +174,7 @@ export default function StepCampaign({ form, setField, currSymbol, budgetUSD, er
           border: '1px solid rgba(79,110,247,0.15)',
         }}>
           <p style={{ fontSize: 12, color: 'var(--ds-color-primary)', fontWeight: 600 }}>
-            💡 La IA recomienda {currSymbol}15-25/día para empezar y optimizar con datos reales en 7-14 días.
+            La IA recomienda {currSymbol}15-25/día para empezar y optimizar con datos reales en 7-14 días.
           </p>
         </div>
       </div>
