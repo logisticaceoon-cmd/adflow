@@ -1,5 +1,5 @@
 'use client'
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Upload, Trash2, ImageIcon, Film } from 'lucide-react'
 
@@ -36,9 +36,9 @@ export default function CreativesPage() {
     setLoaded(true)
   }
 
-  if (!loaded) {
-    loadFiles()
-  }
+  useEffect(() => {
+    if (!loaded) loadFiles()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   async function uploadFiles(fileList: FileList) {
     setUploading(true)

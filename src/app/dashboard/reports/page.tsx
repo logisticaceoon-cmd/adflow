@@ -1,4 +1,5 @@
 // src/app/dashboard/reports/page.tsx — Reports hub (premium server component)
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { ArrowRight, TrendingUp, TrendingDown, Minus, Sparkles, Clock } from 'lucide-react'
@@ -34,7 +35,7 @@ function ChangeArrow({ value }: { value: number }) {
 export default async function ReportsHubPage() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return null
+  if (!user) redirect('/login')
 
   const now = new Date()
   const monthYear = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
