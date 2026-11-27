@@ -148,7 +148,7 @@ export async function evaluateAchievements(userId: string): Promise<AchievementU
           title: `🏆 Nuevo logro: ${def.name}`,
           body: def.description,
           severity: 'success',
-          actionUrl: '/dashboard/pixel',
+          actionUrl: '/dashboard',
           metadata: { achievement_code: def.code, rarity: def.rarity, icon: def.icon },
         })
       } catch (e) {

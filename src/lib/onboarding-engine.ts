@@ -65,7 +65,7 @@ export function calculateOnboardingStatus(data: OnboardingInput): OnboardingStat
       done: data.pixelLevel !== null && data.pixelLevel >= 0 && data.hasPixel,
       label: 'Analizar tu nivel',
       description: 'Escaneamos tu pixel para saber en qué punto está tu negocio',
-      href: '/dashboard/pixel',
+      href: '/dashboard/settings',
       why: 'Miramos los datos que ya tiene tu pixel para darte un nivel (0 a 8). Ese nivel nos dice qué estrategias podés usar hoy (TOFU, MOFU, BOFU) y qué audiencias avanzadas están disponibles.',
     },
     budget_set: {

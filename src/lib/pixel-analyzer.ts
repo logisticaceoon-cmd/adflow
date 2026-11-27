@@ -163,7 +163,7 @@ export async function savePixelAnalysis(userId: string, analysis: PixelAnalysis)
           title: `¡Subiste a Nivel ${analysis.level}: ${analysis.levelName}!`,
           body: 'Tu negocio creció y desbloqueaste nuevas capacidades. Revisá qué podés hacer ahora.',
           severity: 'success',
-          actionUrl: '/dashboard/pixel',
+          actionUrl: '/dashboard',
           metadata: { old_level: existing.level, new_level: analysis.level, level_name: analysis.levelName },
         })
       } catch (e) {

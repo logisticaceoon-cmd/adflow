@@ -1,6 +1,6 @@
 'use client'
 // src/components/dashboard/MonthSummary.tsx
-// 7 business KPIs — no funnel events (those belong to /dashboard/pixel).
+// 7 business KPIs for the month.
 import { DollarSign, TrendingUp, Target, ShoppingCart, CreditCard, BarChart3, Users } from 'lucide-react'
 import SectionHeader from '@/components/ui/SectionHeader'
 

@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import {
   LayoutDashboard, Megaphone, Sparkles, Images,
   BarChart2, Settings, HelpCircle, LogOut, Zap, Shield, CreditCard,
-  Activity, DollarSign,
+  DollarSign,
 } from 'lucide-react'
 import type { User } from '@supabase/supabase-js'
 import type { Profile } from '@/types'
@@ -28,7 +28,6 @@ export default function Sidebar({ user, profile }: Props) {
   // ── Live data ────────────────────────────────────────────────────────────
   const [liveCredits, setLiveCredits] = useState<{ total: number; used: number; plan: string } | null>(null)
   const [campaignCount,  setCampaignCount]  = useState<number>(0)
-  const [hasPixel,       setHasPixel]       = useState<boolean>(false)
   const [onboarding,     setOnboarding]     = useState<{ isComplete: boolean; completedSteps: number; totalSteps: number; completionScore: number } | null>(null)
   // pendingAutomations removed — Automation page eliminated
 
@@ -46,12 +45,6 @@ export default function Sidebar({ user, profile }: Props) {
             plan:  data.plan          ?? 'free',
           })
         }
-      })
-
-    // Pixel — just check if configured
-    supabase.from('pixel_analysis').select('pixel_id').eq('user_id', user.id).maybeSingle()
-      .then(({ data }) => {
-        if (data && active) setHasPixel(true)
       })
 
     // Campaigns count
@@ -106,7 +99,6 @@ export default function Sidebar({ user, profile }: Props) {
   // Nav items
   const platformItems: NavItem[] = [
     { href: '/dashboard',           icon: LayoutDashboard, label: 'Resumen' },
-    { href: '/dashboard/pixel',     icon: Activity,        label: 'Mi Pixel' },
     { href: '/dashboard/create',    icon: Sparkles,        label: 'Crear campaña', badge: 'IA' },
     { href: '/dashboard/campaigns', icon: Megaphone,       label: 'Mis campañas', badge: campaignCount > 0 ? String(campaignCount) : undefined },
     { href: '/dashboard/creatives', icon: Images,          label: 'Creativos' },

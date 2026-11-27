@@ -62,7 +62,6 @@ function formatRelative(iso: string): string {
 // Map pathname (or prefix) → breadcrumb trail
 const BREADCRUMBS: Array<{ match: (p: string) => boolean; trail: Array<{ label: string; href?: string }> }> = [
   { match: p => p === '/dashboard',                             trail: [{ label: 'Resumen' }] },
-  { match: p => p === '/dashboard/pixel',                       trail: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Mi Pixel' }] },
   { match: p => p === '/dashboard/onboarding',                  trail: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Onboarding' }] },
   { match: p => p === '/dashboard/create',                      trail: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Crear campaña' }] },
   { match: p => p === '/dashboard/campaigns',                   trail: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Mis campañas' }] },
