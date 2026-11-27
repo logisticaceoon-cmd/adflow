@@ -45,11 +45,16 @@ export default function BusinessProfileSection({ initialData }: Props) {
   async function save(e: React.FormEvent) {
     e.preventDefault()
     setSaving(true)
+    // Auto-prefix https:// if user typed a bare domain
+    let url = form.website_url.trim()
+    if (url && !/^https?:\/\//i.test(url)) url = `https://${url}`
+    const data = { ...form, website_url: url }
+    setForm(data)
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { setSaving(false); return }
     await supabase.from('business_profiles').upsert(
-      { user_id: user.id, ...form, updated_at: new Date().toISOString() },
+      { user_id: user.id, ...data, updated_at: new Date().toISOString() },
       { onConflict: 'user_id' }
     )
     setSaving(false)
@@ -70,7 +75,7 @@ export default function BusinessProfileSection({ initialData }: Props) {
           </div>
           <div>
             <label className="label">Sitio web / URL principal</label>
-            <input className="input-field" type="url" placeholder="https://mitienda.com"
+            <input className="input-field" placeholder="https://mitienda.com"
               value={form.website_url} onChange={e => setForm(p => ({ ...p, website_url: e.target.value }))} />
           </div>
           <div>

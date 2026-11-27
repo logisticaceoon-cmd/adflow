@@ -169,6 +169,10 @@ export function useCampaignWizard() {
   function nextFromBusiness() {
     if (!form.product_description.trim()) { setError('Contanos qué vendés o qué hace tu negocio.'); return }
     if (!form.goal) { setError('Elegí un objetivo para tu campaña.'); return }
+    // Auto-prefix https:// if user typed a bare domain
+    if (form.website_url.trim() && !/^https?:\/\//i.test(form.website_url.trim())) {
+      setForm(prev => ({ ...prev, website_url: `https://${prev.website_url.trim()}` }))
+    }
     setError(''); setStep(1)
   }
 

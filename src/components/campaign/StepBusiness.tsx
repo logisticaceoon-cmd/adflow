@@ -43,7 +43,6 @@ export default function StepBusiness({ form, setField, error, onNext }: Props) {
         <div className="mb-6">
           <label className="label">¿Tenés sitio web? <span style={{ color: 'var(--ds-text-muted)', fontWeight: 400 }}>(opcional)</span></label>
           <input
-            type="url"
             className="input-field"
             placeholder="https://tutienda.com"
             value={form.website_url}
