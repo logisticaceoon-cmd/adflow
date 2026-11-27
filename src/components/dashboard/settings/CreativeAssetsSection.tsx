@@ -37,8 +37,9 @@ export default function CreativeAssetsSection({ initialData }: Props) {
     setUploadError('')
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { setUploading(false); return }
     const ext  = file.name.split('.').pop()
-    const path = `${user!.id}/logo.${ext}`
+    const path = `${user.id}/logo.${ext}`
 
     const { error } = await supabase.storage
       .from('brand-assets')
@@ -60,8 +61,9 @@ export default function CreativeAssetsSection({ initialData }: Props) {
     setSaving(true)
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { setSaving(false); return }
     await supabase.from('business_profiles').upsert(
-      { user_id: user!.id, ...form, updated_at: new Date().toISOString() },
+      { user_id: user.id, ...form, updated_at: new Date().toISOString() },
       { onConflict: 'user_id' }
     )
     setSaving(false)

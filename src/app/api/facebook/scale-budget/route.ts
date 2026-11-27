@@ -107,12 +107,13 @@ export async function POST(req: NextRequest) {
     const effectiveTotal = status === 'success'
       ? newTotalBudget
       : (newTotalBudget / adsetIds.length) * updated.length
-    await supabase.from('campaigns').update({
+    const { error: budgetErr } = await supabase.from('campaigns').update({
       daily_budget: effectiveTotal,
       updated_at:   new Date().toISOString(),
     }).eq('id', campaign_id)
+    if (budgetErr) console.error('[scale-budget] campaign budget update failed:', budgetErr.message)
   }
-  await supabase.from('campaign_actions').insert({
+  const { error: logErr } = await supabase.from('campaign_actions').insert({
     user_id: user.id,
     campaign_id,
     meta_campaign_id: campaign.meta_campaign_id,
@@ -122,6 +123,7 @@ export async function POST(req: NextRequest) {
     new_value: { daily_budget: newTotalBudget, per_adset_cents: perAdsetCents, updated_adsets: updated.length },
     error_message: failed.length > 0 ? failed.map(f => `${f.id}: ${f.error}`).join(' | ') : null,
   })
+  if (logErr) console.error('[scale-budget] action log failed:', logErr.message)
 
   if (status === 'failed') {
     return NextResponse.json({

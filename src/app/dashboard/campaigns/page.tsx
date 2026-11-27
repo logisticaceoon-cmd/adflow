@@ -1,4 +1,5 @@
 // src/app/dashboard/campaigns/page.tsx
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import type { Campaign } from '@/types'
@@ -8,11 +9,12 @@ import CampaignsListView from '@/components/dashboard/CampaignsListView'
 export default async function CampaignsPage() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
 
   const { data: campaigns } = await supabase
     .from('campaigns')
     .select('*')
-    .eq('user_id', user!.id)
+    .eq('user_id', user.id)
     .order('created_at', { ascending: false }) as { data: Campaign[] | null }
 
   const total  = campaigns?.length || 0

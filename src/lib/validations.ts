@@ -70,6 +70,19 @@ export const updateCreditsSchema = z.object({
   plan: z.enum(['free', 'starter', 'pro', 'agency']).optional(),
 })
 
+// ── Budget Save ──────────────────────────────────────────────────────────
+export const budgetSaveSchema = z.object({
+  total_budget: z.number().positive('Presupuesto debe ser mayor a 0'),
+  month_year: z.string().regex(/^\d{4}-\d{2}$/, 'Formato debe ser YYYY-MM').optional(),
+  currency: z.string().min(2).max(4).optional(),
+  phase_budgets: z.record(z.string(), z.number().min(0)).optional(),
+  phase_budgets_recommended: z.record(z.string(), z.number().min(0)).optional(),
+  phase_results: z.record(z.string(), z.unknown()).optional(),
+  avg_ticket: z.number().min(0).nullable().optional(),
+  margin_pct: z.number().min(0).max(100).nullable().optional(),
+  target_roas: z.number().min(0).nullable().optional(),
+})
+
 // ── Automation Rules ──────────────────────────────────────────────────────
 export const automationRuleSchema = z.object({
   name: z.string().min(1).max(200),

@@ -1,5 +1,6 @@
 // src/app/admin/dashboard/page.tsx
 import { unstable_noStore as noStore } from 'next/cache'
+import { redirect } from 'next/navigation'
 import { createAdminClient, createClient } from '@/lib/supabase/server'
 import {
   Megaphone, Sparkles, TrendingUp,
@@ -95,7 +96,8 @@ export default async function AdminDashboardPage() {
   const anon = createClient()
 
   const { data: { user } } = await anon.auth.getUser()
-  const { data: me } = await db.from('profiles').select('full_name').eq('id', user!.id).single()
+  if (!user) redirect('/admin/login')
+  const { data: me } = await db.from('profiles').select('full_name').eq('id', user.id).single()
 
   const now        = new Date()
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()

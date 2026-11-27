@@ -270,8 +270,9 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
     try {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
+      if (!user) { setSaveError('Sesión expirada. Recargá la página.'); setSaving(false); return }
       const { error } = await supabase.from('business_profiles').upsert(
-        { user_id: user!.id, ...form, updated_at: new Date().toISOString() },
+        { user_id: user.id, ...form, updated_at: new Date().toISOString() },
         { onConflict: 'user_id' }
       )
       if (error) { setSaveError(`Error al guardar: ${error.message}`); return }

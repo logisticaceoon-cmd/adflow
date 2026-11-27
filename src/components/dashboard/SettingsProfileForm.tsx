@@ -24,7 +24,8 @@ export default function SettingsProfileForm({ profile, userEmail }: Props) {
     setSaving(true)
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    await supabase.from('profiles').update(form).eq('id', user!.id)
+    if (!user) { setSaving(false); return }
+    await supabase.from('profiles').update(form).eq('id', user.id)
     setSaving(false)
     setSaved(true)
     setTimeout(() => setSaved(false), 2500)

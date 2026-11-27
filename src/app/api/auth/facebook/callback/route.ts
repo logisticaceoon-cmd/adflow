@@ -23,9 +23,13 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const appId       = process.env.META_APP_ID!
-    const appSecret   = process.env.META_APP_SECRET!
-    const redirectUri = process.env.META_REDIRECT_URI!
+    const appId       = process.env.META_APP_ID
+    const appSecret   = process.env.META_APP_SECRET
+    const redirectUri = process.env.META_REDIRECT_URI
+    if (!appId || !appSecret || !redirectUri) {
+      console.error('[fb-callback] Missing META_APP_ID, META_APP_SECRET, or META_REDIRECT_URI')
+      return NextResponse.redirect(new URL('/dashboard/settings?fb=error&reason=config', req.url))
+    }
 
     // 1. Exchange code for short-lived token
     const tokenRes  = await fetch(
@@ -109,9 +113,17 @@ export async function GET(req: NextRequest) {
       .maybeSingle()
 
     if (existing) {
-      await supabase.from('facebook_connections').update(payload).eq('user_id', user.id)
+      const { error: updateErr } = await supabase.from('facebook_connections').update(payload).eq('user_id', user.id)
+      if (updateErr) {
+        console.error('[fb-callback] DB update failed:', updateErr.message)
+        return NextResponse.redirect(new URL('/dashboard/settings?fb=error&reason=db_write', req.url))
+      }
     } else {
-      await supabase.from('facebook_connections').insert(payload)
+      const { error: insertErr } = await supabase.from('facebook_connections').insert(payload)
+      if (insertErr) {
+        console.error('[fb-callback] DB insert failed:', insertErr.message)
+        return NextResponse.redirect(new URL('/dashboard/settings?fb=error&reason=db_write', req.url))
+      }
     }
 
     console.log(`[fb-callback] Saved connection for ${meData.name}, token expires: ${expiresAt || 'unknown'}`)

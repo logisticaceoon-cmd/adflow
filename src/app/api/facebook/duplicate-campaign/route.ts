@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Log action
-  await supabase.from('campaign_actions').insert({
+  const { error: logErr } = await supabase.from('campaign_actions').insert({
     user_id: user.id,
     campaign_id,
     meta_campaign_id: original.meta_campaign_id,
@@ -77,6 +77,7 @@ export async function POST(req: NextRequest) {
     status: 'success',
     new_value: { new_campaign_id: copy.id, new_name: newName },
   })
+  if (logErr) console.error('[duplicate-campaign] action log failed:', logErr.message)
 
   // Notification
   try {

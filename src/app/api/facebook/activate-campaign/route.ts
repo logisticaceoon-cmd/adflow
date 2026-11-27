@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
     if (data.error) {
       const msg = data.error.error_user_msg || data.error.message || JSON.stringify(data.error)
       // Log failure
-      await supabase.from('campaign_actions').insert({
+      const { error: failLogErr } = await supabase.from('campaign_actions').insert({
         user_id: user.id,
         campaign_id,
         meta_campaign_id: campaign.meta_campaign_id,
@@ -67,17 +67,19 @@ export async function POST(req: NextRequest) {
         new_value: { status: appStatus },
         error_message: msg,
       })
+      if (failLogErr) console.error('[activate-campaign] fail log failed:', failLogErr.message)
       return NextResponse.json({ error: msg }, { status: 400 })
     }
 
-    await supabase.from('campaigns').update({
+    const { error: updateErr } = await supabase.from('campaigns').update({
       meta_status: metaStatus,
       status:      appStatus,
       updated_at:  new Date().toISOString(),
     }).eq('id', campaign_id)
+    if (updateErr) console.error('[activate-campaign] campaign update failed:', updateErr.message)
 
     // Log success
-    await supabase.from('campaign_actions').insert({
+    const { error: logErr } = await supabase.from('campaign_actions').insert({
       user_id: user.id,
       campaign_id,
       meta_campaign_id: campaign.meta_campaign_id,
@@ -86,6 +88,7 @@ export async function POST(req: NextRequest) {
       previous_value: { status: previousStatus },
       new_value: { status: appStatus },
     })
+    if (logErr) console.error('[activate-campaign] action log failed:', logErr.message)
 
     // Notification
     try {

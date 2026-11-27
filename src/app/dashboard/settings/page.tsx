@@ -1,4 +1,5 @@
 // src/app/dashboard/settings/page.tsx
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import type { Profile, BusinessProfile } from '@/types'
 import { PLAN_CREDITS, PLAN_PRICE, PLAN_LABEL, PLAN_COLOR } from '@/lib/plans'
@@ -29,11 +30,12 @@ function calcCompletion(fbConnected: boolean, bp: BusinessProfile | null): { sco
 export default async function SettingsPage() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
 
   const [profileRes, fbRes, bpRes] = await Promise.all([
-    supabase.from('profiles').select('*').eq('id', user!.id).single(),
-    supabase.from('facebook_connections').select('ad_account_id, ad_account_name, access_token').eq('user_id', user!.id).maybeSingle(),
-    supabase.from('business_profiles').select('*').eq('user_id', user!.id).maybeSingle(),
+    supabase.from('profiles').select('*').eq('id', user.id).single(),
+    supabase.from('facebook_connections').select('ad_account_id, ad_account_name, access_token').eq('user_id', user.id).maybeSingle(),
+    supabase.from('business_profiles').select('*').eq('user_id', user.id).maybeSingle(),
   ])
 
   const profile        = profileRes.data as Profile | null
@@ -87,7 +89,7 @@ export default async function SettingsPage() {
       {/* 6. Perfil y reportes */}
       <SettingsProfileForm
         profile={profile}
-        userEmail={user!.email ?? ''}
+        userEmail={user.email ?? ''}
       />
 
       {/* 7. Plan y créditos */}

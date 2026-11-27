@@ -45,8 +45,9 @@ export default function BusinessProfileSection({ initialData }: Props) {
     setSaving(true)
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { setSaving(false); return }
     await supabase.from('business_profiles').upsert(
-      { user_id: user!.id, ...form, updated_at: new Date().toISOString() },
+      { user_id: user.id, ...form, updated_at: new Date().toISOString() },
       { onConflict: 'user_id' }
     )
     setSaving(false)

@@ -474,23 +474,6 @@
   /* Cards de variante danger con glow rojo */
   .ds-card--danger   { background: var(--ds-color-danger-soft) !important;  border-color: var(--ds-color-danger-border) !important; box-shadow: 0 4px 20px rgba(0,0,0,0.25), 0 0 20px rgba(248, 113, 113, 0.10); }
 
-  /* ── Highlighted / accent card — blue glow border ── */
-  .ds-card--accent,
-  .card-accent {
-    background: rgba(37, 99, 235, 0.04);
-  }
-  .ds-card--accent::before,
-  .card-accent::before {
-    background: linear-gradient(180deg, rgba(73, 217, 255, 0.35) 0%, rgba(0, 91, 255, 0.15) 40%, rgba(0, 91, 255, 0.04) 100%) !important;
-  }
-  .ds-card--accent:hover,
-  .card-accent:hover {
-    box-shadow:
-      0 0 0 1px rgba(73, 217, 255, 0.08) inset,
-      0 16px 48px rgba(0, 0, 0, 0.40),
-      0 0 50px rgba(0, 91, 255, 0.10) !important;
-  }
-
   .card-selected, .ds-card.is-selected, .ds-option-card.is-selected {
     background: var(--ds-color-success-soft) !important;
   }
@@ -595,53 +578,6 @@
   }
 
   /* ─────────────────────────────────────────────────────────────
-     METRIC CARDS
-  ───────────────────────────────────────────────────────────── */
-  .metric-card {
-    @apply rounded-2xl p-5;
-    position: relative;
-    overflow: hidden;
-    background: var(--ds-card-bg);
-    border: none;
-    box-shadow:
-      var(--ds-card-inner-glow),
-      0 8px 28px rgba(0, 0, 0, 0.28);
-    backdrop-filter: blur(var(--ds-card-blur));
-    -webkit-backdrop-filter: blur(var(--ds-card-blur));
-    transition: all 0.30s cubic-bezier(0.16,1,0.3,1);
-  }
-  .metric-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 16px;
-    padding: 1px;
-    background: linear-gradient(180deg, var(--ds-card-border-top) 0%, var(--ds-card-border-mid) 40%, var(--ds-card-border-bottom) 100%);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-    z-index: 1;
-  }
-  /* Shimmer sweep on hover */
-  .metric-card::after {
-    content: '';
-    position: absolute;
-    top: 0; left: -80%; width: 55%; height: 100%;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.10) 50%, transparent 100%);
-    transform: skewX(-14deg);
-    pointer-events: none;
-  }
-  .metric-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--ds-card-border-hover);
-    box-shadow: var(--ds-shadow-lg);
-  }
-  .metric-card:hover::after {
-    animation: shimmerSweep 0.65s ease-out forwards;
-  }
-
-  /* ─────────────────────────────────────────────────────────────
      ADMIN CARD
   ───────────────────────────────────────────────────────────── */
   .admin-card {
@@ -693,25 +629,6 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
     background-size: 256px 256px;
     mix-blend-mode: overlay;
-  }
-
-  /* ─────────────────────────────────────────────────────────────
-     GRADIENT BORDER CARD
-  ───────────────────────────────────────────────────────────── */
-  .gradient-border-card {
-    position: relative;
-    border-radius: 20px;
-    padding: 1px;
-    background: linear-gradient(135deg, rgba(37,99,235,0.55) 0%, rgba(37,99,235,0.35) 50%, rgba(37,99,235,0.20) 100%);
-    transition: all 0.26s ease;
-  }
-  .gradient-border-card:hover {
-    background: linear-gradient(135deg, rgba(37,99,235,0.75) 0%, rgba(37,99,235,0.55) 50%, rgba(37,99,235,0.40) 100%);
-    box-shadow: 0 0 40px rgba(37,99,235,0.20), 0 0 20px rgba(37,99,235,0.15);
-  }
-  .gradient-border-card > * {
-    border-radius: 19px;
-    background: linear-gradient(160deg, rgba(14,10,26,0.96) 0%, rgba(8,8,18,0.98) 100%);
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -1109,22 +1026,6 @@
     top: 0; left: 0; right: 0; height: 1px;
     background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.30), transparent);
     pointer-events: none;
-  }
-
-  /* ─────────────────────────────────────────────────────────────
-     METRIC CARD STATUS VARIANTS — subtle 0.05 opacity status glow
-  ───────────────────────────────────────────────────────────── */
-  .metric-card--good {
-    border-color: var(--ds-color-success-border) !important;
-    box-shadow: 0 0 18px rgba(34, 197, 94, 0.08) !important;
-  }
-  .metric-card--warning {
-    border-color: var(--ds-color-warning-border) !important;
-    box-shadow: 0 0 18px rgba(251, 191, 36, 0.08) !important;
-  }
-  .metric-card--bad {
-    border-color: var(--ds-color-danger-border)  !important;
-    box-shadow: 0 0 18px rgba(248, 113, 113, 0.08) !important;
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -1726,6 +1627,5 @@
   ───────────────────────────────────────────────────────────── */
   @media (max-width: 768px) {
     .page-title { font-size: clamp(1.25rem, 4vw, 1.5rem); }
-    .metric-card { @apply p-4; }
   }
 }
