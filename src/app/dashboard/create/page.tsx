@@ -2,14 +2,14 @@
 // src/app/dashboard/create/page.tsx — Simplified wizard: AI-powered agency experience
 import { useCampaignWizard } from '@/hooks/useCampaignWizard'
 import StepBusiness    from '@/components/campaign/StepBusiness'
-import StepBudget      from '@/components/campaign/StepBudget'
+import StepCampaign    from '@/components/campaign/StepCampaign'
 import StepMedia       from '@/components/campaign/StepMedia'
 import StepGenerating  from '@/components/campaign/StepGenerating'
 import StepPublish     from '@/components/campaign/StepPublish'
 import StepDone        from '@/components/campaign/StepDone'
 import NoCreditsModal  from '@/components/campaign/NoCreditsModal'
 
-const STEPS = ['Negocio', 'Inversión', 'Material', 'IA', 'Publicar']
+const STEPS = ['Negocio', 'Campaña', 'Material', 'IA', 'Publicar']
 
 export default function CreateCampaignPage() {
   const w = useCampaignWizard()
@@ -104,17 +104,15 @@ export default function CreateCampaignPage() {
         />
       )}
 
-      {/* Step 1: Budget */}
+      {/* Step 1: Campaign (promo + objective + budget + duration) */}
       {w.step === 1 && (
-        <StepBudget
+        <StepCampaign
           form={w.form}
           setField={w.setField}
           currSymbol={w.currSymbol}
           budgetUSD={w.budgetUSD}
           error={w.error}
-          hasBusinessProfile={w.hasBusinessProfile}
-          onBack={() => w.setStep(0)}
-          onNext={w.nextFromBudget}
+          onNext={w.nextFromCampaign}
         />
       )}
 

@@ -27,6 +27,14 @@ export const generateCopiesSchema = z.object({
   pixel_level: z.number().optional(),
   pixel_data: z.unknown().optional(),
   campaign_id: z.string().uuid().optional().nullable(),
+  // New enriched context fields
+  campaign_objective: z.enum(['sales_web', 'sales_whatsapp', 'instagram_traffic']).optional(),
+  duration: z.number().optional(),
+  business_name: z.string().max(200).optional(),
+  communication_tone: z.string().max(50).optional(),
+  default_whatsapp_cta: z.string().max(500).optional(),
+  fb_page_name: z.string().max(200).optional(),
+  instagram_account_name: z.string().max(200).optional(),
 })
 
 // ── Facebook Publish Campaign ─────────────────────────────────────────────

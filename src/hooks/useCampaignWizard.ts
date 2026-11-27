@@ -7,13 +7,16 @@ import type { AIStrategy, AdCopyItem, CampaignObjective } from '@/types'
 import { compressImageFile, CURRENCY_SYMBOLS, APPROX_RATES } from '@/components/campaign/shared'
 
 export type UserGoal = 'sales' | 'leads' | 'traffic'
+export type AdFlowObjective = 'sales_web' | 'sales_whatsapp' | 'instagram_traffic'
 
 export interface WizardState {
   // Step 0: Business (skip if already in business_profiles)
   product_description: string
   website_url: string
   goal: UserGoal | ''
-  // Step 1: Budget
+  // Step 1: Campaign (new unified step)
+  campaign_promo: string
+  campaign_objective: AdFlowObjective | ''
   daily_budget: number
   duration: 7 | 14 | 30 | 0   // 0 = continuous
   // Media
@@ -59,6 +62,8 @@ export function useCampaignWizard() {
     product_description: '',
     website_url: '',
     goal: '',
+    campaign_promo: '',
+    campaign_objective: '',
     daily_budget: 15,
     duration: 14,
     mediaFiles: [],
@@ -181,6 +186,15 @@ export function useCampaignWizard() {
     setError(''); setStep(2)
   }
 
+  function nextFromCampaign() {
+    if (!form.campaign_promo.trim() || form.campaign_promo.trim().length < 10) {
+      setError('Describí qué querés promocionar (mínimo 10 caracteres).'); return
+    }
+    if (!form.campaign_objective) { setError('Elegí un objetivo para tu campaña.'); return }
+    if (!form.daily_budget || form.daily_budget < 1) { setError('Ingresá un presupuesto diario válido.'); return }
+    setError(''); setStep(2)
+  }
+
   function nextFromMedia() {
     setError(''); generateWithAI()
   }
@@ -224,8 +238,8 @@ export function useCampaignWizard() {
 
     try {
       const goalFields = goalToFields(form.goal as UserGoal)
-      const validBase64s  = imageBase64s.filter(Boolean)
-      const validMedTypes = imageMediaTypes.filter(Boolean)
+      const validBase64s  = imageBase64s.filter(Boolean).slice(0, 5)  // Up to 5 images
+      const validMedTypes = imageMediaTypes.filter(Boolean).slice(0, 5)
       const firstVideoName = form.mediaFiles.find(f => f.type.startsWith('video/'))?.name
 
       // Load business profile data for AI context
@@ -241,21 +255,34 @@ export function useCampaignWizard() {
         bizData = data
       }
 
+      // Use new campaign fields if available, fall back to old fields for compatibility
+      const useCampaignPromo = form.campaign_promo.trim()
+      const useObjective = form.campaign_objective
+
       const res = await fetch('/api/ai/generate-copies', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          product_description: form.product_description,
+          product_description: useCampaignPromo || form.product_description,
           daily_budget:        form.daily_budget,
+          duration:            form.duration,
           target_country:      bizData?.country || 'Argentina',
           currency:            currency,
-          destination_url:     form.website_url || bizData?.website_url || undefined,
+          destination_url:     bizData?.website_url || form.website_url || undefined,
           whatsapp_number:     bizData?.whatsapp_number || undefined,
-          // AI-inferred fields from goal
-          main_objective:      goalFields.mainObjective,
+          // New: campaign objective for precise Meta mapping
+          campaign_objective:  useObjective || undefined,
+          // Legacy fields (still supported by API)
+          main_objective:      useObjective ? undefined : goalFields.mainObjective,
           business_type:       bizData?.industry || goalFields.businessType,
           advertising_status:  goalFields.advertisingStatus,
-          // Media
+          // New: full brand context from profile
+          business_name:          bizData?.business_name || undefined,
+          communication_tone:     bizData?.communication_tone || undefined,
+          default_whatsapp_cta:   bizData?.default_whatsapp_cta || undefined,
+          fb_page_name:           bizData?.fb_page_name || undefined,
+          instagram_account_name: bizData?.instagram_account_name || undefined,
+          // Media — up to 5 images now
           image_base64s:       validBase64s.length  ? validBase64s  : undefined,
           image_media_types:   validMedTypes.length ? validMedTypes : undefined,
           video_name:          firstVideoName,
@@ -316,7 +343,7 @@ export function useCampaignWizard() {
     if (!user) { setError('Sesión expirada.'); return null }
 
     const effective     = applyEditsToStrategy()
-    const campaignName  = effective.campaign?.name || form.product_description.slice(0, 50)
+    const campaignName  = effective.campaign?.name || form.campaign_promo.slice(0, 50) || form.product_description.slice(0, 50)
     const metaObjective = (effective.campaign?.objective || 'OUTCOME_AWARENESS') as CampaignObjective
     const targeting     = effective.targeting
 
@@ -327,7 +354,7 @@ export function useCampaignWizard() {
         name:                  campaignName,
         objective:             metaObjective,
         daily_budget:          form.daily_budget,
-        product_description:   form.product_description,
+        product_description:   form.campaign_promo || form.product_description,
         status:                'draft',
         ai_copies:             effective,
         target_country:        targeting?.geo || 'AR',
@@ -418,6 +445,8 @@ export function useCampaignWizard() {
     setEditedCopies({})
     setForm(prev => ({
       ...prev,
+      campaign_promo: '',
+      campaign_objective: '',
       mediaFiles: [],
       mediaPreviews: [],
     }))
@@ -444,7 +473,7 @@ export function useCampaignWizard() {
     form, setField,
     editedCopies,
     processFiles, removeMedia,
-    nextFromBusiness, nextFromBudget, nextFromMedia,
+    nextFromBusiness, nextFromBudget, nextFromCampaign, nextFromMedia,
     patchAd,
     generateWithAI, handleSaveDraft, handlePublishToMeta,
     resetWizard, router,

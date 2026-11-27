@@ -69,6 +69,15 @@ function buildPrompt(
   destinationUrl?: string,
   whatsappNumber?: string,
   pixelCtx?: PixelContext,
+  // New enriched context fields
+  campaignObjective?: string,
+  duration?: number,
+  businessName?: string,
+  communicationTone?: string,
+  defaultWhatsappCta?: string,
+  fbPageName?: string,
+  instagramAccountName?: string,
+  imageCount?: number,
 ): string {
   const cfg = STRATEGY_CONFIG[strategyType]
   const budgetCents = dailyBudget * 100
@@ -87,22 +96,32 @@ function buildPrompt(
   }
   const countryCode = geoMap[targetCountry.toLowerCase()] || targetCountry.toUpperCase().slice(0, 2)
 
-  // Determine the link URL for CTA context
+  // Determine destination and CTA based on campaign_objective (new) or legacy mainObjective
   let linkContext = ''
-  if (destinationUrl) {
-    linkContext = `- URL de destino de los anuncios: ${destinationUrl}`
-  } else if (whatsappNumber) {
-    linkContext = `- Canal de contacto: WhatsApp ${whatsappNumber} (los CTAs deben llevar a WhatsApp)`
-  }
-
-  // CTA guidance based on objective
   let ctaGuidance = ''
-  if (mainObjective === 'whatsapp' || whatsappNumber) {
-    ctaGuidance = 'Los botones CTA deben ser "Enviar mensaje", "Escribir por WhatsApp" o similar. cta_type: "WHATSAPP_MESSAGE" o "MESSAGE_PAGE".'
-  } else if (mainObjective === 'sales' || businessType === 'ecommerce') {
+  let objectiveLabel = mainObjective || 'No especificado'
+
+  if (campaignObjective === 'sales_whatsapp' || mainObjective === 'whatsapp') {
+    objectiveLabel = 'Ventas por WhatsApp'
+    linkContext = whatsappNumber
+      ? `- Destino: WhatsApp ${whatsappNumber}`
+      : '- Destino: WhatsApp del negocio'
+    ctaGuidance = `Los botones CTA deben ser "Enviar mensaje" o "Escribir por WhatsApp". cta_type: "WHATSAPP_MESSAGE".${defaultWhatsappCta ? ` Texto sugerido por el cliente: "${defaultWhatsappCta}"` : ''}`
+  } else if (campaignObjective === 'instagram_traffic') {
+    objectiveLabel = 'Tráfico a Instagram'
+    linkContext = instagramAccountName
+      ? `- Destino: Perfil de Instagram @${instagramAccountName}`
+      : '- Destino: Perfil de Instagram del negocio'
+    ctaGuidance = 'Los CTAs deben invitar a conocer más: "Ver perfil", "Conocer más", "Seguinos". cta_type: "LEARN_MORE".'
+  } else if (campaignObjective === 'sales_web' || mainObjective === 'sales' || businessType === 'ecommerce') {
+    objectiveLabel = 'Ventas por web'
+    linkContext = destinationUrl
+      ? `- Destino: ${destinationUrl}`
+      : '- Destino: Sitio web del negocio'
     ctaGuidance = 'Los CTAs deben ser de compra directa: "Comprar ahora", "Ver precio", "Obtener descuento". cta_type: "SHOP_NOW" o "GET_OFFER".'
   } else if (mainObjective === 'leads') {
-    ctaGuidance = 'Los CTAs deben capturar leads: "Solicitar info", "Quiero saber más", "Registrarme". cta_type: "GET_QUOTE" o "SIGN_UP".'
+    objectiveLabel = 'Generación de leads'
+    ctaGuidance = 'Los CTAs deben capturar leads: "Solicitar info", "Quiero saber más". cta_type: "GET_QUOTE" o "SIGN_UP".'
   }
 
   // Pixel context block — tells the AI what audience types are realistically possible
@@ -121,24 +140,50 @@ ${!pixelCtx.canRetargetAddToCart ? '- NO menciones retargeting de carrito abando
 ${pixelCtx.level < 3 ? '- El pixel está vacío. TODOS los ad sets deben ser "broad" o "interest" — generá nombres descriptivos basados en audiencias frías y comportamientos, NO en eventos del pixel.' : ''}
 ` : ''
 
+  // Tone instruction
+  const toneBlock = communicationTone ? `
+TONO DE COMUNICACIÓN: Escribí TODOS los copies en tono "${communicationTone}".
+${communicationTone === 'profesional' ? '- Formal, datos, autoridad, sin emojis excesivos' : ''}
+${communicationTone === 'cercano' ? '- Conversacional, empático, como un amigo que recomienda' : ''}
+${communicationTone === 'urgente' ? '- Directo, FOMO, escasez, acción inmediata' : ''}
+${communicationTone === 'inspiracional' ? '- Aspiracional, emocional, transformación personal' : ''}
+` : ''
+
+  // Image analysis instruction
+  const imageBlock = (imageCount && imageCount > 0) ? `
+IMÁGENES DEL PRODUCTO:
+Se adjuntan ${imageCount} imagen${imageCount > 1 ? 'es' : ''} del producto/servicio. Analizá CADA imagen:
+1. Qué producto/servicio se ve
+2. Estilo visual (colores, iluminación, composición)
+3. Contexto (lifestyle, producto solo, antes/después)
+
+Usá lo que ves para adaptar el copy a lo que realmente muestra la imagen, referenciar detalles visuales en el texto, y sugerir qué imagen usar con cada ángulo de copy en el campo "creative_suggestion".
+` : ''
+
+  // Duration context
+  const durationContext = duration ? (duration > 0 ? `${duration} días` : 'campaña continua') : 'no especificada'
+
   return `Sos el mejor estratega de Meta Ads del mundo hispanohablante, con experiencia en más de 500 negocios de Latinoamérica y España.
 ${pixelBlock}
-CONTEXTO DEL NEGOCIO:
-- Descripción: ${productDescription}
+${businessName ? `MARCA: ${businessName}${fbPageName ? ` (Página: ${fbPageName})` : ''}${instagramAccountName ? ` · @${instagramAccountName}` : ''}` : ''}
+${toneBlock}
+CONTEXTO DE ESTA CAMPAÑA:
+- Promoción: ${productDescription}
+- Objetivo: ${objectiveLabel}
 - Tipo de negocio: ${businessType || 'No especificado'}
 - Situación publicitaria: ${advertisingStatus || 'No especificado'}
-- Objetivo principal: ${mainObjective || 'No especificado'}
 - Inversión mensual estimada: ${monthlyBudget || 'No especificada'}
 - ROAS/CPL actual: ${currentRoas || 'Primera vez / No disponible'}
-- País/Ciudad: ${targetCountry} (código: ${countryCode})
+- País: ${targetCountry} (código: ${countryCode})
 - Presupuesto diario: $${dailyBudget} ${currency} (${budgetCents} centavos)
+- Duración: ${durationContext}
 - Moneda: ${currency}
 - Fase recomendada: ${strategyType} — ${cfg.label}
 ${linkContext}
 ${targetAudience ? `- Audiencia indicada: ${targetAudience}` : ''}
 ${existingCopy ? `- Copy de referencia del cliente: ${existingCopy}` : ''}
 ${videoName ? `- Video del producto disponible: "${videoName}" (no tengo acceso al video pero el cliente lo tiene)` : ''}
-
+${imageBlock}
 REGLAS ABSOLUTAS:
 1. Solo usar intereses que EXISTEN EXACTAMENTE en Meta Ads Business Manager 2024-2025
 2. Los intereses deben ser nombres de páginas reales, comportamientos verificados o categorías oficiales de Meta
@@ -299,14 +344,32 @@ export async function POST(req: NextRequest) {
       destination_url,
       whatsapp_number,
       pixel_data,
+      // New enriched context fields
+      campaign_objective,
+      duration,
+      business_name,
+      communication_tone,
+      default_whatsapp_cta,
+      fb_page_name,
+      instagram_account_name,
     } = body
 
     if (!product_description?.trim()) {
       return NextResponse.json({ error: 'Se requiere descripción del producto' }, { status: 400 })
     }
 
+    // Auto-select strategy based on campaign_objective + pixel level
+    function autoSelectStrategy(obj: string | undefined, pxLevel: number): StrategyType {
+      if (obj === 'instagram_traffic') return 'TOFU'
+      if (pxLevel >= 5) return 'BOFU'
+      if (pxLevel >= 3) return 'MOFU'
+      return 'TOFU'
+    }
+
+    const pixelLevelForStrategy = pixel_data?.level ?? 0
     const strategyType: StrategyType = strategy_type
-      || (objective ? objectiveToStrategy(objective) : 'TOFU')
+      || (campaign_objective ? autoSelectStrategy(campaign_objective, pixelLevelForStrategy)
+        : objective ? objectiveToStrategy(objective) : 'TOFU')
 
     // ── Pixel capabilities: prefer client-supplied pixel_data, fall back to DB ─
     let pixelCtx: {
@@ -355,6 +418,11 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    // Count valid images for prompt context
+    const allBase64s = image_base64s?.length ? image_base64s : (image_base64 ? [image_base64] : [])
+    const allMediaTypes = image_media_types?.length ? image_media_types : (image_media_type ? [image_media_type] : [])
+    const validImageCount = allBase64s.filter(Boolean).length
+
     const promptText = buildPrompt(
       strategyType,
       product_description,
@@ -372,47 +440,42 @@ export async function POST(req: NextRequest) {
       destination_url,
       whatsapp_number,
       pixelCtx,
+      // New enriched context fields
+      campaign_objective,
+      duration,
+      business_name,
+      communication_tone,
+      default_whatsapp_cta,
+      fb_page_name,
+      instagram_account_name,
+      validImageCount,
     )
 
     // ── Build message content ───────────────────────────────────────────────
-    // Only send the FIRST image to Claude (cost + size optimization)
+    // Send up to 5 images to Claude for visual analysis
     // Videos are never sent - only the name/type is included in text
-    let firstBase64: string | null = null
-    let firstMediaType: string | null = null
+    const imageBlocks: Anthropic.ImageBlockParam[] = []
+    const maxImages = 5
 
-    if (image_base64s?.length) {
-      const mt = image_media_types?.[0] || 'image/jpeg'
-      const mt2 = mt === 'image/jpg' ? 'image/jpeg' : mt
-      if (SUPPORTED_IMAGE_TYPES.includes(mt2 as SupportedImageType)) {
-        firstBase64 = image_base64s[0]
-        firstMediaType = mt2
-      }
-    } else if (image_base64) {
-      let mt = image_media_type || 'image/jpeg'
+    for (let i = 0; i < Math.min(allBase64s.length, maxImages); i++) {
+      const b64 = allBase64s[i]
+      if (!b64) continue
+      let mt = (allMediaTypes[i] || 'image/jpeg')
       if (mt === 'image/jpg') mt = 'image/jpeg'
       if (SUPPORTED_IMAGE_TYPES.includes(mt as SupportedImageType)) {
-        firstBase64 = image_base64
-        firstMediaType = mt
+        imageBlocks.push({
+          type: 'image',
+          source: { type: 'base64', media_type: mt as SupportedImageType, data: b64 },
+        })
       }
     }
 
     let messageContent: Anthropic.MessageParam['content']
 
-    if (firstBase64 && firstMediaType) {
-      const imageNote = image_base64s?.length > 1
-        ? `El cliente subió ${image_base64s.length} imágenes del producto (te muestro la primera para análisis visual). Adaptá el copy considerando que habrá múltiples creativos.`
-        : 'Esta es la imagen del producto. Analizala y adaptá el copy según lo que ves (colores, estilo, producto, contexto visual).'
-
+    if (imageBlocks.length > 0) {
       messageContent = [
-        {
-          type: 'image',
-          source: {
-            type: 'base64',
-            media_type: firstMediaType as SupportedImageType,
-            data: firstBase64,
-          },
-        },
-        { type: 'text', text: `${imageNote}\n\n${promptText}` },
+        ...imageBlocks,
+        { type: 'text', text: promptText },
       ]
     } else {
       messageContent = promptText
