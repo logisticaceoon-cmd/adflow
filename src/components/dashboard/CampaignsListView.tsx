@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import type { Campaign } from '@/types'
+import { formatRelative } from '@/lib/format'
 import SyncButton from './SyncButton'
 import EmptyState from '@/components/ui/EmptyState'
 import { Play, Pause } from 'lucide-react'
@@ -75,17 +76,7 @@ function RoasCell({ roas }: { roas?: number }) {
   )
 }
 
-function formatRelative(date: string | null | undefined): string {
-  if (!date) return '—'
-  const diff = Date.now() - new Date(date).getTime()
-  const mins = Math.floor(diff / 60000)
-  if (mins < 1) return 'hace segs'
-  if (mins < 60) return `hace ${mins}m`
-  const hours = Math.floor(mins / 60)
-  if (hours < 24) return `hace ${hours}h`
-  const days = Math.floor(hours / 24)
-  return `hace ${days}d`
-}
+// formatRelative imported from @/lib/format
 
 export default function CampaignsListView({ campaigns }: Props) {
   const router = useRouter()

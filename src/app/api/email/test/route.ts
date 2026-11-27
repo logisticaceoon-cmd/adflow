@@ -5,7 +5,9 @@ import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let _resend: Resend | null = null
+function getResend() { return _resend ??= new Resend(process.env.RESEND_API_KEY || '') }
+const resend = { get emails() { return getResend().emails } }
 const FROM = process.env.EMAIL_FROM || 'AdFlow <reportes@adflow.ai>'
 
 export async function GET() {

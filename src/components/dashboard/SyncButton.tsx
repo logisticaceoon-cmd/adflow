@@ -5,21 +5,10 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { RefreshCw } from 'lucide-react'
+import { formatRelative } from '@/lib/format'
 
 interface Props {
   variant?: 'full' | 'compact'
-}
-
-function formatRelative(date: string | null): string {
-  if (!date) return 'nunca'
-  const diff = Date.now() - new Date(date).getTime()
-  const mins = Math.floor(diff / 60000)
-  if (mins < 1) return 'hace unos segundos'
-  if (mins < 60) return `hace ${mins} min`
-  const hours = Math.floor(mins / 60)
-  if (hours < 24) return `hace ${hours} h`
-  const days = Math.floor(hours / 24)
-  return `hace ${days} día${days !== 1 ? 's' : ''}`
 }
 
 export default function SyncButton({ variant = 'full' }: Props) {

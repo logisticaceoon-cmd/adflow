@@ -113,10 +113,6 @@ export default async function DashboardPage() {
   const trendConv    = calcTrend(totalConversions, (prevMonthReport?.total_conversions as number) || 0)
   const trendRoas    = calcTrend(avgRoas,          (prevMonthReport?.avg_roas          as number) || 0)
 
-  // ── Days remaining in the month ───────────────────────────────────────
-  const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
-  const daysRemaining  = Math.max(0, lastDayOfMonth - now.getDate())
-
   const showOnboarding = !allCampaigns.length && !businessProfile?.selected_ad_account_id
   const fullName = profile?.full_name?.split(' ')[0] || 'crecedor'
   const currency = businessProfile?.currency === 'USD' ? '$' : (businessProfile?.currency || '$')

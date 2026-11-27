@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import {
   LayoutDashboard, Megaphone, Sparkles, Images,
-  BarChart2, Settings, HelpCircle, LogOut, Zap, Shield, CreditCard,
+  BarChart2, Settings, HelpCircle, LogOut, Zap, Shield,
   DollarSign,
 } from 'lucide-react'
 import type { User } from '@supabase/supabase-js'

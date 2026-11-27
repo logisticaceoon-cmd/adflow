@@ -9,7 +9,9 @@ import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { checkRateLimit } from '@/lib/rate-limit'
 import { validate, emailSendSchema } from '@/lib/validations'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let _resend: Resend | null = null
+function getResend() { return _resend ??= new Resend(process.env.RESEND_API_KEY || '') }
+const resend = { get emails() { return getResend().emails } }
 const FROM = process.env.EMAIL_FROM || 'AdFlow <reportes@adflow.ai>'
 
 export async function POST(req: NextRequest) {

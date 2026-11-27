@@ -3,6 +3,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { Bell, Check, Menu, ChevronRight } from 'lucide-react'
+import { formatRelative } from '@/lib/format'
 import { useSidebar } from './SidebarContext'
 
 // ── Notification types ─────────────────────────────────────────────────────
@@ -44,19 +45,6 @@ const SEVERITY_COLOR: Record<string, string> = {
 
 function iconFor(type: string, severity: string): string {
   return TYPE_ICONS[type] || (severity === 'error' ? '⚠️' : severity === 'success' ? '✅' : 'ℹ️')
-}
-
-function formatRelative(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime()
-  const mins = Math.floor(diff / 60000)
-  if (mins < 1) return 'ahora'
-  if (mins < 60) return `hace ${mins}m`
-  const hours = Math.floor(mins / 60)
-  if (hours < 24) return `hace ${hours}h`
-  const days = Math.floor(hours / 24)
-  if (days < 7) return `hace ${days}d`
-  const weeks = Math.floor(days / 7)
-  return `hace ${weeks}sem`
 }
 
 // Map pathname (or prefix) → breadcrumb trail

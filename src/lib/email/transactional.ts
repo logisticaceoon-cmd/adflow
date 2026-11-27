@@ -6,7 +6,18 @@
 // nunca lanzan, para no romper el flujo que las invoca.
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy init — avoids crashing build/import when RESEND_API_KEY is missing
+let _resend: Resend | null = null
+function getResend(): Resend {
+  if (!_resend) {
+    if (!process.env.RESEND_API_KEY) {
+      console.warn('[email] RESEND_API_KEY not set — emails will fail')
+    }
+    _resend = new Resend(process.env.RESEND_API_KEY || '')
+  }
+  return _resend
+}
+const resend = { get emails() { return getResend().emails } }
 const FROM = process.env.EMAIL_FROM || 'AdFlow <reportes@adflow.ai>'
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://adflow.ai'
 

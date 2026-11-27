@@ -2,6 +2,7 @@
 // Premium campaign operations center: hero, executive summary, performance,
 // structure, creative previews, action history, and recommendations.
 import { createClient } from '@/lib/supabase/server'
+import { formatRelative } from '@/lib/format'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import type { Campaign, AdSetItem, AdCopyItem, CampaignMetrics } from '@/types'
@@ -41,18 +42,6 @@ const STRATEGY_COLORS: Record<string, string> = {
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────
-function formatRelative(date: string | null | undefined): string {
-  if (!date) return 'nunca'
-  const diff = Date.now() - new Date(date).getTime()
-  const mins = Math.floor(diff / 60000)
-  if (mins < 1) return 'hace unos segundos'
-  if (mins < 60) return `hace ${mins} min`
-  const hours = Math.floor(mins / 60)
-  if (hours < 24) return `hace ${hours} h`
-  const days = Math.floor(hours / 24)
-  return `hace ${days} día${days !== 1 ? 's' : ''}`
-}
-
 function classifyPhase(name: string, strategyType?: string | null): keyof typeof PHASE_COLORS {
   const n = (name || '').toLowerCase()
   const s = (strategyType || '').toUpperCase()
