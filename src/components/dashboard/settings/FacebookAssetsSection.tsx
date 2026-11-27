@@ -167,15 +167,16 @@ export default function FacebookAssetsSection({ hasFbToken, initialData }: Props
     setLoadingInstagram(true)
     setIgError('')
     try {
-      const res  = await fetch(`/api/facebook/meta-assets?page_id=${pageId}`)
+      const params = new URLSearchParams({ page_id: pageId })
+      if (form.business_portfolio_id) params.set('business_id', form.business_portfolio_id)
+      const res  = await fetch(`/api/facebook/meta-assets?${params}`)
       const data = await res.json()
       if (data.error === 'token_expired') { setTokenExpired(true); return }
       if (data.error) { setIgError(`Error al cargar Instagram: ${data.error}`); return }
       const accounts = data.instagramAccounts || []
       setIgAccounts(accounts)
       if (accounts.length === 0) {
-        const detail = data.igDebugError ? ` (${data.igDebugError})` : ''
-        setIgError(`No se encontró una cuenta de Instagram vinculada a esta Página.${detail}`)
+        setIgError('No se encontró una cuenta de Instagram vinculada a esta Página. Asegurate de que tu Instagram esté configurado como cuenta profesional (Business o Creator) y vinculado a esta Página de Facebook.')
       }
     } catch {
       setIgError('Error al cargar cuentas de Instagram. Intentá de nuevo.')

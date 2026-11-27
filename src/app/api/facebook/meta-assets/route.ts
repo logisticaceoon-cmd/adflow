@@ -123,14 +123,32 @@ export async function GET(req: NextRequest) {
         `/${pageId}/instagram_accounts`
       )
 
-      if (igEdgeData.error) igDebugError = JSON.stringify(igEdgeData.error)
+      if (!igEdgeData.error && Array.isArray(igEdgeData.data) && igEdgeData.data.length > 0) {
+        instagramAccounts = igEdgeData.data.map(
+          (a: { id: string; username?: string; name?: string }) => ({
+            id: a.id,
+            username: a.username || a.name || a.id,
+          })
+        )
+      } else {
+        if (igEdgeData.error) igDebugError = JSON.stringify(igEdgeData.error)
 
-      instagramAccounts = (igEdgeData.data || []).map(
-        (a: { id: string; username?: string; name?: string }) => ({
-          id: a.id,
-          username: a.username || a.name || a.id,
-        })
-      )
+        // Intento 3: buscar por Business Portfolio si está disponible
+        if (businessId) {
+          const bizIgData = await graphFetch(
+            `https://graph.facebook.com/v20.0/${businessId}/instagram_accounts?fields=id,username,name&limit=50&access_token=${token}`,
+            `/${businessId}/instagram_accounts`
+          )
+          if (!bizIgData.error && Array.isArray(bizIgData.data)) {
+            instagramAccounts = bizIgData.data.map(
+              (a: { id: string; username?: string; name?: string }) => ({
+                id: a.id,
+                username: a.username || a.name || a.id,
+              })
+            )
+          }
+        }
+      }
     }
   }
 
