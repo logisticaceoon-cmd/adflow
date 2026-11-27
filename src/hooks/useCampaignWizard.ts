@@ -93,11 +93,12 @@ export function useCampaignWizard() {
         if (biz?.business_name && biz?.website_url) {
           setHasBusinessProfile(true)
           setBusinessName(biz.business_name)
-          // Pre-fill from profile
+          // Pre-fill from profile — default goal to 'sales' since step 0 is skipped
           setForm(prev => ({
             ...prev,
             product_description: biz.business_name || '',
             website_url: biz.website_url || '',
+            goal: prev.goal || 'sales',
             daily_budget: biz.default_daily_budget || prev.daily_budget,
           }))
         } else {
@@ -200,13 +201,14 @@ export function useCampaignWizard() {
   }
 
   // ── Map goal to AI fields ─────────────────────────────────────────────────
-  function goalToFields(goal: UserGoal) {
+  function goalToFields(goal: UserGoal | '') {
     const map: Record<UserGoal, { mainObjective: string; businessType: string; advertisingStatus: string }> = {
       sales:   { mainObjective: 'sales',     businessType: 'ecommerce',   advertisingStatus: 'improving' },
       leads:   { mainObjective: 'leads',     businessType: 'b2b',         advertisingStatus: 'improving' },
       traffic: { mainObjective: 'awareness', businessType: 'infoproduct', advertisingStatus: 'first_time' },
     }
-    return map[goal]
+    // Default to 'sales' if goal not set (e.g. business profile pre-filled, step 0 skipped)
+    return map[goal as UserGoal] || map.sales
   }
 
   // ── Generate with AI ──────────────────────────────────────────────────────
