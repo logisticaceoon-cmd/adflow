@@ -238,8 +238,8 @@ export function useCampaignWizard() {
 
     try {
       const goalFields = goalToFields(form.goal as UserGoal)
-      const validBase64s  = imageBase64s.filter(Boolean).slice(0, 3)  // Max 3 images to avoid timeout
-      const validMedTypes = imageMediaTypes.filter(Boolean).slice(0, 3)
+      const validBase64s  = imageBase64s.filter(Boolean).slice(0, 5)
+      const validMedTypes = imageMediaTypes.filter(Boolean).slice(0, 5)
       const firstVideoName = form.mediaFiles.find(f => f.type.startsWith('video/'))?.name
 
       // Load business profile data for AI context

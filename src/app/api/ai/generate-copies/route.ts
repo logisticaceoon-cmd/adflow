@@ -470,7 +470,7 @@ export async function POST(req: NextRequest) {
     // Send up to 5 images to Claude for visual analysis
     // Videos are never sent - only the name/type is included in text
     const imageBlocks: Anthropic.ImageBlockParam[] = []
-    const maxImages = 3
+    const maxImages = 5
 
     for (let i = 0; i < Math.min(allBase64s.length, maxImages); i++) {
       const b64 = allBase64s[i]
