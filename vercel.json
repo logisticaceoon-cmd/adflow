@@ -11,7 +11,7 @@
   ],
   "functions": {
     "src/app/api/ai/generate-copies/route.ts": {
-      "maxDuration": 60,
+      "maxDuration": 120,
       "memory": 1024
     },
     "src/app/api/cron/automation/route.ts": {
