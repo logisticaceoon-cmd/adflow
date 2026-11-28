@@ -102,7 +102,6 @@ export interface AdCopyItem {
   creative_suggestion?: string
   image_analysis?: string
   variants: {
-    short: CopyVariant
     medium: CopyVariant
     long: CopyVariant
   }

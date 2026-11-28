@@ -261,10 +261,6 @@ Respondé ÚNICAMENTE con JSON válido, sin texto extra, sin backticks, sin mark
             "cta_type": "LEARN_MORE|SHOP_NOW|CONTACT_US|GET_QUOTE|SUBSCRIBE|MESSAGE_PAGE|SEND_MESSAGE|WHATSAPP_MESSAGE",
             "creative_suggestion": "tipo de imagen ideal para este copy (lifestyle, demo, testimonio, etc.)",
             "variants": {
-              "short": {
-                "primary_text": "1-2 frases, golpe directo. El hook que detiene el scroll. Máx 80 chars.",
-                "headline": "headline corto y directo con emoji"
-              },
               "medium": {
                 "primary_text": "3-4 frases que fluyen natural. Hook + por qué pasa + qué hace el producto. 80-180 chars.",
                 "headline": "headline con la promesa condensada"

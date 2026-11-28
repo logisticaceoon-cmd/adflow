@@ -40,19 +40,15 @@ Detox Plus trabaja desde la digestión. Sin restricciones, sin rebote.
 Miles de mujeres ya sienten la diferencia en las primeras 2 semanas 💚
 Mirá cómo funciona ⬇️"
 
-REGLA #4: TRES LARGOS, TRES ESTILOS
-Para cada anuncio generá 3 versiones:
-
-SHORT (1-2 frases, máx 80 chars):
-- Un golpe directo. Hook que detiene el scroll.
-- Ejemplo: "Comés bien y seguís hinchada? El problema no es la comida 👀"
+REGLA #4: DOS VERSIONES POR ANUNCIO (medium y long)
+Para cada anuncio generá 2 versiones en "variants":
 
 MEDIUM (3-4 frases, 80-180 chars):
-- Hook + por qué pasa + qué hace el producto
+- Hook + por qué pasa + qué hace el producto. Directo, sin relleno.
 - Ejemplo: "Comés bien y seguís hinchada? No es falta de disciplina — es inflamación interna. Detox Plus trabaja desde la digestión, sin restricciones 💚 Probalo."
 
 LONG (5-7 frases, 180-350 chars):
-- Micro-historia o argumento completo con proof y CTA
+- Micro-historia o argumento completo con proof y CTA. Se lee como mensaje real.
 - Ejemplo: "Llevo 3 meses tomándolo y la diferencia se nota en la ropa 👀 Ya no me levanto hinchada, no me siento pesada después de comer y la energía volvió. Si tu panza se infla sin importar qué comés... el problema está adentro. Detox Plus actúa en la digestión — sin dietas extremas, sin rebote. +10mil mujeres ya lo probaron 💚"
 
 REGLA #5: HEADLINES QUE CONDENSAN

@@ -258,12 +258,11 @@ export default function StepPublish({
                   const editedAd = getAd(setIdx, adIdx)
                   const sel = selectedVariant[`${setIdx}-${adIdx}`] || 'medium'
                   const imageForAd = validPreviews[adIdx % validPreviews.length] || null
-                  const hasVariants = !!ad.variants?.short
+                  const hasVariants = !!ad.variants?.medium
 
                   const VARIANT_LABELS: Record<string, { label: string; tag: string }> = {
-                    short:  { label: 'Corta',   tag: '~60 chars' },
-                    medium: { label: 'Mediana', tag: '~125 chars' },
-                    long:   { label: 'Larga',   tag: '~250 chars' },
+                    medium: { label: 'Mediana', tag: '~150 chars' },
+                    long:   { label: 'Larga',   tag: '~300 chars' },
                   }
 
                   // Build ad object for each variant
@@ -287,11 +286,11 @@ export default function StepPublish({
 
                       <div style={{
                         display: 'grid',
-                        gridTemplateColumns: hasVariants ? '1fr 1fr 1fr' : '1fr',
-                        gap: 10,
-                        maxWidth: hasVariants ? 620 : 200,
+                        gridTemplateColumns: hasVariants ? '1fr 1fr' : '1fr',
+                        gap: 12,
+                        maxWidth: hasVariants ? 440 : 220,
                       }}>
-                        {(hasVariants ? ['short', 'medium', 'long'] : ['medium']).map(vKey => (
+                        {(hasVariants ? ['medium', 'long'] : ['medium']).map(vKey => (
                           <AdPreviewCard
                             key={vKey}
                             ad={adForVariant(vKey)}
