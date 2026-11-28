@@ -1,7 +1,7 @@
 'use client'
-// Step 4: "Revisá y publicá" — Meta Ad preview cards with copy variant selection
+// Step 4: "Revisá y publicá" — Per-ad copy variant selection + compact Meta preview
 import { useState } from 'react'
-import { ChevronDown, ChevronUp, Check } from 'lucide-react'
+import { ChevronDown, ChevronUp, Check, Users } from 'lucide-react'
 import type { AIStrategy, AdCopyItem, CopyVariant } from '@/types'
 
 interface Props {
@@ -19,122 +19,167 @@ interface Props {
   onPublish: () => void
 }
 
-function AdPreviewCard({
-  ad, imageUrl, pageName, selected, onSelect, variant,
+/* ── Compact Meta Ad preview (image + headline + CTA only) ── */
+function AdImageCard({
+  ad, imageUrl, pageName,
 }: {
   ad: AdCopyItem
   imageUrl: string | null
   pageName: string
-  selected: boolean
-  onSelect: () => void
-  variant: string
 }) {
   return (
-    <button
-      type="button"
-      onClick={onSelect}
-      className="text-left w-full transition-all"
-      style={{
-        borderRadius: 10,
-        border: selected ? '2px solid var(--ds-color-primary)' : '2px solid var(--ds-card-border)',
-        background: selected ? 'rgba(79,110,247,0.04)' : 'var(--ds-bg-elevated)',
-        overflow: 'hidden',
-        cursor: 'pointer',
-        position: 'relative',
-      }}
-    >
-      {/* Selection badge */}
-      <div style={{
-        position: 'absolute', top: 8, right: 8, zIndex: 2,
-        width: 24, height: 24, borderRadius: 99,
-        background: selected ? 'var(--ds-color-primary)' : 'rgba(255,255,255,0.1)',
-        border: selected ? 'none' : '1px solid rgba(255,255,255,0.2)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}>
-        {selected && <Check size={14} style={{ color: '#fff' }} strokeWidth={3} />}
-      </div>
-
-      {/* Page name + "Sponsored" */}
-      <div style={{ padding: '10px 12px 0' }}>
-        <div className="flex items-center gap-2">
-          <div style={{
-            width: 28, height: 28, borderRadius: '50%',
-            background: 'var(--ds-color-primary-soft)',
-            border: '1px solid rgba(79,110,247,0.3)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 11, fontWeight: 700, color: 'var(--ds-color-primary)',
-          }}>
-            {pageName.charAt(0)}
-          </div>
-          <div>
-            <p style={{ fontSize: 11, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>{pageName}</p>
-            <p style={{ fontSize: 9, color: 'var(--ds-text-muted)' }}>Publicidad</p>
-          </div>
+    <div style={{
+      borderRadius: 6,
+      border: '1px solid var(--ds-card-border)',
+      background: 'var(--ds-bg-elevated)',
+      overflow: 'hidden',
+    }}>
+      {/* Page name + Sponsored */}
+      <div style={{ padding: '5px 8px', display: 'flex', alignItems: 'center', gap: 6 }}>
+        <div style={{
+          width: 18, height: 18, borderRadius: '50%',
+          background: 'var(--ds-color-primary-soft)',
+          border: '1px solid rgba(79,110,247,0.3)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 7, fontWeight: 700, color: 'var(--ds-color-primary)',
+        }}>
+          {pageName.charAt(0)}
         </div>
-      </div>
-
-      {/* Primary text */}
-      <div style={{ padding: '8px 12px' }}>
-        <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', lineHeight: 1.5 }}>
-          {ad.primary_text || '—'}
-        </p>
+        <div>
+          <p style={{ fontSize: 8, fontWeight: 700, color: '#fff', lineHeight: 1 }}>{pageName}</p>
+          <p style={{ fontSize: 7, color: 'var(--ds-text-muted)' }}>Publicidad</p>
+        </div>
       </div>
 
       {/* Image */}
       <div style={{
         width: '100%', aspectRatio: '1.2',
         background: '#0a0f1e',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
         overflow: 'hidden',
       }}>
         {imageUrl ? (
           <img src={imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         ) : (
-          <p style={{ fontSize: 10, color: 'var(--ds-text-muted)', padding: 16, textAlign: 'center' }}>
-            {ad.creative_suggestion || 'Sin imagen'}
-          </p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+            <p style={{ fontSize: 8, color: 'var(--ds-text-muted)', padding: 8, textAlign: 'center' }}>
+              {ad.creative_suggestion || 'Sin imagen'}
+            </p>
+          </div>
         )}
       </div>
 
-      {/* Headline + CTA bar */}
+      {/* Headline + CTA */}
       <div style={{
-        padding: '10px 12px',
+        padding: '5px 8px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 4,
         borderTop: '1px solid rgba(255,255,255,0.06)',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8,
       }}>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{
-            fontSize: 12, fontWeight: 700, color: '#fff', lineHeight: 1.3,
-            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-          }}>
-            {ad.headline || '—'}
-          </p>
-          {ad.description && (
-            <p style={{ fontSize: 10, color: 'var(--ds-text-muted)', marginTop: 2 }}>
-              {ad.description}
-            </p>
-          )}
-        </div>
+        <p style={{
+          fontSize: 8, fontWeight: 700, color: '#fff', lineHeight: 1.2,
+          flex: 1, minWidth: 0,
+          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+        }}>
+          {ad.headline || '—'}
+        </p>
         <div style={{
-          padding: '5px 12px', borderRadius: 6, fontSize: 10, fontWeight: 700,
+          padding: '2px 6px', borderRadius: 3, fontSize: 7, fontWeight: 700,
           background: 'rgba(255,255,255,0.1)', color: '#fff', flexShrink: 0,
-          whiteSpace: 'nowrap',
         }}>
           {ad.call_to_action || 'Ver más'}
         </div>
       </div>
+    </div>
+  )
+}
 
-      {/* Variant label */}
-      <div style={{
-        padding: '4px 12px 6px',
-        borderTop: '1px solid rgba(255,255,255,0.04)',
-        textAlign: 'center',
-      }}>
-        <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', color: selected ? 'var(--ds-color-primary)' : 'var(--ds-text-muted)', textTransform: 'uppercase' }}>
-          {variant}
+/* ── Selectable copy variant block ── */
+function CopyVariantBlock({
+  label, text, selected, onClick,
+}: {
+  label: string
+  text: string
+  selected: boolean
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        textAlign: 'left',
+        width: '100%',
+        padding: '6px 8px',
+        borderRadius: 6,
+        cursor: 'pointer',
+        border: selected ? '2px solid var(--ds-color-primary)' : '1px solid var(--ds-card-border)',
+        background: selected ? 'rgba(79,110,247,0.06)' : 'rgba(255,255,255,0.02)',
+        position: 'relative',
+      }}
+    >
+      {/* Label + check */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 3 }}>
+        <span style={{
+          fontSize: 7, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
+          color: selected ? 'var(--ds-color-primary)' : 'var(--ds-text-muted)',
+        }}>
+          {label}
         </span>
+        {selected && (
+          <div style={{
+            width: 14, height: 14, borderRadius: 99,
+            background: 'var(--ds-color-primary)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <Check size={8} style={{ color: '#fff' }} strokeWidth={3} />
+          </div>
+        )}
       </div>
+      <p style={{
+        fontSize: 9, color: selected ? 'var(--ds-text-secondary)' : 'var(--ds-text-muted)',
+        lineHeight: 1.4, margin: 0,
+      }}>
+        {text || '—'}
+      </p>
     </button>
+  )
+}
+
+/* ── Audience targeting summary ── */
+function AudienceInfo({ adSet }: { adSet: any }) {
+  const targeting = adSet.targeting || {}
+  const chips: string[] = []
+
+  if (targeting.age_range) chips.push(targeting.age_range)
+  if (targeting.gender && targeting.gender !== 'all') chips.push(targeting.gender)
+  if (targeting.locations) {
+    const loc = Array.isArray(targeting.locations) ? targeting.locations.join(', ') : targeting.locations
+    chips.push(loc)
+  }
+  if (targeting.interests?.length) chips.push(targeting.interests.slice(0, 4).join(', '))
+  if (targeting.behaviors?.length) chips.push(targeting.behaviors.slice(0, 2).join(', '))
+  if (adSet.audience_description) chips.push(adSet.audience_description)
+
+  if (chips.length === 0) return null
+
+  return (
+    <div style={{
+      padding: '8px 10px', marginBottom: 10, borderRadius: 6,
+      background: 'rgba(255,255,255,0.03)',
+      border: '1px solid rgba(255,255,255,0.06)',
+      display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center',
+    }}>
+      <Users size={12} style={{ color: 'var(--ds-text-muted)', flexShrink: 0 }} />
+      {chips.map((chip, i) => (
+        <span key={i} style={{
+          fontSize: 9, color: 'var(--ds-text-secondary)',
+          padding: '2px 8px', borderRadius: 99,
+          background: 'rgba(255,255,255,0.05)',
+          border: '1px solid rgba(255,255,255,0.08)',
+        }}>
+          {chip}
+        </span>
+      ))}
+    </div>
   )
 }
 
@@ -145,7 +190,7 @@ export default function StepPublish({
   onAdjust, onSaveDraft, onPublish,
 }: Props) {
   const [expandedSet, setExpandedSet] = useState(0)
-  // Track selected variant per ad: key = "setIdx-adIdx", value = 'short' | 'medium' | 'long'
+  // Track selected variant per ad: key = "setIdx-adIdx", value = 'medium' | 'long'
   const [selectedVariant, setSelectedVariant] = useState<Record<string, string>>({})
 
   const campaign = aiStrategy?.campaign
@@ -176,18 +221,18 @@ export default function StepPublish({
   return (
     <div className="space-y-5">
       {/* Campaign header */}
-      <div className="card" style={{ padding: '20px 24px' }}>
+      <div className="card" style={{ padding: '16px 20px' }}>
         <div className="flex items-start justify-between mb-3">
           <div>
-            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 4 }}>
+            <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 4 }}>
               Tu campaña está lista
             </p>
-            <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 18, fontWeight: 800, color: '#fff', lineHeight: 1.2 }}>
+            <h2 style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 16, fontWeight: 800, color: '#fff', lineHeight: 1.2 }}>
               {campaign?.name || 'Campaña generada por IA'}
             </h2>
           </div>
           <div style={{
-            padding: '4px 12px', borderRadius: 99, fontSize: 11, fontWeight: 700,
+            padding: '3px 10px', borderRadius: 99, fontSize: 10, fontWeight: 700,
             background: 'var(--ds-color-primary-soft)', color: 'var(--ds-color-primary)',
             border: '1px solid rgba(79,110,247,0.3)',
           }}>
@@ -196,7 +241,7 @@ export default function StepPublish({
         </div>
 
         {diagnosis && (
-          <p style={{ fontSize: 12, color: 'var(--ds-text-secondary)', lineHeight: 1.5, marginBottom: 12 }}>
+          <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)', lineHeight: 1.5, marginBottom: 10 }}>
             {diagnosis.opportunity || diagnosis.main_challenge || ''}
           </p>
         )}
@@ -209,21 +254,21 @@ export default function StepPublish({
               { label: 'CPM',      value: results.estimated_cpm },
             ].map((m, i) => (
               <div key={i} style={{
-                padding: '8px 10px', borderRadius: 8,
+                padding: '6px 8px', borderRadius: 6,
                 background: 'var(--ds-bg-elevated)',
                 border: '1px solid var(--ds-card-border)',
               }}>
-                <p style={{ fontSize: 9, color: 'var(--ds-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>
+                <p style={{ fontSize: 8, color: 'var(--ds-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 1 }}>
                   {m.label}
                 </p>
-                <p style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{m.value || '—'}</p>
+                <p style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>{m.value || '—'}</p>
               </div>
             ))}
           </div>
         )}
       </div>
 
-      {/* Ad Sets with preview cards */}
+      {/* Ad Sets */}
       {adSets.map((adSet: any, setIdx: number) => {
         const isOpen = expandedSet === setIdx
         return (
@@ -232,82 +277,86 @@ export default function StepPublish({
               type="button"
               onClick={() => setExpandedSet(isOpen ? -1 : setIdx)}
               className="w-full text-left flex items-center gap-3 transition-colors"
-              style={{ padding: '14px 18px', cursor: 'pointer', background: 'transparent', border: 'none', color: '#fff' }}
+              style={{ padding: '12px 16px', cursor: 'pointer', background: 'transparent', border: 'none', color: '#fff' }}
             >
               <div style={{
-                width: 26, height: 26, borderRadius: '50%', flexShrink: 0,
+                width: 24, height: 24, borderRadius: '50%', flexShrink: 0,
                 background: 'var(--ds-color-primary-soft)',
                 border: '1px solid rgba(79,110,247,0.3)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 11, fontWeight: 700, color: 'var(--ds-color-primary)',
+                fontSize: 10, fontWeight: 700, color: 'var(--ds-color-primary)',
               }}>
                 {setIdx + 1}
               </div>
               <div className="flex-1">
-                <p style={{ fontSize: 13, fontWeight: 700 }}>{adSet.name}</p>
-                <p style={{ fontSize: 11, color: 'var(--ds-text-secondary)' }}>
+                <p style={{ fontSize: 12, fontWeight: 700 }}>{adSet.name}</p>
+                <p style={{ fontSize: 10, color: 'var(--ds-text-secondary)' }}>
                   {adSet.audience_type} · {adSet.ads?.length || 0} anuncios · {currSymbol}{Math.round((adSet.daily_budget || 0) / 100)}/día
                 </p>
               </div>
-              {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
             </button>
 
             {isOpen && (
-              <div style={{ padding: '0 18px 18px' }}>
-                {/* Length toggle for all ads in this set */}
-                <div className="flex gap-2 mb-4">
-                  {['medium', 'long'].map(len => {
-                    const label = len === 'medium' ? 'Mediana' : 'Larga'
-                    const isActive = (selectedVariant[`${setIdx}-len`] || 'medium') === len
-                    return (
-                      <button key={len} type="button"
-                        onClick={() => {
-                          setSelectedVariant(prev => ({ ...prev, [`${setIdx}-len`]: len }))
-                          adSet.ads?.forEach((_: any, ai: number) => selectVariant(setIdx, ai, len))
-                        }}
-                        style={{
-                          padding: '5px 14px', borderRadius: 99, fontSize: 11, fontWeight: 600, cursor: 'pointer',
-                          background: isActive ? 'var(--ds-color-primary)' : 'var(--ds-bg-elevated)',
-                          color: isActive ? '#fff' : 'var(--ds-text-secondary)',
-                          border: isActive ? '1px solid var(--ds-color-primary)' : '1px solid var(--ds-card-border)',
-                        }}>
-                        {label}
-                      </button>
-                    )
-                  })}
-                </div>
+              <div style={{ padding: '0 16px 16px' }}>
+                {/* Audience targeting info */}
+                <AudienceInfo adSet={adSet} />
 
-                {/* All ads in a horizontal grid */}
+                {/* Ads grid — each ad: copy variants on top, image card below */}
                 <div style={{
                   display: 'grid',
-                  gridTemplateColumns: `repeat(${Math.min(adSet.ads?.length || 1, 4)}, 1fr)`,
-                  gap: 12,
+                  gridTemplateColumns: `repeat(auto-fill, minmax(200px, 1fr))`,
+                  gap: 14,
                 }}>
                   {adSet.ads?.map((ad: any, adIdx: number) => {
                     const editedAd = getAd(setIdx, adIdx)
                     const sel = selectedVariant[`${setIdx}-${adIdx}`] || 'medium'
                     const imageForAd = validPreviews[adIdx % validPreviews.length] || null
 
-                    function adForVariant(key: string): AdCopyItem {
-                      if (key === sel) return editedAd
-                      if (key === 'medium') return ad
-                      const v = ad.variants?.[key]
-                      if (!v) return ad
-                      return { ...ad, headline: v.headline, primary_text: v.primary_text }
-                    }
+                    // Get variant texts
+                    const mediumVariant = ad.variants?.medium
+                    const longVariant = ad.variants?.long
+                    const mediumText = mediumVariant?.primary_text || ad.primary_text || ''
+                    const longText = longVariant?.primary_text || ad.primary_text || ''
+
+                    // Build the ad object for the preview card (uses selected variant)
+                    const displayAd: AdCopyItem = sel === 'medium'
+                      ? { ...ad, ...editedCopies[`${setIdx}-${adIdx}`] }
+                      : {
+                          ...ad,
+                          headline: longVariant?.headline || ad.headline,
+                          primary_text: longVariant?.primary_text || ad.primary_text,
+                          ...editedCopies[`${setIdx}-${adIdx}`],
+                        }
 
                     return (
-                      <div key={adIdx}>
-                        <p style={{ fontSize: 10, fontWeight: 600, color: 'var(--ds-text-muted)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                      <div key={adIdx} style={{ maxWidth: 240 }}>
+                        {/* Angle label */}
+                        <p style={{ fontSize: 9, fontWeight: 600, color: 'var(--ds-text-muted)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                           {ad.copy_angle || `Anuncio ${adIdx + 1}`}
                         </p>
-                        <AdPreviewCard
-                          ad={adForVariant(sel)}
+
+                        {/* Copy variant selectors — above the image, separated */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 6 }}>
+                          <CopyVariantBlock
+                            label="Mediana"
+                            text={mediumText}
+                            selected={sel === 'medium'}
+                            onClick={() => selectVariant(setIdx, adIdx, 'medium')}
+                          />
+                          <CopyVariantBlock
+                            label="Larga"
+                            text={longText}
+                            selected={sel === 'long'}
+                            onClick={() => selectVariant(setIdx, adIdx, 'long')}
+                          />
+                        </div>
+
+                        {/* Image card — separate from copy */}
+                        <AdImageCard
+                          ad={displayAd}
                           imageUrl={imageForAd}
                           pageName={pageName}
-                          selected={true}
-                          onSelect={() => {}}
-                          variant={sel === 'long' ? 'Larga' : 'Mediana'}
                         />
                       </div>
                     )
@@ -325,7 +374,7 @@ export default function StepPublish({
           background: 'rgba(79,110,247,0.06)',
           border: '1px solid rgba(79,110,247,0.15)',
         }}>
-          <p style={{ fontSize: 11, color: 'var(--ds-color-primary)', fontWeight: 600 }}>
+          <p style={{ fontSize: 10, color: 'var(--ds-color-primary)', fontWeight: 600 }}>
             {aiStrategy.budget_tip}
           </p>
         </div>
@@ -344,7 +393,7 @@ export default function StepPublish({
         <button
           onClick={onPublish}
           disabled={isPublishing}
-          className="w-full py-3.5 rounded-xl text-sm font-bold transition-opacity hover:opacity-90"
+          className="w-full py-3 rounded-xl text-sm font-bold transition-opacity hover:opacity-90"
           style={{
             background: 'linear-gradient(135deg, #1877F2, #0d47a1)',
             color: '#fff', border: 'none', cursor: isPublishing ? 'not-allowed' : 'pointer',
@@ -358,14 +407,14 @@ export default function StepPublish({
           <button
             onClick={onSaveDraft}
             disabled={savingDraft}
-            className="flex-1 py-3 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80"
+            className="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80"
             style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', cursor: 'pointer' }}
           >
             {savingDraft ? 'Guardando...' : 'Guardar borrador'}
           </button>
           <button
             onClick={onAdjust}
-            className="flex-1 py-3 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80"
+            className="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80"
             style={{ background: 'transparent', border: '1px solid var(--ds-card-border)', color: 'var(--ds-text-secondary)', cursor: 'pointer' }}
           >
             Ajustar
