@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import type { Campaign } from '@/types'
-import { Megaphone, Sparkles, TrendingUp, Activity } from 'lucide-react'
+import { Sparkles } from 'lucide-react'
 import CampaignsListView from '@/components/dashboard/CampaignsListView'
 
 export default async function CampaignsPage() {
@@ -55,24 +55,7 @@ export default async function CampaignsPage() {
         </Link>
       </div>
 
-      {/* ── Mini stat row ── */}
-      <div className="grid grid-cols-3 gap-4 mb-6 module-enter module-enter-2">
-        {[
-          { label: 'Campañas totales', value: total,  Icon: Megaphone, color: 'var(--ds-color-primary)' },
-          { label: 'Activas ahora',    value: active, Icon: Activity,  color: 'var(--ds-color-success)' },
-          { label: 'En borrador',      value: draft,  Icon: TrendingUp, color: 'var(--ds-color-warning)' },
-        ].map(({ label, value, Icon, color }) => (
-          <div key={label} className="card" style={{ padding: '16px 18px', borderTop: `2px solid ${color}` }}>
-            <div className="flex items-center justify-between mb-1">
-              <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'var(--ds-text-label)' }}>{label}</p>
-              <Icon size={14} style={{ color }} strokeWidth={1.75} />
-            </div>
-            <p style={{ fontFamily: 'var(--font-display), Space Grotesk, sans-serif', fontSize: 26, fontWeight: 600, letterSpacing: '-0.02em', color: 'var(--ds-text-primary)' }}>{value}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* ── Empty state ── */}
+      {/* ── Campaigns ── */}
       {!campaigns?.length ? (
         <div className="card module-enter module-enter-3" style={{ padding: 64, textAlign: 'center', maxWidth: 520, margin: '0 auto' }}>
           <div style={{
