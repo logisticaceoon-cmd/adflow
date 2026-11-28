@@ -1,5 +1,5 @@
 'use client'
-// Step 4: "Revisá y publicá" — Per-ad copy variant selection + compact Meta preview
+// Step 4: "Revisá y publicá" — Per-ad multi-select copy variants + Meta preview
 import { useState } from 'react'
 import { ChevronDown, ChevronUp, Check, Users } from 'lucide-react'
 import type { AIStrategy, AdCopyItem, CopyVariant } from '@/types'
@@ -19,7 +19,37 @@ interface Props {
   onPublish: () => void
 }
 
-/* ── Compact Meta Ad preview (image + headline + CTA only) ── */
+/* ── Meta-valid CTA display labels ── */
+const CTA_LABELS: Record<string, string> = {
+  LEARN_MORE: 'Más información',
+  SHOP_NOW: 'Comprar',
+  SIGN_UP: 'Registrarse',
+  CONTACT_US: 'Contactar',
+  SUBSCRIBE: 'Suscribirse',
+  GET_OFFER: 'Ver oferta',
+  GET_QUOTE: 'Solicitar info',
+  DOWNLOAD: 'Descargar',
+  ORDER_NOW: 'Pedir ahora',
+  BOOK_TRAVEL: 'Reservar',
+  APPLY_NOW: 'Aplicar ahora',
+  SEND_MESSAGE: 'Enviar mensaje',
+  MESSAGE_PAGE: 'Enviar mensaje',
+  WHATSAPP_MESSAGE: 'Enviar WhatsApp',
+  WATCH_MORE: 'Ver más',
+  BUY_TICKETS: 'Comprar entradas',
+  CALL_NOW: 'Llamar',
+  GET_DIRECTIONS: 'Cómo llegar',
+}
+
+function ctaDisplay(ad: AdCopyItem): string {
+  // If cta_type exists, use the meta-valid label
+  const ctaType = (ad as any).cta_type as string | undefined
+  if (ctaType && CTA_LABELS[ctaType]) return CTA_LABELS[ctaType]
+  // Fallback to call_to_action text or default
+  return ad.call_to_action || 'Más información'
+}
+
+/* ── Meta Ad preview card (image + headline + CTA) ── */
 function AdImageCard({
   ad, imageUrl, pageName,
 }: {
@@ -29,31 +59,31 @@ function AdImageCard({
 }) {
   return (
     <div style={{
-      borderRadius: 6,
+      borderRadius: 8,
       border: '1px solid var(--ds-card-border)',
       background: 'var(--ds-bg-elevated)',
       overflow: 'hidden',
     }}>
       {/* Page name + Sponsored */}
-      <div style={{ padding: '5px 8px', display: 'flex', alignItems: 'center', gap: 6 }}>
+      <div style={{ padding: '8px 10px', display: 'flex', alignItems: 'center', gap: 8 }}>
         <div style={{
-          width: 18, height: 18, borderRadius: '50%',
+          width: 24, height: 24, borderRadius: '50%',
           background: 'var(--ds-color-primary-soft)',
           border: '1px solid rgba(79,110,247,0.3)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 7, fontWeight: 700, color: 'var(--ds-color-primary)',
+          fontSize: 10, fontWeight: 700, color: 'var(--ds-color-primary)',
         }}>
           {pageName.charAt(0)}
         </div>
         <div>
-          <p style={{ fontSize: 8, fontWeight: 700, color: '#fff', lineHeight: 1 }}>{pageName}</p>
-          <p style={{ fontSize: 7, color: 'var(--ds-text-muted)' }}>Publicidad</p>
+          <p style={{ fontSize: 11, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>{pageName}</p>
+          <p style={{ fontSize: 9, color: 'var(--ds-text-muted)' }}>Publicidad</p>
         </div>
       </div>
 
-      {/* Image */}
+      {/* Image — 1080x1350 ratio (4:5 portrait, Instagram/Feed standard) */}
       <div style={{
-        width: '100%', aspectRatio: '1.2',
+        width: '100%', aspectRatio: '1080 / 1350',
         background: '#0a0f1e',
         overflow: 'hidden',
       }}>
@@ -61,7 +91,7 @@ function AdImageCard({
           <img src={imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         ) : (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-            <p style={{ fontSize: 8, color: 'var(--ds-text-muted)', padding: 8, textAlign: 'center' }}>
+            <p style={{ fontSize: 10, color: 'var(--ds-text-muted)', padding: 12, textAlign: 'center' }}>
               {ad.creative_suggestion || 'Sin imagen'}
             </p>
           </div>
@@ -70,29 +100,34 @@ function AdImageCard({
 
       {/* Headline + CTA */}
       <div style={{
-        padding: '5px 8px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 4,
+        padding: '8px 10px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8,
         borderTop: '1px solid rgba(255,255,255,0.06)',
       }}>
-        <p style={{
-          fontSize: 8, fontWeight: 700, color: '#fff', lineHeight: 1.2,
-          flex: 1, minWidth: 0,
-          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-        }}>
-          {ad.headline || '—'}
-        </p>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p style={{
+            fontSize: 12, fontWeight: 700, color: '#fff', lineHeight: 1.3,
+            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+          }}>
+            {ad.headline || '—'}
+          </p>
+          {ad.description && (
+            <p style={{ fontSize: 10, color: 'var(--ds-text-muted)', marginTop: 1 }}>{ad.description}</p>
+          )}
+        </div>
         <div style={{
-          padding: '2px 6px', borderRadius: 3, fontSize: 7, fontWeight: 700,
-          background: 'rgba(255,255,255,0.1)', color: '#fff', flexShrink: 0,
+          padding: '5px 10px', borderRadius: 4, fontSize: 10, fontWeight: 700,
+          background: 'rgba(255,255,255,0.12)', color: '#fff', flexShrink: 0,
+          whiteSpace: 'nowrap',
         }}>
-          {ad.call_to_action || 'Ver más'}
+          {ctaDisplay(ad)}
         </div>
       </div>
     </div>
   )
 }
 
-/* ── Selectable copy variant block ── */
+/* ── Selectable copy variant (multi-select: can pick both) ── */
 function CopyVariantBlock({
   label, text, selected, onClick,
 }: {
@@ -108,7 +143,7 @@ function CopyVariantBlock({
       style={{
         textAlign: 'left',
         width: '100%',
-        padding: '6px 8px',
+        padding: '8px 10px',
         borderRadius: 6,
         cursor: 'pointer',
         border: selected ? '2px solid var(--ds-color-primary)' : '1px solid var(--ds-card-border)',
@@ -116,27 +151,25 @@ function CopyVariantBlock({
         position: 'relative',
       }}
     >
-      {/* Label + check */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 3 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
         <span style={{
-          fontSize: 7, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
+          fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
           color: selected ? 'var(--ds-color-primary)' : 'var(--ds-text-muted)',
         }}>
           {label}
         </span>
-        {selected && (
-          <div style={{
-            width: 14, height: 14, borderRadius: 99,
-            background: 'var(--ds-color-primary)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <Check size={8} style={{ color: '#fff' }} strokeWidth={3} />
-          </div>
-        )}
+        <div style={{
+          width: 16, height: 16, borderRadius: 4,
+          background: selected ? 'var(--ds-color-primary)' : 'transparent',
+          border: selected ? 'none' : '1.5px solid rgba(255,255,255,0.25)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          {selected && <Check size={10} style={{ color: '#fff' }} strokeWidth={3} />}
+        </div>
       </div>
       <p style={{
-        fontSize: 9, color: selected ? 'var(--ds-text-secondary)' : 'var(--ds-text-muted)',
-        lineHeight: 1.4, margin: 0,
+        fontSize: 11, color: selected ? 'var(--ds-text-secondary)' : 'var(--ds-text-muted)',
+        lineHeight: 1.5, margin: 0,
       }}>
         {text || '—'}
       </p>
@@ -149,36 +182,69 @@ function AudienceInfo({ adSet }: { adSet: any }) {
   const targeting = adSet.targeting || {}
   const chips: string[] = []
 
+  // Pull from targeting object
   if (targeting.age_range) chips.push(targeting.age_range)
+  if (targeting.age_min || targeting.age_max) {
+    chips.push(`${targeting.age_min || 18}–${targeting.age_max || 65}+`)
+  }
   if (targeting.gender && targeting.gender !== 'all') chips.push(targeting.gender)
+  if (targeting.genders) chips.push(targeting.genders)
   if (targeting.locations) {
     const loc = Array.isArray(targeting.locations) ? targeting.locations.join(', ') : targeting.locations
     chips.push(loc)
   }
-  if (targeting.interests?.length) chips.push(targeting.interests.slice(0, 4).join(', '))
-  if (targeting.behaviors?.length) chips.push(targeting.behaviors.slice(0, 2).join(', '))
+  if (targeting.geo_locations) {
+    const geo = Array.isArray(targeting.geo_locations) ? targeting.geo_locations.join(', ') : typeof targeting.geo_locations === 'string' ? targeting.geo_locations : ''
+    if (geo) chips.push(geo)
+  }
+  if (targeting.interests?.length) {
+    const ints = targeting.interests.map((i: any) => typeof i === 'string' ? i : i.name || '').filter(Boolean)
+    if (ints.length) chips.push(ints.slice(0, 5).join(', '))
+  }
+  if (targeting.behaviors?.length) {
+    const beh = targeting.behaviors.map((b: any) => typeof b === 'string' ? b : b.name || '').filter(Boolean)
+    if (beh.length) chips.push(beh.slice(0, 3).join(', '))
+  }
+
+  // Fallbacks from adSet itself
   if (adSet.audience_description) chips.push(adSet.audience_description)
+  if (adSet.optimization_goal) chips.push(`Opt: ${adSet.optimization_goal}`)
+  if (adSet.advantage_plus) chips.push('Advantage+')
+
+  // Parse name for context if no other data
+  if (chips.length === 0 && adSet.name) {
+    // Extract parenthetical from name like "Intereses Específicos (Salud, Bienestar)"
+    const match = adSet.name.match(/\(([^)]+)\)/)
+    if (match) chips.push(match[1])
+    if (adSet.audience_type) chips.push(adSet.audience_type)
+  }
 
   if (chips.length === 0) return null
 
   return (
     <div style={{
-      padding: '8px 10px', marginBottom: 10, borderRadius: 6,
+      padding: '10px 12px', marginBottom: 12, borderRadius: 8,
       background: 'rgba(255,255,255,0.03)',
       border: '1px solid rgba(255,255,255,0.06)',
-      display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center',
     }}>
-      <Users size={12} style={{ color: 'var(--ds-text-muted)', flexShrink: 0 }} />
-      {chips.map((chip, i) => (
-        <span key={i} style={{
-          fontSize: 9, color: 'var(--ds-text-secondary)',
-          padding: '2px 8px', borderRadius: 99,
-          background: 'rgba(255,255,255,0.05)',
-          border: '1px solid rgba(255,255,255,0.08)',
-        }}>
-          {chip}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+        <Users size={13} style={{ color: 'var(--ds-text-muted)', flexShrink: 0 }} />
+        <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ds-text-muted)' }}>
+          Audiencia
         </span>
-      ))}
+      </div>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+        {chips.map((chip, i) => (
+          <span key={i} style={{
+            fontSize: 10, color: 'var(--ds-text-secondary)',
+            padding: '3px 10px', borderRadius: 99,
+            background: 'rgba(255,255,255,0.05)',
+            border: '1px solid rgba(255,255,255,0.08)',
+          }}>
+            {chip}
+          </span>
+        ))}
+      </div>
     </div>
   )
 }
@@ -190,8 +256,8 @@ export default function StepPublish({
   onAdjust, onSaveDraft, onPublish,
 }: Props) {
   const [expandedSet, setExpandedSet] = useState(0)
-  // Track selected variant per ad: key = "setIdx-adIdx", value = 'medium' | 'long'
-  const [selectedVariant, setSelectedVariant] = useState<Record<string, string>>({})
+  // Multi-select: key = "setIdx-adIdx", value = Set of selected variants
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, Set<string>>>({})
 
   const campaign = aiStrategy?.campaign
   const adSets   = campaign?.ad_sets || []
@@ -201,21 +267,32 @@ export default function StepPublish({
 
   const validPreviews = mediaPreviews.filter(Boolean) as string[]
 
-  function getAd(setIdx: number, adIdx: number): AdCopyItem {
-    const base  = adSets[setIdx]?.ads?.[adIdx] || {} as AdCopyItem
-    const edits = editedCopies[`${setIdx}-${adIdx}`] || {}
-    return { ...base, ...edits }
+  function getSelectedSet(setIdx: number, adIdx: number): Set<string> {
+    return selectedVariants[`${setIdx}-${adIdx}`] || new Set(['medium'])
   }
 
-  function selectVariant(setIdx: number, adIdx: number, variant: string) {
-    setSelectedVariant(prev => ({ ...prev, [`${setIdx}-${adIdx}`]: variant }))
-    const ad = adSets[setIdx]?.ads?.[adIdx]
-    if (!ad?.variants) return
-    const v = (ad.variants as any)[variant] as CopyVariant | undefined
-    if (v) {
-      onPatchAd(setIdx, adIdx, 'headline', v.headline)
-      onPatchAd(setIdx, adIdx, 'primary_text', v.primary_text)
-    }
+  function toggleVariant(setIdx: number, adIdx: number, variant: string) {
+    setSelectedVariants(prev => {
+      const key = `${setIdx}-${adIdx}`
+      const current = new Set(prev[key] || ['medium'])
+      if (current.has(variant)) {
+        // Don't allow deselecting if it's the only one
+        if (current.size > 1) current.delete(variant)
+      } else {
+        current.add(variant)
+      }
+      // Apply the first selected variant to the editable copy
+      const primary = current.has('medium') ? 'medium' : 'long'
+      const ad = adSets[setIdx]?.ads?.[adIdx]
+      if (ad?.variants) {
+        const v = (ad.variants as any)[primary] as CopyVariant | undefined
+        if (v) {
+          onPatchAd(setIdx, adIdx, 'headline', v.headline)
+          onPatchAd(setIdx, adIdx, 'primary_text', v.primary_text)
+        }
+      }
+      return { ...prev, [key]: current }
+    })
   }
 
   return (
@@ -302,15 +379,14 @@ export default function StepPublish({
                 {/* Audience targeting info */}
                 <AudienceInfo adSet={adSet} />
 
-                {/* Ads grid — each ad: copy variants on top, image card below */}
+                {/* Ads grid */}
                 <div style={{
                   display: 'grid',
-                  gridTemplateColumns: `repeat(auto-fill, minmax(200px, 1fr))`,
-                  gap: 14,
+                  gridTemplateColumns: `repeat(auto-fill, minmax(220px, 280px))`,
+                  gap: 16,
                 }}>
                   {adSet.ads?.map((ad: any, adIdx: number) => {
-                    const editedAd = getAd(setIdx, adIdx)
-                    const sel = selectedVariant[`${setIdx}-${adIdx}`] || 'medium'
+                    const selSet = getSelectedSet(setIdx, adIdx)
                     const imageForAd = validPreviews[adIdx % validPreviews.length] || null
 
                     // Get variant texts
@@ -319,36 +395,35 @@ export default function StepPublish({
                     const mediumText = mediumVariant?.primary_text || ad.primary_text || ''
                     const longText = longVariant?.primary_text || ad.primary_text || ''
 
-                    // Build the ad object for the preview card (uses selected variant)
-                    const displayAd: AdCopyItem = sel === 'medium'
-                      ? { ...ad, ...editedCopies[`${setIdx}-${adIdx}`] }
-                      : {
-                          ...ad,
-                          headline: longVariant?.headline || ad.headline,
-                          primary_text: longVariant?.primary_text || ad.primary_text,
-                          ...editedCopies[`${setIdx}-${adIdx}`],
-                        }
+                    // Display uses the first selected variant
+                    const primary = selSet.has('medium') ? 'medium' : 'long'
+                    const pv = primary === 'medium' ? mediumVariant : longVariant
+                    const displayAd: AdCopyItem = {
+                      ...ad,
+                      headline: pv?.headline || ad.headline,
+                      primary_text: pv?.primary_text || ad.primary_text,
+                    }
 
                     return (
-                      <div key={adIdx} style={{ maxWidth: 240 }}>
+                      <div key={adIdx}>
                         {/* Angle label */}
-                        <p style={{ fontSize: 9, fontWeight: 600, color: 'var(--ds-text-muted)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                        <p style={{ fontSize: 10, fontWeight: 600, color: 'var(--ds-text-muted)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                           {ad.copy_angle || `Anuncio ${adIdx + 1}`}
                         </p>
 
-                        {/* Copy variant selectors — above the image, separated */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 6 }}>
+                        {/* Copy variant selectors — multi-select checkboxes */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 8 }}>
                           <CopyVariantBlock
                             label="Mediana"
                             text={mediumText}
-                            selected={sel === 'medium'}
-                            onClick={() => selectVariant(setIdx, adIdx, 'medium')}
+                            selected={selSet.has('medium')}
+                            onClick={() => toggleVariant(setIdx, adIdx, 'medium')}
                           />
                           <CopyVariantBlock
                             label="Larga"
                             text={longText}
-                            selected={sel === 'long'}
-                            onClick={() => selectVariant(setIdx, adIdx, 'long')}
+                            selected={selSet.has('long')}
+                            onClick={() => toggleVariant(setIdx, adIdx, 'long')}
                           />
                         </div>
 
