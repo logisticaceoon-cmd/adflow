@@ -254,57 +254,65 @@ export default function StepPublish({
 
             {isOpen && (
               <div style={{ padding: '0 18px 18px' }}>
-                {adSet.ads?.map((ad: any, adIdx: number) => {
-                  const editedAd = getAd(setIdx, adIdx)
-                  const sel = selectedVariant[`${setIdx}-${adIdx}`] || 'medium'
-                  const imageForAd = validPreviews[adIdx % validPreviews.length] || null
-                  const hasVariants = !!ad.variants?.medium
+                {/* Length toggle for all ads in this set */}
+                <div className="flex gap-2 mb-4">
+                  {['medium', 'long'].map(len => {
+                    const label = len === 'medium' ? 'Mediana' : 'Larga'
+                    const isActive = (selectedVariant[`${setIdx}-len`] || 'medium') === len
+                    return (
+                      <button key={len} type="button"
+                        onClick={() => {
+                          setSelectedVariant(prev => ({ ...prev, [`${setIdx}-len`]: len }))
+                          adSet.ads?.forEach((_: any, ai: number) => selectVariant(setIdx, ai, len))
+                        }}
+                        style={{
+                          padding: '5px 14px', borderRadius: 99, fontSize: 11, fontWeight: 600, cursor: 'pointer',
+                          background: isActive ? 'var(--ds-color-primary)' : 'var(--ds-bg-elevated)',
+                          color: isActive ? '#fff' : 'var(--ds-text-secondary)',
+                          border: isActive ? '1px solid var(--ds-color-primary)' : '1px solid var(--ds-card-border)',
+                        }}>
+                        {label}
+                      </button>
+                    )
+                  })}
+                </div>
 
-                  const VARIANT_LABELS: Record<string, { label: string; tag: string }> = {
-                    medium: { label: 'Mediana', tag: '~150 chars' },
-                    long:   { label: 'Larga',   tag: '~300 chars' },
-                  }
+                {/* All ads in a horizontal grid */}
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: `repeat(${Math.min(adSet.ads?.length || 1, 4)}, 1fr)`,
+                  gap: 12,
+                }}>
+                  {adSet.ads?.map((ad: any, adIdx: number) => {
+                    const editedAd = getAd(setIdx, adIdx)
+                    const sel = selectedVariant[`${setIdx}-${adIdx}`] || 'medium'
+                    const imageForAd = validPreviews[adIdx % validPreviews.length] || null
 
-                  // Build ad object for each variant
-                  function adForVariant(key: string): AdCopyItem {
-                    if (key === sel) return editedAd
-                    if (key === 'medium') return ad
-                    const v = ad.variants?.[key]
-                    if (!v) return ad
-                    return { ...ad, headline: v.headline, primary_text: v.primary_text }
-                  }
+                    function adForVariant(key: string): AdCopyItem {
+                      if (key === sel) return editedAd
+                      if (key === 'medium') return ad
+                      const v = ad.variants?.[key]
+                      if (!v) return ad
+                      return { ...ad, headline: v.headline, primary_text: v.primary_text }
+                    }
 
-                  return (
-                    <div key={adIdx} style={{
-                      marginBottom: adIdx < (adSet.ads.length - 1) ? 16 : 0,
-                      paddingTop: adIdx > 0 ? 16 : 0,
-                      borderTop: adIdx > 0 ? '1px solid var(--ds-card-border)' : 'none',
-                    }}>
-                      <p style={{ fontSize: 11, fontWeight: 600, color: 'var(--ds-text-muted)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                        {ad.copy_angle || `Anuncio ${adIdx + 1}`}
-                      </p>
-
-                      <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: hasVariants ? '1fr 1fr' : '1fr',
-                        gap: 12,
-                        maxWidth: hasVariants ? 440 : 220,
-                      }}>
-                        {(hasVariants ? ['medium', 'long'] : ['medium']).map(vKey => (
-                          <AdPreviewCard
-                            key={vKey}
-                            ad={adForVariant(vKey)}
-                            imageUrl={imageForAd}
-                            pageName={pageName}
-                            selected={sel === vKey}
-                            onSelect={() => selectVariant(setIdx, adIdx, vKey)}
-                            variant={VARIANT_LABELS[vKey]?.label || vKey}
-                          />
-                        ))}
+                    return (
+                      <div key={adIdx}>
+                        <p style={{ fontSize: 10, fontWeight: 600, color: 'var(--ds-text-muted)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                          {ad.copy_angle || `Anuncio ${adIdx + 1}`}
+                        </p>
+                        <AdPreviewCard
+                          ad={adForVariant(sel)}
+                          imageUrl={imageForAd}
+                          pageName={pageName}
+                          selected={true}
+                          onSelect={() => {}}
+                          variant={sel === 'long' ? 'Larga' : 'Mediana'}
+                        />
                       </div>
-                    </div>
-                  )
-                })}
+                    )
+                  })}
+                </div>
               </div>
             )}
           </div>

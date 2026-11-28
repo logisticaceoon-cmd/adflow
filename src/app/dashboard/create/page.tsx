@@ -28,8 +28,11 @@ export default function CreateCampaignPage() {
     )
   }
 
+  // Steps 0-2: narrow layout. Step 4 (review): full width for 4 ad cards per row
+  const isWide = w.step === 4
+
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className={isWide ? 'mx-auto' : 'max-w-3xl mx-auto'}>
       {/* Header */}
       <div className="mb-8">
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ds-color-primary)', marginBottom: 8 }}>
