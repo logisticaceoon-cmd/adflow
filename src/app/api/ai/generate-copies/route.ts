@@ -199,15 +199,13 @@ REGLAS ABSOLUTAS:
 ESTRUCTURA A GENERAR (${strategyType}):
 ${cfg.structure}
 
-REGLAS DE COPY CRÍTICAS:
-- ANALISIS DE IMAGEN OBLIGATORIO: Si hay imágenes, PRIMERO describí en "image_analysis" exactamente qué ves (producto, persona, texto superpuesto, colores, contexto). Después escribí los copies referenciando esos detalles. NUNCA escribas copies genéricos que podrían ser de cualquier producto.
-- EMOJIS: Usá 1-3 emojis por copy, relevantes al contenido (no decorativos). Elegí emojis que refuercen el mensaje: fuego para urgencia, check para prueba, flecha para CTA, etc.
-- 3 VARIANTES POR ANUNCIO en "variants": short (1 frase, máx 60 chars), medium (2-3 frases, 60-125 chars), long (3-5 frases, 125-250 chars). El headline y primary_text base deben ser la versión medium. Cada variante debe funcionar sola.
-- ESPECIFICIDAD: NO uses "calidad premium", "resultados increíbles", "lo mejor". SÍ usa lo que ves: nombre del producto, ingredientes visibles, beneficios concretos, números reales.
-- Headlines: MÁXIMO 40 chars, con 1 emoji. Condensá la promesa, no repitas el texto principal.
-- Descripciones: MÁXIMO 30 chars, complementan la oferta.
-- Copy en el dialecto de ${targetCountry}
-${destinationUrl ? `- Incluir referencias a ${new URL(destinationUrl).hostname} en copies donde sea natural` : ''}
+INSTRUCCIONES FINALES:
+- Seguí las reglas de copywriting del sistema al pie de la letra.
+- Escribí en el dialecto de ${targetCountry}. Si es Argentina, usá voseo natural.
+- Los copies tienen que sonar a persona real, NO a marca. Si al leerlo decís "esto lo escribió una IA", reescribilo.
+- El primary_text base ES la versión medium. Las 3 variantes (short/medium/long) van en "variants".
+- Cada variante debe funcionar sola como anuncio completo.
+${destinationUrl ? `- Podés mencionar ${new URL(destinationUrl).hostname} donde sea natural, sin forzar.` : ''}
 
 Respondé ÚNICAMENTE con JSON válido, sin texto extra, sin backticks, sin markdown.
 
@@ -253,27 +251,27 @@ Respondé ÚNICAMENTE con JSON válido, sin texto extra, sin backticks, sin mark
         "pixel_note": "",
         "ads": [
           {
-            "name": "Ad — Ángulo 1",
+            "name": "nombre descriptivo del anuncio",
             "copy_angle": "emocional|informativo|urgencia|social_proof",
-            "image_analysis": "OBLIGATORIO si hay imágenes: describí en detalle qué ves en la imagen (producto, persona, texto en la imagen, colores, contexto, emociones). Usá esta información para escribir copies ESPECÍFICOS a lo que se ve.",
-            "headline": "máx 40 chars — condensá la promesa principal, con 1 emoji relevante",
-            "primary_text": "versión MEDIANA del copy (60-125 chars) — usá lo que ves en la imagen, sé específico, no genérico. Incluí 1-2 emojis naturales.",
-            "description": "máx 30 chars — complemento de la oferta",
-            "call_to_action": "Texto del botón en español",
+            "image_analysis": "qué ves en la imagen: producto, texto, persona, emoción, contexto. Escribí los copies basándote en esto.",
+            "headline": "frase corta que condensa la promesa. No repite el texto. Con 1 emoji. Máx 40 chars.",
+            "primary_text": "copy versión mediana — el que va por defecto. Escribilo como si hablaras con la persona, no como template.",
+            "description": "complemento breve de la oferta, máx 30 chars",
+            "call_to_action": "texto del botón en español",
             "cta_type": "LEARN_MORE|SHOP_NOW|CONTACT_US|GET_QUOTE|SUBSCRIBE|MESSAGE_PAGE|SEND_MESSAGE|WHATSAPP_MESSAGE",
-            "creative_suggestion": "qué tipo de imagen complementa este copy (lifestyle, demo, testimonio, etc.)",
+            "creative_suggestion": "tipo de imagen ideal para este copy (lifestyle, demo, testimonio, etc.)",
             "variants": {
               "short": {
-                "primary_text": "versión CORTA: 1 frase directa, máx 60 chars. Hook potente + beneficio. Con emoji.",
-                "headline": "máx 40 chars con emoji"
+                "primary_text": "1-2 frases, golpe directo. El hook que detiene el scroll. Máx 80 chars.",
+                "headline": "headline corto y directo con emoji"
               },
               "medium": {
-                "primary_text": "versión MEDIANA: 2-3 frases, 60-125 chars. Hook + argumento + prueba social o beneficio. Con emojis.",
-                "headline": "máx 40 chars con emoji"
+                "primary_text": "3-4 frases que fluyen natural. Hook + por qué pasa + qué hace el producto. 80-180 chars.",
+                "headline": "headline con la promesa condensada"
               },
               "long": {
-                "primary_text": "versión LARGA: 3-5 frases, 125-250 chars. Hook + dolor/deseo + mecanismo + prueba + CTA suave. Con emojis estratégicos.",
-                "headline": "máx 40 chars con emoji"
+                "primary_text": "micro-historia o argumento completo. 5-7 frases, 180-350 chars. Que se lea como un mensaje de alguien que ya lo probó.",
+                "headline": "headline intrigante que invite a leer"
               }
             }
           }
